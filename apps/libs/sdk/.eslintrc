@@ -1,0 +1,8 @@
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "extends": ["react-app", "react-app/jest"]
+}
