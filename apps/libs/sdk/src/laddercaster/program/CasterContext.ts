@@ -140,11 +140,9 @@ export class CasterContext {
           break;
         }
         case 1: {
-          if (this.caster?.turnCommit?.actions?.spell) {
-            const itemSpell = Keypair.generate();
-            tx.add(await this.redeemSpell(itemSpell));
-            signers.push(itemSpell);
-          }
+          const itemSpell = Keypair.generate();
+          tx.add(await this.redeemSpell(itemSpell));
+          signers.push(itemSpell);
           break;
         }
         case 2: {
@@ -203,11 +201,9 @@ export class CasterContext {
           break;
         }
         case 1: {
-          if (this.caster?.turnCommit?.actions?.spell) {
-            const itemSpell = Keypair.generate();
-            tx.add(await this.redeemSpell(itemSpell));
-            signers.push(itemSpell);
-          }
+          const itemSpell = Keypair.generate();
+          tx.add(await this.redeemSpell(itemSpell));
+          signers.push(itemSpell);
           break;
         }
         case 2: {
@@ -390,6 +386,8 @@ export class CasterContext {
     ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
 
+    const empty = Keypair.generate();
+
     return this.client.program.instruction.casterRedeemSpell({
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -409,7 +407,9 @@ export class CasterContext {
       signers: [item, this.client.wallet.payer],
       remainingAccounts: [
         {
-          pubkey: this.caster?.modifiers?.spellBook,
+          pubkey: this.caster?.modifiers?.spellBook
+            ? this.caster?.modifiers?.spellBook
+            : empty.publicKey,
           isSigner: false,
           isWritable: true,
         },
