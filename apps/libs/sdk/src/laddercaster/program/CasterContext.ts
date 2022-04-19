@@ -140,9 +140,11 @@ export class CasterContext {
           break;
         }
         case 1: {
-          const itemSpell = Keypair.generate();
-          tx.add(await this.redeemSpell(itemSpell));
-          signers.push(itemSpell);
+          if (this.caster?.turnCommit?.actions?.spell) {
+            const itemSpell = Keypair.generate();
+            tx.add(await this.redeemSpell(itemSpell));
+            signers.push(itemSpell);
+          }
           break;
         }
         case 2: {
@@ -201,9 +203,11 @@ export class CasterContext {
           break;
         }
         case 1: {
-          const itemSpell = Keypair.generate();
-          tx.add(await this.redeemSpell(itemSpell));
-          signers.push(itemSpell);
+          if (this.caster?.turnCommit?.actions?.spell) {
+            const itemSpell = Keypair.generate();
+            tx.add(await this.redeemSpell(itemSpell));
+            signers.push(itemSpell);
+          }
           break;
         }
         case 2: {
