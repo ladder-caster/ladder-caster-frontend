@@ -12,7 +12,7 @@ import {
 } from './Slide.styled';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
-import { map } from 'lodash';
+import { map, sortBy } from 'lodash';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { GAME_SPELL } from 'core/remix/state';
 import usePrevious from 'core/hooks/usePrevious';
@@ -37,7 +37,7 @@ const Slide = ({ list, items }) => {
   const list_items = useMemo(() => {
     let count = 0;
     if (items?.length && list?.length)
-      return map(items, ({ Item }, key) => {
+      return map(sortBy(items, ['level', 'attribute']), ({ Item }, key) => {
         const num = count;
         count++;
         return (

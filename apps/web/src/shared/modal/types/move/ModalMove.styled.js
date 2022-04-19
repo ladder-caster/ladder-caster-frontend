@@ -4,13 +4,14 @@ import { m } from 'framer-motion';
 export const _move = styled(m.div)`
   min-width: 100%;
   width: 100%;
-  min-height: ${({ $height }) => `${$height}px`};
-  height: ${({ $height }) => `${$height}px`};
+  min-height: ${({ $height }) => `${$height - 32}px`};
+  height: ${({ $height }) => `${$height - 32}px`};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px 8px 40px 8px;
+  padding: 20px 0;
+  overflow-y: scroll;
 `;
 
 export const _board = styled(m.div)`

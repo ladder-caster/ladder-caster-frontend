@@ -48,6 +48,8 @@ export const _container = styled(m.div)`
 
 export const _area = styled(m.div)`
   width: 100%;
+  min-height: ${({ $height }) => ($height ? `${$height - 32}px` : '500px')};
+  height: ${({ $height }) => ($height ? `${$height - 32}px` : '500px')};
   display: flex;
   flex-direction: row;
   justify-content: center;

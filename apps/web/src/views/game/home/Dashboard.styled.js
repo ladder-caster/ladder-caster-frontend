@@ -34,6 +34,7 @@ export const _divider = styled.div`
 
 export const _feed = styled.div`
   padding: 0 16px;
+  overflow-y: scroll;
 `;
 
 export const _section = styled.div`

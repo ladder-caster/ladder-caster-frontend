@@ -36,7 +36,6 @@ import ModalLoot from './types/loot/ModalLoot';
 import ModalCraft from './types/craft/ModalCraft';
 import ModalChest from './types/chest/ModalChest';
 import ModalRedeem from './types/redeem/ModalRedeem';
-import ModalPhase from './types/phase/ModalPhase';
 
 const Modal = ({ screen_height }) => {
   const { t } = useTranslation();
@@ -56,22 +55,10 @@ const Modal = ({ screen_height }) => {
 
   const ModalSwitch = {
     [MODAL_MINT]: ModalMint,
-    [MODAL_MOVE]:
-      !seen && (phase === PHASE_REWARDS || phase === PHASE_EQUIP)
-        ? ModalPhase
-        : ModalMove,
-    [MODAL_SPELL]:
-      !seen && (phase === PHASE_REWARDS || phase === PHASE_EQUIP)
-        ? ModalPhase
-        : ModalSpell,
-    [MODAL_LOOT]:
-      !seen && (phase === PHASE_REWARDS || phase === PHASE_EQUIP)
-        ? ModalPhase
-        : ModalLoot,
-    [MODAL_CRAFT]:
-      !seen && (phase === PHASE_REWARDS || phase === PHASE_EQUIP)
-        ? ModalPhase
-        : ModalCraft,
+    [MODAL_MOVE]: ModalMove,
+    [MODAL_SPELL]: ModalSpell,
+    [MODAL_LOOT]: ModalLoot,
+    [MODAL_CRAFT]: ModalCraft,
     [MODAL_REDEEM]: ModalRedeem,
     [MODAL_CHEST]: ModalChest,
     [MODAL_IMPORT]: ModalImport,
@@ -96,7 +83,7 @@ const Modal = ({ screen_height }) => {
         {active && (
           <_container key={'modal-container'} $height={screen_height}>
             <_center>
-              <_area ref={modal_ref}>
+              <_area $height={screen_height} ref={modal_ref}>
                 {!!ModalSwitch && (
                   <ModalSwitch options={options} height={screen_height} />
                 )}

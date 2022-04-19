@@ -2,10 +2,13 @@ import styled from 'styled-components';
 
 export const _item = styled.div`
   width: 100%;
+  min-height: ${({ $height }) => ($height ? `${$height}px` : 0)};
+  height: ${({ $height }) => ($height ? `${$height}px` : 0)};
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 16px;
+  overflow-y: scroll;
 `;
 
 export const _float = styled.div`

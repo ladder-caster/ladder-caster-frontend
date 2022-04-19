@@ -10,6 +10,7 @@ export const _materials = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 16px 16px 0 16px;
+  overflow-y: scroll;
 `;
 
 export const _breakpoint = styled.div`

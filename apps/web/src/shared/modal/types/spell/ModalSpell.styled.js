@@ -10,7 +10,8 @@ export const _spell = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px 8px 40px 8px;
+  padding: 20px 0;
+  overflow-y: scroll;
 `;
 
 export const _actions = styled.div`

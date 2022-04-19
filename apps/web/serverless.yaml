@@ -1,8 +1,8 @@
 component: website
-name: ladder-caster-play
+name: ladder-caster-debug
 stage: prod
 
 inputs:
   src: ./build
-  domain: https://play.laddercaster.com
+  domain: https://debug.laddercaster.com
   region: us-east-1

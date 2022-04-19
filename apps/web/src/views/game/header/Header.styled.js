@@ -35,6 +35,7 @@ export const _left = styled.div`
   padding-left: 16px;
   height: 100%;
   cursor: pointer;
+  overflow-x: scroll;
 `;
 
 export const _right = styled.div`

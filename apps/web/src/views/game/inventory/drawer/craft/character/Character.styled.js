@@ -9,6 +9,7 @@ export const _character = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0 16px;
+  overflow-y: scroll;
 `;
 
 export const _header = styled.div`

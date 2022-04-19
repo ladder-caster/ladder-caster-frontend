@@ -22,6 +22,7 @@ import {
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
+  VIEW_SIZE,
 } from 'core/remix/state';
 import Rank from '../../../../spellcasters/drawer/rank/Rank';
 import { useSize } from 'core/hooks/useSize';
@@ -39,6 +40,7 @@ const Item = () => {
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [context, setContext] = useRemix(DRAWER_CONTEXT);
   const [inventory] = useRemix(GAME_INVENTORY);
+  const [view_height] = useRemix(VIEW_SIZE);
   const isBoost = drawer?.boost;
   const caster = context?.caster;
   const choose_ref = useRef();
@@ -52,7 +54,7 @@ const Item = () => {
     ?.length;
 
   return (
-    <_item>
+    <_item $height={view_height}>
       <Rank caster={caster} />
       <_breakpoint />
       {isBoost && <Boost />}
