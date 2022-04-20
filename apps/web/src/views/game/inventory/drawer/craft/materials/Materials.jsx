@@ -48,7 +48,7 @@ import {
 import { gridList } from 'core/utils/lists';
 import { map } from 'lodash';
 import { _row } from '../character/Character.styled';
-import { filter, find } from 'lodash';
+import { filter, find, sortBy } from 'lodash';
 import Item from '../../../../../../shared/item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
@@ -181,7 +181,7 @@ const Materials = () => {
 
   const filter_items = filter(
     inventory?.items,
-    (item) => item.type === item_type,
+    (item) => item.type === item_type && item.level <= caster.level,
   );
 
   const removeMaterial = async (item) => {

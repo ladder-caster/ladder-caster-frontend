@@ -55,7 +55,7 @@ import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
-import { map } from 'lodash';
+import { map, sortBy, reverse } from 'lodash';
 
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -213,6 +213,7 @@ const Remix = () => {
             attribute: Object.keys(item?.itemType?.equipment?.feature)?.[0],
             rarity: Object.keys(item?.itemType?.equipment?.rarity)?.[0],
             value: item?.itemType?.equipment?.value,
+            publicKey: item?.publicKey?.toString()
           };
         } else {
           return {
@@ -223,6 +224,7 @@ const Remix = () => {
             attribute: Object.keys(item?.itemType?.spellBook?.spell)?.[0],
             rarity: Object.keys(item?.itemType?.spellBook?.rarity)?.[0],
             value: item?.itemType?.equipment?.value,
+            publicKey: item?.publicKey?.toString()
           };
         }
       };
@@ -272,6 +274,7 @@ const Remix = () => {
           index: key,
           tier: getTier(item.level),
           level: item.level,
+          publicKey: item?.publicKey?.toString()
         });
       } else {
         if (item.itemType.equipment) {
@@ -283,6 +286,7 @@ const Remix = () => {
             attribute: Object.keys(item.itemType.equipment.feature)[0],
             rarity: Object.keys(item.itemType.equipment.rarity)[0],
             value: item.itemType.equipment.value,
+            publicKey: item?.publicKey?.toString()
           });
         } else if (item.itemType.spellBook) {
           items.push({
@@ -295,12 +299,13 @@ const Remix = () => {
             cost: item.itemType.spellBook.cost,
             costFeature: Object.keys(item.itemType.spellBook.costFeature)[0],
             value: item.itemType.spellBook.value,
+            publicKey: item?.publicKey?.toString()
           });
         }
       }
     });
 
-    return { items, chests };
+    return { items: reverse(sortBy(items, ['level', 'attribute', 'rarity'])), chests };
   };
 
   useEffect(() => {
