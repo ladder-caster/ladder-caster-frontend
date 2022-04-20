@@ -7,7 +7,12 @@ import { useTranslation } from 'react-i18next';
 import ManageKey from '../ManageKey';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAutoSignIn } from 'core/hooks/useAutoSignIn';
-import { WALLET_TYPE } from 'core/remix/state';
+import {
+  BURNER_TYPE,
+  STANDARD_TYPE,
+  W3A_TYPE,
+  WALLET_TYPE,
+} from 'core/remix/state';
 import { useActions } from '../../../../../../actions';
 import { AnimateDots } from '../../../../../views/game/animations/AnimateSettings';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
@@ -20,25 +25,27 @@ const KeysTab = () => {
   const { t } = useTranslation();
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [activeMenu, setActiveMenu] = useState(null);
-  const [, setWalletType] = useRemix(WALLET_TYPE);
+  const [walletType, setWalletType] = useRemix(WALLET_TYPE);
   const { handleDisconnect } = useAutoSignIn();
   const adapterWallet = useWallet();
   const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
-  const { closeDrawer, clearStates } = useActions();
+  const { closeDrawer, clearStates, web3AuthDisconnect } = useActions();
 
   const handleLogout = useCallback(async () => {
     setWalletType(null);
     closeDrawer();
     clearStates();
-    if (adapterWallet.publicKey) await handleDisconnect();
-    setInitLoading(true);
-  }, [adapterWallet, client]);
+    console.log('wtf!');
+    console.log('wallet type', walletType);
+    if (walletType === STANDARD_TYPE) handleDisconnect();
+    else if (walletType === W3A_TYPE) web3AuthDisconnect();
+  }, [adapterWallet, client, walletType]);
 
   const { secretKey, publicKey } = useMemo(() => {
     let { secretKey = null, publicKey = null } =
       client?.wallet?.payer?._keypair || {};
 
-    if (!publicKey) {
+    if (walletType !== BURNER_TYPE) {
       return {
         publicKey: client?.wallet?.publicKey.toString(),
       };

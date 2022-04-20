@@ -1,12 +1,16 @@
-const Env = process.env.REACT_APP_ENV || 'development';
+const Env = process.env.REACT_APP_ENV || 'devnet'; // ['mainnet', 'devnet']
 export const isProd = Env === 'production';
 
 const config = {
-  ['development']: {
-    BACKEND_API: 'ws://localhost:7333/',
+  ['devnet']: {
+    WEB3AUTH:
+      'BPQKJdLG2ghikI4O3GH-7yr0Y9-q8rGP-s0q2UMw0HvzUlIYEBYngIPGMOV6Lzkocdae_WE5UlFcjbqYn_iHNzA',
+    W3A_ENV: 'mainnet',
   },
-  ['production']: {
-    BACKEND_API: 'ws://localhost:8333/',
+  ['mainnet']: {
+    WEB3AUTH:
+      'BPQKJdLG2ghikI4O3GH-7yr0Y9-q8rGP-s0q2UMw0HvzUlIYEBYngIPGMOV6Lzkocdae_WE5UlFcjbqYn_iHNzA',
+    W3A_ENV: 'mainnet',
   },
 };
 
