@@ -57,7 +57,7 @@ const Queue = ({ spell_id }) => {
   const { t } = useTranslation();
   const caster = useMemo(
     () => find(spellcasters, (caster) => caster?.id === spell_id && caster),
-    [spellcasters?.length],
+    [spellcasters, spellcasters?.length],
   );
   const currentTurn = game?.turnInfo?.turn;
   const [num_ticks] = useRemix(DEMO_MODE, (demo) => demo.num_ticks);

@@ -54,7 +54,6 @@ import {
   CHAIN_NFTS,
 } from 'chain/hooks/state';
 import { nanoid } from 'nanoid';
-import { find } from 'lodash';
 import {
   VIEW_SPELLCASTERS,
   VIEW_INVENTORY,
@@ -91,7 +90,7 @@ import {
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
-import { map } from 'lodash';
+import { map, find } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 
 let retry_count = {};
@@ -243,7 +242,7 @@ export const useChainActions = () => {
       client,
       client.program.provider.wallet.publicKey,
       localStorage.getItem('gamePK'),
-      casters[caster.index],
+      find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
     );
 
     await fetchPlayer(async () => {
@@ -263,7 +262,7 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        casters[caster.index],
+        find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
       );
 
       await fetchPlayer(async () => {
@@ -429,7 +428,8 @@ export const useChainActions = () => {
               client,
               client?.program?.provider?.wallet?.publicKey,
               localStorage.getItem('gamePK'),
-            ).openChest(items[chest.index]);
+            ).openChest(find(items,
+                match => match?.publicKey?.toString() === chest?.publicKey));
           },
           INST_OPEN_CHEST,
           '',
@@ -491,7 +491,8 @@ export const useChainActions = () => {
               client,
               client.program.provider.wallet.publicKey,
               localStorage.getItem('gamePK'),
-              casters[caster.index],
+              find(casters,
+                  match => match?.publicKey?.toString() === caster?.publicKey),
             ).casterCommitMove(
               row - 1,
               ['a', 'b', 'c'].findIndex((colLetter) => colLetter === col),
@@ -540,7 +541,8 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        casters[caster.index],
+        find(casters,
+            match => match?.publicKey?.toString() === caster?.publicKey)
       );
 
       setContext('');
@@ -582,7 +584,8 @@ export const useChainActions = () => {
           client,
           client.program.provider.wallet.publicKey,
           localStorage.getItem('gamePK'),
-          casters[caster.index],
+          find(casters,
+              match => match?.publicKey?.toString() === caster?.publicKey)
         );
 
         setModal('');
@@ -597,7 +600,9 @@ export const useChainActions = () => {
           return await stateHandler(
             async () => {
               return await casterContext.unequipItem(
-                casters[caster.index].modifiers?.[item.type],
+                find(casters,
+                    match => match?.publicKey?.toString() ===
+                      caster?.publicKey)?.modifiers?.[item.type]
               );
             },
             INST_UNEQUIP,
@@ -613,7 +618,8 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        casters[caster.index],
+        find(casters,
+            match => match?.publicKey?.toString() === caster?.publicKey),
       );
 
       setEquip('');
@@ -665,7 +671,8 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        casters[caster.index],
+        find(casters,
+            match => match?.publicKey?.toString() === caster?.publicKey)
       );
 
       setDrawer('');
@@ -676,9 +683,9 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await casterContext.casterCommitCraft(
-              items[materials[0].id],
-              items[materials[1].id],
-              items[materials[2].id],
+              find(items, match => match?.publickKey?.toString() === materials?.[0]?.publickKey),
+              find(items, match => match?.publickKey?.toString() === materials?.[1]?.publickKey),
+              find(items, match => match?.publickKey?.toString() === materials?.[2]?.publickKey),
             );
           },
           INST_COMMIT_CRAFT,
@@ -746,7 +753,8 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        casters[caster.index],
+        find(casters,
+            match => match?.publicKey?.toString() === caster?.publicKey)
       );
 
       const resources = [
@@ -863,12 +871,15 @@ export const useChainActions = () => {
         item: item || undefined,
       });
 
-      if (caster || context?.caster) {
+      const match_caster = caster || context?.caster;
+      if (match_caster) {
         await fetchPlayer(async () => {
           return await stateHandler(
             async () => {
               return await playerContext.mintNFTCaster(
-                casters[context?.caster?.index],
+                find(casters,
+                  match => match?.publicKey?.toString() ===
+                    match_caster?.publicKey)
               );
             },
             INST_MINT_NFT,
@@ -876,14 +887,12 @@ export const useChainActions = () => {
           );
         });
       } else if (item || context?.item) {
+        const match_item = item || context?.item;
         await fetchPlayer(async () => {
           return await stateHandler(
             async () => {
-              let id = context?.item?.id;
-              if (context?.item?.type === 'chest') {
-                id = context?.item?.index;
-              }
-              return await playerContext.mintNFTItem(items[id]);
+              return await playerContext.mintNFTItem(find(items,
+                  match => match?.publicKey?.toString() === match_item?.publicKey));
             },
             INST_MINT_NFT,
             '',

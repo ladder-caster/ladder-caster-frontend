@@ -38,9 +38,14 @@ const ModalSpell = ({ height, options }) => {
 
   const spells = useMemo(
     () =>
-      filter(inventory?.items, (item) => item.type === EQUIP_MAP[ITEM_BOOK]),
+      filter(
+        inventory?.items,
+        (item) =>
+          item.type === EQUIP_MAP[ITEM_BOOK] && caster?.level >= item?.level,
+      ),
     [inventory?.items],
   );
+
   const hasSpell = spells.length > 0;
 
   const items = useMemo(() => {
@@ -75,7 +80,7 @@ const ModalSpell = ({ height, options }) => {
             <_button
               $hidden={!hasSpell}
               key={'button-modal-speller'}
-              onClick={() => castSpell(spell, options.caster)}
+              onClick={() => castSpell(spell, caster)}
               ref={button_ref}
             >
               {t('modal.spell.action')}
