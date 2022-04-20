@@ -43,7 +43,9 @@ import {
   BURNER_TYPE,
   WALLET_TYPE,
   GAME_MAP,
+  GAME_REWARDS
 } from 'core/remix/state';
+import { diffPlayer, diffResources, diffItems, diffCasters, diffNFTs } from 'core/utils/diffs';
 import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
   CHAIN_CASTERS,
@@ -108,12 +110,13 @@ export const useChainActions = () => {
   const [confirm, setConfirm] = useRemix(GAME_CONFIRM);
   const [mutation, setMutation] = useRemix(CREATE_MUTATION);
   const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
+  const [player, setPlayer] = useRemix(CHAIN_PLAYER);
   const [game, setGame] = useRemix(CHAIN_GAME);
   const [items, setItems] = useRemix(CHAIN_ITEMS);
   const [casters, setCasters] = useRemix(CHAIN_CASTERS);
   const [resources, setResources] = useRemix(GAME_RESOURCES);
   const [spellcasters, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [rewards, setRewards] = useRemix(GAME_REWARDS);
   const [boost, setBoost] = useRemix(GAME_BOOST);
   const [inventory, setInventory] = useRemix(GAME_INVENTORY);
   const [board] = useRemix(GAME_MAP);
@@ -123,7 +126,7 @@ export const useChainActions = () => {
   const { createLocalWallet } = useLocalWallet();
   const [, setWalletType] = useRemix(WALLET_TYPE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
-  const [, setNfts] = useRemix(CHAIN_NFTS);
+  const [nfts, setNfts] = useRemix(CHAIN_NFTS);
 
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
@@ -203,6 +206,80 @@ export const useChainActions = () => {
     }
   };
 
+  var deepDiffMapper = function () {
+    return {
+      VALUE_CREATED: 'created',
+      VALUE_UPDATED: 'updated',
+      VALUE_DELETED: 'deleted',
+      VALUE_UNCHANGED: 'unchanged',
+      map: function(obj1, obj2) {
+        if (this.isFunction(obj1) || this.isFunction(obj2)) {
+          throw 'Invalid argument. Function given, object expected.';
+        }
+        if (this.isValue(obj1) || this.isValue(obj2)) {
+          return {
+            type: this.compareValues(obj1, obj2),
+            data: obj1 === undefined ? obj2 : obj1
+          };
+        }
+
+        var diff = {};
+        for (var key in obj1) {
+          if (this.isFunction(obj1[key])) {
+            continue;
+          }
+
+          var value2 = undefined;
+          if (obj2[key] !== undefined) {
+            value2 = obj2[key];
+          }
+
+          diff[key] = this.map(obj1[key], value2);
+        }
+        for (var key in obj2) {
+          if (this.isFunction(obj2[key]) || diff[key] !== undefined) {
+            continue;
+          }
+
+          diff[key] = this.map(undefined, obj2[key]);
+        }
+
+        return diff;
+
+      },
+      compareValues: function (value1, value2) {
+        if (value1 === value2) {
+          return this.VALUE_UNCHANGED;
+        }
+        if (this.isDate(value1) && this.isDate(value2) && value1.getTime() === value2.getTime()) {
+          return this.VALUE_UNCHANGED;
+        }
+        if (value1 === undefined) {
+          return this.VALUE_CREATED;
+        }
+        if (value2 === undefined) {
+          return this.VALUE_DELETED;
+        }
+        return this.VALUE_UPDATED;
+      },
+      isFunction: function (x) {
+        return Object.prototype.toString.call(x) === '[object Function]';
+      },
+      isArray: function (x) {
+        return Object.prototype.toString.call(x) === '[object Array]';
+      },
+      isDate: function (x) {
+        return Object.prototype.toString.call(x) === '[object Date]';
+      },
+      isObject: function (x) {
+        return Object.prototype.toString.call(x) === '[object Object]';
+      },
+      isValue: function (x) {
+        return !this.isObject(x) && !this.isArray(x);
+      }
+    }
+  }();
+
   const fetchPlayer = async (preInstructionsCallback) => {
     const result = await preInstructionsCallback();
     if (result && !result?.value?.err) {
@@ -212,11 +289,25 @@ export const useChainActions = () => {
         localStorage.getItem('gamePK'),
       );
 
-      setPlayer(await playerContext.getPlayer());
-      setResources(await playerContext.getResources());
-      setItems(await playerContext.getInventory());
-      setCasters(await playerContext.getCasters());
-      setNfts(await playerContext.getNFTUris(await playerContext.getNFTS()));
+      console.log('Next Result', result);
+
+      const next_player = await playerContext.getPlayer();
+      const next_resources = await playerContext.getResources();
+      const next_items = await playerContext.getInventory();
+      const next_casters = await playerContext.getCasters();
+      const next_nfts = await playerContext.getNFTUris(await playerContext.getNFTS());
+
+      console.log('diff player', diffPlayer(player, next_player));
+      console.log('diff resources', diffResources(resources, next_resources));
+      console.log('diff items', diffItems(items, next_items));
+      console.log('diff casters', diffCasters(casters, next_casters));
+      console.log('diff nfts', diffNFTs(nfts, next_nfts));
+
+      setPlayer(next_player);
+      setResources(next_resources);
+      setItems(next_items);
+      setCasters(next_casters);
+      setNfts(next_nfts);
     } else {
       //TODO: display user error from blockchain
     }

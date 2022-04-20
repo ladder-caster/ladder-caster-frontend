@@ -26,6 +26,7 @@ import {
   GAME_INIT,
   ERROR_CODES,
   SEEN_PHASE,
+  GAME_REWARDS
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -80,6 +81,7 @@ const Remix = () => {
     lada: 0,
   });
 
+  useRemixOrigin(GAME_REWARDS, []);
   useRemixOrigin(GAME_INIT);
   useRemixOrigin(USER_PHASE);
   useRemixOrigin(WALLET_TYPE);
