@@ -51,7 +51,13 @@ export const Onboarding = ({ home }) => {
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
   const { createLocalWallet } = useLocalWallet();
   const { setVisible } = useWalletModal();
-  const { startDemo, initPlayer, visitCasters, modalBuyLADA } = useActions();
+  const {
+    startDemo,
+    initPlayer,
+    visitCasters,
+    modalBuyLADA,
+    web3AuthConnect,
+  } = useActions();
   const getFunds = async () => {
     setNoFunds((await client.getSOLBalance()) === 0);
   };
@@ -102,12 +108,21 @@ export const Onboarding = ({ home }) => {
         <_section>
           <_description>{t('home.description')}</_description>
           <_actions $long>
-            {/* <AnimateButton high> */}
             <_button $big $long onClick={() => connectWallet()}>
               <IconWallet />
               <span>{t('connect.wallet')}</span>
             </_button>
-            {/* </AnimateButton> */}
+
+            <_button
+              $big
+              $long
+              onClick={() => {
+                web3AuthConnect('google');
+              }}
+            >
+              <IconWallet />
+              <span>{t('connect.web3Auth')}</span>
+            </_button>
             {demo ? (
               <AnimateButton low>
                 <_button $long onClick={() => generateTestWallet()}>

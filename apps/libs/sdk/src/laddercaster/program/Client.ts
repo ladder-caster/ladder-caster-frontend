@@ -41,21 +41,7 @@ export class Client {
   }
 
   static getConnection(env: Environment): anchor.web3.Connection {
-    switch (env) {
-      case 'mainnet': {
-        return new anchor.web3.Connection(
-          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
-        );
-      }
-      case 'localnet': {
-        return new anchor.web3.Connection('http://localhost:8899');
-      }
-      case 'devnet': {
-        return new anchor.web3.Connection(
-          'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/',
-        );
-      }
-    }
+    return new anchor.web3.Connection(this.getRPC(env));
   }
 
   static getIDL(env: Environment) {
@@ -68,6 +54,20 @@ export class Client {
       }
       case 'devnet': {
         return laddercasterIDLDev;
+      }
+    }
+  }
+
+  static getRPC(env: Environment) {
+    switch (env) {
+      case 'mainnet': {
+        return 'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/';
+      }
+      case 'localnet': {
+        return 'http://localhost:8899';
+      }
+      case 'devnet': {
+        return 'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/';
       }
     }
   }

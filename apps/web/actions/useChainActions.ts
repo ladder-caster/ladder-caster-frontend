@@ -43,6 +43,10 @@ import {
   BURNER_TYPE,
   WALLET_TYPE,
   GAME_MAP,
+  WEB3AUTH_CLIENT,
+  WEB3AUTH_PROVIDER,
+  WEB3AUTH_PLUGIN_STORE,
+  W3A_TYPE,
 } from 'core/remix/state';
 import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
@@ -71,7 +75,6 @@ import {
   GIVE_LADA,
   GIVE_RESOURCES,
   INST_INIT_PLAYER,
-  INST_INIT_LADA_ACCOUNT,
   INST_COMMIT_CRAFT,
   INST_COMMIT_LOOT,
   INST_COMMIT_MOVE,
@@ -86,12 +89,12 @@ import {
   INST_UNEQUIP,
   RPC_ERROR,
   RPC_LOADING,
-  INST_INIT_RES_ACCOUNT,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
+import { WALLET_ADAPTERS } from '@web3auth/base';
 
 let retry_count = {};
 
@@ -124,6 +127,9 @@ export const useChainActions = () => {
   const [, setWalletType] = useRemix(WALLET_TYPE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
   const [, setNfts] = useRemix(CHAIN_NFTS);
+  const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
+  const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
+  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
 
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
@@ -464,7 +470,7 @@ export const useChainActions = () => {
       setModal({
         active: true,
         type: MODAL_CHEST,
-        tier
+        tier,
       });
     },
     async actionLoot(caster) {
@@ -1147,6 +1153,33 @@ export const useChainActions = () => {
           }
         });
       });
+    },
+    async web3AuthConnect(loginProvider: string) {
+      try {
+        if (!web3Auth) {
+          console.log('web3auth not initialized yet');
+          return;
+        }
+        const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider,
+          login_hint: '',
+        });
+
+        setProvider(provider);
+        const user = await web3Auth.getUserInfo();
+        console.log(user);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async web3AuthDisconnect() {
+      if (!web3Auth) {
+        console.log('web3auth not initialized yet');
+        return;
+      }
+      console.log('logging out');
+      await web3Auth.logout();
+      setProvider(null);
     },
   };
 };

@@ -52,6 +52,7 @@
     "title.map": "Game Board",
     "home.description": "To get started, connect your wallet",
     "connect.wallet": "Connect Wallet",
+    "connect.web3Auth": "Connect with Google",
     "connect.local_wallet": "Generate Test Wallet",
     "home.google": "Continue with Google",
     "home.task.lada": "Buy 1000 LADA to get started",
