@@ -3,6 +3,7 @@ import {
   CHAIN_CASTERS,
   CHAIN_LOCAL_CLIENT,
   CHAIN_PLAYER,
+  INIT_CHAIN_LOAD,
 } from 'chain/hooks/state';
 import {
   _home,
@@ -36,6 +37,7 @@ import { IconHat } from 'design/icons/hat.icon';
 import Spotlight from '../../../../shared/spotlight/Spotlight';
 import { IconMoney } from 'design/icons/money.icon';
 import { IconLightning } from 'design/icons/lightning.icon';
+import Skeleton from './skeleton/Skeleton';
 
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
@@ -46,6 +48,7 @@ export const Onboarding = ({ home }) => {
   const [resources] = useRemix(GAME_RESOURCES);
   const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
+  const [initLoading] = useRemix(INIT_CHAIN_LOAD);
   const { createLocalWallet } = useLocalWallet();
   const { setVisible } = useWalletModal();
   const { startDemo, initPlayer, visitCasters, modalBuyLADA } = useActions();
@@ -90,6 +93,8 @@ export const Onboarding = ({ home }) => {
   useEffect(() => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
+
+  if (initLoading && active) return <Skeleton />;
 
   return (
     <>

@@ -5,6 +5,7 @@ import {
   CHAIN_ITEMS,
   CHAIN_NFTS,
   CHAIN_PLAYER,
+  INIT_CHAIN_LOAD,
 } from './state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { Client } from '../../sdk/src/laddercaster/program/Client';
@@ -19,6 +20,7 @@ export const useGame = () => {
   const [, setItems] = useRemix(CHAIN_ITEMS);
   const [, setCasters] = useRemix(CHAIN_CASTERS);
   const [, setResources] = useRemix(GAME_RESOURCES);
+  const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
   const [error, setError] = useState();
   const [waiting, setWaiting] = useState(false);
 
@@ -61,11 +63,12 @@ export const useGame = () => {
             console.log(e);
           }
         }
-        setWaiting(false);
       } catch (e) {
-        setWaiting(false);
         console.log(e);
         setError(e);
+      } finally {
+        setWaiting(false);
+        setInitLoading(false);
       }
     },
     [setPlayer, setResources, setItems, setCasters, setNfts, setGame],

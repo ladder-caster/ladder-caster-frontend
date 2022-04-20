@@ -39,6 +39,7 @@ import {
   CHAIN_NEXT_TURN,
   CHAIN_NFTS,
   CHAIN_PLAYER,
+  INIT_CHAIN_LOAD,
 } from '../../../libs/chain/hooks/state';
 import {
   Caster,
@@ -80,6 +81,7 @@ const Remix = () => {
     lada: 0,
   });
 
+  useRemixOrigin(INIT_CHAIN_LOAD, true);
   useRemixOrigin(GAME_INIT);
   useRemixOrigin(USER_PHASE);
   useRemixOrigin(WALLET_TYPE);
