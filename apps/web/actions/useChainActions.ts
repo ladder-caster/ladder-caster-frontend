@@ -159,7 +159,7 @@ export const useChainActions = () => {
 
       if (
         String(e).includes('Blockhash') ||
-        String(e).includes('Solana Explorer')
+        String(e).includes('Solana')
       ) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 3)
@@ -683,9 +683,9 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await casterContext.casterCommitCraft(
-              find(items, match => match?.publickKey?.toString() === materials?.[0]?.publickKey),
-              find(items, match => match?.publickKey?.toString() === materials?.[1]?.publickKey),
-              find(items, match => match?.publickKey?.toString() === materials?.[2]?.publickKey),
+              find(items, match => match?.publicKey?.toString() === materials?.[0]?.publicKey),
+              find(items, match => match?.publicKey?.toString() === materials?.[1]?.publicKey),
+              find(items, match => match?.publicKey?.toString() === materials?.[2]?.publicKey),
             );
           },
           INST_COMMIT_CRAFT,
@@ -871,15 +871,12 @@ export const useChainActions = () => {
         item: item || undefined,
       });
 
-      const match_caster = caster || context?.caster;
-      if (match_caster) {
+      if (caster || context?.caster) {
         await fetchPlayer(async () => {
           return await stateHandler(
             async () => {
               return await playerContext.mintNFTCaster(
-                find(casters,
-                  match => match?.publicKey?.toString() ===
-                    match_caster?.publicKey)
+                casters[context?.caster?.index],
               );
             },
             INST_MINT_NFT,
