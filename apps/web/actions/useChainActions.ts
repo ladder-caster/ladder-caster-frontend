@@ -43,6 +43,10 @@ import {
   BURNER_TYPE,
   WALLET_TYPE,
   GAME_MAP,
+  WEB3AUTH_CLIENT,
+  WEB3AUTH_PROVIDER,
+  WEB3AUTH_PLUGIN_STORE,
+  W3A_TYPE,
 } from 'core/remix/state';
 import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
@@ -93,6 +97,7 @@ import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
+import { WALLET_ADAPTERS } from '@web3auth/base';
 
 let retry_count = {};
 
@@ -125,6 +130,9 @@ export const useChainActions = () => {
   const [, setWalletType] = useRemix(WALLET_TYPE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
   const [, setNfts] = useRemix(CHAIN_NFTS);
+  const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
+  const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
+  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
 
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
@@ -1248,6 +1256,33 @@ export const useChainActions = () => {
           }
         });
       });
+    },
+    async web3AuthConnect(loginProvider: string) {
+      try {
+        if (!web3Auth) {
+          console.log('web3auth not initialized yet');
+          return;
+        }
+        const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider,
+          login_hint: '',
+        });
+
+        setProvider(provider);
+        const user = await web3Auth.getUserInfo();
+        console.log(user);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async web3AuthDisconnect() {
+      if (!web3Auth) {
+        console.log('web3auth not initialized yet');
+        return;
+      }
+      console.log('logging out');
+      await web3Auth.logout();
+      setProvider(null);
     },
   };
 };
