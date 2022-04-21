@@ -43,12 +43,16 @@ export const _coin = styled.div`
   font-size: 16px;
   font-weight: 700;
   color: ${({ theme }) => theme.text['base']};
-  margin-bottom: 8px;
   white-space: nowrap;
-  padding-left: 4px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid ${({ theme }) => theme.border['divide']};
+  padding: 16px 4px;
+  border-top: 2px solid ${({ theme }) => theme.border['high']};
+  border-bottom: 1px solid ${({ theme }) => theme.border['divide']};
+  &:first-child {
+    border-top: none;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 export const _icon = styled.div`
@@ -117,4 +121,23 @@ export const _link = styled(m.a)`
       $disabled ? theme.text['faded'] : theme.text['base']};
     white-space: nowrap;
   }
+`;
+
+export const _more = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 104px;
+  border: none;
+  color: ${({ theme }) => theme.highlight['background']};
+  padding: 8px 16px;
+  border-radius: 50px;
+  background: ${({ theme }) => theme.background['button_active']};
+  box-shadow: ${({ theme }) => theme.shadow['glass']};
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  letter-spacing: 0.5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;

@@ -149,3 +149,8 @@ export const WALLET_TYPE = 'WALLET_TYPE';
 
 export const STANDARD_TYPE = 'STANDARD_TYPE';
 export const BURNER_TYPE = 'BURNER_TYPE';
+
+export const TOKEN_LADA = 'TOKEN_LADA';
+export const TOKEN_WADA = 'TOKEN_WADA';
+export const TOKEN_FIYA = 'TOKEN_FIYA';
+export const TOKEN_ERRA = 'TOKEN_ERRA';

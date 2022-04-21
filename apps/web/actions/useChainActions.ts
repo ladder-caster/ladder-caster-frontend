@@ -1148,5 +1148,11 @@ export const useChainActions = () => {
         });
       });
     },
+    async getMoreTokens(token) {
+      setContext({
+        ...context,
+        token
+      });
+    }
   };
 };

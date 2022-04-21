@@ -17,11 +17,13 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.13.10",
     "@parcel/transformer-image": "^2.0.0-nightly.1981",
+    "@project-serum/serum": "^0.13.64",
     "@solana/spl-token-registry": "0.2.46",
     "@solana/wallet-adapter-base": "^0.9.3",
     "@solana/wallet-adapter-react": "0.15.4",
     "@solana/wallet-adapter-react-ui": "^0.9.5",
     "@solana/wallet-adapter-wallets": "^0.15.4",
+    "@solana/web3.js": "^1.39.1",
     "@svgdotjs/svg.js": "3.0.16",
     "@web3auth/base": "^0.6.3",
     "@web3auth/web3auth": "^0.6.3",

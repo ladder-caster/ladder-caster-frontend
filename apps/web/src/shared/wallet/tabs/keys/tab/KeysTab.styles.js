@@ -8,17 +8,19 @@ export const _tab = styled.div`
   display: flex;
   flex-direction: column;
   overflow: auto;
-  padding-top: 16px;
+  padding: 16px 4px;
 `;
 
 export const buttonStyle = css`
-  padding: 10px 12px;
-  margin-bottom: 16px;
+  padding: 12px 20px;
+  margin-bottom: 8px;
   color: ${({ theme }) => theme.text['base']};
-  border-radius: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-shadow: ${({ theme }) => theme.shadow['text']};
   box-shadow: ${({ theme }) => theme.shadow['frost']};
   cursor: pointer;
-  font-size: 14px;
 
   &:hover {
     background: ${({ theme }) => theme.background['button_active']};
@@ -45,7 +47,7 @@ export const _disconnect = styled(m.div)`
 `;
 
 export const _link = styled.a`
-  ${buttonStyle}
+  ${buttonStyle};
   display: flex;
   align-items: center;
   justify-content: space-between;
