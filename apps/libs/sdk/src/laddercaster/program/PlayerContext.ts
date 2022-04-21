@@ -187,17 +187,21 @@ export class PlayerContext {
 
     const tx = new Transaction();
 
-    tx.add(
-      this.client.program.instruction.initPlayer({
-        accounts: {
-          game: gameAccount,
-          playerAccount: playerAccount,
-          authority: this.playerPubKey,
-          systemProgram: SystemProgram.programId,
-        },
-        signers: [this.client.wallet.payer],
-      }),
-    );
+    try {
+      await this.getPlayer();
+    } catch (e) {
+      tx.add(
+        this.client.program.instruction.initPlayer({
+          accounts: {
+            game: gameAccount,
+            playerAccount: playerAccount,
+            authority: this.playerPubKey,
+            systemProgram: SystemProgram.programId,
+          },
+          signers: [this.client.wallet.payer],
+        }),
+      );
+    }
 
     const tokenAccount = await Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -241,17 +245,21 @@ export class PlayerContext {
       },
     ];
 
-    resources.forEach((item) => {
-      tx.add(
-        Token.createAssociatedTokenAccountInstruction(
-          ASSOCIATED_TOKEN_PROGRAM_ID,
-          TOKEN_PROGRAM_ID,
-          item.mintAccount,
-          item.tokenAccount,
-          this.client.wallet.publicKey,
-          this.client.wallet.publicKey,
-        ),
-      );
+    resources.forEach(async (item) => {
+      try {
+        await this.client.connection.getTokenAccountBalance(item.tokenAccount);
+      } catch (e) {
+        tx.add(
+          Token.createAssociatedTokenAccountInstruction(
+            ASSOCIATED_TOKEN_PROGRAM_ID,
+            TOKEN_PROGRAM_ID,
+            item.mintAccount,
+            item.tokenAccount,
+            this.client.wallet.publicKey,
+            this.client.wallet.publicKey,
+          ),
+        );
+      }
     });
 
     try {
