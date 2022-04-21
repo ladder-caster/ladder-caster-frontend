@@ -44,7 +44,7 @@ export class Client {
     switch (env) {
       case 'mainnet': {
         return new anchor.web3.Connection(
-          'https://wispy-cool-tree.solana-mainnet.quiknode.pro/ec04ea22416bbee8c5141064583748272c6119c3/',
+          'https://wispy-cool-tree.solana-mainnet.quiknode.pro/b9ee9eac7b2c5dce648a5c70bf4f9f7af9b6f957/',
         );
       }
       case 'localnet': {
