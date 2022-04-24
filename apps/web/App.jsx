@@ -44,7 +44,6 @@ const withThemes = ({ palette = 'dark' }) => ({
 });
 
 const ticks_key = nanoid();
-export const TicksInstance = <Ticks key={ticks_key} />;
 
 const App = () => {
   const [autoConnect, setAutoConnect] = useState(false);

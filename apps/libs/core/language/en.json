@@ -312,6 +312,8 @@
     "error.test.tile": "Error! Changing TEST Tile...",
     "error.auto.connect": "Failed Wallet Connection...",
     "error.auto.disconnect": "Failed to Disconnect Wallet...",
+    "error.refresh.player": "Failed to update player",
+    "error.refresh.caster": "Failed to update caster",
     "wallet.mint": "Mint",
     "account.opt.in": "Opt In",
     "copy.clipboard": "Copy to clipboard",

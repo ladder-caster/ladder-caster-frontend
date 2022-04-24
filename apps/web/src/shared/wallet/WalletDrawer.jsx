@@ -26,13 +26,15 @@ import Tabs from '../tabs/Tabs';
 import MintTab from './tabs/mint/tab/MintTab';
 import WalletTab from './tabs/wallet/tab/WalletTab';
 import KeysTab from './tabs/keys/tab/KeysTab';
-import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
+import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 
 const WalletDrawer = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const { closeDrawer, refreshResources } = useActions();
+  
+  const [nfts, setNfts] = useRemix(CHAIN_NFTS);
 
   const tabs_mint_redeem = {
     [TAB_WALLET]: {
@@ -52,7 +54,7 @@ const WalletDrawer = () => {
       View: MintTab,
     },
   };
-
+  
   useEffect(() => {
     if (refreshResources && client) refreshResources();
   }, [client]);

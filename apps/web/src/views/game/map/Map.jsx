@@ -17,7 +17,6 @@ import {
 import { _feed } from '../home/Dashboard.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
-import { TicksInstance } from '../../../../App';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { GAME_INIT, GAME_MAP } from 'core/remix/state';
 import { reverse } from 'lodash';

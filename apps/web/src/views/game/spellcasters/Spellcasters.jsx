@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   GAME_INIT,
   GAME_SPELLCASTERS,
-  SPELLCASTER_BUY,
+  SPELLCASTER_BUY, USER_PHASE,
 } from 'core/remix/state';
 import { _feed } from '../home/Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -21,6 +21,7 @@ const Spellcasters = () => {
   const [casters] = useRemix(CHAIN_CASTERS);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [initialized] = useRemix(GAME_INIT);
+  const [phase] = useRemix(USER_PHASE);
   const { lootAllResources } = useActions();
 
   const render_spellcasters = useMemo(() => {
@@ -34,12 +35,12 @@ const Spellcasters = () => {
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />
-      {(!initialized || casters?.length === 0) && (
+      {(!initialized || !phase || casters?.length === 0) && (
         <_feed>
           <Onboarding />
         </_feed>
       )}
-      {initialized && casters?.length !== 0 && (
+      {initialized && phase && casters?.length !== 0 && (
         <_list>
           {/*{casters?.length > 1 && (*/}
           {/*  <_button onClick={() => lootAllResources()}>*/}

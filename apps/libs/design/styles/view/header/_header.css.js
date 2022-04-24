@@ -59,8 +59,8 @@ export const _fill = css`
   min-height: 8px;
   height: 8px;
   border-radius: 2px;
-  background: ${({ theme, $active }) =>
-    $active ? theme.background['active'] : theme.background['highest']};
+  background: ${({ theme, $active, $lootAll }) =>
+      $lootAll || $active ? theme.background['active'] : theme.background['highest']};
   box-shadow: ${({ theme }) => theme.shadow['glass']};
   transform: translateX(-67%);
 `;

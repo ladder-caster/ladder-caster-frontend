@@ -5,13 +5,13 @@ import {
   CHAIN_ITEMS,
   CHAIN_NFTS,
   CHAIN_PLAYER,
-  INIT_CHAIN_LOAD,
+  INIT_CHAIN_LOAD
 } from './state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { Client } from '../../sdk/src/laddercaster/program/Client';
 import { GameContext } from '../../sdk/src/laddercaster/program/GameContext';
 import { PlayerContext } from '../../sdk/src/laddercaster/program';
-import { GAME_RESOURCES } from 'core/remix/state';
+import { GAME_RESOURCES, LOADING_CASTERS } from 'core/remix/state';
 
 export const useGame = () => {
   const [game, setGame] = useRemix(CHAIN_GAME);
@@ -47,12 +47,8 @@ export const useGame = () => {
 
           try {
             setResources(await playerContext.getResources());
-
             setItems(await playerContext.getInventory());
             setCasters(await playerContext.getCasters());
-            setNfts(
-              await playerContext.getNFTUris(await playerContext.getNFTS()),
-            );
           } catch (e) {
             console.log(e);
           }

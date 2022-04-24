@@ -25,7 +25,7 @@ import {
   WALLET_TYPE,
   GAME_INIT,
   ERROR_CODES,
-  SEEN_PHASE,
+  SEEN_PHASE
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -352,7 +352,7 @@ const Remix = () => {
     if (casters) {
       asyncSpellCaster();
     }
-  }, [casters]);
+  }, [casters, JSON.stringify(casters)]);
 
   useEffect(() => {
     if (items) {

@@ -71,7 +71,8 @@ import {
   GIVE_LADA,
   GIVE_RESOURCES,
   INST_INIT_PLAYER,
-  INST_INIT_LADA_ACCOUNT,
+  FETCH_PLAYER,
+  FETCH_CASTER,
   INST_COMMIT_CRAFT,
   INST_COMMIT_LOOT,
   INST_COMMIT_MOVE,
@@ -85,12 +86,11 @@ import {
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
   RPC_ERROR,
-  RPC_LOADING,
-  INST_INIT_RES_ACCOUNT,
+  RPC_LOADING
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
-import { map, find } from 'lodash';
+import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 
 let retry_count = {};
@@ -157,13 +157,10 @@ export const useChainActions = () => {
 
       const e = confirmationResult?.value?.err;
 
-      if (
-        String(e).includes('Blockhash') ||
-        String(e).includes('Solana')
-      ) {
+      if (String(e).includes('Blockhash') || String(e).includes('Solana') || String(e).includes('Raw')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 3)
-          setTimeout(() => stateHandler(rpcCallback, type, id), 100);
+        if (retry_count[id] < 2)
+          await stateHandler(rpcCallback, type, id);
       } else {
         const parsedMessage = handleCustomErrors(e);
         setMutation({
@@ -182,10 +179,10 @@ export const useChainActions = () => {
 
       return confirmationResult;
     } catch (e) {
-      if (String(e).includes('Blockhash') || String(e).includes('60s')) {
+      if (String(e).includes('Blockhash') || String(e).includes('Solana') || String(e).includes('Raw')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 3)
-          setTimeout(() => stateHandler(rpcCallback, type, id), 2000);
+        if (retry_count[id] < 2)
+          await stateHandler(rpcCallback, type, id);
       } else {
         const parsedMessage = handleCustomErrors(e.message);
         setMutation({
@@ -203,7 +200,10 @@ export const useChainActions = () => {
     }
   };
 
-  const fetchPlayer = async (preInstructionsCallback) => {
+  const fetchPlayer = async (
+    preInstructionsCallback,
+    casterInstance = null,
+  ) => {
     const result = await preInstructionsCallback();
     if (result && !result?.value?.err) {
       const playerContext = new PlayerContext(
@@ -212,13 +212,74 @@ export const useChainActions = () => {
         localStorage.getItem('gamePK'),
       );
 
-      setPlayer(await playerContext.getPlayer());
       setResources(await playerContext.getResources());
-      setItems(await playerContext.getInventory());
-      setCasters(await playerContext.getCasters());
-      setNfts(await playerContext.getNFTUris(await playerContext.getNFTS()));
+      if (casterInstance) {
+        const next_caster = await casterInstance.refreshCaster();
+        const publicKey = casterInstance.getCasterId();
+
+
+        const next_casters = [...casters];
+
+        if (next_caster && publicKey) {
+          let index = -1;
+
+          for (let i = 0; i < next_casters?.length;i++) {
+            if (casters[i]?.publicKey?.toString() === publicKey?.toString()) {
+              console.log('last_caster', casters[i]);
+              console.log('replace caster', next_caster);
+              index = i;
+              break;
+            }
+          }
+
+          let next_next = [];
+          for (let m = 0; m < casters?.length;m++) {
+            if (m === index) {
+              next_next.push(next_caster);
+            } else {
+              next_next.push(casters[m]);
+            }
+          }
+
+          console.log('index', index);
+          console.log('last_casters', casters);
+          console.log('next', next_next);
+
+          if (index !== -1) {
+            // next_casters[index] = next_caster;
+            setCasters(next_next);
+          }
+        } else {
+          setMutation({
+            id: nanoid(),
+            rpc: false,
+            validator: false,
+            success: false,
+            error: false,
+            done: true,
+            text: {
+              error: t('error.refresh.caster'),
+            },
+            FETCH_CASTER
+          });
+        }
+      } else {
+        setPlayer(await playerContext.getPlayer());
+        setItems(await playerContext.getInventory());
+      }
     } else {
-      //TODO: display user error from blockchain
+      setMutation({
+        id: nanoid(),
+        rpc: false,
+        validator: false,
+        success: false,
+        error: false,
+        done: true,
+        text: {
+          error: t('error.refresh.player'),
+        },
+        FETCH_PLAYER,
+      });
     }
   };
 
@@ -242,7 +303,10 @@ export const useChainActions = () => {
       client,
       client.program.provider.wallet.publicKey,
       localStorage.getItem('gamePK'),
-      find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
+      find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),
     );
 
     await fetchPlayer(async () => {
@@ -253,7 +317,7 @@ export const useChainActions = () => {
         INST_REDEEM_ACTION,
         '',
       );
-    });
+    }, casterContext);
   };
 
   const lootResources = async (caster) => {
@@ -262,7 +326,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       await fetchPlayer(async () => {
@@ -273,7 +340,7 @@ export const useChainActions = () => {
           INST_COMMIT_LOOT,
           '',
         );
-      });
+      }, casterContext);
     }
   };
 
@@ -372,6 +439,13 @@ export const useChainActions = () => {
           '',
         );
       });
+      const playerContext = new PlayerContext(
+        client,
+        client?.program?.provider?.wallet?.publicKey,
+        localStorage.getItem('gamePK'),
+      );
+
+      setCasters(await playerContext.getCasters());
       setPhase(PHASE_REWARDS);
     },
     modalLoot(caster) {
@@ -428,8 +502,12 @@ export const useChainActions = () => {
               client,
               client?.program?.provider?.wallet?.publicKey,
               localStorage.getItem('gamePK'),
-            ).openChest(find(items,
-                match => match?.publicKey?.toString() === chest?.publicKey));
+            ).openChest(
+              find(
+                items,
+                (match) => match?.publicKey?.toString() === chest?.publicKey,
+              ),
+            );
           },
           INST_OPEN_CHEST,
           '',
@@ -464,7 +542,7 @@ export const useChainActions = () => {
       setModal({
         active: true,
         type: MODAL_CHEST,
-        tier
+        tier,
       });
     },
     async actionLoot(caster) {
@@ -477,6 +555,16 @@ export const useChainActions = () => {
       }
     },
     async confirmMove(caster) {
+      const casterContext = new CasterContext(
+        client,
+        client.program.provider.wallet.publicKey,
+        localStorage.getItem('gamePK'),
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
+      );
+
       setModal('');
       setDrawer('');
       setContext('');
@@ -491,8 +579,10 @@ export const useChainActions = () => {
               client,
               client.program.provider.wallet.publicKey,
               localStorage.getItem('gamePK'),
-              find(casters,
-                  match => match?.publicKey?.toString() === caster?.publicKey),
+              find(
+                casters,
+                (match) => match?.publicKey?.toString() === caster?.publicKey,
+              ),
             ).casterCommitMove(
               row - 1,
               ['a', 'b', 'c'].findIndex((colLetter) => colLetter === col),
@@ -501,7 +591,7 @@ export const useChainActions = () => {
           INST_COMMIT_MOVE,
           '',
         );
-      });
+      }, casterContext);
     },
     async actionRedeem(caster) {
       setModal('');
@@ -541,8 +631,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setContext('');
@@ -559,7 +651,7 @@ export const useChainActions = () => {
           INST_EQUIP,
           '',
         );
-      });
+      }, casterContext);
     },
     async unequipConfirm(item, caster) {
       setContext({
@@ -584,8 +676,10 @@ export const useChainActions = () => {
           client,
           client.program.provider.wallet.publicKey,
           localStorage.getItem('gamePK'),
-          find(casters,
-              match => match?.publicKey?.toString() === caster?.publicKey)
+          find(
+            casters,
+            (match) => match?.publicKey?.toString() === caster?.publicKey,
+          ),
         );
 
         setModal('');
@@ -600,15 +694,16 @@ export const useChainActions = () => {
           return await stateHandler(
             async () => {
               return await casterContext.unequipItem(
-                find(casters,
-                    match => match?.publicKey?.toString() ===
-                      caster?.publicKey)?.modifiers?.[item.type]
+                find(
+                  casters,
+                  (match) => match?.publicKey?.toString() === caster?.publicKey,
+                )?.modifiers?.[item.type],
               );
             },
             INST_UNEQUIP,
             '',
           );
-        });
+        }, casterContext);
       } catch (e) {
         console.log(e);
       }
@@ -618,8 +713,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey),
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setEquip('');
@@ -634,7 +731,7 @@ export const useChainActions = () => {
           INST_COMMIT_SPELL,
           '',
         );
-      });
+      }, casterContext);
     },
     async craftChooseCharacter(caster) {
       setContext({ ...context, type: CRAFT_ITEM, caster });
@@ -671,8 +768,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setDrawer('');
@@ -683,9 +782,21 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await casterContext.casterCommitCraft(
-              find(items, match => match?.publicKey?.toString() === materials?.[0]?.publicKey),
-              find(items, match => match?.publicKey?.toString() === materials?.[1]?.publicKey),
-              find(items, match => match?.publicKey?.toString() === materials?.[2]?.publicKey),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[0]?.publicKey,
+              ),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[1]?.publicKey,
+              ),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[2]?.publicKey,
+              ),
             );
           },
           INST_COMMIT_CRAFT,
@@ -753,8 +864,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       const resources = [
@@ -793,7 +906,7 @@ export const useChainActions = () => {
           }
         }
         return result;
-      });
+      }, casterContext);
     },
     async updateCasterLevel(caster) {},
     async openDrawerWallet() {
@@ -888,8 +1001,13 @@ export const useChainActions = () => {
         await fetchPlayer(async () => {
           return await stateHandler(
             async () => {
-              return await playerContext.mintNFTItem(find(items,
-                  match => match?.publicKey?.toString() === match_item?.publicKey));
+              return await playerContext.mintNFTItem(
+                find(
+                  items,
+                  (match) =>
+                    match?.publicKey?.toString() === match_item?.publicKey,
+                ),
+              );
             },
             INST_MINT_NFT,
             '',
@@ -1038,7 +1156,6 @@ export const useChainActions = () => {
       setPlayer(await playerContext.getPlayer());
       setResources(await playerContext.getResources());
       setItems(await playerContext.getInventory());
-      setCasters(await playerContext.getCasters());
     },
     async initPlayer() {
       const playerContext = new PlayerContext(
@@ -1075,7 +1192,6 @@ export const useChainActions = () => {
       setPlayer(await playerContext.getPlayer());
       setResources(await playerContext.getResources());
       setItems(await playerContext.getInventory());
-      setCasters(await playerContext.getCasters());
     },
     async refreshResources() {
       const playerContext = new PlayerContext(
