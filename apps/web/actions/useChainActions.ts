@@ -4,6 +4,7 @@ import {
   DRAWER_WALLET,
   DRAWER_SETTINGS,
   DRAWER_TOKENS,
+  DRAWER_TRADE,
   DRAWER_INVENTORY,
   DRAWER_CRAFT,
   DRAWER_CONTEXT,
@@ -1249,5 +1250,13 @@ export const useChainActions = () => {
         });
       });
     },
+    openDrawerTrade(type) {
+      setDrawer({
+        type: DRAWER_TRADE
+      });
+      setContext({
+        buy: type
+      });
+    }
   };
 };

@@ -61,7 +61,7 @@ const Modal = ({ screen_height }) => {
     [MODAL_CRAFT]: ModalCraft,
     [MODAL_REDEEM]: ModalRedeem,
     [MODAL_CHEST]: ModalChest,
-    [MODAL_IMPORT]: ModalImport,
+    [MODAL_IMPORT]: ModalImport
   }[modal?.type];
 
   // useLayoutEffect(() => {

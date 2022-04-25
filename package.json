@@ -66,6 +66,7 @@
     "husky": "4.2.5",
     "lerna": "3.21.0",
     "lint-staged": ">=10",
+    "path-browserify": "^1.0.1",
     "os-browserify": "0.3.0",
     "port-precheck": "https://github.com/trycrypto/port-precheck",
     "prettier": "2.0.5",

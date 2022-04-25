@@ -8,7 +8,7 @@ import {
   DRAWER_INVENTORY,
   DRAWER_SETTINGS,
   DRAWER_SPELLCASTER,
-  DRAWER_TOKENS,
+  DRAWER_TOKENS, DRAWER_TRADE,
   DRAWER_WALLET,
   VIEW_SIZE,
 } from 'core/remix/state';
@@ -24,6 +24,7 @@ import { _container, _view } from '../Game.styled';
 import CraftDrawer from '../inventory/drawer/craft/CraftDrawer';
 import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
 import Player from '../spellcasters/drawer/Player';
+import TradeDrawer from '../../../shared/trade/TradeDrawer';
 
 export const View = () => {
   const view_ref = useRef();
@@ -44,7 +45,7 @@ export const View = () => {
   useLayoutEffect(() => refreshHeight(), []);
   useEventListener('resize', () => refreshHeight());
   useEventListener('scroll', () => refreshHeight());
-
+  
   const Drawers = {
     [DRAWER_SETTINGS]: SettingsDrawer,
     [DRAWER_WALLET]: WalletDrawer,
@@ -53,6 +54,7 @@ export const View = () => {
     [DRAWER_CRAFT]: CraftDrawer,
     [DRAWER_SPELLCASTER]: Player,
     [DRAWER_CRANK]: CrankDrawer,
+    [DRAWER_TRADE]: TradeDrawer
   }[drawer?.type];
 
   return (

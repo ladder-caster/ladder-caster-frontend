@@ -13,6 +13,8 @@ import {
   MODAL_ACTIVE,
   USER_OFFLINE,
   TABS_CHARACTER_ACTIONS,
+  TABS_SWAP_LIMIT,
+  TAB_SWAP,
   TOKENS_ACTIVE,
   TYPE_EARTH,
   TYPE_FIRE,
@@ -94,6 +96,7 @@ const Remix = () => {
   useRemixOrigin(UNEQUIP_ITEM, '');
   useRemixOrigin(MODAL_ACTIVE, {});
   useRemixOrigin(GAME_CONFIRM, {});
+  useRemixOrigin(TABS_SWAP_LIMIT, TAB_SWAP);
   useRemixOrigin(TABS_CHARACTER_ACTIONS, TAB_CHARACTER);
   useRemixOrigin(TABS_MINT_REDEEM, TAB_WALLET);
   useRemixOrigin(GAME_SPELL, {});

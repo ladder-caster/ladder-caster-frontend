@@ -240,6 +240,7 @@
     "drawer.button.xp": "XP",
     "heading.mint": "Mint",
     "heading.redeem": "Redeem",
+    "heading.trade": "Trade",
     "thumbar.craft": "Craft",
     "drawer.wallet.title": "Wallet Settings",
     "wallet.wallet": "Wallet",
@@ -331,6 +332,12 @@
     "drawer.crank.claim.all": "Claim All Rewards",
     "drawer.crank.loot.all": "Loot All Resources",
     "drawer.craft.warning": "By crafting now, you will need to wait until next turn to equip or unequip items",
+    "wallet.buy.lada": "Get LADA",
+    "wallet.buy.fiya": "Get FIYA",
+    "wallet.buy.wada": "Get WADA",
+    "wallet.buy.erra": "Get ERRA",
+    "trade.tab.swap": "Swap",
+    "trade.tab.limit": "Limit",
     "modal.chests.title": "Tier",
     "mutation.timeout": "Timed out. You may need to refresh to see if it worked."
   }

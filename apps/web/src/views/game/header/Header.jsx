@@ -73,25 +73,29 @@ const Header = withTheme(({ theme }) => {
             <_icon $background={theme.element['legendary']}>
               <IconMoneyIMG />
             </_icon>
-            <Counter from={prevGold} to={+resources?.lada} />
+            {+resources?.lada ?
+              <Counter from={prevGold} to={+resources?.lada} /> : null}
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_WATER]}>
               <IconWaterIMG />
             </_icon>
-            <Counter from={prevWater} to={+resources?.water} />
+            {+resources?.water ?
+              <Counter from={prevWater} to={+resources?.water} /> : null}
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_FIRE]}>
               <IconFireeIMG />
             </_icon>
-            <Counter from={prevFire} to={+resources?.fire} />
+            {+resources?.fire ?
+              <Counter from={prevFire} to={+resources?.fire} /> : null}
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_EARTH]}>
               <IconEarthIMG />
             </_icon>
-            <Counter from={prevEarth} to={+resources?.earth} />
+            {+resources?.earth ?
+            <Counter from={prevEarth} to={+resources?.earth} /> : null}
           </_coin>
         </_left>
         <_right>

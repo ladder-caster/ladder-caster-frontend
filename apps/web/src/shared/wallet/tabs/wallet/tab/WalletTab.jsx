@@ -7,36 +7,28 @@ import {
   _amount,
   _icon,
   _right,
-  _link,
+  _swap,
   _text,
 } from './WalletTab.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
-import { GAME_RESOURCES } from 'core/remix/state';
-import { IconHyperlink } from 'design/icons/hyperlink.icon';
+import { GAME_RESOURCES, TYPE_EARTH, TYPE_FIRE, TYPE_GOLD, TYPE_WATER } from 'core/remix/state';
 import { IconFireeIMG } from 'design/icons/firee.icon';
 import { IconWaterIMG } from 'design/icons/water.icon';
 import { IconEarthIMG } from 'design/icons/earth.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { IconSolana } from 'design/icons/solana.icon';
 import { truncateDecimals } from 'core/utils/numbers';
+import { useActions } from '../../../../../../actions';
 
-const TRUNCATE_DECIMAL = 5;
+const TRUNCATE_DECIMAL = 4;
 
 const WalletTab = () => {
   const { t } = useTranslation();
+  const { openDrawerTrade } = useActions();
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [resources, setResources] = useRemix(GAME_RESOURCES);
-
-  const publicKey = useMemo(() => {
-    const key = client?.wallet?.payer?._keypair?.publicKey;
-
-    if (!key) return client?.wallet?.publicKey.toString();
-
-    return key ? bs58.encode(key) : '';
-  }, [client]);
 
   return (
     <_tab>
@@ -59,16 +51,30 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Lada Token</_label>
+            <_label>Lada</_label>
             <_amount>
-              <span>
-                {truncateDecimals(resources?.lada, TRUNCATE_DECIMAL)} LADA
-              </span>
+              {truncateDecimals(resources?.lada, TRUNCATE_DECIMAL)} LADA
             </_amount>
           </_text>
-          <_link href={'https://jup.ag/swap/USDC-LADA'} target="_blank">
-            <span>{t('lada.getMore')}</span>
-          </_link>
+          <_swap $element={TYPE_GOLD} onClick={() => openDrawerTrade(TYPE_GOLD)}>
+            {t('wallet.buy.lada')}
+          </_swap>
+        </_right>
+      </_coin>
+      <_coin>
+        <_icon>
+          <IconWaterIMG />
+        </_icon>
+        <_right>
+          <_text>
+            <_label>Water</_label>
+            <_amount>
+              {truncateDecimals(resources?.water, TRUNCATE_DECIMAL)} WADA
+            </_amount>
+          </_text>
+          <_swap $element={TYPE_WATER} onClick={() => openDrawerTrade(TYPE_WATER)}>
+            {t('wallet.buy.wada')}
+          </_swap>
         </_right>
       </_coin>
       <_coin>
@@ -82,19 +88,9 @@ const WalletTab = () => {
               {truncateDecimals(resources?.fire, TRUNCATE_DECIMAL)} FIYA
             </_amount>
           </_text>
-        </_right>
-      </_coin>
-      <_coin>
-        <_icon>
-          <IconWaterIMG />
-        </_icon>
-        <_right>
-          <_text>
-            <_label>Water</_label>
-            <_amount>
-              {truncateDecimals(resources?.wate, TRUNCATE_DECIMAL)} WADA
-            </_amount>
-          </_text>
+          <_swap $element={TYPE_FIRE} onClick={() => openDrawerTrade(TYPE_FIRE)}>
+            {t('wallet.buy.fiya')}
+          </_swap>
         </_right>
       </_coin>
       <_coin>
@@ -108,6 +104,9 @@ const WalletTab = () => {
               {truncateDecimals(resources?.earth, TRUNCATE_DECIMAL)} ERRA
             </_amount>
           </_text>
+          <_swap $element={TYPE_EARTH} onClick={() => openDrawerTrade(TYPE_EARTH)}>
+            {t('wallet.buy.erra')}
+          </_swap>
         </_right>
       </_coin>
     </_tab>

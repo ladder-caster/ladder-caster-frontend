@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 
-export const _redeem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
+export const _trade = styled.div`
+
 `;
 
 export const _button = styled.div`

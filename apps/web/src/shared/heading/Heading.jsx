@@ -7,8 +7,9 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { GAME_INIT, GAME_MAP, GAME_SPELLCASTERS, TYPE_EARTH, TYPE_FIRE, TYPE_WATER } from 'core/remix/state';
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
+import Trade from './trade/Trade';
 
-const Heading = ({ title, flat, marketplace }) => {
+const Heading = ({ title, flat, marketplace, trade }) => {
   const [initialized] = useRemix(GAME_INIT);
   const [game] = useRemix(CHAIN_GAME);
   const [casters] = useRemix(CHAIN_CASTERS);
@@ -46,6 +47,9 @@ const Heading = ({ title, flat, marketplace }) => {
         <span>{title}</span>
         {marketplace ? (
           <Redeem />
+        ) : null}
+        {trade ? (
+          <Trade />
         ) : null}
       </_title>
       <Ticks />

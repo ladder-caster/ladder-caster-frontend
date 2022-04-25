@@ -35,7 +35,7 @@ const Spellcasters = () => {
 
   return (
     <_spellcasters>
-      <Heading title={t('title.casters')} />
+      <Heading title={t('title.casters')} trade/>
       {!initialized || (!phase && casters?.length) ? (
         <_feed>
           <Onboarding />
