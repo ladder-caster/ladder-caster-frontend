@@ -29,7 +29,7 @@ const { SystemProgram } = anchor.web3;
 
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/gLy0YB5JUm5XmTjzW7UH7wy7_iT-vhiyLuos71qRZJk',
+    'https://arweave.net/C-spa46EfVVFX2PcbzcKwyf1Q3oZ-FwKqWFLaKyYgxM',
   );
 }
 
