@@ -8,6 +8,9 @@ import {
   _title,
   _actions,
   _claim,
+  _loot,
+  _life,
+  _turns
 } from './Queue.styled';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
@@ -172,33 +175,40 @@ const Queue = ({ spell_id }) => {
                 </_action>
               </AnimateButton>
             ) : (
-              <AnimateButton
-                low
-                shake={clicked === 'loot' && !unlocked_loot}
-                element={element}
-              >
-                <_action
-                  onClick={() => {
-                    !unlocked_loot ? setClicked('loot') : actionLoot(caster);
-                  }}
+              <_loot>
+                <_life>
+                  <_turns $element={element}>
+                    {tile?.remaining}
+                  </_turns>
+                </_life>
+                <AnimateButton
+                  low
+                  shake={clicked === 'loot' && !unlocked_loot}
+                  element={element}
                 >
-                  <_icon $element={element}>
-                    {!!IconElement ? <IconElement /> : undefined}
-                    <span>{t('spellcaster.action.loot')}</span>
-                  </_icon>
-                  <_float>
-                    <AnimatePresence>
-                      {!unlocked_loot && (
-                        <AnimateLock key={'animate-lock-loot'}>
-                          <_lock $element={element}>
-                            <IconLock />
-                          </_lock>
-                        </AnimateLock>
-                      )}
-                    </AnimatePresence>
-                  </_float>
-                </_action>
-              </AnimateButton>
+                  <_action
+                    onClick={() => {
+                      !unlocked_loot ? setClicked('loot') : actionLoot(caster);
+                    }}
+                  >
+                    <_icon $element={element}>
+                      {!!IconElement ? <IconElement /> : undefined}
+                      <span>{t('spellcaster.action.loot')}</span>
+                    </_icon>
+                    <_float>
+                      <AnimatePresence>
+                        {!unlocked_loot && (
+                          <AnimateLock key={'animate-lock-loot'}>
+                            <_lock $element={element}>
+                              <IconLock />
+                            </_lock>
+                          </AnimateLock>
+                        )}
+                      </AnimatePresence>
+                    </_float>
+                  </_action>
+                </AnimateButton>
+              </_loot>
             )}
             <AnimateButton shake={clicked === 'move' && !unlocked_move}>
               <_action

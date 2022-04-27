@@ -24,13 +24,13 @@ import {
   RARITY_LEGENDARY,
   RARITY_RARE,
 } from 'core/remix/state';
-import { useActions } from '../../../actions';
+import { useActions } from '../../../actions';s
 import Power from '../power/Power';
 import { IconDice } from 'design/icons/dice.icon';
 
 const Info = ({ item, caster }) => {
   const { t } = useTranslation();
-  const { unequipConfirm, equipChoose, castSpell, confirmMint } = useActions();
+  const { unequipItem, equipChoose, castSpell, confirmMint } = useActions();
   const [context] = useRemix(DRAWER_CONTEXT);
   const image_ref = useRef();
   const { width } = useSize(image_ref);
@@ -63,7 +63,7 @@ const Info = ({ item, caster }) => {
                 isSpellbook
                   ? castSpell(item, caster)
                   : unequip
-                  ? unequipConfirm(item, caster)
+                  ? unequipItem(item, caster)
                   : equipChoose(item);
               }}
             >

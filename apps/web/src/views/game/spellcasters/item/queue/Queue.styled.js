@@ -14,6 +14,8 @@ export const _queue = styled.div`
 `;
 
 export const _action = styled(m.div)`
+position: relative;
+z-index: ${({ theme }) => theme.zindex['map_tile']};
   min-width: 52px;
   width: 52px;
   min-height: 52px;
@@ -29,6 +31,16 @@ export const _action = styled(m.div)`
   &:last-child {
     margin-right: 0;
   }
+`;
+
+export const _loot = styled.div`
+      min-width: 52px;
+      width: 52px;
+      min-height: 52px;
+      height: 52px;
+      margin-right: 16px;
+      display: flex;
+      flex-direction: column;
 `;
 
 export const _button = styled(m.div)`
@@ -99,6 +111,35 @@ export const _float = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+`
+
+export const _life = styled.div`
+  position: relative;
+  z-index: ${({ theme }) => theme.zindex['map_tile_enchant']};
+  width: 100%;
+  height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+
+export const _turns = styled.div`
+      min-width: 20px;
+      width: 20px;
+      min-height: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50px;
+      pointer-events: none;
+      font-size: 10px;
+      font-weight: 700;
+      color: ${({ theme, $element }) => theme[$element]?.['text']};
+      opacity: 0.28;
+      right: 2px;
+      bottom: 2px;
 `;
 
 export const _lock = styled(m.div)`

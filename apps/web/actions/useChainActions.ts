@@ -576,9 +576,7 @@ export const useChainActions = () => {
           }),
       });
     },
-    async unequipItem() {
-      const item = context?.item;
-      const caster = context?.caster;
+    async unequipItem(item, caster) {
       try {
         const casterContext = new CasterContext(
           client,
