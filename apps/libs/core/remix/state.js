@@ -149,3 +149,7 @@ export const WALLET_TYPE = 'WALLET_TYPE';
 
 export const STANDARD_TYPE = 'STANDARD_TYPE';
 export const BURNER_TYPE = 'BURNER_TYPE';
+
+
+export const LOADING_CASTERS = 'LOADING_CASTERS';
+export const FORCE_RERENDER = 'FORCE_RERENDER';

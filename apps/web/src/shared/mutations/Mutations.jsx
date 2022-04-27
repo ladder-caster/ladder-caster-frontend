@@ -30,9 +30,6 @@ import { AnimateSpinner } from './animations/AnimateSpinner';
 import { IconBlind } from 'design/icons/blind.icon';
 import { IconOffline } from 'design/icons/offline.icon';
 import { withTheme } from 'styled-components';
-import { Client } from 'sdk/src';
-import { IconRefresh } from 'design/icons/refresh.icon';
-import { useEventListener } from 'core/hooks/useEventListener';
 
 const Mutations = withTheme(({ theme }) => {
   const { t } = useTranslation();
@@ -45,20 +42,18 @@ const Mutations = withTheme(({ theme }) => {
   const [queue, setQueue] = useState([]);
   const prev_queue = usePrevious(queue);
 
-  useEventListener('focus', () => {
-    if (queue?.length) setQueue([]);
-  });
-
   // Handle Mutation
   useEffect(() => {
     if (mutation?.id) {
       // Find in the queue or add
       const match = findIndex(queue, (item) => item.id === mutation.id);
       const next_queue = [...queue];
-      next_queue[match] = mutation;
-
-      if (match !== -1) setQueue(next_queue);
-      else setQueue([...queue, mutation]);
+      
+      if (match !== -1) {
+        next_queue[match] = mutation;
+        setQueue(next_queue);
+      } else setQueue([...queue, mutation]);
+      
       setActions({ ...actions, [mutation.id]: mutation });
       setMutation(undefined);
     }
@@ -101,14 +96,14 @@ const Mutations = withTheme(({ theme }) => {
       setTimeout(
         () => removeFromQueue(item),
         pending_item
-          ? 100
+          ? 800
           : item?.error
           ? 3000
           : item?.done
           ? 1500
           : item?.success
           ? 1000
-          : 100,
+          : 800,
       );
     }
   }, [queue]);
@@ -118,7 +113,7 @@ const Mutations = withTheme(({ theme }) => {
     if (offline) return <IconOffline />;
     else if (item?.error) return <IconBlind />;
     else if (item?.success) return <IconEye />;
-    else if (item?.retry_id) return <IconRefresh />;
+    else if (item?.retry_id) return <IconLoading />;
     else if (item?.validator) return <IconLightning />;
     else if (item?.rpc) return <IconLoading />;
     else return <IconLoading />;
@@ -157,8 +152,8 @@ const Mutations = withTheme(({ theme }) => {
                   <_icon $color={color}>{icon_type(queue[0])}</_icon>
                   <_text $color={color}>
                     <span>
-                      {retry && `${t('mutation.retry')} `}
                       {current_text}
+                      {retry && ` ${t('mutation.retry')}`}
                     </span>
                   </_text>
                 </_body>

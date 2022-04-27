@@ -196,7 +196,7 @@ export const _claim = styled(m.div)`
   background-repeat: repeat;
   box-shadow: ${({ theme }) => theme.shadow['glass']};
   border: 2px solid ${({ theme }) => theme['legendary']?.['dark_tile']};
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: ${({ theme }) => theme['legendary']?.['text']};
   text-shadow: 2px 2px 3px ${({ theme }) => theme['legendary']?.['dark_tile']};

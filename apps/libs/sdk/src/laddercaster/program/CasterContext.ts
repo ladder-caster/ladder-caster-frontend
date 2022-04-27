@@ -24,6 +24,10 @@ export class CasterContext {
     private caster?: Caster,
   ) {}
 
+  getCasterId() {
+    return this.caster?.publicKey;
+  }
+
   async initCaster() {
     const [gameAccount, playerAccount, game] = await this.getAccounts();
     const playerLadaTokenAccount = await this.getTokenAccount(
@@ -70,6 +74,12 @@ export class CasterContext {
       },
       signers: [this.client.wallet.payer],
     });
+  }
+
+  async refreshCaster() {
+    return await this.client.program.account.caster.fetch(
+      this.caster?.publicKey,
+    );
   }
 
   async casterCommitLoot() {

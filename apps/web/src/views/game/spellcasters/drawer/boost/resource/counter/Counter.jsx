@@ -22,6 +22,7 @@ const Counter = ({ element }) => {
 
   return (
     <_counter>
+      <_big onClick={() => decrementXP(element, 1000)}>{'-1000'}</_big>
       <_big onClick={() => decrementXP(element, 100)}>{'-100'}</_big>
       <_decrement onClick={() => decrementXP(element)}>
         <IconMinus />
@@ -36,6 +37,7 @@ const Counter = ({ element }) => {
         <IconPlus />
       </_increment>
       <_big onClick={() => incrementXP(element, 100)}>{'+100'}</_big>
+      <_big onClick={() => incrementXP(element, 1000)}>{'+1000'}</_big>
     </_counter>
   );
 };

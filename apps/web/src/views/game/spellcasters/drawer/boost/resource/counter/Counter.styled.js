@@ -8,10 +8,10 @@ export const _counter = styled.div`
 `;
 
 export const _decrement = styled.div`
-  min-width: 48px;
-  width: 48px;
-  min-height: 48px;
-  height: 48px;
+  min-width: 36px;
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
   border-radius: 50%;
   box-shadow: ${({ theme }) => theme.shadow['frost']};
   background: ${({ theme }) => theme.background['highest']};
@@ -21,19 +21,19 @@ export const _decrement = styled.div`
   align-items: center;
   cursor: pointer;
   > svg {
-    min-width: 24px;
-    width: 24px;
-    min-height: 24px;
-    height: 24px;
+    min-width: 16px;
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
     color: ${({ theme }) => theme.text['base']};
   }
 `;
 
 export const _increment = styled.div`
-  min-width: 48px;
-  width: 48px;
-  min-height: 48px;
-  height: 48px;
+  min-width: 36px;
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
   border-radius: 50%;
   box-shadow: ${({ theme }) => theme.shadow['frost']};
   background: ${({ theme }) => theme.background['highest']};
@@ -43,10 +43,10 @@ export const _increment = styled.div`
   align-items: center;
   cursor: pointer;
   > svg {
-    min-width: 24px;
-    width: 24px;
-    min-height: 24px;
-    height: 24px;
+    min-width: 16px;
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
     color: ${({ theme }) => theme.text['base']};
   }
 `;
@@ -54,8 +54,6 @@ export const _increment = styled.div`
 export const _amount = styled.div`
   width: 100%;
   min-width: 88px;
-  margin-left: 8px;
-  margin-right: 8px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -87,10 +85,10 @@ export const _icon = styled.div`
 `;
 
 export const _big = styled.div`
-  min-width: 48px;
-  width: 48px;
-  min-height: 48px;
-  height: 48px;
+  min-width: 36px;
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
   border-radius: 50%;
   box-shadow: ${({ theme }) => theme.shadow['frost']};
   background: ${({ theme }) => theme.background['highest']};
@@ -99,8 +97,14 @@ export const _big = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 9px;
+  font-weight: 700;
   color: ${({ theme }) => theme.text['base']};
   margin: 0 8px;
+  &:first-child {
+    margin-right: 0;
+  }
+  &:last-child {
+    margin-left: 0;
+  }
 `;

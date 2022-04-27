@@ -7,8 +7,11 @@ const AnimatedLoading = keyframes`
   0% {
     background-color: rgb(35, 43, 67);
   }
-  100% {
+  50% {
     background-color: rgb(52, 60, 87);
+  }
+  100% {
+    background-color: rgb(35, 43, 67);
   }
 `;
 
@@ -16,9 +19,9 @@ export const _shimmer = styled(m.div)`
   height: 100%;
   width: 100%;
   animation-name: ${AnimatedLoading};
-  animation-duration: 1.25s;
+  animation-duration: 1.8s;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in;
+  animation-timing-function: ease-in-out;
 `;
 
 export const _icon = styled(m.div)`

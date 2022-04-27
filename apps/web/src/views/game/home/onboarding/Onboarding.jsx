@@ -27,7 +27,7 @@ import {
 import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { DEMO_MODE, GAME_INIT, GAME_RESOURCES } from 'core/remix/state';
+import { DEMO_MODE, GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { useActions } from '../../../../../actions';
@@ -49,6 +49,7 @@ export const Onboarding = ({ home }) => {
   const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
+  const [phase, setPhase] = useRemix(USER_PHASE);
   const { createLocalWallet } = useLocalWallet();
   const { setVisible } = useWalletModal();
   const { startDemo, initPlayer, visitCasters, modalBuyLADA } = useActions();
@@ -94,7 +95,7 @@ export const Onboarding = ({ home }) => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if (initLoading && active) return <Skeleton />;
+  if ((initLoading && active) || !phase) return <Skeleton />;
 
   return (
     <>
