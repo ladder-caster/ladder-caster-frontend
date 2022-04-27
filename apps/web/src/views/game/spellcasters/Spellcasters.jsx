@@ -35,12 +35,12 @@ const Spellcasters = () => {
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />
-      {(!initialized || !phase || casters?.length === 0) && (
+      {(!initialized || (!phase && casters?.length)) && (
         <_feed>
           <Onboarding />
         </_feed>
       )}
-      {initialized && phase && casters?.length !== 0 && (
+      {initialized && phase && casters?.length && (
         <_list>
           {/*{casters?.length > 1 && (*/}
           {/*  <_button onClick={() => lootAllResources()}>*/}

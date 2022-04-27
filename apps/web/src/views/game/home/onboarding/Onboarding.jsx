@@ -95,7 +95,7 @@ export const Onboarding = ({ home }) => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if ((initLoading && active) || !phase) return <Skeleton />;
+  if ((initLoading && active) || (!phase && casters?.length)) return <Skeleton />;
 
   return (
     <>
