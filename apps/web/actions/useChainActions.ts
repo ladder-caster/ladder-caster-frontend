@@ -72,7 +72,7 @@ import {
   GIVE_RESOURCES,
   INST_INIT_PLAYER,
   FETCH_PLAYER,
-  FETCH_CASTER,
+  FETCH_CASTERS,
   INST_COMMIT_CRAFT,
   INST_COMMIT_LOOT,
   INST_COMMIT_MOVE,
@@ -86,7 +86,7 @@ import {
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
   RPC_ERROR,
-  RPC_LOADING
+  RPC_LOADING,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
@@ -157,10 +157,13 @@ export const useChainActions = () => {
 
       const e = confirmationResult?.value?.err;
 
-      if (String(e).includes('Blockhash') || String(e).includes('Solana') || String(e).includes('Raw')) {
+      if (
+        String(e).includes('Blockhash') ||
+        String(e).includes('Solana') ||
+        String(e).includes('Raw')
+      ) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 2)
-          await stateHandler(rpcCallback, type, id);
+        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
         const parsedMessage = handleCustomErrors(e);
         setMutation({
@@ -179,10 +182,13 @@ export const useChainActions = () => {
 
       return confirmationResult;
     } catch (e) {
-      if (String(e).includes('Blockhash') || String(e).includes('Solana') || String(e).includes('Raw')) {
+      if (
+        String(e).includes('Blockhash') ||
+        String(e).includes('Solana') ||
+        String(e).includes('Raw')
+      ) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 2)
-          await stateHandler(rpcCallback, type, id);
+        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
         const parsedMessage = handleCustomErrors(e.message);
         setMutation({
@@ -214,40 +220,23 @@ export const useChainActions = () => {
 
       setResources(await playerContext.getResources());
       if (casterInstance) {
-        const next_caster = await casterInstance.refreshCaster();
+        const nextCaster = await casterInstance.refreshCaster();
         const publicKey = casterInstance.getCasterId();
+        const nextCasters = [...casters];
 
-
-        const next_casters = [...casters];
-
-        if (next_caster && publicKey) {
-          let index = -1;
-
-          for (let i = 0; i < next_casters?.length;i++) {
-            if (casters[i]?.publicKey?.toString() === publicKey?.toString()) {
-              console.log('last_caster', casters[i]);
-              console.log('replace caster', next_caster);
-              index = i;
-              break;
-            }
-          }
-
-          let next_next = [];
-          for (let m = 0; m < casters?.length;m++) {
-            if (m === index) {
-              next_next.push(next_caster);
+        if (nextCaster && publicKey) {
+          let changed = false;
+          const updatedCasters = nextCasters.map((caster) => {
+            if (caster.publicKey?.toString() === publicKey?.toString()) {
+              changed = true;
+              return { ...nextCaster, publicKey: publicKey };
             } else {
-              next_next.push(casters[m]);
+              return { ...caster };
             }
-          }
+          });
 
-          console.log('index', index);
-          console.log('last_casters', casters);
-          console.log('next', next_next);
-
-          if (index !== -1) {
-            // next_casters[index] = next_caster;
-            setCasters(next_next);
+          if (changed) {
+            setCasters(updatedCasters);
           }
         } else {
           setMutation({
@@ -260,7 +249,7 @@ export const useChainActions = () => {
             text: {
               error: t('error.refresh.caster'),
             },
-            FETCH_CASTER
+            FETCH_CASTERS,
           });
         }
       } else {

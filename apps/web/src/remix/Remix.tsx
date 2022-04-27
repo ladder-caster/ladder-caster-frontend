@@ -25,7 +25,7 @@ import {
   WALLET_TYPE,
   GAME_INIT,
   ERROR_CODES,
-  SEEN_PHASE
+  SEEN_PHASE,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -191,6 +191,8 @@ const Remix = () => {
       const currentTurn = game?.turnInfo?.turn;
 
       const generateModifier = async (itemPK: anchor.web3.PublicKey) => {
+        if (!itemPK) return null;
+
         let item: Item;
         try {
           const playerContext = new PlayerContext(
@@ -215,7 +217,7 @@ const Remix = () => {
             attribute: Object.keys(item?.itemType?.equipment?.feature)?.[0],
             rarity: Object.keys(item?.itemType?.equipment?.rarity)?.[0],
             value: item?.itemType?.equipment?.value,
-            publicKey: item?.publicKey?.toString()
+            publicKey: item?.publicKey?.toString(),
           };
         } else {
           return {
@@ -226,7 +228,7 @@ const Remix = () => {
             attribute: Object.keys(item?.itemType?.spellBook?.spell)?.[0],
             rarity: Object.keys(item?.itemType?.spellBook?.rarity)?.[0],
             value: item?.itemType?.equipment?.value,
-            publicKey: item?.publicKey?.toString()
+            publicKey: item?.publicKey?.toString(),
           };
         }
       };
@@ -276,7 +278,7 @@ const Remix = () => {
           index: key,
           tier: getTier(item.level),
           level: item.level,
-          publicKey: item?.publicKey?.toString()
+          publicKey: item?.publicKey?.toString(),
         });
       } else {
         if (item.itemType.equipment) {
@@ -288,7 +290,7 @@ const Remix = () => {
             attribute: Object.keys(item.itemType.equipment.feature)[0],
             rarity: Object.keys(item.itemType.equipment.rarity)[0],
             value: item.itemType.equipment.value,
-            publicKey: item?.publicKey?.toString()
+            publicKey: item?.publicKey?.toString(),
           });
         } else if (item.itemType.spellBook) {
           items.push({
@@ -301,13 +303,16 @@ const Remix = () => {
             cost: item.itemType.spellBook.cost,
             costFeature: Object.keys(item.itemType.spellBook.costFeature)[0],
             value: item.itemType.spellBook.value,
-            publicKey: item?.publicKey?.toString()
+            publicKey: item?.publicKey?.toString(),
           });
         }
       }
     });
 
-    return { items: reverse(sortBy(items, ['level', 'attribute', 'rarity'])), chests };
+    return {
+      items: reverse(sortBy(items, ['level', 'attribute', 'rarity'])),
+      chests,
+    };
   };
 
   useEffect(() => {
@@ -344,15 +349,15 @@ const Remix = () => {
     // };
   }, [game, client]);
 
-  const asyncSpellCaster = async () => {
-    setSpellcasters(await generateSpellCaster(casters));
+  const asyncSpellCaster = async (casters) => {
+    setSpellcasters([...(await generateSpellCaster(casters))]);
   };
 
   useEffect(() => {
     if (casters) {
-      asyncSpellCaster();
+      asyncSpellCaster(casters);
     }
-  }, [casters, JSON.stringify(casters)]);
+  }, [casters]);
 
   useEffect(() => {
     if (items) {
