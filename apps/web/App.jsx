@@ -15,7 +15,6 @@ import Game from './src/views/game/Game';
 import Header from './src/shared/header/Header';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import Remix from './src/remix/Remix';
-import Ticks from './src/shared/ticks/Ticks';
 import { nanoid } from 'nanoid';
 import {
   ConnectionProvider,

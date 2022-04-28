@@ -45,6 +45,9 @@ const configureRemix = () => {
         current_item.next(undefined);
       }
     },
+    getValue(key) {
+      return bubbles?.getValue()?.get(key)?.getValue()?.value;
+    },
     refs,
     bubbles,
   };
