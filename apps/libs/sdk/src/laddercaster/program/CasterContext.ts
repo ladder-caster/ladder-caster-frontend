@@ -17,6 +17,10 @@ import {
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 
 export class CasterContext {
+  private game: Game;
+  private playerAccount: PublicKey;
+  private gameSigner: PublicKey;
+
   constructor(
     private client: Client,
     private playerPubKey: anchor.web3.PublicKey,
@@ -723,19 +727,29 @@ export class CasterContext {
     [PublicKey, PublicKey, Game, PublicKey]
   > {
     const gameAccount = new anchor.web3.PublicKey(this.gamePK);
-    const [playerAccount] = findProgramAddressSync(
-      [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
-      this.client.program.programId,
-    );
-    const game = (await this.client.program.account.game.fetch(
-      gameAccount,
-    )) as Game;
+    if (!this.playerAccount) {
+      const [playerAccount] = findProgramAddressSync(
+        [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
+        this.client.program.programId,
+      );
+      this.playerAccount = playerAccount;
+    }
+    if (!this.game) {
+      const game = (await this.client.program.account.game.fetch(
+        gameAccount,
+      )) as Game;
+      this.game = game;
+    }
 
-    const [gameSigner] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from('game_signer')],
-      this.client.program.programId,
-    );
+    if (!this.gameSigner) {
+      const [gameSigner] = findProgramAddressSync(
+        [Buffer.from('game_signer')],
+        this.client.program.programId,
+      );
 
-    return [gameAccount, playerAccount, game, gameSigner];
+      this.gameSigner = gameSigner;
+    }
+
+    return [gameAccount, this.playerAccount, this.game, this.gameSigner];
   }
 }

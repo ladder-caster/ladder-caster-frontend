@@ -31,12 +31,12 @@ const Market = () => {
   return (
     <_market $init={initialized && casters?.length !== 0}>
       <Heading title={t('title.market')} marketplace />
-      {(!initialized || casters?.length === 0) && (
+      {!initialized || casters?.length === 0 ? (
         <_feed>
           <Onboarding />
         </_feed>
-      )}
-      {initialized && casters?.length !== 0 && (
+      ) : null}
+      {initialized && casters?.length !== 0 ? (
         <_body>
           <_section>
             <_title>{t('market.available')}:</_title>
@@ -59,7 +59,7 @@ const Market = () => {
             {/* opensea */}
           </_section>
         </_body>
-      )}
+      ) : null}
     </_market>
   );
 };

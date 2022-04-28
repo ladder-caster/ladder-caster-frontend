@@ -5,7 +5,7 @@ import {
   CHAIN_ITEMS,
   CHAIN_NFTS,
   CHAIN_PLAYER,
-  INIT_CHAIN_LOAD
+  INIT_CHAIN_LOAD,
 } from './state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { Client } from '../../sdk/src/laddercaster/program/Client';
@@ -46,15 +46,16 @@ export const useGame = () => {
           );
 
           try {
-            setResources(await playerContext.getResources());
-            setItems(await playerContext.getInventory());
-            setCasters(await playerContext.getCasters());
+            setPlayer(await playerContext.getPlayer());
           } catch (e) {
             console.log(e);
           }
 
           try {
-            setPlayer(await playerContext.getPlayer());
+            console.log('init');
+            setResources(await playerContext.getResources());
+            setItems(await playerContext.getInventory());
+            setCasters(await playerContext.getCasters());
           } catch (e) {
             console.log(e);
           }
