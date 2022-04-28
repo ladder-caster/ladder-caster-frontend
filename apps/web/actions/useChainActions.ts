@@ -92,6 +92,7 @@ import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
+import remix from 'core/remix';
 
 let retry_count = {};
 
@@ -222,22 +223,20 @@ export const useChainActions = () => {
       if (casterInstance) {
         const nextCaster = await casterInstance.refreshCaster();
         const publicKey = casterInstance.getCasterId();
-        const nextCasters = [...casters];
+        if  (nextCaster) nextCaster.publicKey = publicKey;
+        const nextCasters = remix?.getValue(CHAIN_CASTERS);
 
         if (nextCaster && publicKey) {
-          let changed = false;
+          // Replace
           const updatedCasters = nextCasters.map((caster) => {
             if (caster.publicKey?.toString() === publicKey?.toString()) {
-              changed = true;
               return { ...nextCaster, publicKey: publicKey };
             } else {
               return { ...caster };
             }
           });
 
-          if (changed) {
-            setCasters(updatedCasters);
-          }
+          setCasters(updatedCasters);
         } else {
           setMutation({
             id: nanoid(),
@@ -257,6 +256,8 @@ export const useChainActions = () => {
         setItems(await playerContext.getInventory());
       }
     } else {
+      console.log('error refreshing');
+
       setMutation({
         id: nanoid(),
         rpc: false,
