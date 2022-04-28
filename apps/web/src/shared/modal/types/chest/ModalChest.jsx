@@ -42,10 +42,11 @@ const ModalChest = () => {
   // fill remaining empty slots in the row
   if(chests?.length>0 && chestEmptyLimit!=0) chestEmptyLimit = columnCount-chestEmptyLimit;
   useClickOutside([button_ref, chest_ref], () => modalClear());
+  
   return (
     <_gridContainer>
       <_gridLabel>{modal?.tier?.split("_")[0]} {chestTier}</_gridLabel>
-      <_gridCloseButton><span>close</span></_gridCloseButton>
+      <_gridCloseButton onClick={modalClear}><span>close</span></_gridCloseButton>
       <_grid ref={chest_ref}>
         {
           chests.map((chest, index) => {
