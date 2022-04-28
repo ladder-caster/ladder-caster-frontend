@@ -34,7 +34,6 @@ async function getMerkle() {
 }
 
 async function buildMerkleTree(url: string): Promise<MerkleTree> {
-  console.log(url);
   const merkelTree = (await axios.get(url)).data;
 
   return new MerkleTree(merkelTree, keccak256, {
@@ -59,6 +58,11 @@ export type ResourcesPK = {
 };
 
 export class PlayerContext {
+  private game: Game;
+  private playerAccount: PublicKey;
+  private playerBump: number;
+  private gameSigner: PublicKey;
+
   constructor(
     private client: Client,
     private playerPubKey: anchor.web3.PublicKey,
@@ -119,13 +123,12 @@ export class PlayerContext {
           },
         },
       ])
-    )
-      .map((item) => {
-        return { ...(item.account as Item), publicKey: item.publicKey };
-      })
-      .filter((item) => {
-        return !item.equippedOwner;
-      });
+    ).map((item) => {
+      return { ...(item.account as Item), publicKey: item.publicKey };
+    });
+    // .filter((item) => {
+    //   return !item.equippedOwner;
+    // });
 
     return itemArray;
   }
@@ -732,19 +735,36 @@ export class PlayerContext {
     [PublicKey, PublicKey, number, Game, PublicKey]
   > {
     const gameAccount = new anchor.web3.PublicKey(this.gamePK);
-    const [playerAccount, playerBump] = findProgramAddressSync(
-      [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
-      this.client.program.programId,
-    );
-    const game = (await this.client.program.account.game.fetch(
+    if (!this.playerAccount) {
+      const [playerAccount, playerBump] = findProgramAddressSync(
+        [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
+        this.client.program.programId,
+      );
+      this.playerAccount = playerAccount;
+      this.playerBump = playerBump;
+    }
+    if (!this.game) {
+      const game = (await this.client.program.account.game.fetch(
+        gameAccount,
+      )) as Game;
+      this.game = game;
+    }
+
+    if (!this.gameSigner) {
+      const [gameSigner] = findProgramAddressSync(
+        [Buffer.from('game_signer')],
+        this.client.program.programId,
+      );
+
+      this.gameSigner = gameSigner;
+    }
+
+    return [
       gameAccount,
-    )) as Game;
-
-    const [gameSigner] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from('game_signer')],
-      this.client.program.programId,
-    );
-
-    return [gameAccount, playerAccount, playerBump, game, gameSigner];
+      this.playerAccount,
+      this.playerBump,
+      this.game,
+      this.gameSigner,
+    ];
   }
 }

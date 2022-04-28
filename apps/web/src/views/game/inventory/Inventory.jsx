@@ -44,12 +44,12 @@ const Inventory = () => {
   return (
     <_inventory>
       <Heading title={t('title.bag')} />
-      {(!initialized || casters?.length === 0) && (
+      {!initialized || casters?.length === 0 ? (
         <_feed>
           <Onboarding />
         </_feed>
-      )}
-      {initialized && casters?.length !== 0 && (
+      ) : null}
+      {initialized && casters?.length !== 0 ? (
         <>
           <_container>
             <Category type={ITEM_HAT} />
@@ -77,7 +77,7 @@ const Inventory = () => {
             </_chests>
           </Thumbar>
         </>
-      )}
+      ) : null}
     </_inventory>
   );
 };

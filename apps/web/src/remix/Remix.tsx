@@ -48,7 +48,6 @@ import {
   Game,
   GameContext,
   Item,
-  PlayerContext,
   ResourcesPK,
   Tile,
 } from '../../../libs/sdk/src/laddercaster/program';
@@ -72,7 +71,6 @@ const Remix = () => {
   const [inventory, setInventory] = useRemixOrigin(GAME_INVENTORY, {
     items: [],
     chests: [],
-    last_mint: 0,
   });
   useRemixOrigin(GAME_RESOURCES, {
     fire: 0,
@@ -158,7 +156,7 @@ const Remix = () => {
     return lands;
   };
 
-  const generateSpellCaster = async (casterArr: Caster[]) => {
+  const generateSpellCaster = (casterArr: Caster[]) => {
     let spellcastersArr = [];
 
     for (let i = 0; i < casterArr.length; i++) {
@@ -190,21 +188,12 @@ const Remix = () => {
 
       const currentTurn = game?.turnInfo?.turn;
 
-      const generateModifier = async (itemPK: anchor.web3.PublicKey) => {
+      const generateModifier = (itemPK: anchor.web3.PublicKey) => {
         if (!itemPK) return null;
 
-        let item: Item;
-        try {
-          const playerContext = new PlayerContext(
-            client,
-            client?.program?.provider?.wallet?.publicKey,
-            localStorage.getItem('gamePK'),
-          );
-
-          item = (await playerContext.getItem(itemPK)) as Item;
-        } catch (e) {
-          item = null;
-        }
+        let item: Item = items.find(
+          (i: Item) => i.publicKey.toString() === itemPK.toString(),
+        );
 
         if (!item) return null;
 
@@ -246,10 +235,10 @@ const Remix = () => {
         position: position,
         id: nanoid(),
         xp: caster.experience.toNumber(),
-        hat: await generateModifier(caster.modifiers.head),
-        robe: await generateModifier(caster.modifiers.robe),
-        staff: await generateModifier(caster.modifiers.staff),
-        spell: await generateModifier(caster.modifiers.spellBook),
+        hat: generateModifier(caster.modifiers.head),
+        robe: generateModifier(caster.modifiers.robe),
+        staff: generateModifier(caster.modifiers.staff),
+        spell: generateModifier(caster.modifiers.spellBook),
         last_loot: caster?.turnCommit?.actions?.loot
           ? currentTurn
           : currentTurn - 1,
@@ -291,6 +280,7 @@ const Remix = () => {
             rarity: Object.keys(item.itemType.equipment.rarity)[0],
             value: item.itemType.equipment.value,
             publicKey: item?.publicKey?.toString(),
+            equippedOwner: item.equippedOwner,
           });
         } else if (item.itemType.spellBook) {
           items.push({
@@ -304,13 +294,18 @@ const Remix = () => {
             costFeature: Object.keys(item.itemType.spellBook.costFeature)[0],
             value: item.itemType.spellBook.value,
             publicKey: item?.publicKey?.toString(),
+            equippedOwner: item.equippedOwner,
           });
         }
       }
     });
 
     return {
-      items: reverse(sortBy(items, ['level', 'attribute', 'rarity'])),
+      items: reverse(
+        sortBy(items, ['level', 'attribute', 'rarity']).filter((item) => {
+          return !item.equippedOwner;
+        }),
+      ),
       chests,
     };
   };
@@ -349,13 +344,9 @@ const Remix = () => {
     // };
   }, [game, client]);
 
-  const asyncSpellCaster = async (casters) => {
-    setSpellcasters([...(await generateSpellCaster(casters))]);
-  };
-
   useEffect(() => {
     if (casters) {
-      asyncSpellCaster(casters);
+      setSpellcasters(generateSpellCaster(casters));
     }
   }, [casters]);
 
@@ -384,33 +375,33 @@ const Remix = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (player) {
-      console.log('player', player);
-    }
-  }, [player]);
+  // useEffect(() => {
+  //   if (player) {
+  //     console.log('player', player);
+  //   }
+  // }, [player]);
 
-  useEffect(() => {
-    if (inventory) {
-      console.log('inventory', inventory);
-    }
-  }, [inventory]);
+  // useEffect(() => {
+  //   if (inventory) {
+  //     console.log('inventory', inventory);
+  //   }
+  // }, [inventory]);
 
-  useEffect(() => {
-    if (casters) {
-      console.log('casters', casters);
-    }
-  }, [casters]);
+  // useEffect(() => {
+  //   if (casters) {
+  //     console.log('casters', casters);
+  //   }
+  // }, [casters]);
 
-  useEffect(() => {
-    if (game) {
-      console.log('game', game);
-      console.log(
-        'last crank',
-        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
-      );
-    }
-  }, [game]);
+  // useEffect(() => {
+  //   if (game) {
+  //     console.log('game', game);
+  //     console.log(
+  //       'last crank',
+  //       new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+  //     );
+  //   }
+  // }, [game]);
 
   useEffect(() => {
     if (loading) {
