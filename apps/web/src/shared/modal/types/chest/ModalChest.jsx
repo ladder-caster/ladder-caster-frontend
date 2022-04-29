@@ -22,11 +22,10 @@ const ModalChest = () => {
   //const { t } = useTranslation();
   const { modalClear, confirmChest } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
-  const button_ref = useRef();
-  const chest_ref = useRef();
+  const grid_ref = useRef();
   const [inventory] = useRemix(GAME_INVENTORY);
   const chests = filter(inventory?.chests,
-    (chest) => chest.tier === modal?.tier).sort((a,b)=>a.level-b.level);
+    (chest) => chest.tier === modal?.tier).sort((a,b)=>b.level-a.level);
   //const [confirm] = useRemix(GAME_CONFIRM);
 
   const tierMap = {
@@ -35,41 +34,41 @@ const ModalChest = () => {
     [TIER_III]: 3,
     [TIER_IV]: 4,
   }
-  const chestTier = tierMap[modal?.tier];
   const columnCount = 4;
   const chestPlaceHolderCount = 20;
   var chestEmptyLimit = chests?.length>chestPlaceHolderCount? chests?.length % columnCount:clamp(chestPlaceHolderCount - chests?.length, 0, chestPlaceHolderCount);
   // fill remaining empty slots in the row
   if(chests?.length>0 && chestEmptyLimit!=0) chestEmptyLimit = columnCount-chestEmptyLimit;
-  useClickOutside([button_ref, chest_ref], () => modalClear());
-  
+  useClickOutside([grid_ref], () => modalClear());
+  const gridMap = [...chests, ...Array(chestEmptyLimit).keys()];
+
   return (
     <_gridContainer>
-      <_gridLabel>{modal?.tier?.split("_")[0]} {chestTier}</_gridLabel>
+      <_gridLabel>{modal?.tier?.split("_")[0]} {tierMap[modal?.tier]}</_gridLabel>
       <_gridCloseButton onClick={modalClear}><span>close</span></_gridCloseButton>
-      <_grid ref={chest_ref}>
+      <_grid ref={grid_ref}>
         {
-          chests.map((chest, index) => {
+          gridMap.map((chest,index)=>{
+            if(chest?.tier){
             return (
-              <_gridItemSelectable key={'chest_modal_' + index} onClick={() => { console.log(chest); confirmChest(chest?.mint || chest) }}>
-                <_overlay>
-                  <_level>
-                    <span>{chest.level}</span>
-                  </_level>
-                </_overlay>
+              <_gridItemSelectable key={'chest_full_' + index} onClick={() => confirmChest(chest?.mint || chest)}>
+              <_overlay>
+                <_level>
+                  <span>{chest.level}</span>
+                </_level>
+              </_overlay>
 
-                <NFT
-                  type={ITEM_CHEST}
-                  tier={chest.tier}
-                />
+              <NFT
+                type={ITEM_CHEST}
+                tier={chest.tier}
+              />
 
-              </_gridItemSelectable>
-            )
-          })
-        }
-        {
-          [...Array(chestEmptyLimit).keys()].map((x) =>
-            <_gridItem key={'chest_non_selectable_' + x} />)
+            </_gridItemSelectable>
+            )}
+            
+            return <_gridItem key={'chest_empty_'+index}></_gridItem>;
+          }
+          )
         }
       </_grid>
     </_gridContainer>

@@ -49,9 +49,7 @@ export const _grid = styled.div`
     height: 90%;
     width:97%;
   }
-  @media (max-width: 356px) {
-    height: 75%;
-  }
+ 
 `;
 
 export const _gridLabel = styled.div`
@@ -96,7 +94,7 @@ transition: box-shadow 0.5s, transform 0.5s, filter 0.33s ease-in-out;
   border-radius: 8px 0 8px 0 ;
   background-color: #8692b1;
 }
-&:hover  {
+&:hover, &:focus  {
   transform: scale(1.1,1.1);
   filter: drop-shadow(0 0 0.1rem white) brightness(1.2);
   > img {
@@ -121,7 +119,7 @@ text-align: center;
 margin: 0 auto;
 transition: box-shadow 0.25s, transform 0.2s ease-in-out;
 cursor: pointer;
-&:hover {
+&:hover, &:focus {
   box-shadow:  0 0 .5rem white;
   transform: scale(1.05);
 }
