@@ -330,6 +330,7 @@
     "drawer.rank.next.level": "XP until next level",
     "drawer.crank.claim.all": "Claim All Rewards",
     "drawer.crank.loot.all": "Loot All Resources",
-    "drawer.craft.warning": "By crafting now, you will need to wait until next turn to equip or unequip items"
+    "drawer.craft.warning": "By crafting now, you will need to wait until next turn to equip or unequip items",
+    "modal.chests.title": "Tier"
   }
 }
