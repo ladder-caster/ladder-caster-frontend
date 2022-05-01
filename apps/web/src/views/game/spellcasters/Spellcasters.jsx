@@ -34,12 +34,12 @@ const Spellcasters = () => {
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />
-      {(!initialized || casters?.length === 0) && (
+      {!initialized || casters?.length === 0 ? (
         <_feed>
           <Onboarding />
         </_feed>
-      )}
-      {initialized && casters?.length !== 0 && (
+      ) : null}
+      {initialized && phase && casters?.length !== 0 ? (
         <_list>
           {/*{casters?.length > 1 && (*/}
           {/*  <_button onClick={() => lootAllResources()}>*/}
@@ -49,7 +49,7 @@ const Spellcasters = () => {
           {render_spellcasters}
           <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
         </_list>
-      )}
+      ) : null}
     </_spellcasters>
   );
 };

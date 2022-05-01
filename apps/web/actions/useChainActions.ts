@@ -48,7 +48,12 @@ import {
   WEB3AUTH_PLUGIN_STORE,
   W3A_TYPE,
 } from 'core/remix/state';
-import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
+import {
+  TAB_REDEEM,
+  TAB_WALLET,
+  TABS_MINT_REDEEM,
+  TAB_MINT,
+} from 'core/remix/tabs';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -163,10 +168,7 @@ export const useChainActions = () => {
 
       const e = confirmationResult?.value?.err;
 
-      if (
-        String(e).includes('Blockhash') ||
-        String(e).includes('Solana')
-      ) {
+      if (String(e).includes('Blockhash') || String(e).includes('Solana')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 3)
           setTimeout(() => stateHandler(rpcCallback, type, id), 100);
@@ -248,7 +250,10 @@ export const useChainActions = () => {
       client,
       client.program.provider.wallet.publicKey,
       localStorage.getItem('gamePK'),
-      find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
+      find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),
     );
 
     await fetchPlayer(async () => {
@@ -268,7 +273,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters, match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       await fetchPlayer(async () => {
@@ -434,8 +442,12 @@ export const useChainActions = () => {
               client,
               client?.program?.provider?.wallet?.publicKey,
               localStorage.getItem('gamePK'),
-            ).openChest(find(items,
-                match => match?.publicKey?.toString() === chest?.publicKey));
+            ).openChest(
+              find(
+                items,
+                (match) => match?.publicKey?.toString() === chest?.publicKey,
+              ),
+            );
           },
           INST_OPEN_CHEST,
           '',
@@ -497,8 +509,10 @@ export const useChainActions = () => {
               client,
               client.program.provider.wallet.publicKey,
               localStorage.getItem('gamePK'),
-              find(casters,
-                  match => match?.publicKey?.toString() === caster?.publicKey),
+              find(
+                casters,
+                (match) => match?.publicKey?.toString() === caster?.publicKey,
+              ),
             ).casterCommitMove(
               row - 1,
               ['a', 'b', 'c'].findIndex((colLetter) => colLetter === col),
@@ -547,8 +561,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setContext('');
@@ -590,8 +606,10 @@ export const useChainActions = () => {
           client,
           client.program.provider.wallet.publicKey,
           localStorage.getItem('gamePK'),
-          find(casters,
-              match => match?.publicKey?.toString() === caster?.publicKey)
+          find(
+            casters,
+            (match) => match?.publicKey?.toString() === caster?.publicKey,
+          ),
         );
 
         setModal('');
@@ -606,9 +624,10 @@ export const useChainActions = () => {
           return await stateHandler(
             async () => {
               return await casterContext.unequipItem(
-                find(casters,
-                    match => match?.publicKey?.toString() ===
-                      caster?.publicKey)?.modifiers?.[item.type]
+                find(
+                  casters,
+                  (match) => match?.publicKey?.toString() === caster?.publicKey,
+                )?.modifiers?.[item.type],
               );
             },
             INST_UNEQUIP,
@@ -624,8 +643,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey),
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setEquip('');
@@ -677,8 +698,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       setDrawer('');
@@ -689,9 +712,21 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await casterContext.casterCommitCraft(
-              find(items, match => match?.publicKey?.toString() === materials?.[0]?.publicKey),
-              find(items, match => match?.publicKey?.toString() === materials?.[1]?.publicKey),
-              find(items, match => match?.publicKey?.toString() === materials?.[2]?.publicKey),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[0]?.publicKey,
+              ),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[1]?.publicKey,
+              ),
+              find(
+                items,
+                (match) =>
+                  match?.publicKey?.toString() === materials?.[2]?.publicKey,
+              ),
             );
           },
           INST_COMMIT_CRAFT,
@@ -759,8 +794,10 @@ export const useChainActions = () => {
         client,
         client.program.provider.wallet.publicKey,
         localStorage.getItem('gamePK'),
-        find(casters,
-            match => match?.publicKey?.toString() === caster?.publicKey)
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
       );
 
       const resources = [
@@ -812,6 +849,11 @@ export const useChainActions = () => {
       setWalletTab(TAB_REDEEM);
       setContext(INIT_STATE_REDEEM);
     },
+    async openDrawerMint() {
+      setDrawer({ type: DRAWER_WALLET });
+      setWalletTab(TAB_MINT);
+      setContext(INIT_STATE_REDEEM);
+    },
     async openDrawerSettings() {
       setDrawer({ type: DRAWER_SETTINGS });
     },
@@ -856,6 +898,9 @@ export const useChainActions = () => {
           INST_MINT_NFT,
           '',
         );
+      }).then(async () => {
+        if (context?.nft?.data.name === 'Caster')
+          setCasters(await playerContext.getCasters());
       });
     },
     async chooseMint(item) {
@@ -894,12 +939,20 @@ export const useChainActions = () => {
         await fetchPlayer(async () => {
           return await stateHandler(
             async () => {
-              return await playerContext.mintNFTItem(find(items,
-                  match => match?.publicKey?.toString() === match_item?.publicKey));
+              return await playerContext.mintNFTItem(
+                find(
+                  items,
+                  (match) =>
+                    match?.publicKey?.toString() === match_item?.publicKey,
+                ),
+              );
             },
             INST_MINT_NFT,
             '',
           );
+        }).then(async () => {
+          if (caster || context?.caster)
+            setCasters(await playerContext.getCasters());
         });
       }
     },

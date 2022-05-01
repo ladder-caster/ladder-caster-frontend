@@ -101,14 +101,14 @@ const Mutations = withTheme(({ theme }) => {
       setTimeout(
         () => removeFromQueue(item),
         pending_item
-          ? 100
-          : item?.error
-          ? 3000
-          : item?.done
-          ? 1500
-          : item?.success
           ? 1000
-          : 100,
+          : item?.error
+          ? 4000
+          : item?.done
+          ? 2000
+          : item?.success
+          ? 4000
+          : 1000,
       );
     }
   }, [queue]);
@@ -159,6 +159,7 @@ const Mutations = withTheme(({ theme }) => {
                     <span>
                       {retry && `${t('mutation.retry')} `}
                       {current_text}
+                      {retry && `...`}
                     </span>
                   </_text>
                 </_body>

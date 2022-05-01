@@ -79,30 +79,32 @@ export const _link = styled(m.a)`
   box-shadow: ${({ theme, $disabled }) =>
     $disabled ? 'none' : theme.shadow['glass']};
   background: ${({ theme, $disabled }) =>
-    $disabled ? theme.background['button'] : theme.background['button_low']};
+    $disabled ? theme.background['button'] : theme.background['button']};
   border: none;
   cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
   margin-bottom: 16px;
   width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
-  transition: 0.25s background-color;
 
   &:hover {
     background: ${({ theme, $disabled }) =>
       $disabled ? theme.background['button'] : theme.background['button_high']};
   }
 
-  > span {
-    font-size: 12px;
-    font-weight: 700;
-
+  > svg {
+    min-height: 14px;
+    height: 14px;
+    min-width: 14px;
+    width: 14px;
     color: ${({ theme, $disabled }) =>
-      $disabled ? theme.text['faded'] : theme.text['base']};
+      theme.text[$disabled ? 'faded' : 'base']};
+  }
+  > span {
+    font-size: ${({ $big }) => ($big ? '14px' : '12px')};
+    font-weight: 700;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+    padding-left: ${({ $noIcon }) => ($noIcon ? '0' : '6px')};
     white-space: nowrap;
-
-    /* &:hover {
-      color: ${({ theme, $disabled }) =>
-        $disabled ? theme.text['faded'] : theme.text['active']};
-    } */
   }
 `;
 
@@ -142,6 +144,58 @@ export const _button = styled(m.div)`
       theme.text[$disabled ? 'faded' : 'base']};
     padding-left: ${({ $noIcon }) => ($noIcon ? '0' : '6px')};
     white-space: nowrap;
+  }
+`;
+
+export const _google = styled(m.div)`
+  padding: 10px 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: ${({ theme, $disabled }) =>
+    $disabled ? 'none' : theme.shadow['card']};
+  background: ${({ theme, $disabled }) =>
+    $disabled ? theme.background['button'] : theme.socials['google']};
+  border: none;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  margin-bottom: 16px;
+  width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
+
+  &:hover {
+    background: ${({ theme, $disabled }) =>
+      $disabled ? theme.background['button'] : theme.socials['google_hover']};
+  }
+
+  > span {
+    font-size: ${({ $big }) => ($big ? '14px' : '12px')};
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: ${({ theme }) => theme.shadow['text']};
+    padding-left: ${({ $noIcon }) => ($noIcon ? '0' : '6px')};
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+`;
+
+export const _circle = styled.div`
+  min-width: 24px;
+  width: 24px;
+  min-height: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > svg {
+    min-height: 18px;
+    height: 18px;
+    min-width: 18px;
+    width: 18px;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+    filter: drop-shadow(${({ theme }) => theme.shadow['text']});
   }
 `;
 
@@ -200,6 +254,15 @@ export const _task = styled.p`
   color: ${({ theme, $disabled }) =>
     theme.text[$disabled ? 'faded' : 'active']};
 
+  > div {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 700;
+    padding-left: 16px;
+    letter-spacing: 0.5px;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'active']};
+  }
   > span {
     color: ${({ theme }) => theme.text['faded']};
   }
