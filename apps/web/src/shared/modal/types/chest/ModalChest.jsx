@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   _grid,
   _grid_item,
@@ -32,10 +32,13 @@ const ModalChest = () => {
   const [modal] = useRemix(MODAL_ACTIVE);
   const grid_ref = useRef();
   const [inventory] = useRemix(GAME_INVENTORY);
-  const chests = filter(
-    inventory?.chests,
-    (chest) => chest.tier === modal?.tier,
-  ).sort((a, b) => b?.level - a?.level);
+  const chests = useMemo(() => {
+    if (!inventory?.chests) return [];
+    return filter(
+      inventory?.chests,
+      (chest) => chest.tier === modal?.tier,
+    ).sort((a, b) => b?.level - a?.level);
+  }, [inventory]);
   //const [confirm] = useRemix(GAME_CONFIRM);
 
   const tierMap = {
