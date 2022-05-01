@@ -14,9 +14,10 @@ export class GameContext {
   constructor(private client: Client, private gamePK: string) {}
 
   async getGameAccount(): Promise<Game> {
-    return (await this.client.program.account.game.fetch(
-      new anchor.web3.PublicKey(this.gamePK),
-    )) as Game;
+    const next_game = await this.client.program.account.game.fetch(
+      new anchor.web3.PublicKey(this.gamePK)
+    ) as Game;
+    return (next_game);
   }
 
   //TODO: needs to accept user that cranked and give them a reward to crank

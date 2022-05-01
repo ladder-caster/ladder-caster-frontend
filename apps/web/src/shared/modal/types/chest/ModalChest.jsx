@@ -25,7 +25,7 @@ const ModalChest = () => {
   const grid_ref = useRef();
   const [inventory] = useRemix(GAME_INVENTORY);
   const chests = filter(inventory?.chests,
-    (chest) => chest.tier === modal?.tier).sort((a,b)=>b.level-a.level);
+    (chest) => chest.tier === modal?.tier).sort((a,b)=>b?.level-a?.level);
   //const [confirm] = useRemix(GAME_CONFIRM);
 
   const tierMap = {
@@ -36,11 +36,12 @@ const ModalChest = () => {
   }
   const columnCount = 4;
   const chestPlaceHolderCount = 20;
-  var chestEmptyLimit = chests?.length>chestPlaceHolderCount? chests?.length % columnCount:clamp(chestPlaceHolderCount - chests?.length, 0, chestPlaceHolderCount);
+  let chestEmptyLimit = chests?.length && chests?.length > chestPlaceHolderCount ? chests?.length % columnCount : clamp(chestPlaceHolderCount - chests?.length, 0, chestPlaceHolderCount);
   // fill remaining empty slots in the row
-  if(chests?.length>0 && chestEmptyLimit!=0) chestEmptyLimit = columnCount-chestEmptyLimit;
+  if (chests?.length > 0 && chestEmptyLimit !== 0) chestEmptyLimit = columnCount - chestEmptyLimit >= 0 ? columnCount - chestEmptyLimit : 0;
   useClickOutside([grid_ref], () => modalClear());
-  const gridMap = [...chests, ...Array(chestEmptyLimit).keys()];
+  const emptyGrid = chestEmptyLimit >= 0 ? Array(chestEmptyLimit).keys() : [];
+  const gridMap = [...chests, ...emptyGrid];
 
   return (
     <_grid_container>

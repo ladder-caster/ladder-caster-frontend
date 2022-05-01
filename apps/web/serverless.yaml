@@ -1,8 +1,8 @@
 component: website
-name: ladder-caster-previous
+name: ladder-caster-play
 stage: prod
 
 inputs:
   src: ./build
-  domain: https://previous.laddercaster.com
+  domain: https://play.laddercaster.com
   region: us-east-1

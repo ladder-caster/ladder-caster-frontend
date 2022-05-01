@@ -52,9 +52,10 @@ const Timer = () => {
       (prev_game &&
         prev_game?.turnInfo?.lastCrankSeconds?.toNumber() !==
           game?.turnInfo?.lastCrankSeconds?.toNumber());
-    start = game?.turnInfo?.lastCrankSeconds?.toNumber();
-    delay = game?.turnInfo?.turnDelay;
+    
     const next_second = () => {
+      start = game?.turnInfo?.lastCrankSeconds?.toNumber();
+      delay = game?.turnInfo?.turnDelay;
       elapsed = Math.floor((+dayjs() - start * 1000) / 1000);
       ended = elapsed >= delay;
       remaining = !ended ? delay - elapsed : 0;
@@ -93,7 +94,7 @@ const Timer = () => {
       interval = setInterval(() => next_second(), 1000);
       return () => clearInterval(interval);
     }
-  }, [game]);
+  }, [game, game?.turnInfo?.lastCrankSeconds?.toNumber()]);
 
   const Button = useMemo(() => {
     return () => {

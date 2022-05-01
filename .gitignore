@@ -28,6 +28,8 @@ yarn-error.log*
 .idea
 .idea/
 
+.yarn/*
+.yarn
 yarn.lock
 
 **/node_modules/*

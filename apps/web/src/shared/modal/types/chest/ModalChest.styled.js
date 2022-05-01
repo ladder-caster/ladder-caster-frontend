@@ -29,6 +29,7 @@ export const _grid_container = styled(_chest)`
   top: 0;
   backdrop-filter: blur(5px);
   padding-top: 72px;
+  padding-bottom: 12px;
 `;
 export const _grid = styled.div`
   display: grid;
