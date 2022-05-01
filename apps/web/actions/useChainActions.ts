@@ -480,7 +480,6 @@ export const useChainActions = () => {
       setConfirm({});
     },
     async confirmChest(chest) {
-      setModal('');
       setDrawer('');
       setContext('');
       setConfirm({});

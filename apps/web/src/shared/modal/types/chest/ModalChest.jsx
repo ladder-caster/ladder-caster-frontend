@@ -1,52 +1,77 @@
 import React, { useRef } from 'react';
-import { _chest, _image, _confirm } from './ModalChest.styled';
+import { _grid, _grid_item, _grid_item_selectable, _grid_container, _grid_label,_grid_close_button,_double_height_clickable } from './ModalChest.styled';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
-import { _button } from '../loot/ModalLoot.styled';
+
 import {
   GAME_CONFIRM,
   GAME_INVENTORY,
   ITEM_CHEST,
   MODAL_ACTIVE,
+  TIER_I,
+  TIER_II,
+  TIER_III,
+  TIER_IV
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { filter } from 'lodash';
+import { filter, clamp } from 'lodash';
 import NFT from '../../../nft/NFT';
-
+import { _level, _overlay } from '../../../item/Item.styled';
 const ModalChest = () => {
   const { t } = useTranslation();
   const { modalClear, confirmChest } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
-  const button_ref = useRef();
+  const grid_ref = useRef();
   const [inventory] = useRemix(GAME_INVENTORY);
-  const [confirm] = useRemix(GAME_CONFIRM);
-  const first_chest = filter(
-    inventory?.chests,
-    (chest) => chest.tier === modal?.tier,
-  )?.[0];
+  const chests = filter(inventory?.chests,
+    (chest) => chest.tier === modal?.tier).sort((a,b)=>b.level-a.level);
+  //const [confirm] = useRemix(GAME_CONFIRM);
 
-  useClickOutside(button_ref, () => modalClear());
+  const tierMap = {
+    [TIER_I]: 1,
+    [TIER_II]: 2,
+    [TIER_III]: 3,
+    [TIER_IV]: 4,
+  }
+  const columnCount = 4;
+  const chestPlaceHolderCount = 20;
+  var chestEmptyLimit = chests?.length>chestPlaceHolderCount? chests?.length % columnCount:clamp(chestPlaceHolderCount - chests?.length, 0, chestPlaceHolderCount);
+  // fill remaining empty slots in the row
+  if(chests?.length>0 && chestEmptyLimit!=0) chestEmptyLimit = columnCount-chestEmptyLimit;
+  useClickOutside([grid_ref], () => modalClear());
+  const gridMap = [...chests, ...Array(chestEmptyLimit).keys()];
 
   return (
-    <_chest>
-      <_image onClick={() => confirmChest(first_chest?.mint || first_chest)}>
-        {first_chest && <NFT type={ITEM_CHEST} tier={modal?.tier} />}
-      </_image>
-      <_confirm>
-        <AnimateButton $hidden={!confirm} key={'button-modal-chest'}>
-          <_button
-            disabled={!confirm}
-            key={'button-modal-chest'}
-            ref={button_ref}
-            onClick={() => confirmChest(first_chest?.mint || first_chest)}
-          >
-            {t('modal.chest.action')}
-          </_button>
-        </AnimateButton>
-      </_confirm>
-    </_chest>
+    <_grid_container>
+      <_grid_label>{t("modal.chests.title").toUpperCase()} {tierMap[modal?.tier]}</_grid_label>
+      <_grid ref={grid_ref}>
+        {
+          gridMap.map((chest,index)=>{
+            if(chest?.tier){
+            return (
+              <_grid_item_selectable key={'chest_full_' + index} onClick={() => confirmChest(chest?.mint || chest)}>
+              <_overlay>
+                <_level>
+                  <span>{chest.level}</span>
+                </_level>
+              </_overlay>
+
+              <NFT
+                type={ITEM_CHEST}
+                tier={chest.tier}
+              />
+
+            </_grid_item_selectable>
+            )}
+            
+            return <_grid_item key={'chest_empty_'+index}></_grid_item>;
+          }
+          )
+        }
+      </_grid>
+      <_grid_close_button><span>{t("drawer.close")}</span><_double_height_clickable/></_grid_close_button>
+    </_grid_container>
   );
 };
 
