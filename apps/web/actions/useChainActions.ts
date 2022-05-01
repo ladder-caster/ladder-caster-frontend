@@ -51,7 +51,12 @@ import {
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
 } from 'core/remix/state';
-import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
+import {
+  TAB_REDEEM,
+  TAB_WALLET,
+  TABS_MINT_REDEEM,
+  TAB_MINT,
+} from 'core/remix/tabs';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -917,6 +922,11 @@ export const useChainActions = () => {
       setWalletTab(TAB_REDEEM);
       setContext(INIT_STATE_REDEEM);
     },
+    async openDrawerMint() {
+      setDrawer({ type: DRAWER_WALLET });
+      setWalletTab(TAB_MINT);
+      setContext(INIT_STATE_REDEEM);
+    },
     async openDrawerSettings() {
       setDrawer({ type: DRAWER_SETTINGS });
     },
@@ -960,6 +970,9 @@ export const useChainActions = () => {
           INST_MINT_NFT,
           '',
         );
+      }).then(async () => {
+        if (context?.nft?.data.name === 'Caster')
+          setCasters(await playerContext.getCasters());
       });
     },
     async chooseMint(item) {
@@ -1009,6 +1022,9 @@ export const useChainActions = () => {
             INST_MINT_NFT,
             '',
           );
+        }).then(async () => {
+          if (caster || context?.caster)
+            setCasters(await playerContext.getCasters());
         });
       }
     },
@@ -1280,18 +1296,18 @@ export const useChainActions = () => {
     },
     async web3AuthConnect(loginProvider: string) {
       try {
-        if (!web3Auth) {
-          console.log('web3auth not initialized yet');
-          return;
-        }
-        const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-          loginProvider,
-          login_hint: '',
-        });
-
-        setProvider(provider);
-        const user = await web3Auth.getUserInfo();
-        console.log(user);
+        // if (!web3Auth) {
+        //   console.log('web3auth not initialized yet');
+        //   return;
+        // }
+        // const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        //   loginProvider,
+        //   login_hint: '',
+        // });
+        //
+        // setProvider(provider);
+        // const user = await web3Auth.getUserInfo();
+        // console.log(user);
       } catch (error) {
         console.error(error);
       }

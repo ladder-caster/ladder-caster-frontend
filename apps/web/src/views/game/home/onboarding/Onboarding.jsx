@@ -6,10 +6,7 @@ import {
   INIT_CHAIN_LOAD,
 } from 'chain/hooks/state';
 import {
-  _home,
-  _header,
-  _title,
-  _feed,
+  _google,
   _section,
   _description,
   _button,
@@ -18,16 +15,20 @@ import {
   _step,
   _order,
   _task,
-  _divider,
-  _button_override,
   _link,
   _icon,
   _card,
+  _circle,
 } from '../Dashboard.styled';
 import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { DEMO_MODE, GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
+import {
+  DEMO_MODE,
+  GAME_INIT,
+  GAME_RESOURCES,
+  USER_PHASE,
+} from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { useActions } from '../../../../../actions';
@@ -38,6 +39,7 @@ import Spotlight from '../../../../shared/spotlight/Spotlight';
 import { IconMoney } from 'design/icons/money.icon';
 import { IconLightning } from 'design/icons/lightning.icon';
 import Skeleton from './skeleton/Skeleton';
+import { IconGoogle } from '../../../../../../libs/design/icons/google.icon';
 
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
@@ -51,6 +53,7 @@ export const Onboarding = ({ home }) => {
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
   const [phase, setPhase] = useRemix(USER_PHASE);
   const { createLocalWallet } = useLocalWallet();
+  const { openDrawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
     startDemo,
@@ -101,7 +104,8 @@ export const Onboarding = ({ home }) => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if ((initLoading && active) || (!phase && casters?.length)) return <Skeleton />;
+  if ((initLoading && active) || (!phase && casters?.length))
+    return <Skeleton />;
 
   return (
     <>
@@ -114,16 +118,18 @@ export const Onboarding = ({ home }) => {
               <span>{t('connect.wallet')}</span>
             </_button>
 
-            <_button
-              $big
-              $long
-              onClick={() => {
-                web3AuthConnect('google');
-              }}
-            >
-              <IconWallet />
-              <span>{t('connect.web3Auth')}</span>
-            </_button>
+            {/*<_google*/}
+            {/*  $big*/}
+            {/*  $long*/}
+            {/*  onClick={() => {*/}
+            {/*    web3AuthConnect('google');*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  <_circle>*/}
+            {/*    <IconGoogle />*/}
+            {/*  </_circle>*/}
+            {/*  <span>{t('connect.web3Auth')}</span>*/}
+            {/*</_google>*/}
             {demo ? (
               <AnimateButton low>
                 <_button $long onClick={() => generateTestWallet()}>
@@ -171,10 +177,10 @@ export const Onboarding = ({ home }) => {
       {(initialized && casters?.length === 0) || (initialized && home) ? (
         <>
           <_step>
-            <_card $active={!(resources.lada !== 0 || casters?.length !== 0)}>
+            <_card $active={!(resources?.lada !== 0 || casters?.length !== 0)}>
               <Spotlight>
                 <_icon
-                  $active={!(resources.lada !== 0 || casters?.length !== 0)}
+                  $active={!(resources?.lada !== 0 || casters?.length !== 0)}
                   $step={1}
                 >
                   <IconMoney />
@@ -182,13 +188,22 @@ export const Onboarding = ({ home }) => {
               </Spotlight>
             </_card>
             <_item>
-              <_task $disabled={resources.lada !== 0 || casters?.length !== 0}>
-                1. {t('home.task.lada')}
+              <_task $disabled={resources?.lada !== 0 || casters?.length !== 0}>
+                1. {t('home.task.redeem')}
+                <div>{t('home.task.lada')}</div>
               </_task>
               <_actions>
+                <_button
+                  disabled={resources?.lada >= 1000 || casters?.length !== 0}
+                  $disabled={resources?.lada >= 1000 || casters?.length !== 0}
+                  style={{ marginRight: 8 }}
+                  onClick={() => openDrawerRedeem()}
+                  $noIcon
+                >
+                  <span>{t('visit.redeem')}</span>
+                </_button>
+                <span>or</span>
                 <_link
-                  disabled={resources.lada !== 0 || casters?.length !== 0}
-                  $disabled={resources.lada !== 0 || casters?.length !== 0}
                   href={
                     resources.lada !== 0 || casters?.length !== 0
                       ? '#'
@@ -199,8 +214,12 @@ export const Onboarding = ({ home }) => {
                       ? '_self'
                       : '_blank'
                   }
+                  disabled={resources?.lada !== 0 || casters?.length !== 0}
+                  $disabled={resources?.lada !== 0 || casters?.length !== 0}
+                  style={{ marginLeft: 8 }}
+                  onClick={() => {}}
+                  $noIcon
                 >
-                  <IconHat />
                   <span>{t('visit.buy.lada')}</span>
                 </_link>
               </_actions>
@@ -233,15 +252,6 @@ export const Onboarding = ({ home }) => {
                   $noIcon
                 >
                   <span>{t('spellcasters.mint')}</span>
-                </_button>
-                <span>or</span>
-                <_button
-                  style={{ marginLeft: 8 }}
-                  disabled={true}
-                  $disabled={true}
-                  $noIcon
-                >
-                  <span>{t('spellcasters.stake')}</span>
                 </_button>
               </_actions>
             </_item>

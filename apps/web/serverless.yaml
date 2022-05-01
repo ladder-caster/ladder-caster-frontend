@@ -1,8 +1,8 @@
 component: website
-name: ladder-caster-draco
+name: ladder-caster-play
 stage: prod
 
 inputs:
   src: ./build
-  domain: https://draco.laddercaster.com
+  domain: https://play.laddercaster.com
   region: us-east-1
