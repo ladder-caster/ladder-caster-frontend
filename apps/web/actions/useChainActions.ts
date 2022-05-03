@@ -223,7 +223,7 @@ export const useChainActions = () => {
       if (casterInstance) {
         const nextCaster = await casterInstance.refreshCaster();
         const publicKey = casterInstance.getCasterId();
-        if  (nextCaster) nextCaster.publicKey = publicKey;
+        if (nextCaster) nextCaster.publicKey = publicKey;
         const nextCasters = remix?.getValue(CHAIN_CASTERS);
 
         if (nextCaster && publicKey) {
@@ -256,8 +256,6 @@ export const useChainActions = () => {
         setItems(await playerContext.getInventory());
       }
     } else {
-      console.log('error refreshing');
-
       setMutation({
         id: nanoid(),
         rpc: false,

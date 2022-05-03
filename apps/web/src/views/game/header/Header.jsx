@@ -45,9 +45,6 @@ const Header = withTheme(({ theme }) => {
   const [resources] = useRemix(GAME_RESOURCES);
   const [game] = useRemix(CHAIN_GAME);
   const [initialized] = useRemix(GAME_INIT);
-  
-  console.log('Game', game);
-  
 
   const prevGold = usePrevious(+resources?.lada || 0);
   const prevFire = usePrevious(+resources?.fire || 0);

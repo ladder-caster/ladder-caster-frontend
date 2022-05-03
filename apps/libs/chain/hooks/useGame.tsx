@@ -52,7 +52,6 @@ export const useGame = () => {
           }
 
           try {
-            console.log('init');
             setResources(await playerContext.getResources());
             setItems(await playerContext.getInventory());
             setCasters(await playerContext.getCasters());
