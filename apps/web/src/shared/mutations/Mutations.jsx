@@ -38,7 +38,6 @@ const Mutations = withTheme(({ theme }) => {
   const [mutation, setMutation] = useRemix(CREATE_MUTATION);
   const [codes] = useRemix(ERROR_CODES);
   const [offline, setOffline] = useRemix(USER_OFFLINE);
-  const [actions, setActions] = useState({});
   const [queue, setQueue] = useState([]);
   const prev_queue = usePrevious(queue);
 
@@ -48,13 +47,11 @@ const Mutations = withTheme(({ theme }) => {
       // Find in the queue or add
       const match = findIndex(queue, (item) => item.id === mutation.id);
       const next_queue = [...queue];
-      
+
       if (match !== -1) {
         next_queue[match] = mutation;
         setQueue(next_queue);
       } else setQueue([...queue, mutation]);
-      
-      setActions({ ...actions, [mutation.id]: mutation });
       setMutation(undefined);
     }
   }, [mutation]);
