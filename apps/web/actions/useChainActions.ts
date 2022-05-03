@@ -159,14 +159,13 @@ export const useChainActions = () => {
       const e = confirmationResult?.value?.err;
 
       if (
-        String(e).includes('Blockhash') ||
-        String(e).includes('Solana') ||
-        String(e).includes('Raw')
+        String(e).includes('Blockhash')
       ) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
-        const parsedMessage = handleCustomErrors(e);
+        let parsedMessage = handleCustomErrors(e);
+        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
@@ -184,14 +183,13 @@ export const useChainActions = () => {
       return confirmationResult;
     } catch (e) {
       if (
-        String(e).includes('Blockhash') ||
-        String(e).includes('Solana') ||
-        String(e).includes('Raw')
+        String(e).includes('Blockhash')
       ) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
-        const parsedMessage = handleCustomErrors(e.message);
+        let parsedMessage = handleCustomErrors(e.message);
+        if (e.message?.includes('Solana')) parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
