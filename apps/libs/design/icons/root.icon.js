@@ -1,6 +1,6 @@
 import React from 'react';
 
-const rootImg = require('../assets/resource3.png');
+const rootImg = require('../assets/earth.png');
 
 export const IconRootIMG = () => {
   return <img src={rootImg} />;

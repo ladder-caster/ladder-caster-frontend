@@ -1,6 +1,6 @@
 import React from 'react';
 
-const emberImg = require('../../design/assets/resource1.png');
+const emberImg = require('../../design/assets/fire.png');
 
 export const IconEmberIMG = () => {
   return <img src={emberImg} />;

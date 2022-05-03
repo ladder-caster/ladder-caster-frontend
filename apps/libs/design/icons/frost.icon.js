@@ -1,6 +1,6 @@
 import React from 'react';
 
-const frostImg = require('../../design/assets/resource2.png');
+const frostImg = require('../../design/assets/water.png');
 
 export const IconFrostIMG = () => {
   return <img src={frostImg} />;
