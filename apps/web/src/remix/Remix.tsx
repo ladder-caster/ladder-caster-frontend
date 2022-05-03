@@ -315,27 +315,27 @@ const Remix = () => {
     if (game) {
       setMap(generateMap(game));
 
-      if (client) {
-        window.addEventListener('focus', () => {
-          if (client.program._events._eventCallbacks.size === 0)
-            listener = client.program.addEventListener('NewTurn', async () => {
-              const gameContext = new GameContext(
-                client,
-                localStorage.getItem('gamePK'),
-              );
-              setGame(await gameContext.getGameAccount());
-            });
-        });
+      // if (client) {
+      //   window.addEventListener('focus', () => {
+      //     if (client.program._events._eventCallbacks.size === 0)
+      //       listener = client.program.addEventListener('NewTurn', async () => {
+      //         const gameContext = new GameContext(
+      //           client,
+      //           localStorage.getItem('gamePK'),
+      //         );
+      //         setGame(await gameContext.getGameAccount());
+      //       });
+      //   });
 
-        if (client.program._events._eventCallbacks.size === 0)
-          listener = client.program.addEventListener('NewTurn', async () => {
-            const gameContext = new GameContext(
-              client,
-              localStorage.getItem('gamePK'),
-            );
-            setGame(await gameContext.getGameAccount());
-          });
-      }
+      //   if (client.program._events._eventCallbacks.size === 0)
+      //     listener = client.program.addEventListener('NewTurn', async () => {
+      //       const gameContext = new GameContext(
+      //         client,
+      //         localStorage.getItem('gamePK'),
+      //       );
+      //       setGame(await gameContext.getGameAccount());
+      //     });
+      // }
     }
 
     // return () => {
@@ -343,6 +343,51 @@ const Remix = () => {
     //   if (client) client.program.removeEventListener(listener);
     // };
   }, [game, client]);
+
+  useEffect(() => {
+    let interval, timeout;
+
+    const gamePoll = () => {
+      const poll = async () => {
+        const prevGame = game;
+        const gameContext = new GameContext(
+          client,
+          localStorage.getItem('gamePK'),
+        );
+        const nextGame = await gameContext.getGameAccount();
+        setGame(nextGame);
+
+        if (prevGame?.turnInfo?.turn !== nextGame?.turnInfo?.turn) {
+          clearInterval(interval);
+        }
+      };
+
+      poll();
+      interval = setInterval(() => {
+        poll();
+      }, 10000);
+    };
+
+    if (game) {
+      console.log(game);
+      const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
+      const timeDiff =
+        new Date().getTime() -
+        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getTime();
+      const crankTime = timeTwentyMinute - timeDiff;
+
+      if (crankTime > 0) {
+        setTimeout(() => gamePoll(), crankTime + 10000);
+      } else {
+        gamePoll();
+      }
+    }
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [game?.turnInfo?.lastCrankSeconds?.toNumber()]);
 
   useEffect(() => {
     if (casters) {
