@@ -6,6 +6,7 @@
 import { Client, Game, GameTurnInfo, SLOTS_PUBKEY } from '.';
 import * as anchor from '@project-serum/anchor';
 import {
+  PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
@@ -14,10 +15,10 @@ export class GameContext {
   constructor(private client: Client, private gamePK: string) {}
 
   async getGameAccount(): Promise<Game> {
-    const next_game = await this.client.program.account.game.fetch(
-      new anchor.web3.PublicKey(this.gamePK)
-    ) as Game;
-    return (next_game);
+    const next_game = (await this.client.program.account.game.fetch(
+      new anchor.web3.PublicKey(this.gamePK),
+    )) as Game;
+    return next_game;
   }
 
   //TODO: needs to accept user that cranked and give them a reward to crank
@@ -27,6 +28,11 @@ export class GameContext {
     const game = (await this.client.program.account.game.fetch(
       gameAccount,
     )) as Game;
+
+    const [season] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
+      this.client.program.programId,
+    );
 
     const [gameTurnData] = await anchor.web3.PublicKey.findProgramAddress(
       [
@@ -56,6 +62,7 @@ export class GameContext {
       accounts: {
         gameAccount: new anchor.web3.PublicKey(this.gamePK),
         slots: SLOTS_PUBKEY,
+        season: season,
         authority: this.client.wallet.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
