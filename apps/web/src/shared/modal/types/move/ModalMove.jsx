@@ -30,10 +30,10 @@ import {
   CONFIRM_MOVE,
   GAME_CONFIRM,
   TYPE_CRAFT,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
+  TYPE_RES3,
+  TYPE_RES1,
   TYPE_LEGENDARY,
-  TYPE_RESOURCE2,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
@@ -64,9 +64,9 @@ const ModalMove = ({ height, options }) => {
     : caster?.position;
 
   const Icon = {
-    [TYPE_RESOURCE1]: IconResourcee1IMG,
-    [TYPE_RESOURCE2]: IconResource2IMG,
-    [TYPE_RESOURCE3]: IconResource3IMG,
+    [TYPE_RES1]: IconResourcee1IMG,
+    [TYPE_RES2]: IconResource2IMG,
+    [TYPE_RES3]: IconResource3IMG,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];

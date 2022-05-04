@@ -20,6 +20,7 @@ export class CasterContext {
   private game: Game;
   private playerAccount: PublicKey;
   private gameSigner: PublicKey;
+  private season: PublicKey;
 
   constructor(
     private client: Client,
@@ -33,7 +34,13 @@ export class CasterContext {
   }
 
   async initCaster() {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
     const playerLadaTokenAccount = await this.getTokenAccount(
       game.ladaMintAccount,
     );
@@ -45,6 +52,7 @@ export class CasterContext {
         tokenProgram: TOKEN_PROGRAM_ID,
         rent: SYSVAR_RENT_PUBKEY,
         authority: this.playerPubKey,
+        season: season,
         game: gameAccount,
         player: playerAccount,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
@@ -59,11 +67,20 @@ export class CasterContext {
   }
 
   async casterCommitMove(lvl: number, col: number) {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
+    const playerLadaTokenAccount = await this.getTokenAccount(
+      game.ladaMintAccount,
+    );
 
-    return await this.client.program.rpc.casterCommitMove(lvl, col, {
+    return await this.client.program.rpc.casterCommitMoveS1(lvl, col, {
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -73,8 +90,11 @@ export class CasterContext {
         game: gameAccount,
         player: playerAccount,
         caster: this.caster?.publicKey,
+        season: season,
         ...mintAccounts,
         gameTurnData,
+        ladaMint: game.ladaMintAccount,
+        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });
@@ -107,10 +127,20 @@ export class CasterContext {
   }
 
   async casterCommitCraft(item1: Item, item2: Item, item3: Item) {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
     const mintAccounts = await this.getMintAccounts(game);
-    return await this.client.program.rpc.casterCommitCraft({
+    const playerLadaTokenAccount = await this.getTokenAccount(
+      game.ladaMintAccount,
+    );
+
+    return await this.client.program.rpc.casterCommitCraftS1({
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -124,7 +154,10 @@ export class CasterContext {
         item2: item2.publicKey,
         item3: item3.publicKey,
         gameTurnData,
+        season: season,
         ...mintAccounts,
+        ladaMint: game.ladaMintAccount,
+        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });
@@ -261,6 +294,7 @@ export class CasterContext {
       playerAccount,
       game,
       gameSigner,
+      season,
     ] = await this.getAccounts();
     const playerLadaTokenAccount = await this.getTokenAccount(
       game.ladaMintAccount,
@@ -292,6 +326,7 @@ export class CasterContext {
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         authority: this.playerPubKey,
         game: gameAccount,
+        season: season,
         player: playerAccount,
         caster: this.caster?.publicKey,
         gameSigner: gameSigner,
@@ -373,14 +408,15 @@ export class CasterContext {
   }
 
   private async redeemCraft(item) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
 
-    return this.client.program.instruction.casterRedeemCraft({
+    return this.client.program.instruction.casterRedeemCraftS1({
       accounts: {
         game: gameAccount,
         authority: this.playerPubKey,
         player: playerAccount,
         caster: this.caster?.publicKey,
+        season: season,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         rent: SYSVAR_RENT_PUBKEY,
@@ -397,6 +433,7 @@ export class CasterContext {
       playerAccount,
       game,
       gameSigner,
+      season,
     ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
 
@@ -411,6 +448,7 @@ export class CasterContext {
         rent: SYSVAR_RENT_PUBKEY,
         authority: this.playerPubKey,
         game: gameAccount,
+        season: season,
         player: playerAccount,
         caster: this.caster?.publicKey,
         gameSigner: gameSigner,
@@ -647,13 +685,14 @@ export class CasterContext {
   }
 
   async giveItem(itemType: ItemType) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     const item = Keypair.generate();
 
     return await this.client.program.rpc.giveItem(itemType, new anchor.BN(1), {
       accounts: {
         systemProgram: anchor.web3.SystemProgram.programId,
         game: gameAccount,
+        season: season,
         authority: this.playerPubKey,
         player: playerAccount,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
@@ -724,7 +763,7 @@ export class CasterContext {
   }
 
   private async getAccounts(): Promise<
-    [PublicKey, PublicKey, Game, PublicKey]
+    [PublicKey, PublicKey, Game, PublicKey, PublicKey]
   > {
     const gameAccount = new anchor.web3.PublicKey(this.gamePK);
     if (!this.playerAccount) {
@@ -750,6 +789,21 @@ export class CasterContext {
       this.gameSigner = gameSigner;
     }
 
-    return [gameAccount, this.playerAccount, this.game, this.gameSigner];
+    if (!this.season) {
+      const [season] = findProgramAddressSync(
+        [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
+        this.client.program.programId,
+      );
+
+      this.season = season;
+    }
+
+    return [
+      gameAccount,
+      this.playerAccount,
+      this.game,
+      this.gameSigner,
+      this.season,
+    ];
   }
 }

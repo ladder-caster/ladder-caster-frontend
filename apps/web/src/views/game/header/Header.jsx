@@ -26,9 +26,9 @@ import {
   DEMO_MODE,
   GAME_INIT,
   GAME_RESOURCES,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
@@ -76,19 +76,19 @@ const Header = withTheme(({ theme }) => {
             <Counter from={prevGold} to={+resources?.lada} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE2]}>
+            <_icon $background={theme.element[TYPE_RES2]}>
               <IconResource2IMG />
             </_icon>
             <Counter from={prevWater} to={+resources?.resource2} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE1]}>
+            <_icon $background={theme.element[TYPE_RES1]}>
               <IconResourcee1IMG />
             </_icon>
             <Counter from={prevFire} to={+resources?.resource1} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE3]}>
+            <_icon $background={theme.element[TYPE_RES3]}>
               <IconResource3IMG />
             </_icon>
             <Counter from={prevEarth} to={+resources?.resource3} />

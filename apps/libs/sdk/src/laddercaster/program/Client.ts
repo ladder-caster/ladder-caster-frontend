@@ -1,12 +1,18 @@
 import * as anchor from '@project-serum/anchor';
 import { Connection, Keypair } from '@solana/web3.js';
 import laddercasterIDLMain from '../config/laddercast-mainnet.json';
+import laddercasterIDLMainPriv from '../config/laddercast-mainnet-priv.json';
 import laddercasterIDLDev from '../config/laddercast-dev.json';
 import laddercasterIDLLocal from '../config/laddercast-local.json';
 import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
-export type Environment = 'mainnet' | 'localnet' | 'devnet' | 'localprod';
+export type Environment =
+  | 'mainnet'
+  | 'mainnet-priv'
+  | 'localnet'
+  | 'devnet'
+  | 'localprod';
 export const SLOTS_PUBKEY = 'SysvarS1otHashes111111111111111111111111111';
 const LOCAL_SECRET = 'LOCAL_SECRET';
 
@@ -47,6 +53,11 @@ export class Client {
           'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
         );
       }
+      case 'mainnet-priv': {
+        return new anchor.web3.Connection(
+          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
+        );
+      }
       case 'localnet': {
         return new anchor.web3.Connection('http://localhost:8899');
       }
@@ -68,11 +79,14 @@ export class Client {
       case 'mainnet': {
         return laddercasterIDLMain;
       }
+      case 'mainnet-priv': {
+        return laddercasterIDLMainPriv;
+      }
       case 'localnet': {
         return laddercasterIDLLocal;
       }
       case 'localprod': {
-        return laddercasterIDLMain;
+        return laddercasterIDLMainPriv;
       }
       case 'devnet': {
         return laddercasterIDLDev;

@@ -18,9 +18,9 @@ import {
   GAME_SPELLCASTERS,
   TYPE_CRAFT,
   TYPE_LEGENDARY,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
   PHASE_ACTIONS,
   USER_PHASE,
   GAME_INVENTORY,
@@ -91,9 +91,9 @@ const Queue = ({ spell_id }) => {
   const element = tile?.type;
 
   const IconElement = {
-    [TYPE_RESOURCE1]: IconResourcee1,
-    [TYPE_RESOURCE2]: IconResource2,
-    [TYPE_RESOURCE3]: IconResource3,
+    [TYPE_RES1]: IconResourcee1,
+    [TYPE_RES2]: IconResource2,
+    [TYPE_RES3]: IconResource3,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconTreasure,
   }[element];

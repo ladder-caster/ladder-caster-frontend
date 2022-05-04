@@ -13,6 +13,7 @@ import {
   ParsedAccountData,
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
+  SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   SYSVAR_SLOT_HASHES_PUBKEY,
   Transaction,
@@ -55,6 +56,7 @@ async function getMerkleSingleton() {
 export type ResourcesPK = {
   gameAccount: string;
   gameAccountProd: string;
+  gameAccountProdPriv: string;
 };
 
 export class PlayerContext {
@@ -62,6 +64,7 @@ export class PlayerContext {
   private playerAccount: PublicKey;
   private playerBump: number;
   private gameSigner: PublicKey;
+  private season: PublicKey;
 
   constructor(
     private client: Client,
@@ -126,9 +129,6 @@ export class PlayerContext {
     ).map((item) => {
       return { ...(item.account as Item), publicKey: item.publicKey };
     });
-    // .filter((item) => {
-    //   return !item.equippedOwner;
-    // });
 
     return itemArray;
   }
@@ -185,8 +185,14 @@ export class PlayerContext {
   }
 
   async initPlayer() {
-    const [, , , game] = await this.getAccounts();
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      ,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
 
     const tx = new Transaction();
 
@@ -197,6 +203,7 @@ export class PlayerContext {
         this.client.program.instruction.initPlayer({
           accounts: {
             game: gameAccount,
+            season: season,
             playerAccount: playerAccount,
             authority: this.playerPubKey,
             systemProgram: SystemProgram.programId,
@@ -289,7 +296,7 @@ export class PlayerContext {
   }
 
   async openChest(chestItem: Item) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
     const item1 = Keypair.generate();
     const item2 = Keypair.generate();
     const item3 = Keypair.generate();
@@ -301,6 +308,7 @@ export class PlayerContext {
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         chest: chestItem.publicKey,
+        season: season,
         item1: item1.publicKey,
         item2: item2.publicKey,
         item3: item3.publicKey,
@@ -327,6 +335,65 @@ export class PlayerContext {
           authority: this.playerPubKey,
         },
       },
+    );
+  }
+
+  async manualItemBurn(item: PublicKey) {
+    const [
+      gameAccount,
+      playerAccount,
+      ,
+      game,
+      gameSigner,
+      season,
+    ] = await this.getAccounts();
+    const mintAccounts = await this.getMintAccounts(game);
+
+    return this.client.program.rpc.manualItemBurn({
+      accounts: {
+        tokenProgram: TOKEN_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
+        authority: this.playerPubKey,
+        game: gameAccount,
+        player: playerAccount,
+        gameSigner,
+        season,
+        item,
+        ...mintAccounts,
+      },
+      signers: [this.client.wallet.payer],
+    });
+  }
+
+  private async getMintAccounts(game: Game) {
+    const ata_resourcemint1 = await this.getTokenAccount(
+      game.resource1MintAccount,
+    );
+    const ata_resourcemint2 = await this.getTokenAccount(
+      game.resource2MintAccount,
+    );
+    const ata_resourcemint3 = await this.getTokenAccount(
+      game.resource3MintAccount,
+    );
+
+    return {
+      resource1MintAccount: game.resource1MintAccount,
+      resource2MintAccount: game.resource2MintAccount,
+      resource3MintAccount: game.resource3MintAccount,
+      resource1TokenAccount: ata_resourcemint1,
+      resource2TokenAccount: ata_resourcemint2,
+      resource3TokenAccount: ata_resourcemint3,
+    };
+  }
+
+  private async getTokenAccount(publicKey: anchor.web3.PublicKey) {
+    return await Token.getAssociatedTokenAddress(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      publicKey,
+      this.client.wallet.publicKey,
     );
   }
 
@@ -382,18 +449,18 @@ export class PlayerContext {
 
     const accountsFiltered = accountsDecodedMeta
       .filter((result) => result && result.status === 'fulfilled')
-      .filter((t) => {
-        const uri = (t as PromiseFulfilledResult<
-          MetadataData
-        >).value.data?.uri?.replace?.(/\0/g, '');
-        return uri !== '' && uri !== undefined;
-      })
-      .filter((result) => {
-        return (
-          (result as PromiseFulfilledResult<MetadataData>)?.value?.data
-            ?.symbol === 'LC'
-        );
-      })
+      // .filter((t) => {
+      //   const uri = (t as PromiseFulfilledResult<
+      //     MetadataData
+      //   >).value.data?.uri?.replace?.(/\0/g, '');
+      //   return uri !== '' && uri !== undefined;
+      // })
+      // .filter((result) => {
+      //   return (
+      //     (result as PromiseFulfilledResult<MetadataData>)?.value?.data
+      //       ?.symbol === 'LC'
+      //   );
+      // })
       .map((result) => {
         return (result as PromiseFulfilledResult<MetadataData>)?.value;
       });
@@ -494,6 +561,90 @@ export class PlayerContext {
     });
   }
 
+  async redeemNFTTwinPack(nftMintKeys: PublicKey) {
+    console.log(nftMintKeys);
+    console.log('Your nft: ', nftMintKeys.toString());
+
+    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
+    console.log('game account', gameAccount.toString());
+    console.log('player account', playerAccount.toString());
+    const caster1 = Keypair.generate();
+    const caster2 = Keypair.generate();
+
+    console.log('caster 1 account', caster1.publicKey.toString());
+    console.log('caster 2 account', caster2.publicKey.toString());
+    const nftToken = await Token.getAssociatedTokenAddress(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      nftMintKeys,
+      this.playerPubKey,
+    );
+
+    console.log('nft token', nftToken.toString());
+    const [collectionPda] = findProgramAddressSync(
+      [
+        Buffer.from('collection'),
+        new PublicKey(
+          'CL3DQUqMYp49UKqvRoCFpnER1LGRGw5ULqhR72tamnNB',
+        ).toBuffer(),
+      ],
+      new PublicKey('cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'),
+    );
+    console.log('collectionPda', collectionPda.toString());
+
+    try {
+      console.log(await this.client.connection.getAccountInfo(collectionPda));
+    } catch (e) {
+      console.log('fetching collection pda failed', e);
+    }
+
+    const [metaplexTokenMetadata] = findProgramAddressSync(
+      [
+        Buffer.from('metadata'),
+        MetadataProgram.PUBKEY.toBuffer(),
+        nftMintKeys.toBuffer(),
+      ],
+      MetadataProgram.PUBKEY,
+    );
+    console.log('metaplexTokenMetadata', metaplexTokenMetadata.toString());
+
+    try {
+      console.log(
+        await this.client.connection.getAccountInfo(metaplexTokenMetadata),
+      );
+    } catch (e) {
+      console.log('fetching metaplextokenmetadata failed', e);
+    }
+
+    return await this.client.program.rpc.redeemCasters({
+      accounts: {
+        tokenProgram: TOKEN_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+        authority: this.playerPubKey,
+        game: gameAccount,
+        player: playerAccount,
+        season: season,
+        slots: SYSVAR_SLOT_HASHES_PUBKEY,
+        nftMint: nftMintKeys,
+        nftToken: nftToken,
+        candyMachine: new PublicKey(
+          'CL3DQUqMYp49UKqvRoCFpnER1LGRGw5ULqhR72tamnNB',
+        ),
+        collectionPda: collectionPda,
+        metaplexTokenMetadataProgram: MetadataProgram.PUBKEY,
+        metaplexTokenMetadata,
+        caster1: caster1.publicKey,
+        caster2: caster2.publicKey,
+      },
+      signers: [
+        // this.client.wallet.payer,
+        caster1,
+        caster2,
+      ],
+    });
+  }
+
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
@@ -538,6 +689,7 @@ export class PlayerContext {
       ,
       ,
       gameSigner,
+      season,
     ] = await this.getAccounts();
     const [nftMetadata] = await anchor.web3.PublicKey.findProgramAddress(
       [
@@ -574,6 +726,7 @@ export class PlayerContext {
       authority: this.playerPubKey,
       game: gameAccount,
       gameSigner: gameSigner,
+      season: season,
       player: playerAccount,
       metaplexMetadataAccount: metaplexMetadataAccount,
       metaplexTokenMetadataProgram: MetadataProgram.PUBKEY,
@@ -732,7 +885,7 @@ export class PlayerContext {
   }
 
   private async getAccounts(): Promise<
-    [PublicKey, PublicKey, number, Game, PublicKey]
+    [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]
   > {
     const gameAccount = new anchor.web3.PublicKey(this.gamePK);
     if (!this.playerAccount) {
@@ -759,12 +912,22 @@ export class PlayerContext {
       this.gameSigner = gameSigner;
     }
 
+    if (!this.season) {
+      const [season] = findProgramAddressSync(
+        [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
+        this.client.program.programId,
+      );
+
+      this.season = season;
+    }
+
     return [
       gameAccount,
       this.playerAccount,
       this.playerBump,
       this.game,
       this.gameSigner,
+      this.season,
     ];
   }
 }
