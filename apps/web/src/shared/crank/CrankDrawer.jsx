@@ -26,9 +26,9 @@ import { AnimateBar } from './animations/AnimateBar';
 import {
   GAME_MAP,
   GAME_SPELLCASTERS,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { map } from 'lodash';
 
@@ -73,9 +73,9 @@ const CrankDrawer = () => {
               const tile = row?.[col];
               if (
                 caster?.last_loot < game?.turnInfo?.turn &&
-                (tile?.type === TYPE_RESOURCE2 ||
-                  tile?.type === TYPE_RESOURCE3 ||
-                  tile?.type === TYPE_RESOURCE1)
+                (tile?.type === TYPE_RES2 ||
+                  tile?.type === TYPE_RES3 ||
+                  tile?.type === TYPE_RES1)
               ) {
                 if (!loot) setLoot(true);
               }

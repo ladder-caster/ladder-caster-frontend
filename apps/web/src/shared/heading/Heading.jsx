@@ -8,9 +8,9 @@ import {
   GAME_INIT,
   GAME_MAP,
   GAME_SPELLCASTERS,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
@@ -34,9 +34,9 @@ const Heading = ({ title, flat, marketplace }) => {
         const row = +caster?.position?.slice(1);
         const tile = board?.[row - 1]?.[col];
         const isLoot =
-          tile?.type === TYPE_RESOURCE3 ||
-          tile?.type === TYPE_RESOURCE1 ||
-          tile?.type === TYPE_RESOURCE2;
+          tile?.type === TYPE_RES3 ||
+          tile?.type === TYPE_RES1 ||
+          tile?.type === TYPE_RES2;
         if (isLoot) {
           max++;
           if (caster?.last_loot === currentTurn) looted++;

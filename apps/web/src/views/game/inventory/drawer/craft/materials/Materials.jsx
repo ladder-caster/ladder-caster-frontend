@@ -38,9 +38,9 @@ import {
   TIER_IV,
   TYPE_LEGENDARY,
   VIEW_SIZE,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
   USER_PHASE,
   PHASE_REWARDS,
   PHASE_EQUIP,
@@ -53,9 +53,9 @@ import Item from '../../../../../../shared/item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../../actions';
-import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
-import { IconResource2IMG } from 'design/icons/resource2.icon';
-import { IconResource3IMG } from 'design/icons/resource3.icon';
+import { IconFireeIMG } from 'design/icons/firee.icon';
+import { IconWaterIMG } from 'design/icons/water.icon';
+import { IconEarthIMG } from 'design/icons/earth.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
 import { findIndex } from 'lodash';
 
@@ -279,15 +279,15 @@ const Materials = () => {
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
                   <_icon $element={confirm?.tileType}>
-                    <IconResourcee1IMG />
+                    <IconFireeIMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                   <_icon $element={confirm?.tileType}>
-                    <IconResource2IMG />
+                    <IconWaterIMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                   <_icon $element={confirm?.tileType}>
-                    <IconResource3IMG />
+                    <IconEarthIMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                 </_cost>

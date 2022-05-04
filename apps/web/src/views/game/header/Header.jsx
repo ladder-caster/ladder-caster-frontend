@@ -17,18 +17,18 @@ import {
   _after,
 } from './Header.styled';
 import { withTheme } from 'styled-components';
-import { IconResource2IMG } from 'design/icons/resource2.icon';
-import { IconResource3IMG } from 'design/icons/resource3.icon';
-import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
+import { IconWaterIMG } from 'design/icons/water.icon';
+import { IconEarthIMG } from 'design/icons/earth.icon';
+import { IconFireeIMG } from 'design/icons/firee.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   DEMO_MODE,
   GAME_INIT,
   GAME_RESOURCES,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
@@ -47,9 +47,9 @@ const Header = withTheme(({ theme }) => {
   const [initialized] = useRemix(GAME_INIT);
 
   const prevGold = usePrevious(+resources?.lada || 0);
-  const prevFire = usePrevious(+resources?.resource1 || 0);
-  const prevWater = usePrevious(+resources?.resource2 || 0);
-  const prevEarth = usePrevious(+resources?.resource3 || 0);
+  const prevFire = usePrevious(+resources?.fire || 0);
+  const prevWater = usePrevious(+resources?.water || 0);
+  const prevEarth = usePrevious(+resources?.earth || 0);
 
   const TurnTitle = useMemo(() => {
     return () =>
@@ -76,22 +76,22 @@ const Header = withTheme(({ theme }) => {
             <Counter from={prevGold} to={+resources?.lada} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE2]}>
-              <IconResource2IMG />
+            <_icon $background={theme.element[TYPE_RES2]}>
+              <IconWaterIMG />
             </_icon>
-            <Counter from={prevWater} to={+resources?.resource2} />
+            <Counter from={prevWater} to={+resources?.water} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE1]}>
-              <IconResourcee1IMG />
+            <_icon $background={theme.element[TYPE_RES1]}>
+              <IconFireeIMG />
             </_icon>
-            <Counter from={prevFire} to={+resources?.resource1} />
+            <Counter from={prevFire} to={+resources?.fire} />
           </_coin>
           <_coin>
-            <_icon $background={theme.element[TYPE_RESOURCE3]}>
-              <IconResource3IMG />
+            <_icon $background={theme.element[TYPE_RES3]}>
+              <IconEarthIMG />
             </_icon>
-            <Counter from={prevEarth} to={+resources?.resource3} />
+            <Counter from={prevEarth} to={+resources?.earth} />
           </_coin>
         </_left>
         <_right>

@@ -1,9 +1,9 @@
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_RESOURCE3,
-  ATTRIBUTE_RESOURCE1,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_RESOURCE2,
+  ATTRIBUTE_RES2,
   ITEM_STAFF,
   RARITY_COMMON,
   RARITY_EPIC,
@@ -17,9 +17,9 @@ import { EQUIP_MAP } from 'core/utils/switch';
 
 export const staff = (level, rarity, tier) => {
   const attribute_types = [
-    ATTRIBUTE_RESOURCE1,
-    ATTRIBUTE_RESOURCE2,
-    ATTRIBUTE_RESOURCE3,
+    ATTRIBUTE_RES1,
+    ATTRIBUTE_RES2,
+    ATTRIBUTE_RES3,
     ATTRIBUTE_MAGIC,
     ATTRIBUTE_CRIT,
   ];
@@ -57,9 +57,9 @@ export const staff = (level, rarity, tier) => {
   };
 
   const value = {
-    [ATTRIBUTE_RESOURCE1]: () => element_attribute(),
-    [ATTRIBUTE_RESOURCE2]: () => element_attribute(),
-    [ATTRIBUTE_RESOURCE3]: () => element_attribute(),
+    [ATTRIBUTE_RES1]: () => element_attribute(),
+    [ATTRIBUTE_RES2]: () => element_attribute(),
+    [ATTRIBUTE_RES3]: () => element_attribute(),
     [ATTRIBUTE_MAGIC]: () => magic_attribute(),
     [ATTRIBUTE_CRIT]: () => crit_attribute(),
   }[chosen_attribute]?.();

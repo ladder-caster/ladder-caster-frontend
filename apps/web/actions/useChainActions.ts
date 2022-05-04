@@ -26,9 +26,9 @@ import {
   GAME_RESOURCES,
   TOKENS_ACTIVE,
   GAME_BOOST,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
-  TYPE_RESOURCE3,
+  TYPE_RES1,
+  TYPE_RES2,
+  TYPE_RES3,
   GAME_SPELLCASTERS,
   CREATE_MUTATION,
   DRAWER_SPELLCASTER,
@@ -55,7 +55,6 @@ import {
   CHAIN_LOCAL_CLIENT,
   CHAIN_PLAYER,
   CHAIN_NFTS,
-  CHAIN_OLD_CASTERS,
 } from 'chain/hooks/state';
 import { nanoid } from 'nanoid';
 import {
@@ -117,7 +116,6 @@ export const useChainActions = () => {
   const [game, setGame] = useRemix(CHAIN_GAME);
   const [items, setItems] = useRemix(CHAIN_ITEMS);
   const [casters, setCasters] = useRemix(CHAIN_CASTERS);
-  const [oldCasters, setOldCasters] = useRemix(CHAIN_OLD_CASTERS);
   const [resources, setResources] = useRemix(GAME_RESOURCES);
   const [spellcasters, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
   const [boost, setBoost] = useRemix(GAME_BOOST);
@@ -415,9 +413,6 @@ export const useChainActions = () => {
       });
     },
     async nextTurn() {
-      setDrawer('');
-      setContext('');
-
       await fetchGame(async () => {
         return await stateHandler(
           async () => {
@@ -472,7 +467,7 @@ export const useChainActions = () => {
     },
     modalCraft(caster) {
       setDrawer({ type: DRAWER_CRAFT });
-      setContext({ type: CRAFT_MATERIALS, caster });
+      setContext({ type: CRAFT_ITEM, caster });
     },
     actionMove(action) {
       setConfirm(action);
@@ -724,7 +719,7 @@ export const useChainActions = () => {
       }, casterContext);
     },
     async craftChooseCharacter(caster) {
-      setContext({ ...context, type: CRAFT_MATERIALS, caster });
+      setContext({ ...context, type: CRAFT_ITEM, caster });
     },
     async craftChooseItem(item) {
       setContext({ ...context, type: CRAFT_MATERIALS, item });
@@ -816,9 +811,9 @@ export const useChainActions = () => {
       setContext({
         ...context,
         caster,
-        [TYPE_RESOURCE3]: 0,
-        [TYPE_RESOURCE1]: 0,
-        [TYPE_RESOURCE2]: 0,
+        [TYPE_RES3]: 0,
+        [TYPE_RES1]: 0,
+        [TYPE_RES2]: 0,
       });
     },
     async decrementXP(element, custom) {
@@ -834,7 +829,7 @@ export const useChainActions = () => {
       });
     },
     async incrementXP(element, custom) {
-      let amount = context?.[element] || 0;
+      let amount = context?.[element];
       let max_amount = +resources?.[element];
       if (custom && amount + custom <= max_amount) {
         amount = amount + custom;
@@ -862,16 +857,16 @@ export const useChainActions = () => {
 
       const resources = [
         {
-          itemFeature: { fire: {} },
-          amount: context?.[TYPE_RESOURCE1],
+          itemFeature: { [ATTRIBUTE_RES1]: {} },
+          amount: context?.[TYPE_RES1],
         },
         {
-          itemFeature: { water: {} },
-          amount: context?.[TYPE_RESOURCE2],
+          itemFeature: { [ATTRIBUTE_RES2]: {} },
+          amount: context?.[TYPE_RES2],
         },
         {
-          itemFeature: { earth: {} },
-          amount: context?.[TYPE_RESOURCE3],
+          itemFeature: { [ATTRIBUTE_RES3]: {} },
+          amount: context?.[TYPE_RES3],
         },
       ];
 
@@ -933,7 +928,8 @@ export const useChainActions = () => {
         localStorage.getItem('gamePK'),
       );
 
-      setContext(INIT_STATE_REDEEM);
+      setDrawer('');
+      setContext({});
       setModal('');
 
       await fetchPlayer(async () => {
@@ -1221,9 +1217,9 @@ export const useChainActions = () => {
         last_mint: 0,
       });
       setResources({
-        resource1: 0,
-        resource2: 0,
-        resource3: 0,
+        fire: 0,
+        earth: 0,
+        water: 0,
         lada: 0,
       });
     },
@@ -1247,32 +1243,15 @@ export const useChainActions = () => {
             const tile = row?.[col];
             if (
               caster?.last_loot < game?.turnInfo?.turn &&
-              (tile?.type === TYPE_RESOURCE2 ||
-                tile?.type === TYPE_RESOURCE3 ||
-                tile?.type === TYPE_RESOURCE1)
+              (tile?.type === TYPE_RES2 ||
+                tile?.type === TYPE_RES3 ||
+                tile?.type === TYPE_RES1)
             ) {
               setTimeout(async () => await lootResources(caster), 1000 * count);
               count++;
             }
           }
         });
-      });
-    },
-    async prestigeCaster(casterPK) {
-      const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
-        find(oldCasters, (match) => match?.publicKey?.toString() === casterPK),
-      );
-      await fetchPlayer(async () => {
-        return await stateHandler(
-          async () => {
-            return await casterContext.prestigeCaster();
-          },
-          INST_MINT_NFT,
-          '',
-        );
       });
     },
   };

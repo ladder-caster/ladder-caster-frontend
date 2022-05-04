@@ -1,11 +1,11 @@
 import {
   ATTRIBUTE_XP,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_RESOURCE3,
-  ATTRIBUTE_RESOURCE1,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_RESOURCE2,
+  ATTRIBUTE_RES2,
   ITEM_BOOK,
   ITEM_HAT,
   ITEM_ROBE,
@@ -22,12 +22,37 @@ export const randomIntBetween = (start, end) => {
 };
 
 export const LEVEL_BOUNDS = [
-  251, 1000, 2592, 5373, 9736, 16117, 24988,
-  36863, 52292, 71868, 96221, 126022, 161980,
-  204845, 255404, 314487, 382960, 450467, 525466,
-  608352, 699519, 799360, 908268, 1026640, 1154867,
-  1293344, 1442465, 1602624, 1774214, 1957630
-]
+  502,
+  2000,
+  4985,
+  9950,
+  17387,
+  27789,
+  41648,
+  59457,
+  81707,
+  108891,
+  141502,
+  180032,
+  224973,
+  276818,
+  336059,
+  403189,
+  478700,
+  563084,
+  656833,
+  760441,
+  874399,
+  999200,
+  1135336,
+  1283300,
+  1443584,
+  1616681,
+  1803082,
+  2003280,
+  2217768,
+  2447038,
+];
 
 export const itemPowerLevel = (item, combined) => {
   const type = item?.type;
@@ -53,9 +78,9 @@ export const itemPowerLevel = (item, combined) => {
     const magic_max = Math.floor(magic_min * 100) / 100;
 
     const max = {
-      [ATTRIBUTE_RESOURCE1]: element_max,
-      [ATTRIBUTE_RESOURCE2]: element_max,
-      [ATTRIBUTE_RESOURCE3]: element_max,
+      [ATTRIBUTE_RES1]: element_max,
+      [ATTRIBUTE_RES2]: element_max,
+      [ATTRIBUTE_RES3]: element_max,
       [ATTRIBUTE_MAGIC]: magic_max,
       [ATTRIBUTE_CRIT]: magic_max,
     }[attribute];
@@ -87,9 +112,9 @@ export const itemPowerLevel = (item, combined) => {
       [ATTRIBUTE_XP]: 1,
       [ATTRIBUTE_ITEM]: 1,
       [ATTRIBUTE_CRAFT]: 1,
-      [ATTRIBUTE_RESOURCE1]: value / element_max,
-      [ATTRIBUTE_RESOURCE2]: value / element_max,
-      [ATTRIBUTE_RESOURCE3]: value / element_max,
+      [ATTRIBUTE_RES1]: value / element_max,
+      [ATTRIBUTE_RES2]: value / element_max,
+      [ATTRIBUTE_RES3]: value / element_max,
     }[attribute];
 
     const max_power = power > 1 ? 1 : power;
