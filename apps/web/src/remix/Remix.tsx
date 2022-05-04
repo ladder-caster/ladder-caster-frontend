@@ -410,6 +410,13 @@ const Remix = () => {
         localStorage.setItem('gamePK', (resources as ResourcesPK).gameAccount);
         break;
       }
+      case 'mainnet-priv': {
+        localStorage.setItem(
+          'gamePK',
+          (resources as ResourcesPK).gameAccountProdPriv,
+        );
+        break;
+      }
       case 'mainnet': {
         localStorage.setItem(
           'gamePK',

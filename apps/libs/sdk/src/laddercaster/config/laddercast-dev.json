@@ -72,7 +72,7 @@
         },
         {
           "name": "ladaTokenAccount",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         }
       ],
@@ -315,11 +315,6 @@
         {
           "name": "caster",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "season",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -1738,111 +1733,6 @@
       "args": []
     },
     {
-      "name": "casterCommitMoveS1",
-      "accounts": [
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "game",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "player",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "caster",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "season",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "resource1MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource1TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameTurnData",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ladaMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ladaTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "lvl",
-          "type": "u8"
-        },
-        {
-          "name": "clm",
-          "type": "u8"
-        }
-      ]
-    },
-    {
       "name": "casterCommitCraftS1",
       "accounts": [
         {
@@ -1891,6 +1781,36 @@
           "isSigner": false
         },
         {
+          "name": "resource1MintAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "resource2MintAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "resource3MintAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "resource1TokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "resource2TokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "resource3TokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "item1",
           "isMut": true,
           "isSigner": false
@@ -1906,105 +1826,9 @@
           "isSigner": false
         },
         {
-          "name": "ladaMint",
+          "name": "gameTurnData",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "ladaMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ladaTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemCasters",
-      "accounts": [
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "game",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "player",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "season",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "slots",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "candyMachine",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionPda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metaplexTokenMetadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metaplexTokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "caster1",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "caster2",
-          "isMut": true,
-          "isSigner": true
         }
       ],
       "args": []
