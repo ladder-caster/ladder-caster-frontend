@@ -14,9 +14,9 @@ import {
   USER_OFFLINE,
   TABS_CHARACTER_ACTIONS,
   TOKENS_ACTIVE,
-  TYPE_RESOURCE3,
-  TYPE_RESOURCE1,
-  TYPE_RESOURCE2,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
   UNEQUIP_ITEM,
   CREATE_MUTATION,
   DRAWER_CONTEXT,
@@ -103,9 +103,9 @@ const Remix = () => {
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(GAME_BOOST, {
-    [TYPE_RESOURCE2]: 0,
-    [TYPE_RESOURCE1]: 0,
-    [TYPE_RESOURCE3]: 0,
+    [TYPE_RES2]: 0,
+    [TYPE_RES1]: 0,
+    [TYPE_RES3]: 0,
   });
 
   // TODO: Remove! Only added for esthetics
@@ -455,12 +455,6 @@ const Remix = () => {
       console.log('inventory', inventory);
     }
   }, [inventory]);
-
-  useEffect(() => {
-    if (oldCasters) {
-      console.log('old casters', oldCasters);
-    }
-  }, [oldCasters]);
 
   useEffect(() => {
     if (casters) {

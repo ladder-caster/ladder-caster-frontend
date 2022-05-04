@@ -156,6 +156,7 @@ export class CasterContext {
         item2: item2.publicKey,
         item3: item3.publicKey,
         season: season,
+        ...mintAccounts,
         ladaMint: game.ladaMintAccount,
         ladaTokenAccount: playerLadaTokenAccount,
       },

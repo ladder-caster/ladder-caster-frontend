@@ -1,11 +1,11 @@
 import {
   ATTRIBUTE_XP,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_RESOURCE3,
-  ATTRIBUTE_RESOURCE1,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_RESOURCE2,
+  ATTRIBUTE_RES2,
   ITEM_BOOK,
   ITEM_HAT,
   ITEM_ROBE,
@@ -53,9 +53,9 @@ export const itemPowerLevel = (item, combined) => {
     const magic_max = Math.floor(magic_min * 100) / 100;
 
     const max = {
-      [ATTRIBUTE_RESOURCE1]: element_max,
-      [ATTRIBUTE_RESOURCE2]: element_max,
-      [ATTRIBUTE_RESOURCE3]: element_max,
+      [ATTRIBUTE_RES1]: element_max,
+      [ATTRIBUTE_RES2]: element_max,
+      [ATTRIBUTE_RES3]: element_max,
       [ATTRIBUTE_MAGIC]: magic_max,
       [ATTRIBUTE_CRIT]: magic_max,
     }[attribute];
@@ -87,9 +87,9 @@ export const itemPowerLevel = (item, combined) => {
       [ATTRIBUTE_XP]: 1,
       [ATTRIBUTE_ITEM]: 1,
       [ATTRIBUTE_CRAFT]: 1,
-      [ATTRIBUTE_RESOURCE1]: value / element_max,
-      [ATTRIBUTE_RESOURCE2]: value / element_max,
-      [ATTRIBUTE_RESOURCE3]: value / element_max,
+      [ATTRIBUTE_RES1]: value / element_max,
+      [ATTRIBUTE_RES2]: value / element_max,
+      [ATTRIBUTE_RES3]: value / element_max,
     }[attribute];
 
     const max_power = power > 1 ? 1 : power;

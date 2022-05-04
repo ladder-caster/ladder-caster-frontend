@@ -2,11 +2,11 @@ import React from 'react';
 import {
   ATTRIBUTE_CRAFT,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_RESOURCE3,
-  ATTRIBUTE_RESOURCE1,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_RESOURCE2,
+  ATTRIBUTE_RES2,
   ATTRIBUTE_XP,
 } from 'core/remix/state';
 import { _value } from '../../../views/game/inventory/drawer/attributes/Attributes.styled';
@@ -16,21 +16,21 @@ const DescriptionSkill = ({ level, attribute, value, spell }) => {
   const { t } = useTranslation();
 
   const Description = {
-    [ATTRIBUTE_RESOURCE1]: (
+    [ATTRIBUTE_RES1]: (
       <_value $attribute={attribute}>
         {`${t(`attribute${spell ? '.spell' : ''}.resource1.desc1`)}`}
         <b>+{value}</b>
         {`${t('attribute.resource1.desc2')}`}
       </_value>
     ),
-    [ATTRIBUTE_RESOURCE2]: (
+    [ATTRIBUTE_RES2]: (
       <_value $attribute={attribute}>
         {`${t(`attribute${spell ? '.spell' : ''}.resource2.desc1`)}`}
         <b>+{value}</b>
         {`${t('attribute.resource2.desc2')}`}
       </_value>
     ),
-    [ATTRIBUTE_RESOURCE3]: (
+    [ATTRIBUTE_RES3]: (
       <_value $attribute={attribute}>
         {`${t(`attribute${spell ? '.spell' : ''}.resource3.desc1`)}`}
         <b>+{value}</b>

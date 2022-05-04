@@ -90,9 +90,9 @@ export const ACTION_CRAFT = 'ACTION_CRAFT';
 export const ACTION_SPELL = 'ACTION_SPELL';
 export const ACTION_EQUIP = 'ACTION_EQUIP';
 
-export const TYPE_RESOURCE1 = 'ember';
-export const TYPE_RESOURCE2 = 'frost';
-export const TYPE_RESOURCE3 = 'root';
+export const TYPE_RES1 = 'resource1';
+export const TYPE_RES2 = 'resource2';
+export const TYPE_RES3 = 'resource3';
 export const TYPE_CRAFT = 'crafting';
 //Legendary craft
 export const TYPE_LEGENDARY = 'legendary';
@@ -114,9 +114,9 @@ export const ITEM_BOOK = 'spellBook';
 export const ITEM_GEM = 'gem';
 export const ITEM_CHEST = 'chest';
 
-export const ATTRIBUTE_RESOURCE1 = 'ember';
-export const ATTRIBUTE_RESOURCE2 = 'frost';
-export const ATTRIBUTE_RESOURCE3 = 'root';
+export const ATTRIBUTE_RES1 = 'resource1';
+export const ATTRIBUTE_RES2 = 'resource2';
+export const ATTRIBUTE_RES3 = 'resource3';
 export const ATTRIBUTE_MAGIC = 'magic';
 export const ATTRIBUTE_CRIT = 'power';
 export const ATTRIBUTE_ITEM = 'item';
