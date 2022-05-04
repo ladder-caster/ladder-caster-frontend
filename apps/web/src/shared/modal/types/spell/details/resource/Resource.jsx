@@ -3,9 +3,9 @@ import { _resource } from './Resource.styled';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { useTranslation } from 'react-i18next';
 import {
-  ATTRIBUTE_RES3,
-  ATTRIBUTE_RES1,
-  ATTRIBUTE_RES2,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
+  ATTRIBUTE_RESOURCE2,
 } from 'core/remix/state';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
@@ -14,15 +14,15 @@ const Resource = ({ type, value }) => {
   const { t } = useTranslation();
 
   const Icon = {
-    [ATTRIBUTE_RES1]: IconFiree,
-    [ATTRIBUTE_RES2]: IconWater,
-    [ATTRIBUTE_RES3]: IconEarth,
+    [ATTRIBUTE_RESOURCE1]: IconResourcee1,
+    [ATTRIBUTE_RESOURCE2]: IconResource2,
+    [ATTRIBUTE_RESOURCE3]: IconResource3,
   }[type];
 
   const element = {
-    [ATTRIBUTE_RES1]: 'resource1',
-    [ATTRIBUTE_RES2]: 'resource2',
-    [ATTRIBUTE_RES3]: 'resource3',
+    [ATTRIBUTE_RESOURCE1]: 'fire',
+    [ATTRIBUTE_RESOURCE2]: 'water',
+    [ATTRIBUTE_RESOURCE3]: 'earth',
   }[type];
 
   return (

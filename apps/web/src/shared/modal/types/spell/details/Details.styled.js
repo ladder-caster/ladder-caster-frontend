@@ -1,4 +1,3 @@
-import { ATTRIBUTE_RES1 } from 'core/remix/state';
 import styled from 'styled-components';
 
 export const _details = styled.div`
@@ -31,13 +30,13 @@ export const _text = styled.div`
     border: 2px solid ${({ theme }) => theme.border['base']};
     padding: 8px 16px;
     font-weight: 700;
-    color: ${({ theme }) => theme[ATTRIBUTE_RES1]['resource']};
+    color: ${({ theme }) => theme.resource1['resource']};
     > svg {
       min-width: 18px;
       width: 18px;
       min-height: 18px;
       height: 18px;
-      color: ${({ theme }) => theme[ATTRIBUTE_RES1]['resource']};
+      color: ${({ theme }) => theme.resource1['resource']};
       margin-right: 4px;
     }
   }

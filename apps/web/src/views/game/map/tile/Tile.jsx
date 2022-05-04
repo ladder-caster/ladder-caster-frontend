@@ -35,10 +35,10 @@ import {
   TILE_CHIP,
   TILE_GLOWING,
   TYPE_CRAFT,
-  TYPE_RES3,
-  TYPE_RES1,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
   TYPE_LEGENDARY,
-  TYPE_RES2,
+  TYPE_RESOURCE2,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { IconBeaker } from 'design/icons/beaker.icon';
@@ -95,9 +95,9 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
     modal?.options?.caster?.position === position;
 
   const Icon = {
-    [TYPE_RES1]: IconFiree,
-    [TYPE_RES2]: IconWater,
-    [TYPE_RES3]: IconEarth,
+    [TYPE_RESOURCE1]: IconResourcee1,
+    [TYPE_RESOURCE2]: IconResource2,
+    [TYPE_RESOURCE3]: IconResource3,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconMap,
   }[type];
@@ -110,24 +110,14 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   }[land?.tier?.toString()];
 
   const color = theme.tile[type];
-  const getCost = () => {
-    // incase future tile costs are added such as towers, fights, etc.
-    switch (type) {
-      case TYPE_RES1:
-      case TYPE_RES2:
-      case TYPE_RES3:
-        return level * COST_MULTIPLIER;
-      default:
-        return 0;
-    }
-  };
+
   const clickTile = () => {
     if (isModal) {
       if (status === TILE_GLOWING)
         actionMove({
           type: CONFIRM_MOVE,
           position,
-          cost: getCost(),
+          cost: type === TYPE_CRAFT ? 0 : level * COST_MULTIPLIER,
           tileType: type,
         });
       if (status === TILE_CHIP) cancelMove();

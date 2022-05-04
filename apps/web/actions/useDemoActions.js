@@ -35,9 +35,9 @@ import {
   ITEM_BOOK,
   GAME_RESOURCES,
   TOKENS_ACTIVE,
-  TYPE_RES3,
-  TYPE_RES1,
-  TYPE_RES2,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
   GAME_BOOST,
   DRAWER_CONTEXT,
   DRAWER_SETTINGS,
@@ -309,12 +309,9 @@ export const useDemoActions = () => {
           });
         }
 
-        const resource1 =
-          (resources?.resource1 || 0) + (rewards?.resource1 || 0);
-        const resource2 =
-          (resources?.resource2 || 0) + (rewards?.resource2 || 0);
-        const resource3 =
-          (resources?.resource3 || 0) + (rewards?.resource3 || 0);
+        const fire = (resources?.resource1 || 0) + (rewards?.resource1 || 0);
+        const water = (resources?.resource2 || 0) + (rewards?.resource2 || 0);
+        const earth = (resources?.resource3 || 0) + (rewards?.resource3 || 0);
 
         // Add resources
         setResources({ ...resources, resource1, resource2, resource3 });
@@ -606,7 +603,9 @@ export const useDemoActions = () => {
     },
     async burnResourcesForXP() {
       const total_xp =
-        context?.[TYPE_RES1] + context?.[TYPE_RES2] + context?.[TYPE_RES3];
+        context?.[TYPE_RESOURCE1] +
+        context?.[TYPE_RESOURCE2] +
+        context?.[TYPE_RESOURCE3];
       const next_caster = find(
         spellcasters,
         (caster) => caster.id === drawer?.id,
@@ -617,9 +616,12 @@ export const useDemoActions = () => {
         updateCaster(next_caster);
         setResources({
           ...resources,
-          [TYPE_RES1]: resources?.[TYPE_RES1] - context?.[TYPE_RES1],
-          [TYPE_RES2]: resources?.[TYPE_RES2] - context?.[TYPE_RES2],
-          [TYPE_RES3]: resources?.[TYPE_RES3] - context?.[TYPE_RES3],
+          [TYPE_RESOURCE1]:
+            resources?.[TYPE_RESOURCE1] - context?.[TYPE_RESOURCE1],
+          [TYPE_RESOURCE2]:
+            resources?.[TYPE_RESOURCE2] - context?.[TYPE_RESOURCE2],
+          [TYPE_RESOURCE3]:
+            resources?.[TYPE_RESOURCE3] - context?.[TYPE_RESOURCE3],
         });
         setContext(INIT_STATE_BOOST);
       }

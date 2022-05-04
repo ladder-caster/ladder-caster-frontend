@@ -1,29 +1,34 @@
 import React from 'react';
 import { _pairs, _row } from './Pairs.styled';
-import { TYPE_RES3, TYPE_RES1, TYPE_GOLD, TYPE_RES2 } from 'core/remix/state';
+import {
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_GOLD,
+  TYPE_RESOURCE2,
+} from 'core/remix/state';
 import Button from './button/Button';
 
 const Pairs = () => {
-  const gold_resource1 = `${TYPE_GOLD}/${TYPE_RES1}`;
-  const gold_resource2 = `${TYPE_GOLD}/${TYPE_RES2}`;
-  const gold_resource3 = `${TYPE_GOLD}/${TYPE_RES3}`;
-  const resource1_resource2 = `${TYPE_RES1}/${TYPE_RES2}`;
-  const resource2_resource3 = `${TYPE_RES2}/${TYPE_RES3}`;
-  const resource3_resource1 = `${TYPE_RES3}/${TYPE_RES1}`;
+  const gold_fire = `${TYPE_GOLD}/${TYPE_RESOURCE1}`;
+  const gold_water = `${TYPE_GOLD}/${TYPE_RESOURCE2}`;
+  const gold_earth = `${TYPE_GOLD}/${TYPE_RESOURCE3}`;
+  const fire_water = `${TYPE_RESOURCE1}/${TYPE_RESOURCE2}`;
+  const water_earth = `${TYPE_RESOURCE2}/${TYPE_RESOURCE3}`;
+  const earth_fire = `${TYPE_RESOURCE3}/${TYPE_RESOURCE1}`;
 
   return (
     <_pairs>
       <_row>
-        <Button pair={gold_resource1} />
-        <Button pair={resource1_resource2} />
+        <Button pair={gold_fire} />
+        <Button pair={fire_water} />
       </_row>
       <_row>
-        <Button pair={gold_resource2} />
-        <Button pair={resource2_resource3} />
+        <Button pair={gold_water} />
+        <Button pair={water_earth} />
       </_row>
       <_row>
-        <Button pair={gold_resource3} />
-        <Button pair={resource3_resource1} />
+        <Button pair={gold_earth} />
+        <Button pair={earth_fire} />
       </_row>
     </_pairs>
   );

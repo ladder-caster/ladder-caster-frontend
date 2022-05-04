@@ -14,9 +14,9 @@ import {
   USER_OFFLINE,
   TABS_CHARACTER_ACTIONS,
   TOKENS_ACTIVE,
-  TYPE_RES3,
-  TYPE_RES1,
-  TYPE_RES2,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
   UNEQUIP_ITEM,
   CREATE_MUTATION,
   DRAWER_CONTEXT,
@@ -26,7 +26,6 @@ import {
   GAME_INIT,
   ERROR_CODES,
   SEEN_PHASE,
-  GAME_OLD_SPELLCASTERS,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -39,7 +38,6 @@ import {
   CHAIN_LOCAL_CLIENT,
   CHAIN_NEXT_TURN,
   CHAIN_NFTS,
-  CHAIN_OLD_CASTERS,
   CHAIN_PLAYER,
   INIT_CHAIN_LOAD,
 } from '../../../libs/chain/hooks/state';
@@ -67,9 +65,7 @@ const Remix = () => {
   const [seen] = useRemixOrigin(SEEN_PHASE);
   const [items] = useRemixOrigin(CHAIN_ITEMS, []);
   const [casters] = useRemixOrigin(CHAIN_CASTERS, []);
-  const [oldCasters] = useRemixOrigin(CHAIN_OLD_CASTERS, []);
   const [, setSpellcasters] = useRemixOrigin(GAME_SPELLCASTERS, []);
-  const [, setOldSpellcasters] = useRemixOrigin(GAME_OLD_SPELLCASTERS, []);
   const [client] = useRemixOrigin(CHAIN_LOCAL_CLIENT);
   const [loading] = useRemixOrigin(RPC_LOADING, {});
   const [inventory, setInventory] = useRemixOrigin(GAME_INVENTORY, {
@@ -77,9 +73,9 @@ const Remix = () => {
     chests: [],
   });
   useRemixOrigin(GAME_RESOURCES, {
-    resource1: 0,
-    resource2: 0,
-    resource3: 0,
+    fire: 0,
+    earth: 0,
+    water: 0,
     lada: 0,
   });
 
@@ -103,9 +99,9 @@ const Remix = () => {
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(GAME_BOOST, {
-    [TYPE_RES2]: 0,
-    [TYPE_RES1]: 0,
-    [TYPE_RES3]: 0,
+    [TYPE_RESOURCE2]: 0,
+    [TYPE_RESOURCE1]: 0,
+    [TYPE_RESOURCE3]: 0,
   });
 
   // TODO: Remove! Only added for esthetics
@@ -369,9 +365,7 @@ const Remix = () => {
       poll();
       interval = setInterval(() => {
         poll();
-      }, process.env.REACT_APP_ENV === 'mainnet' ||
-                process.env.REACT_APP_ENV === 'mainnet-priv' ||
-                process.env.REACT_APP_ENV === 'localprod' ? 10000 : 1000000);
+      }, 10000);
     };
 
     if (game) {
@@ -402,12 +396,6 @@ const Remix = () => {
   }, [casters]);
 
   useEffect(() => {
-    if (oldCasters) {
-      setOldSpellcasters(generateSpellCaster(oldCasters));
-    }
-  }, [oldCasters]);
-
-  useEffect(() => {
     if (items) {
       setInventory(generateInventory(items));
     }
@@ -419,58 +407,46 @@ const Remix = () => {
     // DO NOT REMOVE, the game breaks if removed
     switch (process.env.REACT_APP_ENV as Environment) {
       case 'devnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
-        break;
-      }
-      case 'localprod':
-      case 'mainnet-priv': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[1].gameAccountProdPriv,
-        );
-        break;
-      }
-      case 'mainnet-priv': {
-        localStorage.setItem(
-          'gamePK',
-          (resources as ResourcesPK).gameAccountProdPriv,
-        );
+        localStorage.setItem('gamePK', (resources as ResourcesPK).gameAccount);
         break;
       }
       case 'mainnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccountProd);
+        localStorage.setItem(
+          'gamePK',
+          (resources as ResourcesPK).gameAccountProd,
+        );
         break;
       }
     }
   }, []);
 
-  useEffect(() => {
-    if (player) {
-      console.log('player', player);
-    }
-  }, [player]);
+  // useEffect(() => {
+  //   if (player) {
+  //     console.log('player', player);
+  //   }
+  // }, [player]);
 
-  useEffect(() => {
-    if (inventory) {
-      console.log('inventory', inventory);
-    }
-  }, [inventory]);
+  // useEffect(() => {
+  //   if (inventory) {
+  //     console.log('inventory', inventory);
+  //   }
+  // }, [inventory]);
 
-  useEffect(() => {
-    if (casters) {
-      console.log('casters', casters);
-    }
-  }, [casters]);
+  // useEffect(() => {
+  //   if (casters) {
+  //     console.log('casters', casters);
+  //   }
+  // }, [casters]);
 
-  useEffect(() => {
-    if (game) {
-      console.log('game', game);
-      console.log(
-        'last crank',
-        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
-      );
-    }
-  }, [game]);
+  // useEffect(() => {
+  //   if (game) {
+  //     console.log('game', game);
+  //     console.log(
+  //       'last crank',
+  //       new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+  //     );
+  //   }
+  // }, [game]);
 
   useEffect(() => {
     if (loading) {

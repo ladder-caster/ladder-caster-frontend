@@ -7,10 +7,10 @@ import { IconResource3 } from 'design/icons/resource3.icon';
 import { IconDice } from 'design/icons/dice.icon';
 import {
   ATTRIBUTE_XP,
-  ATTRIBUTE_RES3,
-  ATTRIBUTE_RES1,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_ITEM,
-  ATTRIBUTE_RES2,
+  ATTRIBUTE_RESOURCE2,
   RARITY_COMMON,
   RARITY_EPIC,
   RARITY_LEGENDARY,
@@ -26,9 +26,15 @@ const Details = ({ item }) => {
   const { t } = useTranslation();
 
   const text = {
-    [ATTRIBUTE_RES1]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_RES2]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_RES3]: <Resource type={item?.attribute} value={item?.value} />,
+    [ATTRIBUTE_RESOURCE1]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
+    [ATTRIBUTE_RESOURCE2]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
+    [ATTRIBUTE_RESOURCE3]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
     [ATTRIBUTE_CRAFT]: <Craft level={item?.level} />,
     [ATTRIBUTE_ITEM]: <Item level={item?.level} />,
     [ATTRIBUTE_XP]: <Xp value={item?.value} />,
@@ -43,14 +49,14 @@ const Details = ({ item }) => {
 
   const elementIcon = useMemo(() => {
     switch (item?.costFeature) {
-      case [ATTRIBUTE_RES1]: {
-        return <IconFiree />;
+      case 'fire': {
+        return <IconResourcee1 />;
       }
-      case [ATTRIBUTE_RES2]: {
-        return <IconWater />;
+      case 'water': {
+        return <IconResource2 />;
       }
-      case [ATTRIBUTE_RES3]: {
-        return <IconEarth />;
+      case 'earth': {
+        return <IconResource3 />;
       }
       default: {
         return <IconResource3 />;

@@ -13,9 +13,9 @@ import {
   ENCHANT_SPELL,
   GAME_MOVES,
   ENCHANT_TREASURE,
-  TYPE_RES1,
-  TYPE_RES3,
-  TYPE_RES2,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE2,
   GAME_INVENTORY,
   MODAL_ACTIVE,
   TABS_CHARACTER_ACTIONS,
@@ -53,9 +53,9 @@ const Demo = () => {
   const [tokens] = useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(VIEW_NAVIGATION);
   const [boost] = useRemixOrigin(GAME_BOOST, {
-    [TYPE_RES2]: 0,
-    [TYPE_RES1]: 0,
-    [TYPE_RES3]: 0,
+    [TYPE_RESOURCE2]: 0,
+    [TYPE_RESOURCE1]: 0,
+    [TYPE_RESOURCE3]: 0,
   });
 
   const [casterTab, setCasterTab] = useRemixOrigin(
@@ -86,9 +86,9 @@ const Demo = () => {
   });
 
   const [resources, setResources] = useRemixOrigin(GAME_RESOURCES, {
-    resource1: 99,
-    resource2: 99,
-    resource3: 99,
+    fire: 99,
+    earth: 99,
+    water: 99,
     lada: 99,
   });
 
@@ -143,7 +143,9 @@ const Demo = () => {
       history: {},
       players: {},
       actions: {},
-      type: [TYPE_RES1, TYPE_RES2, TYPE_RES3][randomIntBetween(0, 2)],
+      type: [TYPE_RESOURCE1, TYPE_RESOURCE2, TYPE_RESOURCE3][
+        randomIntBetween(0, 2)
+      ],
     };
   };
 
@@ -173,7 +175,9 @@ const Demo = () => {
       history: {},
       players: {},
       actions: {},
-      type: [TYPE_RES1, TYPE_RES2, TYPE_RES3][randomIntBetween(0, 2)],
+      type: [TYPE_RESOURCE1, TYPE_RESOURCE2, TYPE_RESOURCE3][
+        randomIntBetween(0, 2)
+      ],
     };
   };
 

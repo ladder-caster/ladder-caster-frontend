@@ -30,20 +30,15 @@ import {
   CONFIRM_MOVE,
   GAME_CONFIRM,
   TYPE_CRAFT,
-  TYPE_RES3,
-  TYPE_RES1,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
   TYPE_LEGENDARY,
-  TYPE_RES2,
+  TYPE_RESOURCE2,
 } from 'core/remix/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
-import { getTierNumber } from 'core/utils/switch';
-import {
-  IconMoney,
-  IconMoneyIMG,
-} from '../../../../../../libs/design/icons/money.icon';
 
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
@@ -67,14 +62,11 @@ const ModalMove = ({ height, options }) => {
   const position = caster?.casterActionPosition
     ? caster?.casterActionPosition
     : caster?.position;
-  const confirm_level = +confirm?.position?.slice(1);
-  const level_up = confirm_level > level;
-  const confirm_tier = getTierNumber(level_up);
 
   const Icon = {
-    [TYPE_RES1]: IconFireeIMG,
-    [TYPE_RES2]: IconWaterIMG,
-    [TYPE_RES3]: IconEarthIMG,
+    [TYPE_RESOURCE1]: IconResourcee1IMG,
+    [TYPE_RESOURCE2]: IconResource2IMG,
+    [TYPE_RESOURCE3]: IconResource3IMG,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];
@@ -91,7 +83,7 @@ const ModalMove = ({ height, options }) => {
             {next_level && (
               <_row>
                 <Level level={next_level} />
-                <Tiles caster={caster} level={next_level} position={position} />
+                <Tiles level={next_level} position={position} />
                 <Level level={next_level} $right />
               </_row>
             )}
@@ -105,24 +97,14 @@ const ModalMove = ({ height, options }) => {
               {isConfirm && (
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
-                  {level_up ? (
-                    <>
-                      <_icon $element={'lada'}>
-                        <IconMoneyIMG />
-                      </_icon>
-                      <_amount>{confirm_tier}</_amount>
-                    </>
-                  ) : null}
                   {confirm?.cost > 0 && (
                     <_icon $element={confirm?.tileType}>
                       <Icon />
                     </_icon>
                   )}
-                  {!(level_up && !confirm?.cost) && (
-                    <_amount>
-                      {confirm?.cost > 0 ? confirm?.cost : t('modal.move.free')}
-                    </_amount>
-                  )}
+                  <_amount>
+                    {confirm?.cost > 0 ? confirm?.cost : t('modal.move.free')}
+                  </_amount>
                 </_cost>
               )}
             </_float>

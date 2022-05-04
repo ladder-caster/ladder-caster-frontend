@@ -26,9 +26,9 @@ import {
   GAME_RESOURCES,
   TOKENS_ACTIVE,
   GAME_BOOST,
-  TYPE_RES1,
-  TYPE_RES2,
-  TYPE_RES3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
+  TYPE_RESOURCE3,
   GAME_SPELLCASTERS,
   CREATE_MUTATION,
   DRAWER_SPELLCASTER,
@@ -816,9 +816,9 @@ export const useChainActions = () => {
       setContext({
         ...context,
         caster,
-        [TYPE_RES3]: 0,
-        [TYPE_RES1]: 0,
-        [TYPE_RES2]: 0,
+        [TYPE_RESOURCE3]: 0,
+        [TYPE_RESOURCE1]: 0,
+        [TYPE_RESOURCE2]: 0,
       });
     },
     async decrementXP(element, custom) {
@@ -862,16 +862,16 @@ export const useChainActions = () => {
 
       const resources = [
         {
-          itemFeature: { [ATTRIBUTE_RES1]: {} },
-          amount: context?.[TYPE_RES1],
+          itemFeature: { fire: {} },
+          amount: context?.[TYPE_RESOURCE1],
         },
         {
-          itemFeature: { [ATTRIBUTE_RES2]: {} },
-          amount: context?.[TYPE_RES2],
+          itemFeature: { water: {} },
+          amount: context?.[TYPE_RESOURCE2],
         },
         {
-          itemFeature: { [ATTRIBUTE_RES3]: {} },
-          amount: context?.[TYPE_RES3],
+          itemFeature: { earth: {} },
+          amount: context?.[TYPE_RESOURCE3],
         },
       ];
 
@@ -1247,9 +1247,9 @@ export const useChainActions = () => {
             const tile = row?.[col];
             if (
               caster?.last_loot < game?.turnInfo?.turn &&
-              (tile?.type === TYPE_RES2 ||
-                tile?.type === TYPE_RES3 ||
-                tile?.type === TYPE_RES1)
+              (tile?.type === TYPE_RESOURCE2 ||
+                tile?.type === TYPE_RESOURCE3 ||
+                tile?.type === TYPE_RESOURCE1)
             ) {
               setTimeout(async () => await lootResources(caster), 1000 * count);
               count++;

@@ -27,9 +27,9 @@ const Edit = ({ spell_id }) => {
   const order = [];
 
   const icons = {
-    resource1: <IconResourcee1 />,
-    resource3: <IconResource3 />,
-    resource2: <IconResource2 />,
+    fire: <IconResourcee1 />,
+    earth: <IconResource3 />,
+    water: <IconResource2 />,
   };
 
   const elements = useMemo(() => {

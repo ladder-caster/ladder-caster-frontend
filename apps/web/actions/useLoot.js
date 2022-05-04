@@ -5,10 +5,10 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-  TYPE_RES3,
-  TYPE_RES1,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
   TYPE_LEGENDARY,
-  TYPE_RES2,
+  TYPE_RESOURCE2,
 } from 'core/remix/state';
 import { randomIntBetween } from 'core';
 
@@ -27,9 +27,9 @@ export const useLoot = (tile, caster, rewards, inventory) => {
       [TIER_IV]: 4,
     }[tile_tier];
     if (
-      tile_type === TYPE_RES1 ||
-      tile_type === TYPE_RES2 ||
-      tile_type === TYPE_RES3
+      tile_type === TYPE_RESOURCE1 ||
+      tile_type === TYPE_RESOURCE2 ||
+      tile_type === TYPE_RESOURCE3
     ) {
       // enchant
       const enchant_reward = tile_enchant === ENCHANT_MINING ? 1.5 : 1;

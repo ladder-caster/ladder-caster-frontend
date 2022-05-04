@@ -9,9 +9,9 @@ import {
   PHASE_ACTIONS,
   PHASE_EQUIP,
   PHASE_REWARDS,
-  TYPE_RES3,
-  TYPE_RES1,
-  TYPE_RES2,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
   USER_PHASE,
   VIEW_NAVIGATION,
 } from 'core/remix/state';
@@ -49,9 +49,9 @@ const Ticks = () => {
         const tile = board?.[row - 1]?.[col];
         const turnCommitTurn = caster?.turnCommit;
         const isLoot =
-          tile?.type === TYPE_RES3 ||
-          tile?.type === TYPE_RES1 ||
-          tile?.type === TYPE_RES2;
+          tile?.type === TYPE_RESOURCE3 ||
+          tile?.type === TYPE_RESOURCE1 ||
+          tile?.type === TYPE_RESOURCE2;
         if (isLoot) {
           max++;
           if (
