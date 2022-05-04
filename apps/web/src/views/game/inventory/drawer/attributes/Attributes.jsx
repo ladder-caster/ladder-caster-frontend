@@ -10,10 +10,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
   ITEM_HAT,
   TIER_I,
   TIER_II,

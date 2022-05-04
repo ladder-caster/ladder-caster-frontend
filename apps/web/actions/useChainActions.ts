@@ -26,9 +26,9 @@ import {
   GAME_RESOURCES,
   TOKENS_ACTIVE,
   GAME_BOOST,
-  TYPE_FIRE,
-  TYPE_WATER,
-  TYPE_EARTH,
+  TYPE_RES1,
+  TYPE_RES2,
+  TYPE_RES3,
   GAME_SPELLCASTERS,
   CREATE_MUTATION,
   DRAWER_SPELLCASTER,
@@ -43,6 +43,9 @@ import {
   BURNER_TYPE,
   WALLET_TYPE,
   GAME_MAP,
+  ATTRIBUTE_RES1,
+  ATTRIBUTE_RES2,
+  ATTRIBUTE_RES3,
 } from 'core/remix/state';
 import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
@@ -158,9 +161,7 @@ export const useChainActions = () => {
 
       const e = confirmationResult?.value?.err;
 
-      if (
-        String(e).includes('Blockhash')
-      ) {
+      if (String(e).includes('Blockhash')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
@@ -182,14 +183,13 @@ export const useChainActions = () => {
 
       return confirmationResult;
     } catch (e) {
-      if (
-        String(e).includes('Blockhash')
-      ) {
+      if (String(e).includes('Blockhash')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
         let parsedMessage = handleCustomErrors(e.message);
-        if (e.message?.includes('Solana')) parsedMessage = t('mutations.timeout');
+        if (e.message?.includes('Solana'))
+          parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
@@ -811,9 +811,9 @@ export const useChainActions = () => {
       setContext({
         ...context,
         caster,
-        [TYPE_EARTH]: 0,
-        [TYPE_FIRE]: 0,
-        [TYPE_WATER]: 0,
+        [TYPE_RES3]: 0,
+        [TYPE_RES1]: 0,
+        [TYPE_RES2]: 0,
       });
     },
     async decrementXP(element, custom) {
@@ -857,16 +857,16 @@ export const useChainActions = () => {
 
       const resources = [
         {
-          itemFeature: { fire: {} },
-          amount: context?.[TYPE_FIRE],
+          itemFeature: { [ATTRIBUTE_RES1]: {} },
+          amount: context?.[TYPE_RES1],
         },
         {
-          itemFeature: { water: {} },
-          amount: context?.[TYPE_WATER],
+          itemFeature: { [ATTRIBUTE_RES2]: {} },
+          amount: context?.[TYPE_RES2],
         },
         {
-          itemFeature: { earth: {} },
-          amount: context?.[TYPE_EARTH],
+          itemFeature: { [ATTRIBUTE_RES3]: {} },
+          amount: context?.[TYPE_RES3],
         },
       ];
 
@@ -935,15 +935,20 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            if (context?.nft?.data.name === 'Caster') {
-              return await playerContext.redeemNFTCaster(
+            try {
+              console.log(context?.nft);
+              return await playerContext.redeemNFTTwinPack(
                 new anchor.web3.PublicKey(context?.nft?.mint),
               );
-            } else {
-              return await playerContext.redeemNFTItem(
-                new anchor.web3.PublicKey(context?.nft?.mint),
-              );
+            } catch (e) {
+              console.log(e);
             }
+            // if (context?.nft?.data.name === 'Caster') {
+            // } else {
+            //   return await playerContext.redeemNFTItem(
+            //     new anchor.web3.PublicKey(context?.nft?.mint),
+            //   );
+            // }
           },
           INST_MINT_NFT,
           '',
@@ -1060,7 +1065,7 @@ export const useChainActions = () => {
         async () => {
           return await casterContext.giveItem({
             equipment: {
-              feature: { water: {} },
+              feature: { [ATTRIBUTE_RES2]: {} },
               rarity: { common: {} },
               equipmentType: { head: {} },
               value: 1, // 8
@@ -1079,7 +1084,7 @@ export const useChainActions = () => {
         async () => {
           return await casterContext.giveItem({
             equipment: {
-              feature: { water: {} },
+              feature: { [ATTRIBUTE_RES2]: {} },
               rarity: { common: {} },
               equipmentType: { robe: {} },
               value: 1, // 8
@@ -1098,7 +1103,7 @@ export const useChainActions = () => {
         async () => {
           return await casterContext.giveItem({
             equipment: {
-              feature: { water: {} },
+              feature: { [ATTRIBUTE_RES2]: {} },
               rarity: { common: {} },
               equipmentType: { staff: {} },
               value: 1, // 8
@@ -1117,8 +1122,8 @@ export const useChainActions = () => {
         async () => {
           return await casterContext.giveItem({
             spellBook: {
-              spell: { fire: {} },
-              costFeature: { fire: {} },
+              spell: { [ATTRIBUTE_RES1]: {} },
+              costFeature: { [ATTRIBUTE_RES1]: {} },
               rarity: { common: {} },
               /// 1-300
               cost: 1, // 16
@@ -1238,9 +1243,9 @@ export const useChainActions = () => {
             const tile = row?.[col];
             if (
               caster?.last_loot < game?.turnInfo?.turn &&
-              (tile?.type === TYPE_WATER ||
-                tile?.type === TYPE_EARTH ||
-                tile?.type === TYPE_FIRE)
+              (tile?.type === TYPE_RES2 ||
+                tile?.type === TYPE_RES3 ||
+                tile?.type === TYPE_RES1)
             ) {
               setTimeout(async () => await lootResources(caster), 1000 * count);
               count++;

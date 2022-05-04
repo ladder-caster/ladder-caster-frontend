@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
 } from 'core/remix/state';
 import { IconTreasure } from 'design/icons/treasure.icon';
 import { IconExp } from 'design/icons/xp.icon';
@@ -15,9 +15,9 @@ import { IconFiree } from 'design/icons/firee.icon';
 
 const AttributeIcon = ({ attribute }) => {
   const Attribute = {
-    [ATTRIBUTE_FIRE]: IconFiree,
-    [ATTRIBUTE_WATER]: IconWater,
-    [ATTRIBUTE_EARTH]: IconEarth,
+    [ATTRIBUTE_RES1]: IconFiree,
+    [ATTRIBUTE_RES2]: IconWater,
+    [ATTRIBUTE_RES3]: IconEarth,
     [ATTRIBUTE_MAGIC]: IconTreasure,
     [ATTRIBUTE_CRIT]: IconExp,
   }[attribute];

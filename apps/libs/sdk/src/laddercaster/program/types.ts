@@ -124,9 +124,9 @@ export interface Item {
 
 // Converted from Rust enums
 export interface TileType {
-  earth?: {};
-  water?: {};
-  fire?: {};
+  resource3?: {};
+  resource2?: {};
+  resource1?: {};
   crafting?: {};
   legendary?: {};
 }
@@ -166,9 +166,9 @@ export interface ItemType {
 export interface ItemFeature {
   power?: {};
   magic?: {};
-  fire?: {};
-  earth?: {};
-  water?: {};
+  resource3?: {};
+  resource2?: {};
+  resource1?: {};
 }
 
 export interface ItemRarity {
@@ -185,9 +185,9 @@ export interface EquipmentType {
 }
 
 export interface SpellType {
-  fire?: {};
-  water?: {};
-  earth?: {};
+  resource3?: {};
+  resource2?: {};
+  resource1?: {};
   experience?: {};
   craft?: {};
   item?: {};
