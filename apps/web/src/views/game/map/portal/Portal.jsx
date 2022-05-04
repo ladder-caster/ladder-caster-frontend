@@ -20,9 +20,9 @@ import {
   DRAWER_ACTIVE,
   GAME_MOVES,
   GAME_MAP,
-  TYPE_RES3,
-  TYPE_RES2,
-  TYPE_RES1,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE2,
+  TYPE_RESOURCE1,
 } from 'core/remix/state';
 import Enchant from './enchant/Enchant';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
@@ -40,16 +40,16 @@ const Portal = withTheme(({ theme, level, col }) => {
   const random_elements = useMemo(
     () => [
       {
-        resources: land?.[TYPE_RES1],
-        color: theme.element[TYPE_RES1],
+        resources: land?.[TYPE_RESOURCE1],
+        color: theme.element[TYPE_RESOURCE1],
       },
       {
-        resources: land?.[TYPE_RES2],
-        color: theme.element[TYPE_RES2],
+        resources: land?.[TYPE_RESOURCE2],
+        color: theme.element[TYPE_RESOURCE2],
       },
       {
-        resources: land?.[TYPE_RES3],
-        color: theme.element[TYPE_RES3],
+        resources: land?.[TYPE_RESOURCE3],
+        color: theme.element[TYPE_RESOURCE3],
       },
     ],
     [land],

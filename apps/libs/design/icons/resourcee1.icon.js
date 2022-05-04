@@ -1,12 +1,12 @@
 import React from 'react';
 
-const fireImg = require('../../design/assets/fire.png');
+const resource1Img = require('../../design/assets/resource1.png');
 
-export const IconFireeIMG = () => {
-  return <img src={fireImg} />;
+export const IconResourcee1IMG = () => {
+  return <img src={resource1Img} />;
 };
 
-export const IconFiree = () => (
+export const IconResourcee1 = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24.2 32"

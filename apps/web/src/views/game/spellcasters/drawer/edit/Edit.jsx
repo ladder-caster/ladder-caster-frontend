@@ -12,9 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { GAME_SPELLCASTERS } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconEarth } from 'design/icons/earth.icon';
-import { IconWater } from 'design/icons/water.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 
 const Edit = ({ spell_id }) => {
   const { t } = useTranslation();
@@ -27,9 +27,9 @@ const Edit = ({ spell_id }) => {
   const order = [];
 
   const icons = {
-    fire: <IconFiree />,
-    earth: <IconEarth />,
-    water: <IconWater />,
+    fire: <IconResourcee1 />,
+    earth: <IconResource3 />,
+    water: <IconResource2 />,
   };
 
   const elements = useMemo(() => {
