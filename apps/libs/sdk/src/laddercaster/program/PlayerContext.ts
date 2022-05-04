@@ -56,6 +56,7 @@ async function getMerkleSingleton() {
 export type ResourcesPK = {
   gameAccount: string;
   gameAccountProd: string;
+  gameAccountProdPriv: string;
 };
 
 export class PlayerContext {
