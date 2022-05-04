@@ -1,11 +1,11 @@
 import {
   ATTRIBUTE_XP,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
   RARITY_COMMON,
   RARITY_EPIC,
   RARITY_LEGENDARY,
@@ -24,9 +24,9 @@ export const gold = {
     texture: '#ffba1a',
   },
   attribute: {
-    [ATTRIBUTE_FIRE]: '#d5a2e2',
-    [ATTRIBUTE_WATER]: '#9ab8db',
-    [ATTRIBUTE_EARTH]: '#88cec4',
+    [ATTRIBUTE_RES1]: '#d5a2e2',
+    [ATTRIBUTE_RES2]: '#9ab8db',
+    [ATTRIBUTE_RES3]: '#88cec4',
     [ATTRIBUTE_MAGIC]: '#dbca9a',
     [ATTRIBUTE_CRIT]: '#e2a2a2',
     [ATTRIBUTE_CRAFT]: '#e2a2a2',
@@ -79,7 +79,7 @@ export const gold = {
     text: '#dbca9a',
     open: '#5e4c08',
   },
-  water: {
+  [ATTRIBUTE_RES2]: {
     button: 'radial-gradient(circle,  #173a4f 0%, #173a4f 60%)',
     tap: 'radial-gradient(circle,  #1a4261 0%, #1a4261 60%)',
     tile: '#1a4261',
@@ -99,7 +99,7 @@ export const gold = {
     resource: '#8692b1',
     text: '#8692b1',
   },
-  fire: {
+  [ATTRIBUTE_RES1]: {
     button: 'radial-gradient(circle,  #411e48 0%, #411e48 60%)',
     tap: 'radial-gradient(circle,  #522159 0%, #522159 60%)',
     tile: '#522159',
@@ -109,7 +109,7 @@ export const gold = {
     resource: '#d671ef',
     text: '#d5a2e2',
   },
-  earth: {
+  [ATTRIBUTE_RES3]: {
     button: 'radial-gradient(circle,  #194332 0%, #194332 60%)',
     tap: 'radial-gradient(circle,  #1c5441 0%, #1c5441 60%)',
     tile: '#1c5441',
@@ -120,23 +120,23 @@ export const gold = {
     text: '#88cec4',
   },
   element: {
-    water: '#3392ff',
-    fire: '#d671ef',
-    earth: '#65e7c2',
+    [ATTRIBUTE_RES2]: '#3392ff',
+    [ATTRIBUTE_RES1]: '#d671ef',
+    [ATTRIBUTE_RES3]: '#65e7c2',
     legendary: '#d6cba9',
     crafting: '#8692b1',
   },
   textures: {
-    water: '#3392ff',
-    fire: '#d671ef',
-    earth: '#29bca6',
+    [ATTRIBUTE_RES2]: '#3392ff',
+    [ATTRIBUTE_RES1]: '#d671ef',
+    [ATTRIBUTE_RES3]: '#29bca6',
     crafting: '#8692b1',
     legendary: '#d6cba9',
   },
   tile: {
-    water: '#1a4261',
-    fire: '#522159',
-    earth: '#1c5441',
+    [ATTRIBUTE_RES2]: '#1a4261',
+    [ATTRIBUTE_RES1]: '#522159',
+    [ATTRIBUTE_RES3]: '#1c5441',
     crafting: '#232b43',
     legendary: '#856800',
   },

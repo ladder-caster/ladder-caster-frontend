@@ -86,7 +86,7 @@ export class Client {
         return laddercasterIDLLocal;
       }
       case 'localprod': {
-        return laddercasterIDLMain;
+        return laddercasterIDLMainPriv;
       }
       case 'devnet': {
         return laddercasterIDLDev;

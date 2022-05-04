@@ -67,11 +67,20 @@ export class CasterContext {
   }
 
   async casterCommitMove(lvl: number, col: number) {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
+    const playerLadaTokenAccount = await this.getTokenAccount(
+      game.ladaMintAccount,
+    );
 
-    return await this.client.program.rpc.casterCommitMove(lvl, col, {
+    return await this.client.program.rpc.casterCommitMoveS1(lvl, col, {
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -81,8 +90,11 @@ export class CasterContext {
         game: gameAccount,
         player: playerAccount,
         caster: this.caster?.publicKey,
+        season: season,
         ...mintAccounts,
         gameTurnData,
+        ladaMint: game.ladaMintAccount,
+        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });
@@ -124,6 +136,10 @@ export class CasterContext {
     ] = await this.getAccounts();
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
     const mintAccounts = await this.getMintAccounts(game);
+    const playerLadaTokenAccount = await this.getTokenAccount(
+      game.ladaMintAccount,
+    );
+
     return await this.client.program.rpc.casterCommitCraftS1({
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -140,6 +156,8 @@ export class CasterContext {
         gameTurnData,
         season: season,
         ...mintAccounts,
+        ladaMint: game.ladaMintAccount,
+        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });

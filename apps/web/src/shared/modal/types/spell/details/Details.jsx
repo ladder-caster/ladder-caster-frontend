@@ -7,10 +7,10 @@ import { IconEarth } from 'design/icons/earth.icon';
 import { IconDice } from 'design/icons/dice.icon';
 import {
   ATTRIBUTE_XP,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
   RARITY_COMMON,
   RARITY_EPIC,
   RARITY_LEGENDARY,
@@ -26,9 +26,9 @@ const Details = ({ item }) => {
   const { t } = useTranslation();
 
   const text = {
-    [ATTRIBUTE_FIRE]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_WATER]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_EARTH]: <Resource type={item?.attribute} value={item?.value} />,
+    [ATTRIBUTE_RES1]: <Resource type={item?.attribute} value={item?.value} />,
+    [ATTRIBUTE_RES2]: <Resource type={item?.attribute} value={item?.value} />,
+    [ATTRIBUTE_RES3]: <Resource type={item?.attribute} value={item?.value} />,
     [ATTRIBUTE_CRAFT]: <Craft level={item?.level} />,
     [ATTRIBUTE_ITEM]: <Item level={item?.level} />,
     [ATTRIBUTE_XP]: <Xp value={item?.value} />,
@@ -43,13 +43,13 @@ const Details = ({ item }) => {
 
   const elementIcon = useMemo(() => {
     switch (item?.costFeature) {
-      case 'fire': {
+      case [ATTRIBUTE_RES1]: {
         return <IconFiree />;
       }
-      case 'water': {
+      case [ATTRIBUTE_RES2]: {
         return <IconWater />;
       }
-      case 'earth': {
+      case [ATTRIBUTE_RES3]: {
         return <IconEarth />;
       }
       default: {

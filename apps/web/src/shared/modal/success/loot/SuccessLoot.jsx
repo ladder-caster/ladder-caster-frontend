@@ -14,9 +14,9 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   ITEM_CHEST,
   MODAL_ACTIVE,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import NFT from '../../../nft/NFT';
 import { IconFiree } from 'design/icons/firee.icon';
@@ -37,9 +37,9 @@ const SuccessLoot = ({ height }) => {
 
   const resource_reward = useMemo(() => {
     const ResourceIcon = {
-      [TYPE_FIRE]: IconFiree,
-      [TYPE_WATER]: IconWater,
-      [TYPE_EARTH]: IconEarth,
+      [TYPE_RES1]: IconFiree,
+      [TYPE_RES2]: IconWater,
+      [TYPE_RES3]: IconEarth,
     }[type];
 
     // return (

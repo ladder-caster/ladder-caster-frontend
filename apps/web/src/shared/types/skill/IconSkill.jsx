@@ -2,11 +2,11 @@ import React from 'react';
 import {
   ATTRIBUTE_CRAFT,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
   ATTRIBUTE_XP,
 } from 'core/remix/state';
 import { IconFiree } from 'design/icons/firee.icon';
@@ -21,9 +21,9 @@ import { IconAnvil } from 'design/icons/anvil.icon';
 
 const IconSkill = ({ attribute }) => {
   const Icon = {
-    [ATTRIBUTE_FIRE]: IconFiree,
-    [ATTRIBUTE_WATER]: IconWater,
-    [ATTRIBUTE_EARTH]: IconEarth,
+    [ATTRIBUTE_RES1]: IconFiree,
+    [ATTRIBUTE_RES2]: IconWater,
+    [ATTRIBUTE_RES3]: IconEarth,
     [ATTRIBUTE_MAGIC]: IconTreasure,
     [ATTRIBUTE_CRIT]: IconGather,
     [ATTRIBUTE_XP]: IconSparkle,
