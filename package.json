@@ -8,7 +8,7 @@
     "link-all": "lerna exec --parallel yarn link",
     "web": "cross-env REACT_APP_ENV=devnet lerna run web --scope=web --stream",
     "web-prod": "cross-env REACT_APP_ENV=localprod lerna run web --scope=web --stream",
-    "web-prod-priv": "cross-env REACT_APP_ENV=localprod lerna run web --scope=web --stream",
+    "web-prod-priv": "cross-env REACT_APP_ENV=mainnet-priv lerna run web --scope=web --stream",
     "web-local": "cross-env REACT_APP_ENV=localnet lerna run web --scope=web --stream",
     "unlink-all": "lerna exec --parallel --bail=false yarn unlink",
     "build-web": "lerna run build --scope=web",

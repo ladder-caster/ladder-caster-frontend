@@ -57,18 +57,9 @@ async function getMerkleSingleton() {
 }
 
 export type ResourcesPK = {
-  seasons: {
-    0: {
-      gameAccount: string;
-      gameAccountProd: string;
-      gameAccountProdPriv: string;
-    };
-    1: {
-      gameAccount: string;
-      gameAccountProd: string;
-      gameAccountProdPriv: string;
-    };
-  };
+  gameAccount: string;
+  gameAccountProd: string;
+  gameAccountProdPriv: string;
 };
 
 export class PlayerContext {
