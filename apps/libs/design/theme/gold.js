@@ -185,6 +185,7 @@ export const gold = {
     solid: '#aaacab',
   },
   background: {
+    top: '#455b87',
     active: '#425176',
     highest: '#2d3653',
     higher: '#232b43',

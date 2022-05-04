@@ -66,6 +66,12 @@ const Queue = ({ spell_id }) => {
     caster?.casterActionPosition && !caster?.isLootActionBefore
       ? caster?.casterActionPosition
       : position;
+
+  console.log('caster', caster);
+  console.log('search', searchPosition);
+  console.log('caster?.casterActionPosition', caster?.casterActionPosition);
+  console.log('!caster?.isLootActionBefore', !caster?.isLootActionBefore);
+
   const [tile] = useRemix(
     GAME_MAP,
     (rows) =>
@@ -73,6 +79,10 @@ const Queue = ({ spell_id }) => {
         searchPosition?.[0]
       ],
   );
+
+  console.log('tile', tile);
+  console.log('position', position);
+
   const caster_tile = +caster?.level === +position?.slice(1);
 
   const unlocked_loot = caster?.last_loot < (num_ticks || currentTurn);

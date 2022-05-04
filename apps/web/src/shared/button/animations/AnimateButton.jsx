@@ -54,7 +54,24 @@ export const AnimateButton = withTheme(
         y: shake ? [1, -2, 0, 2, -1, 2, 1, 1, -1, 2, -2] : 0,
         rotate: shake ? [0, -1, 1, 0, 1, -1, 0, -1, 1, 0, -1] : 0,
       },
-      hover: {},
+      hover: {
+        background: element
+          ? theme[element]?.['button']
+          : theme.background[
+              active
+                ? 'button_top'
+                : high
+                ? 'button_active'
+                : low
+                ? 'button_high'
+                : disabled
+                ? 'button_disabled'
+                : 'button'
+            ],
+        transition: {
+          duration: 0.1,
+        },
+      },
       tap: {
         background: element
           ? theme[element]?.['tap']

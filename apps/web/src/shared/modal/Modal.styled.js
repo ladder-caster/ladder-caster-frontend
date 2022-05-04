@@ -77,7 +77,7 @@ export const _title = styled.div`
 export const _description = styled.div`
   width: 100%;
   height: 100%;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.5px;
   color: ${({ theme }) => theme.text['base']};
@@ -86,6 +86,7 @@ export const _description = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   padding: 16px 8px;
 `;
 
@@ -99,7 +100,6 @@ export const _actions = styled.div`
 `;
 
 export const _deny = styled.div`
-  width: 100%;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -117,6 +117,7 @@ export const _deny = styled.div`
 `;
 
 export const _accept = styled(m.div)`
+  width: 100%;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -131,6 +132,7 @@ export const _accept = styled(m.div)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
   cursor: pointer;
 `;
 
@@ -141,4 +143,51 @@ export const _input = styled.div`
   min-width: initial;
   width: calc(100% - 32px);
   height: 100%;
+`;
+
+export const _counter = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const _less = styled.div`
+  border-radius: 50%;
+  min-width: 24px;
+  width: 24px;
+  min-height: 24px;
+  height: 24px;
+  box-shadow: ${({ theme }) => theme.shadow['frost']};
+  > svg {
+    min-width: 16px;
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
+    color: ${({ theme }) => theme.text['base']};
+  }
+`;
+
+export const _number = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['base']};
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+`;
+
+export const _more = styled.div`
+  border-radius: 50%;
+  min-width: 24px;
+  width: 24px;
+  min-height: 24px;
+  height: 24px;
+  box-shadow: ${({ theme }) => theme.shadow['frost']};
+  > svg {
+    min-width: 16px;
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
+    color: ${({ theme }) => theme.text['base']};
+  }
 `;

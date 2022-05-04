@@ -387,7 +387,7 @@ export const useChainActions = () => {
       setModal({
         active: true,
         type: MODAL_MINT,
-        description: t('modal.demo.description'),
+        number: 1,
         accept: async () => {
           const casterContext = new CasterContext(
             client,
@@ -1300,5 +1300,11 @@ export const useChainActions = () => {
       await web3Auth.logout();
       setProvider(null);
     },
+    async decrementMint() {
+
+    },
+    async incrementMint() {
+
+    }
   };
 };
