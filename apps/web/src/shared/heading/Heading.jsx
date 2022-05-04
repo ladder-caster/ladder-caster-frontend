@@ -4,7 +4,14 @@ import Redeem from '../redeem/Redeem';
 import Phases from '../phases/Phases';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_INIT, GAME_MAP, GAME_SPELLCASTERS, TYPE_EARTH, TYPE_FIRE, TYPE_WATER } from 'core/remix/state';
+import {
+  GAME_INIT,
+  GAME_MAP,
+  GAME_SPELLCASTERS,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
+} from 'core/remix/state';
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
 
@@ -16,25 +23,26 @@ const Heading = ({ title, flat, marketplace }) => {
   const [board] = useRemix(GAME_MAP);
   const [lootAll, setLootAll] = useState(false);
   const currentTurn = game?.turnInfo?.turn;
-  
+
   useEffect(() => {
     if (spellcasters) {
       let looted = 0;
       let max = 0;
-  
-      map(spellcasters, caster => {
+
+      map(spellcasters, (caster) => {
         const col = caster?.position?.[0];
         const row = +caster?.position?.slice(1);
-        const tile = board?.[row -1]?.[col];
-        const isLoot = tile?.type === TYPE_EARTH ||
-          tile?.type === TYPE_FIRE ||
-          tile?.type === TYPE_WATER;
+        const tile = board?.[row - 1]?.[col];
+        const isLoot =
+          tile?.type === TYPE_RES3 ||
+          tile?.type === TYPE_RES1 ||
+          tile?.type === TYPE_RES2;
         if (isLoot) {
           max++;
           if (caster?.last_loot === currentTurn) looted++;
         }
-      })
-      
+      });
+
       if (!lootAll && looted && looted === max) setLootAll(true);
       else if (lootAll && looted && looted !== max) setLootAll(false);
     }
@@ -44,9 +52,7 @@ const Heading = ({ title, flat, marketplace }) => {
     <_heading key={'heading-component'}>
       <_title>
         <span>{title}</span>
-        {marketplace ? (
-          <Redeem />
-        ) : null}
+        {marketplace ? <Redeem /> : null}
       </_title>
       <Ticks />
       {!lootAll && <Phases />}

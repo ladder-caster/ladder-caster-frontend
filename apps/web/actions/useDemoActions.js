@@ -35,9 +35,9 @@ import {
   ITEM_BOOK,
   GAME_RESOURCES,
   TOKENS_ACTIVE,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
   GAME_BOOST,
   DRAWER_CONTEXT,
   DRAWER_SETTINGS,
@@ -603,7 +603,7 @@ export const useDemoActions = () => {
     },
     async burnResourcesForXP() {
       const total_xp =
-        context?.[TYPE_FIRE] + context?.[TYPE_WATER] + context?.[TYPE_EARTH];
+        context?.[TYPE_RES1] + context?.[TYPE_RES2] + context?.[TYPE_RES3];
       const next_caster = find(
         spellcasters,
         (caster) => caster.id === drawer?.id,
@@ -614,9 +614,9 @@ export const useDemoActions = () => {
         updateCaster(next_caster);
         setResources({
           ...resources,
-          [TYPE_FIRE]: resources?.[TYPE_FIRE] - context?.[TYPE_FIRE],
-          [TYPE_WATER]: resources?.[TYPE_WATER] - context?.[TYPE_WATER],
-          [TYPE_EARTH]: resources?.[TYPE_EARTH] - context?.[TYPE_EARTH],
+          [TYPE_RES1]: resources?.[TYPE_RES1] - context?.[TYPE_RES1],
+          [TYPE_RES2]: resources?.[TYPE_RES2] - context?.[TYPE_RES2],
+          [TYPE_RES3]: resources?.[TYPE_RES3] - context?.[TYPE_RES3],
         });
         setContext(INIT_STATE_BOOST);
       }

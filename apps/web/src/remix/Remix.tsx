@@ -14,9 +14,9 @@ import {
   USER_OFFLINE,
   TABS_CHARACTER_ACTIONS,
   TOKENS_ACTIVE,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
   UNEQUIP_ITEM,
   CREATE_MUTATION,
   DRAWER_CONTEXT,
@@ -99,9 +99,9 @@ const Remix = () => {
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(GAME_BOOST, {
-    [TYPE_WATER]: 0,
-    [TYPE_FIRE]: 0,
-    [TYPE_EARTH]: 0,
+    [TYPE_RES2]: 0,
+    [TYPE_RES1]: 0,
+    [TYPE_RES3]: 0,
   });
 
   // TODO: Remove! Only added for esthetics
@@ -427,33 +427,33 @@ const Remix = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (player) {
-  //     console.log('player', player);
-  //   }
-  // }, [player]);
+  useEffect(() => {
+    if (player) {
+      console.log('player', player);
+    }
+  }, [player]);
 
-  // useEffect(() => {
-  //   if (inventory) {
-  //     console.log('inventory', inventory);
-  //   }
-  // }, [inventory]);
+  useEffect(() => {
+    if (inventory) {
+      console.log('inventory', inventory);
+    }
+  }, [inventory]);
 
-  // useEffect(() => {
-  //   if (casters) {
-  //     console.log('casters', casters);
-  //   }
-  // }, [casters]);
+  useEffect(() => {
+    if (casters) {
+      console.log('casters', casters);
+    }
+  }, [casters]);
 
-  // useEffect(() => {
-  //   if (game) {
-  //     console.log('game', game);
-  //     console.log(
-  //       'last crank',
-  //       new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
-  //     );
-  //   }
-  // }, [game]);
+  useEffect(() => {
+    if (game) {
+      console.log('game', game);
+      console.log(
+        'last crank',
+        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+      );
+    }
+  }, [game]);
 
   useEffect(() => {
     if (loading) {

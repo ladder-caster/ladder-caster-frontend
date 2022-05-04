@@ -3,9 +3,9 @@ import { _boost, _explainer } from './Boost.styled';
 import Resource from './resource/Resource';
 import {
   DRAWER_CONTEXT,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { _burn, _float } from '../Player.styled';
 import { useActions } from '../../../../../../actions';
@@ -17,14 +17,14 @@ const Boost = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
   const { burnResourcesForXP } = useActions();
   const total_amount =
-    context?.[TYPE_FIRE] + context?.[TYPE_WATER] + context?.[TYPE_EARTH] || 0;
+    context?.[TYPE_RES1] + context?.[TYPE_RES2] + context?.[TYPE_RES3] || 0;
 
   return (
     <_boost>
       <_explainer></_explainer>
-      <Resource element={TYPE_WATER} />
-      <Resource element={TYPE_FIRE} />
-      <Resource element={TYPE_EARTH} />
+      <Resource element={TYPE_RES2} />
+      <Resource element={TYPE_RES1} />
+      <Resource element={TYPE_RES3} />
       <_burn onClick={() => burnResourcesForXP()}>
         {`${t('drawer.button.burn')} ${total_amount} ${t('drawer.button.xp')}`}
       </_burn>

@@ -30,10 +30,10 @@ import {
   CONFIRM_MOVE,
   GAME_CONFIRM,
   TYPE_CRAFT,
-  TYPE_EARTH,
-  TYPE_FIRE,
+  TYPE_RES3,
+  TYPE_RES1,
   TYPE_LEGENDARY,
-  TYPE_WATER,
+  TYPE_RES2,
 } from 'core/remix/state';
 import { IconFireeIMG } from 'design/icons/firee.icon';
 import { IconWaterIMG } from 'design/icons/water.icon';
@@ -64,9 +64,9 @@ const ModalMove = ({ height, options }) => {
     : caster?.position;
 
   const Icon = {
-    [TYPE_FIRE]: IconFireeIMG,
-    [TYPE_WATER]: IconWaterIMG,
-    [TYPE_EARTH]: IconEarthIMG,
+    [TYPE_RES1]: IconFireeIMG,
+    [TYPE_RES2]: IconWaterIMG,
+    [TYPE_RES3]: IconEarthIMG,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];

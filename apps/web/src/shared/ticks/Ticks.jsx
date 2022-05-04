@@ -2,12 +2,18 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { _ticks, _bar, _fill, _loading } from './Ticks.styled';
 import { AnimateLoading } from './animations/AnimateLoading';
 import {
-  DEMO_MODE, GAME_MAP,
-  GAME_OPTIONS, GAME_SPELLCASTERS,
+  DEMO_MODE,
+  GAME_MAP,
+  GAME_OPTIONS,
+  GAME_SPELLCASTERS,
   PHASE_ACTIONS,
   PHASE_EQUIP,
-  PHASE_REWARDS, TYPE_EARTH, TYPE_FIRE, TYPE_WATER,
-  USER_PHASE, VIEW_NAVIGATION,
+  PHASE_REWARDS,
+  TYPE_RES3,
+  TYPE_RES1,
+  TYPE_RES2,
+  USER_PHASE,
+  VIEW_NAVIGATION,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { nanoid } from 'nanoid';
@@ -31,31 +37,36 @@ const Ticks = () => {
   const regen_keys =
     prev_ticks % loading_bars === 2 && demo?.num_ticks % loading_bars === 0;
   const currentTurn = game?.turnInfo?.turn;
-  
+
   useEffect(() => {
     if (spellcasters) {
       let looted = 0;
       let max = 0;
-      
-      map(spellcasters, caster => {
+
+      map(spellcasters, (caster) => {
         const col = caster?.position?.[0];
         const row = +caster?.position?.slice(1);
-        const tile = board?.[row -1]?.[col];
+        const tile = board?.[row - 1]?.[col];
         const turnCommitTurn = caster?.turnCommit;
-        const isLoot = tile?.type === TYPE_EARTH ||
-          tile?.type === TYPE_FIRE ||
-          tile?.type === TYPE_WATER;
+        const isLoot =
+          tile?.type === TYPE_RES3 ||
+          tile?.type === TYPE_RES1 ||
+          tile?.type === TYPE_RES2;
         if (isLoot) {
           max++;
-          if (caster?.last_loot === currentTurn && turnCommitTurn >= currentTurn) looted++;
+          if (
+            caster?.last_loot === currentTurn &&
+            turnCommitTurn >= currentTurn
+          )
+            looted++;
         }
-      })
-      
+      });
+
       if (!lootAll && looted && looted === max) setLootAll(true);
       else if (lootAll && looted && looted !== max) setLootAll(false);
     }
   }, [spellcasters, lootAll, view, currentTurn]);
-  
+
   useEffect(() => {
     if (regen_keys) setInc(inc + 1);
   }, [regen_keys]);

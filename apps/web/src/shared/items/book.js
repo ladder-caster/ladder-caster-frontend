@@ -1,11 +1,11 @@
 import {
   ATTRIBUTE_XP,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RES2,
   ITEM_BOOK,
   RARITY_COMMON,
   RARITY_EPIC,
@@ -20,9 +20,9 @@ import { EQUIP_MAP } from 'core/utils/switch';
 
 export const spell = (level, rarity, tier) => {
   const attribute_types = [
-    ATTRIBUTE_FIRE,
-    ATTRIBUTE_WATER,
-    ATTRIBUTE_EARTH,
+    ATTRIBUTE_RES1,
+    ATTRIBUTE_RES2,
+    ATTRIBUTE_RES3,
     ATTRIBUTE_XP,
     ATTRIBUTE_ITEM,
   ];
