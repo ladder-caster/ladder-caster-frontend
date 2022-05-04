@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 import { _details, _text, _end, _risk, _odds, _cost } from './Details.styled';
 import { useTranslation } from 'react-i18next';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconWater } from 'design/icons/water.icon';
-import { IconEarth } from 'design/icons/earth.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 import { IconDice } from 'design/icons/dice.icon';
 import {
   ATTRIBUTE_XP,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_ITEM,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RESOURCE2,
   RARITY_COMMON,
   RARITY_EPIC,
   RARITY_LEGENDARY,
@@ -26,9 +26,15 @@ const Details = ({ item }) => {
   const { t } = useTranslation();
 
   const text = {
-    [ATTRIBUTE_FIRE]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_WATER]: <Resource type={item?.attribute} value={item?.value} />,
-    [ATTRIBUTE_EARTH]: <Resource type={item?.attribute} value={item?.value} />,
+    [ATTRIBUTE_RESOURCE1]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
+    [ATTRIBUTE_RESOURCE2]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
+    [ATTRIBUTE_RESOURCE3]: (
+      <Resource type={item?.attribute} value={item?.value} />
+    ),
     [ATTRIBUTE_CRAFT]: <Craft level={item?.level} />,
     [ATTRIBUTE_ITEM]: <Item level={item?.level} />,
     [ATTRIBUTE_XP]: <Xp value={item?.value} />,
@@ -44,16 +50,16 @@ const Details = ({ item }) => {
   const elementIcon = useMemo(() => {
     switch (item?.costFeature) {
       case 'fire': {
-        return <IconFiree />;
+        return <IconResourcee1 />;
       }
       case 'water': {
-        return <IconWater />;
+        return <IconResource2 />;
       }
       case 'earth': {
-        return <IconEarth />;
+        return <IconResource3 />;
       }
       default: {
-        return <IconEarth />;
+        return <IconResource3 />;
       }
     }
   }, [item?.costFeature]);

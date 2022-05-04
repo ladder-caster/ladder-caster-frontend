@@ -1,9 +1,9 @@
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RESOURCE2,
   ITEM_HAT,
   RARITY_COMMON,
   RARITY_EPIC,
@@ -17,9 +17,9 @@ import { EQUIP_MAP } from 'core/utils/switch';
 
 export const hat = (level, rarity, tier) => {
   const attribute_types = [
-    ATTRIBUTE_FIRE,
-    ATTRIBUTE_WATER,
-    ATTRIBUTE_EARTH,
+    ATTRIBUTE_RESOURCE1,
+    ATTRIBUTE_RESOURCE2,
+    ATTRIBUTE_RESOURCE3,
     ATTRIBUTE_MAGIC,
     ATTRIBUTE_CRIT,
   ];
@@ -57,9 +57,9 @@ export const hat = (level, rarity, tier) => {
   };
 
   const value = {
-    [ATTRIBUTE_FIRE]: () => element_attribute(),
-    [ATTRIBUTE_WATER]: () => element_attribute(),
-    [ATTRIBUTE_EARTH]: () => element_attribute(),
+    [ATTRIBUTE_RESOURCE1]: () => element_attribute(),
+    [ATTRIBUTE_RESOURCE2]: () => element_attribute(),
+    [ATTRIBUTE_RESOURCE3]: () => element_attribute(),
     [ATTRIBUTE_MAGIC]: () => magic_attribute(),
     [ATTRIBUTE_CRIT]: () => crit_attribute(),
   }[chosen_attribute]?.();

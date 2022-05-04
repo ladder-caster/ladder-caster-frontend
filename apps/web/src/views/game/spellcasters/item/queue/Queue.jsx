@@ -18,9 +18,9 @@ import {
   GAME_SPELLCASTERS,
   TYPE_CRAFT,
   TYPE_LEGENDARY,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
   PHASE_ACTIONS,
   USER_PHASE,
   GAME_INVENTORY,
@@ -32,9 +32,9 @@ import { IconBook } from 'design/icons/book.icon';
 import { IconMove } from 'design/icons/move.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
 import { IconTreasure } from 'design/icons/treasure.icon';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconWater } from 'design/icons/water.icon';
-import { IconEarth } from 'design/icons/earth.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 import { IconLock } from 'design/icons/lock.icon';
 import { AnimatePresence } from 'framer-motion';
 import { AnimateLock } from '../animations/AnimateLock';
@@ -91,9 +91,9 @@ const Queue = ({ spell_id }) => {
   const element = tile?.type;
 
   const IconElement = {
-    [TYPE_FIRE]: IconFiree,
-    [TYPE_WATER]: IconWater,
-    [TYPE_EARTH]: IconEarth,
+    [TYPE_RESOURCE1]: IconResourcee1,
+    [TYPE_RESOURCE2]: IconResource2,
+    [TYPE_RESOURCE3]: IconResource3,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconTreasure,
   }[element];

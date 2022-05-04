@@ -30,14 +30,14 @@ import {
   CONFIRM_MOVE,
   GAME_CONFIRM,
   TYPE_CRAFT,
-  TYPE_EARTH,
-  TYPE_FIRE,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
   TYPE_LEGENDARY,
-  TYPE_WATER,
+  TYPE_RESOURCE2,
 } from 'core/remix/state';
-import { IconFireeIMG } from 'design/icons/firee.icon';
-import { IconWaterIMG } from 'design/icons/water.icon';
-import { IconEarthIMG } from 'design/icons/earth.icon';
+import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
+import { IconResource2IMG } from 'design/icons/resource2.icon';
+import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
 
 const ModalMove = ({ height, options }) => {
@@ -64,9 +64,9 @@ const ModalMove = ({ height, options }) => {
     : caster?.position;
 
   const Icon = {
-    [TYPE_FIRE]: IconFireeIMG,
-    [TYPE_WATER]: IconWaterIMG,
-    [TYPE_EARTH]: IconEarthIMG,
+    [TYPE_RESOURCE1]: IconResourcee1IMG,
+    [TYPE_RESOURCE2]: IconResource2IMG,
+    [TYPE_RESOURCE3]: IconResource3IMG,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];

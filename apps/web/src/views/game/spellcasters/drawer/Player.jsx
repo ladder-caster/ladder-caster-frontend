@@ -24,9 +24,9 @@ import {
   PLAYER_LEADERBOARD,
   SPELLCASTER_BUY,
   TABS_CHARACTER_ACTIONS,
-  TYPE_EARTH,
-  TYPE_FIRE,
-  TYPE_WATER,
+  TYPE_RESOURCE3,
+  TYPE_RESOURCE1,
+  TYPE_RESOURCE2,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';

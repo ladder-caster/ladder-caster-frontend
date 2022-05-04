@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RESOURCE2,
 } from 'core/remix/state';
 
 const AttributeItem = ({ attribute }) => {
@@ -13,9 +13,9 @@ const AttributeItem = ({ attribute }) => {
 
   return (
     {
-      [ATTRIBUTE_FIRE]: t('attribute.name.fire'),
-      [ATTRIBUTE_WATER]: t('attribute.name.water'),
-      [ATTRIBUTE_EARTH]: t('attribute.name.earth'),
+      [ATTRIBUTE_RESOURCE1]: t('attribute.name.resource1'),
+      [ATTRIBUTE_RESOURCE2]: t('attribute.name.resource2'),
+      [ATTRIBUTE_RESOURCE3]: t('attribute.name.resource3'),
       [ATTRIBUTE_MAGIC]: t('attribute.name.magic'),
       [ATTRIBUTE_CRIT]: t('attribute.name.crit'),
     }[attribute]?.toUpperCase() || null

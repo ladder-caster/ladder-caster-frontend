@@ -1,12 +1,12 @@
 import React from 'react';
 
-const earthImg = require('../assets/earth.png');
+const resource3IMG = require('../assets/resource3.png');
 
-export const IconEarthIMG = () => {
-  return <img src={earthImg} />;
+export const IconResource3IMG = () => {
+  return <img src={resource3IMG} />;
 };
 
-export const IconEarth = () => (
+export const IconResource3 = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 28 31.3"

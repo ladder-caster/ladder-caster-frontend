@@ -2,16 +2,16 @@ import React from 'react';
 import {
   ATTRIBUTE_XP,
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_ITEM,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RESOURCE2,
   ATTRIBUTE_CRAFT,
 } from 'core/remix/state';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconWater } from 'design/icons/water.icon';
-import { IconEarth } from 'design/icons/earth.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 import { IconSwirl } from 'design/icons/swirl.icon';
 import { IconPower } from 'design/icons/power.icon';
 import { IconTag } from 'design/icons/tag.icon';
@@ -20,9 +20,9 @@ import { IconAnvil } from 'design/icons/anvil.icon';
 
 const IconAttribute = ({ attribute }) => {
   const Icon = {
-    [ATTRIBUTE_WATER]: IconWater,
-    [ATTRIBUTE_FIRE]: IconFiree,
-    [ATTRIBUTE_EARTH]: IconEarth,
+    [ATTRIBUTE_RESOURCE2]: IconResource2,
+    [ATTRIBUTE_RESOURCE1]: IconResourcee1,
+    [ATTRIBUTE_RESOURCE3]: IconResource3,
     [ATTRIBUTE_MAGIC]: IconSwirl,
     [ATTRIBUTE_CRIT]: IconPower,
     [ATTRIBUTE_XP]: IconSparkle,

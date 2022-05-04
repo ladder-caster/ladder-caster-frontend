@@ -16,9 +16,9 @@ import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
 import { GAME_RESOURCES } from 'core/remix/state';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
-import { IconFireeIMG } from 'design/icons/firee.icon';
-import { IconWaterIMG } from 'design/icons/water.icon';
-import { IconEarthIMG } from 'design/icons/earth.icon';
+import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
+import { IconResource2IMG } from 'design/icons/resource2.icon';
+import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { IconSolana } from 'design/icons/solana.icon';
 import { truncateDecimals } from 'core/utils/numbers';
@@ -73,20 +73,20 @@ const WalletTab = () => {
       </_coin>
       <_coin>
         <_icon>
-          <IconFireeIMG />
+          <IconResourcee1IMG />
         </_icon>
         <_right>
           <_text>
             <_label>Fire</_label>
             <_amount>
-              {truncateDecimals(resources?.fire, TRUNCATE_DECIMAL)} FIYA
+              {truncateDecimals(resources?.resource1, TRUNCATE_DECIMAL)} FIYA
             </_amount>
           </_text>
         </_right>
       </_coin>
       <_coin>
         <_icon>
-          <IconWaterIMG />
+          <IconResource2IMG />
         </_icon>
         <_right>
           <_text>
@@ -99,13 +99,13 @@ const WalletTab = () => {
       </_coin>
       <_coin>
         <_icon>
-          <IconEarthIMG />
+          <IconResource3IMG />
         </_icon>
         <_right>
           <_text>
             <_label>Earth</_label>
             <_amount>
-              {truncateDecimals(resources?.earth, TRUNCATE_DECIMAL)} ERRA
+              {truncateDecimals(resources?.resource3, TRUNCATE_DECIMAL)} ERRA
             </_amount>
           </_text>
         </_right>

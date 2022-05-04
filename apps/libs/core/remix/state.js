@@ -89,9 +89,9 @@ export const ACTION_CRAFT = 'ACTION_CRAFT';
 export const ACTION_SPELL = 'ACTION_SPELL';
 export const ACTION_EQUIP = 'ACTION_EQUIP';
 
-export const TYPE_FIRE = 'fire';
-export const TYPE_WATER = 'water';
-export const TYPE_EARTH = 'earth';
+export const TYPE_RESOURCE1 = 'ember';
+export const TYPE_RESOURCE2 = 'frost';
+export const TYPE_RESOURCE3 = 'root';
 export const TYPE_CRAFT = 'crafting';
 //Legendary craft
 export const TYPE_LEGENDARY = 'legendary';
@@ -113,9 +113,9 @@ export const ITEM_BOOK = 'spellBook';
 export const ITEM_GEM = 'gem';
 export const ITEM_CHEST = 'chest';
 
-export const ATTRIBUTE_FIRE = 'fire';
-export const ATTRIBUTE_WATER = 'water';
-export const ATTRIBUTE_EARTH = 'earth';
+export const ATTRIBUTE_RESOURCE1 = 'ember';
+export const ATTRIBUTE_RESOURCE2 = 'frost';
+export const ATTRIBUTE_RESOURCE3 = 'root';
 export const ATTRIBUTE_MAGIC = 'magic';
 export const ATTRIBUTE_CRIT = 'power';
 export const ATTRIBUTE_ITEM = 'item';
@@ -127,9 +127,9 @@ export const SPELL_UNLOCK = 'SPELL_UNLOCK';
 export const SPELL_LOOT = 'SPELL_LOOT';
 export const SPELL_CRIT = 'SPELL_CRIT';
 export const SPELL_MAGIC = 'SPELL_MAGIC';
-export const SPELL_FIRE = 'SPELL_FIRE';
-export const SPELL_WATER = 'SPELL_WATER';
-export const SPELL_EARTH = 'SPELL_EARTH';
+export const SPELL_RESOURCE1 = 'SPELL_RESOURCE1';
+export const SPELL_RESOURCE2 = 'SPELL_RESOURCE2';
+export const SPELL_RESOURCE3 = 'SPELL_RESOURCE3';
 export const SPELL_XP = 'SPELL_XP';
 export const SPELL_CRAFT = 'SPELL_CRAFT';
 export const SPELL_ITEM = 'SPELL_ITEM';
@@ -149,7 +149,6 @@ export const WALLET_TYPE = 'WALLET_TYPE';
 
 export const STANDARD_TYPE = 'STANDARD_TYPE';
 export const BURNER_TYPE = 'BURNER_TYPE';
-
 
 export const LOADING_CASTERS = 'LOADING_CASTERS';
 export const FORCE_RERENDER = 'FORCE_RERENDER';

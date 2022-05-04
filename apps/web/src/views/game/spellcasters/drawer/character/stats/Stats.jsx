@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { _stats, _rows, _row, _bonus } from './Stats.styled';
 import {
   ATTRIBUTE_CRIT,
-  ATTRIBUTE_EARTH,
-  ATTRIBUTE_FIRE,
+  ATTRIBUTE_RESOURCE3,
+  ATTRIBUTE_RESOURCE1,
   ATTRIBUTE_MAGIC,
-  ATTRIBUTE_WATER,
+  ATTRIBUTE_RESOURCE2,
 } from 'core/remix/state';
 import IconAttribute from '../../../../../../shared/types/icons/IconAttribute';
 
@@ -45,9 +45,9 @@ const Stats = ({ caster }) => {
   return (
     <_stats>
       <_rows>
-        {bonus?.[ATTRIBUTE_WATER] && row(ATTRIBUTE_WATER)}
-        {bonus?.[ATTRIBUTE_FIRE] && row(ATTRIBUTE_FIRE)}
-        {bonus?.[ATTRIBUTE_EARTH] && row(ATTRIBUTE_EARTH)}
+        {bonus?.[ATTRIBUTE_RESOURCE2] && row(ATTRIBUTE_RESOURCE2)}
+        {bonus?.[ATTRIBUTE_RESOURCE1] && row(ATTRIBUTE_RESOURCE1)}
+        {bonus?.[ATTRIBUTE_RESOURCE3] && row(ATTRIBUTE_RESOURCE3)}
         {bonus?.[ATTRIBUTE_CRIT] && row(ATTRIBUTE_CRIT)}
         {bonus?.[ATTRIBUTE_MAGIC] && row(ATTRIBUTE_MAGIC)}
       </_rows>

@@ -1,12 +1,12 @@
 import React from 'react';
 
-const waterImg = require('../../design/assets/water.png');
+const resource2Img = require('../../design/assets/resource2.png');
 
-export const IconWaterIMG = () => {
-  return <img src={waterImg} />;
+export const IconResource2IMG = () => {
+  return <img src={resource2Img} />;
 };
 
-export const IconWater = () => (
+export const IconResource2 = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 19.6 32"
