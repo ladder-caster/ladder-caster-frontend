@@ -10,6 +10,7 @@
   "private": true,
   "scripts": {
     "web": "cross-env parcel serve public/index.html ",
+    "build-prod-priv": "cross-env rimraf build && cross-env REACT_APP_ENV=mainnet-priv parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "build-prod": "cross-env rimraf build && cross-env REACT_APP_ENV=mainnet parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "build-dev": "cross-env rimraf build && cross-env REACT_APP_ENV=devnet parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "build": "cross-env rimraf build && cross-env REACT_APP_ENV=mainnet parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url ."

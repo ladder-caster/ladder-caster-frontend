@@ -1609,6 +1609,11 @@
           "isSigner": false
         },
         {
+          "name": "caster",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "gameSigner",
           "isMut": true,
           "isSigner": false
@@ -1651,82 +1656,6 @@
         {
           "name": "item",
           "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "transferCaster",
-      "accounts": [
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "oldGame",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "newGame",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oldPlayer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newPlayer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oldSeason",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newSeason",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oldCaster",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCaster",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "slots",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "instructionSysvarAccount",
-          "isMut": false,
           "isSigner": false
         }
       ],
@@ -2436,12 +2365,6 @@
             "type": {
               "defined": "CasterType"
             }
-          },
-          {
-            "name": "edition",
-            "type": {
-              "defined": "CasterEdition"
-            }
           }
         ]
       }
@@ -2563,12 +2486,6 @@
             "name": "casterType",
             "type": {
               "defined": "CasterType"
-            }
-          },
-          {
-            "name": "edition",
-            "type": {
-              "defined": "CasterEdition"
             }
           }
         ]
@@ -3035,20 +2952,6 @@
       }
     },
     {
-      "name": "CasterEdition",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Normal"
-          },
-          {
-            "name": "Limited"
-          }
-        ]
-      }
-    },
-    {
       "name": "ItemTypeForCrafting",
       "type": {
         "kind": "enum",
@@ -3294,39 +3197,9 @@
       "code": 6039,
       "name": "NotAvailableForSeason",
       "msg": "Functionality not available in current season"
-    },
-    {
-      "code": 6040,
-      "name": "InvalidCasterTransfer",
-      "msg": "Trying to transfer to old season."
-    },
-    {
-      "code": 6041,
-      "name": "InvalidCasterLevelForTransfer",
-      "msg": "Caster needs to be level 30 to transfer."
-    },
-    {
-      "code": 6042,
-      "name": "CasterDoesNotBelongPlayer",
-      "msg": "Caster does not belong to player."
-    },
-    {
-      "code": 6043,
-      "name": "NFTMetadataNotBelongMint",
-      "msg": "NFT Metadata does not belong to NFT mint."
-    },
-    {
-      "code": 6044,
-      "name": "InvalidCandyMachineID",
-      "msg": "Candy machine ID invalid"
-    },
-    {
-      "code": 6045,
-      "name": "InvalidCollectionForNftMint",
-      "msg": "Invalid Candy Machine collection."
     }
   ],
   "metadata": {
-    "address": "LCThBz55Ma7hcueUQA3iiofBhvidQHfNLxxwfLsycxb"
+    "address": "4gqr3AcAyjzUpbKcpBQjBPQhcXbHy4q4GLooGioCMRkQ"
   }
 }
