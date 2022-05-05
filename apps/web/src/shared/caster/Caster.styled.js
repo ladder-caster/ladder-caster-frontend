@@ -62,6 +62,8 @@ export const _img = styled.img`
   min-height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
   height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
   border-radius: 8px;
+  transform: scale(1.5);
+  top: 16px;
 `;
 
 export const _level = styled.div`
