@@ -72,7 +72,7 @@
         },
         {
           "name": "ladaTokenAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -1732,6 +1732,16 @@
         {
           "name": "instructionSysvarAccount",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ladaMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ladaTokenAccount",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -3485,6 +3495,11 @@
       "code": 6045,
       "name": "InvalidUpdateAuthorityForMetadata",
       "msg": "Invalid update authority for collection."
+    },
+    {
+      "code": 6046,
+      "name": "ItemRarityToLowForMint",
+      "msg": "Item rarity too low to mint."
     }
   ],
   "metadata": {

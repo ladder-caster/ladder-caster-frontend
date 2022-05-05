@@ -55,6 +55,7 @@ import {
   CHAIN_LOCAL_CLIENT,
   CHAIN_PLAYER,
   CHAIN_NFTS,
+  CHAIN_OLD_CASTERS,
 } from 'chain/hooks/state';
 import { nanoid } from 'nanoid';
 import {
@@ -116,6 +117,7 @@ export const useChainActions = () => {
   const [game, setGame] = useRemix(CHAIN_GAME);
   const [items, setItems] = useRemix(CHAIN_ITEMS);
   const [casters, setCasters] = useRemix(CHAIN_CASTERS);
+  const [oldCasters, setOldCasters] = useRemix(CHAIN_OLD_CASTERS);
   const [resources, setResources] = useRemix(GAME_RESOURCES);
   const [spellcasters, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
   const [boost, setBoost] = useRemix(GAME_BOOST);
@@ -1252,6 +1254,23 @@ export const useChainActions = () => {
             }
           }
         });
+      });
+    },
+    async prestigeCaster(casterPK) {
+      const casterContext = new CasterContext(
+        client,
+        client.program.provider.wallet.publicKey,
+        localStorage.getItem('gamePK'),
+        find(oldCasters, (match) => match?.publicKey?.toString() === casterPK),
+      );
+      await fetchPlayer(async () => {
+        return await stateHandler(
+          async () => {
+            return await casterContext.prestigeCaster();
+          },
+          INST_MINT_NFT,
+          '',
+        );
       });
     },
   };

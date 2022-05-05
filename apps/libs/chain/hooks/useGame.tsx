@@ -4,6 +4,7 @@ import {
   CHAIN_GAME,
   CHAIN_ITEMS,
   CHAIN_NFTS,
+  CHAIN_OLD_CASTERS,
   CHAIN_PLAYER,
   INIT_CHAIN_LOAD,
 } from './state';
@@ -19,6 +20,7 @@ export const useGame = () => {
   const [, setNfts] = useRemix(CHAIN_NFTS);
   const [, setItems] = useRemix(CHAIN_ITEMS);
   const [, setCasters] = useRemix(CHAIN_CASTERS);
+  const [, setOldCasters] = useRemix(CHAIN_OLD_CASTERS);
   const [, setResources] = useRemix(GAME_RESOURCES);
   const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
   const [error, setError] = useState();
@@ -55,6 +57,7 @@ export const useGame = () => {
             setResources(await playerContext.getResources());
             setItems(await playerContext.getInventory());
             setCasters(await playerContext.getCasters());
+            setOldCasters(await playerContext.getPreSeasonCasters());
           } catch (e) {
             console.log(e);
           }

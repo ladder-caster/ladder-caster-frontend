@@ -6,6 +6,7 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+import resources from 'sdk/src/laddercaster/config/resources.json';
 import { deserializeUnchecked } from 'borsh';
 import {
   AccountInfo,
@@ -26,6 +27,7 @@ import {
 import axios from 'axios';
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
+import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
 
 async function getMerkle() {
@@ -54,9 +56,18 @@ async function getMerkleSingleton() {
 }
 
 export type ResourcesPK = {
-  gameAccount: string;
-  gameAccountProd: string;
-  gameAccountProdPriv: string;
+  seasons: {
+    0: {
+      gameAccount: string;
+      gameAccountProd: string;
+      gameAccountProdPriv: string;
+    };
+    1: {
+      gameAccount: string;
+      gameAccountProd: string;
+      gameAccountProdPriv: string;
+    };
+  };
 };
 
 export class PlayerContext {
@@ -135,6 +146,42 @@ export class PlayerContext {
 
   async getCasters() {
     const [, playerAccount] = await this.getAccounts();
+
+    const casterArray = (
+      await this.client.program.account.caster.all([
+        { memcmp: { offset: 18, bytes: playerAccount.toBase58() } },
+      ])
+    ).map((caster) => {
+      return { ...caster.account, publicKey: caster.publicKey };
+    });
+
+    return casterArray;
+  }
+
+  static getGamePK(env: Environment, season: number) {
+    switch (env) {
+      case 'mainnet': {
+        return resources.seasons[season].gameAccountProd;
+      }
+      case 'localprod':
+      case 'mainnet-priv': {
+        return resources.seasons[season].gameAccountProdPriv;
+      }
+      case 'devnet': {
+        return resources.seasons[season].gameAccount;
+      }
+    }
+  }
+
+  async getPreSeasonCasters() {
+    const gameAccount = new anchor.web3.PublicKey(
+      PlayerContext.getGamePK(process.env.REACT_APP_ENV as Environment, 0),
+    );
+
+    const [playerAccount] = findProgramAddressSync(
+      [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
+      this.client.program.programId,
+    );
 
     const casterArray = (
       await this.client.program.account.caster.all([
