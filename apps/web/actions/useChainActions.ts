@@ -467,7 +467,7 @@ export const useChainActions = () => {
     },
     modalCraft(caster) {
       setDrawer({ type: DRAWER_CRAFT });
-      setContext({ type: CRAFT_ITEM, caster });
+      setContext({ type: CRAFT_MATERIALS, caster });
     },
     actionMove(action) {
       setConfirm(action);
@@ -719,7 +719,7 @@ export const useChainActions = () => {
       }, casterContext);
     },
     async craftChooseCharacter(caster) {
-      setContext({ ...context, type: CRAFT_ITEM, caster });
+      setContext({ ...context, type: CRAFT_MATERIALS, caster });
     },
     async craftChooseItem(item) {
       setContext({ ...context, type: CRAFT_MATERIALS, item });
