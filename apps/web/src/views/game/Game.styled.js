@@ -29,6 +29,7 @@ export const _container = styled.div`
 
 export const _mobile = styled(m.div)`
   position: relative;
+  min-height: 58px;
   min-width: 100%;
   width: 100%;
   background: ${({ theme }) => theme.background['base']};

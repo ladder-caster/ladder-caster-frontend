@@ -376,11 +376,17 @@ export const useChainActions = () => {
         type: MODAL_MINT,
         description: t('modal.demo.description'),
         accept: async () => {
+          const playerContext = new PlayerContext(
+            client,
+            client?.program?.provider?.wallet?.publicKey,
+            localStorage.getItem('gamePK'),
+          );
           const casterContext = new CasterContext(
             client,
             client?.program?.provider?.wallet?.publicKey,
             localStorage.getItem('gamePK'),
           );
+
 
           await fetchPlayer(async () => {
             return await stateHandler(
@@ -391,6 +397,7 @@ export const useChainActions = () => {
               '',
             );
           });
+          setCasters(await playerContext.getCasters());
         },
         deny: () => {
           setModal({});
