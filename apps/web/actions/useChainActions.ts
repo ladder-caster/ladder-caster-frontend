@@ -1221,9 +1221,9 @@ export const useChainActions = () => {
         last_mint: 0,
       });
       setResources({
-        [TYPE_RES1]: 0,
-        [TYPE_RES2]: 0,
-        [TYPE_RES3]: 0,
+        resource1: 0,
+        resource2: 0,
+        resource3: 0,
         lada: 0,
       });
     },

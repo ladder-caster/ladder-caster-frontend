@@ -99,9 +99,9 @@ export class PlayerContext {
     }
 
     return {
-      [TYPE_RES1]: resourcesArray[0],
-      [TYPE_RES2]: resourcesArray[1],
-      [TYPE_RES3]: resourcesArray[2],
+      resource1: resourcesArray[0],
+      resource2: resourcesArray[1],
+      resource3: resourcesArray[2],
       lada: resourcesArray[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
     };
