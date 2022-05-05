@@ -118,7 +118,6 @@
     "inventory.items": "All Items",
     "inventory.craft": "Craft Chest",
     "spellcasters.buy": "Mint Spellcaster",
-    "spellcasters.prestige": "Prestige me daddy",
     "spellcasters.mint": "Create Caster",
     "spellcasters.stake": "Stake",
     "spellcasters.claim": "Claim Rewards!",
@@ -132,9 +131,9 @@
     "SPELL_LOOT": "Remove the lock from this spellcaster's Loot action for this turn.",
     "SPELL_CRIT": "Perform a critical strike on your next loot this turn.",
     "SPELL_MAGIC": "Increase Magic Chance by 20% this turn.",
-    "SPELL_RESOURCE1": "Gain 30 ember",
-    "SPELL_RESOURCE2": "Gain 30 frost",
-    "SPELL_RESOURCE3": "Gain 30 root",
+    "SPELL_RES1": "Gain 30 ember",
+    "SPELL_RES2": "Gain 30 frost",
+    "SPELL_RES3": "Gain 30 root",
     "SPELL_XP": "Gain 100 experience points",
     "SPELL_CRAFT": "The next item you craft will be one level higher than its crafting materials",
     "SPELL_ITEM": "Craft a new random item of Tier X",
@@ -319,7 +318,7 @@
     "account.opt.in": "Opt In",
     "copy.clipboard": "Copy to clipboard",
     "copied.clipboard": "Copied!",
-    "home.task.init.res.account": "Create $EMBA,$FRO,$ROOT Accounts",
+    "home.task.init.res.account": "Create $FIYA,$WADA,$ERRA Accounts",
     "import.generate.wallet": "Import or Generate Burner Wallet",
     "confirm.title": "Confirm",
     "confirm.equip.action": "Equip {{type}}",
@@ -335,7 +334,7 @@
     "modal.chests.title": "Tier",
     "mutation.timeout": "Timed out. You may need to refresh to see if it worked.",
     "resources.resource1.symbol":"EMBA",
-    "resources.resource2.symbol":"FRO",
+    "resources.resource2.symbol":"FROST",
     "resources.resource3.symbol":"ROOT"
   }
 }

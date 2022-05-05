@@ -17,9 +17,9 @@ import {
   _after,
 } from './Header.styled';
 import { withTheme } from 'styled-components';
-import { IconWaterIMG } from 'design/icons/water.icon';
-import { IconEarthIMG } from 'design/icons/earth.icon';
-import { IconFireeIMG } from 'design/icons/firee.icon';
+import { IconResource2IMG } from 'design/icons/resource2.icon';
+import { IconResource3IMG } from 'design/icons/resource3.icon';
+import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
@@ -47,9 +47,9 @@ const Header = withTheme(({ theme }) => {
   const [initialized] = useRemix(GAME_INIT);
 
   const prevGold = usePrevious(+resources?.lada || 0);
-  const prevFire = usePrevious(+resources?.fire || 0);
-  const prevWater = usePrevious(+resources?.water || 0);
-  const prevEarth = usePrevious(+resources?.earth || 0);
+  const prevResource1 = usePrevious(+resources?.resource1 || 0);
+  const prevResource2 = usePrevious(+resources?.resource2 || 0);
+  const prevResource3 = usePrevious(+resources?.resource3 || 0);
 
   const TurnTitle = useMemo(() => {
     return () =>
@@ -64,7 +64,6 @@ const Header = withTheme(({ theme }) => {
         </_controls>
       ) : null;
   }, [game?.turnInfo?.turn, demo?.num_ticks, casters?.length, initialized]);
-
   return (
     <_header>
       <_container>
@@ -77,21 +76,21 @@ const Header = withTheme(({ theme }) => {
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES2]}>
-              <IconWaterIMG />
+              <IconResource2IMG />
             </_icon>
-            <Counter from={prevWater} to={+resources?.water} />
+            <Counter from={prevResource2} to={+resources?.resource2} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES1]}>
-              <IconFireeIMG />
+              <IconResourcee1IMG />
             </_icon>
-            <Counter from={prevFire} to={+resources?.fire} />
+            <Counter from={prevResource1} to={+resources?.resource1} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES3]}>
-              <IconEarthIMG />
+              <IconResource3IMG />
             </_icon>
-            <Counter from={prevEarth} to={+resources?.earth} />
+            <Counter from={prevResource3} to={+resources?.resource3} />
           </_coin>
         </_left>
         <_right>
