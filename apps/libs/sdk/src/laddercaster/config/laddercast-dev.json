@@ -2007,16 +2007,6 @@
           "isSigner": false
         },
         {
-          "name": "candyMachine",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionPda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "metaplexTokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -3523,13 +3513,13 @@
     },
     {
       "code": 6044,
-      "name": "InvalidCandyMachineID",
-      "msg": "Candy machine ID invalid"
+      "name": "NFTTokenNotBelongMind",
+      "msg": "NFT Token does not belong to NFT mint."
     },
     {
       "code": 6045,
-      "name": "InvalidCollectionForNftMint",
-      "msg": "Invalid Candy Machine collection."
+      "name": "InvalidUpdateAuthorityForMetadata",
+      "msg": "Invalid update authority for collection."
     }
   ],
   "metadata": {
