@@ -77,9 +77,10 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Fire</_label>
+            <_label>{t('attribute.name.resource1')}</_label>
             <_amount>
-              {truncateDecimals(resources?.resource1, TRUNCATE_DECIMAL)} FIYA
+              {truncateDecimals(resources?.resource1, TRUNCATE_DECIMAL)}{' '}
+              {t('resources.resource1.symbol')}
             </_amount>
           </_text>
         </_right>
@@ -90,9 +91,10 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Water</_label>
+            <_label>{t('attribute.name.resource2')}</_label>
             <_amount>
-              {truncateDecimals(resources?.wate, TRUNCATE_DECIMAL)} WADA
+              {truncateDecimals(resources?.resource2, TRUNCATE_DECIMAL)}{' '}
+              {t('resources.resource2.symbol')}
             </_amount>
           </_text>
         </_right>
@@ -103,9 +105,10 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Earth</_label>
+            <_label>{t('attribute.name.resource3')}</_label>
             <_amount>
-              {truncateDecimals(resources?.resource3, TRUNCATE_DECIMAL)} ERRA
+              {truncateDecimals(resources?.resource3, TRUNCATE_DECIMAL)}{' '}
+              {t('resources.resource3.symbol')}
             </_amount>
           </_text>
         </_right>

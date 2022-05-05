@@ -309,12 +309,15 @@ export const useDemoActions = () => {
           });
         }
 
-        const fire = (resources?.resource1 || 0) + (rewards?.resource1 || 0);
-        const water = (resources?.resource2 || 0) + (rewards?.resource2 || 0);
-        const earth = (resources?.resource3 || 0) + (rewards?.resource3 || 0);
+        const resource1 =
+          (resources?.resource1 || 0) + (rewards?.resource1 || 0);
+        const resource2 =
+          (resources?.resource2 || 0) + (rewards?.resource2 || 0);
+        const resource3 =
+          (resources?.resource3 || 0) + (rewards?.resource3 || 0);
 
         // Add resources
-        setResources({ ...resources, fire, water, earth });
+        setResources({ ...resources, resource1, resource2, resource3 });
 
         // Save latest success animation data in spellcaster
         const next_caster = { ...caster };

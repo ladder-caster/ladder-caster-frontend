@@ -96,9 +96,9 @@ export class PlayerContext {
     }
 
     return {
-      fire: resourcesArray[0],
-      water: resourcesArray[1],
-      earth: resourcesArray[2],
+      resource1: resourcesArray[0],
+      resource2: resourcesArray[1],
+      resource3: resourcesArray[2],
       lada: resourcesArray[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
     };

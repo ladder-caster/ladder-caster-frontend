@@ -332,6 +332,9 @@
     "drawer.crank.loot.all": "Loot All Resources",
     "drawer.craft.warning": "By crafting now, you will need to wait until next turn to equip or unequip items",
     "modal.chests.title": "Tier",
-    "mutation.timeout": "Timed out. You may need to refresh to see if it worked."
+    "mutation.timeout": "Timed out. You may need to refresh to see if it worked.",
+    "resources.resource1.symbol":"EMBA",
+    "resources.resource2.symbol":"FROST",
+    "resources.resource3.symbol":"ROOT"
   }
 }

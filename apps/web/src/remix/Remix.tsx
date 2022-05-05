@@ -73,9 +73,9 @@ const Remix = () => {
     chests: [],
   });
   useRemixOrigin(GAME_RESOURCES, {
-    fire: 0,
-    earth: 0,
-    water: 0,
+    resource1: 0,
+    resource2: 0,
+    resource3: 0,
     lada: 0,
   });
 
