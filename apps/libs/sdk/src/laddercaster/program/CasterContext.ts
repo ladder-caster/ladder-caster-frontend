@@ -80,7 +80,7 @@ export class CasterContext {
       game.ladaMintAccount,
     );
 
-    return await this.client.program.rpc.casterCommitMoveS1(lvl, col, {
+    return await this.client.program.rpc.casterCommitMove(lvl, col, {
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -93,8 +93,6 @@ export class CasterContext {
         season: season,
         ...mintAccounts,
         gameTurnData,
-        ladaMint: game.ladaMintAccount,
-        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });
@@ -140,7 +138,7 @@ export class CasterContext {
       game.ladaMintAccount,
     );
 
-    return await this.client.program.rpc.casterCommitCraftS1({
+    return await this.client.program.rpc.casterCommitCraft({
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -156,8 +154,6 @@ export class CasterContext {
         gameTurnData,
         season: season,
         ...mintAccounts,
-        ladaMint: game.ladaMintAccount,
-        ladaTokenAccount: playerLadaTokenAccount,
       },
       signers: [this.client.wallet.payer],
     });
@@ -410,7 +406,7 @@ export class CasterContext {
   private async redeemCraft(item) {
     const [gameAccount, playerAccount, , , season] = await this.getAccounts();
 
-    return this.client.program.instruction.casterRedeemCraftS1({
+    return this.client.program.instruction.casterRedeemCraft({
       accounts: {
         game: gameAccount,
         authority: this.playerPubKey,
