@@ -1891,36 +1891,6 @@
           "isSigner": false
         },
         {
-          "name": "resource1MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource1TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "item1",
           "isMut": true,
           "isSigner": false
@@ -1932,11 +1902,6 @@
         },
         {
           "name": "item3",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameTurnData",
           "isMut": true,
           "isSigner": false
         },
