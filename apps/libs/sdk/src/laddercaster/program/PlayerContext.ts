@@ -580,24 +580,6 @@ export class PlayerContext {
       this.playerPubKey,
     );
 
-    console.log('nft token', nftToken.toString());
-    const [collectionPda] = findProgramAddressSync(
-      [
-        Buffer.from('collection'),
-        new PublicKey(
-          'CL3DQUqMYp49UKqvRoCFpnER1LGRGw5ULqhR72tamnNB',
-        ).toBuffer(),
-      ],
-      new PublicKey('cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'),
-    );
-    console.log('collectionPda', collectionPda.toString());
-
-    try {
-      console.log(await this.client.connection.getAccountInfo(collectionPda));
-    } catch (e) {
-      console.log('fetching collection pda failed', e);
-    }
-
     const [metaplexTokenMetadata] = findProgramAddressSync(
       [
         Buffer.from('metadata'),
@@ -628,10 +610,6 @@ export class PlayerContext {
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         nftMint: nftMintKeys,
         nftToken: nftToken,
-        candyMachine: new PublicKey(
-          'CL3DQUqMYp49UKqvRoCFpnER1LGRGw5ULqhR72tamnNB',
-        ),
-        collectionPda: collectionPda,
         metaplexTokenMetadataProgram: MetadataProgram.PUBKEY,
         metaplexTokenMetadata,
         caster1: caster1.publicKey,
