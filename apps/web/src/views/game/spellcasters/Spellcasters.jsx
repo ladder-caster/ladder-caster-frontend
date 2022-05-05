@@ -4,6 +4,7 @@ import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
 import {
   GAME_INIT,
+  GAME_OLD_SPELLCASTERS,
   GAME_SPELLCASTERS,
   SPELLCASTER_BUY,
   USER_PHASE,
@@ -21,6 +22,7 @@ const Spellcasters = () => {
   const { t } = useTranslation();
   const [casters] = useRemix(CHAIN_CASTERS);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [oldSpellcasters] = useRemix(GAME_OLD_SPELLCASTERS);
   const [initialized] = useRemix(GAME_INIT);
   const [phase] = useRemix(USER_PHASE);
   const { lootAllResources } = useActions();
@@ -32,6 +34,14 @@ const Spellcasters = () => {
       ));
     }
   }, [spellcasters]);
+
+  const render_old_spellcasters = useMemo(() => {
+    if (oldSpellcasters && oldSpellcasters.length >= 1) {
+      return sortBy(oldSpellcasters, (sort) => sort?.hue).map((caster) => (
+        <Item key={nanoid()} spell_id={caster.id} isOld />
+      ));
+    }
+  }, [oldSpellcasters]);
 
   return (
     <_spellcasters>
@@ -49,6 +59,7 @@ const Spellcasters = () => {
           {/*  </_button>*/}
           {/*)}*/}
           {render_spellcasters}
+          {render_old_spellcasters}
           <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
         </_list>
       ) : null}

@@ -6,6 +6,7 @@ export const CHAIN_PLAYER = 'CHAIN_PLAYER';
 export const CHAIN_NFTS = 'CHAIN_NFTS';
 export const CHAIN_ITEMS = 'CHAIN_ITEMS';
 export const CHAIN_CASTERS = 'CHAIN_CASTERS';
+export const CHAIN_OLD_CASTERS = 'CHAIN_OLD_CASTERS';
 export const CHAIN_NEXT_TURN = 'CHAIN_NEXT_TURN';
 export const CHAIN_PROGRAM = 'CHAIN_PROGRAM';
 export const INIT_CHAIN_LOAD = 'INIT_CHAIN_LOAD';
