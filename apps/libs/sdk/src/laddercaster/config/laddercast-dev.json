@@ -72,7 +72,7 @@
         },
         {
           "name": "ladaTokenAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -1733,6 +1733,16 @@
           "name": "instructionSysvarAccount",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "ladaMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ladaTokenAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": []
@@ -1891,36 +1901,6 @@
           "isSigner": false
         },
         {
-          "name": "resource1MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3MintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource1TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource2TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "resource3TokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "item1",
           "isMut": true,
           "isSigner": false
@@ -1932,11 +1912,6 @@
         },
         {
           "name": "item3",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameTurnData",
           "isMut": true,
           "isSigner": false
         },
@@ -2003,16 +1978,6 @@
         },
         {
           "name": "nftToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "candyMachine",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionPda",
           "isMut": true,
           "isSigner": false
         },
@@ -3523,13 +3488,18 @@
     },
     {
       "code": 6044,
-      "name": "InvalidCandyMachineID",
-      "msg": "Candy machine ID invalid"
+      "name": "NFTTokenNotBelongMind",
+      "msg": "NFT Token does not belong to NFT mint."
     },
     {
       "code": 6045,
-      "name": "InvalidCollectionForNftMint",
-      "msg": "Invalid Candy Machine collection."
+      "name": "InvalidUpdateAuthorityForMetadata",
+      "msg": "Invalid update authority for collection."
+    },
+    {
+      "code": 6046,
+      "name": "ItemRarityToLowForMint",
+      "msg": "Item rarity too low to mint."
     }
   ],
   "metadata": {

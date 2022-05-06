@@ -15,6 +15,8 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
+import { PlayerContext } from './PlayerContext';
+import { Environment } from './Client';
 
 export class CasterContext {
   private game: Game;
@@ -153,9 +155,7 @@ export class CasterContext {
         item1: item1.publicKey,
         item2: item2.publicKey,
         item3: item3.publicKey,
-        gameTurnData,
         season: season,
-        ...mintAccounts,
         ladaMint: game.ladaMintAccount,
         ladaTokenAccount: playerLadaTokenAccount,
       },
@@ -634,6 +634,55 @@ export class CasterContext {
         signers: [this.client.wallet.payer],
       },
     );
+  }
+
+  async prestigeCaster() {
+    const [
+      newGameAccount,
+      newPlayerAccount,
+      game,
+      ,
+      newSeason,
+    ] = await this.getAccounts();
+    const newCaster = Keypair.generate();
+    const oldGameAccount = new anchor.web3.PublicKey(
+      PlayerContext.getGamePK(process.env.REACT_APP_ENV as Environment, 0),
+    );
+
+    const [oldPlayerAccount] = findProgramAddressSync(
+      [oldGameAccount.toBuffer(), this.playerPubKey.toBuffer()],
+      this.client.program.programId,
+    );
+
+    const [oldSeason] = findProgramAddressSync(
+      [Buffer.from('season'), new PublicKey(oldGameAccount).toBuffer()],
+      this.client.program.programId,
+    );
+    const playerLadaTokenAccount = await this.getTokenAccount(
+      game.ladaMintAccount,
+    );
+
+    return await this.client.program.rpc.transferCaster({
+      accounts: {
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+        authority: this.playerPubKey,
+        oldGame: oldGameAccount,
+        newGame: newGameAccount,
+        oldPlayer: oldPlayerAccount,
+        newPlayer: newPlayerAccount,
+        oldSeason: oldSeason,
+        newSeason: newSeason,
+        oldCaster: this.caster?.publicKey,
+        newCaster: newCaster.publicKey,
+        slots: SYSVAR_SLOT_HASHES_PUBKEY,
+        instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
+        ladaMint: game.ladaMintAccount,
+        ladaTokenAccount: playerLadaTokenAccount,
+      },
+      signers: [this.client.wallet.payer, newCaster],
+    });
   }
 
   //DEBUG - Devnet only
