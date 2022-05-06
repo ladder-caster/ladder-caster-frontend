@@ -717,7 +717,7 @@ export class CasterContext {
     ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
 
-    return await this.client.program.rpc.giveResources(new anchor.BN(10), {
+    return await this.client.program.rpc.giveResources(new anchor.BN(500), {
       accounts: {
         systemProgram: anchor.web3.SystemProgram.programId,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

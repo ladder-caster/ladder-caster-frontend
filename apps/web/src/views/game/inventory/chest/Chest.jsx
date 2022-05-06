@@ -54,9 +54,10 @@ const Chest = ({ tier }) => {
     return count;
   }, [chests]);
 
-  const handleChestClick = () => {
-    if (num_chests == 1) {
-      confirmChest(chests[0]?.mint || chests[0]);
+  const handleChestClick = async () => {
+    if (num_chests === 1) {
+      await confirmChest(chests[0]?.mint || chests[0]);
+      return;
     }
     modalChest(tier);
   };

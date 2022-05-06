@@ -29,6 +29,7 @@ import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
+import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
 
 async function getMerkle() {
   return await axios.get(
@@ -107,9 +108,9 @@ export class PlayerContext {
     }
 
     return {
-      resource1: resourcesArray[0],
-      resource2: resourcesArray[1],
-      resource3: resourcesArray[2],
+      [TYPE_RES1]: resourcesArray[0],
+      [TYPE_RES2]: resourcesArray[1],
+      [TYPE_RES3]: resourcesArray[2],
       lada: resourcesArray[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
     };

@@ -73,7 +73,13 @@ const Queue = ({ spell_id }) => {
         searchPosition?.[0]
       ],
   );
-  const caster_tile = +caster?.level === +position?.slice(1);
+  const next_level = caster?.casterActionPosition
+    ? +caster?.casterActionPosition?.slice(
+        1,
+        caster?.casterActionPosition?.length,
+      )
+    : +caster?.position?.slice(1, caster?.position?.length);
+  const caster_tile = +caster?.level === next_level;
 
   const unlocked_loot = caster?.last_loot < (num_ticks || currentTurn);
   const unlocked_craft = caster?.last_craft < (num_ticks || currentTurn);
