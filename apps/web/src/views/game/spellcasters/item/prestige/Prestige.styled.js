@@ -5,7 +5,7 @@ export const _prestige = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 16px 0 24px;
+  padding: 0 16px 0 16px;
 `;
 
 export const _title = styled.div`
@@ -26,18 +26,6 @@ export const _options = styled.div`
 `;
 
 export const _button = styled(m.div)`
-  /* font-size: 12px;
-  font-weight: 700;
-  color: ${({ theme, $disabled }) => theme.text[$disabled ? 'faded' : 'base']};
-  background: ${({ theme, $disabled }) =>
-    theme.background[$disabled ? 'lowest' : 'base']};
-  box-shadow: ${({ theme }) => theme.shadow['card']};
-  padding: 16px 20px;
-  white-space: nowrap;
-  border-radius: 8px;
-  line-height: 1;
-  cursor: pointer; */
-
   padding: 12px 18px;
   display: flex;
   flex-direction: row;
@@ -46,16 +34,24 @@ export const _button = styled(m.div)`
   border-radius: 12px;
   box-shadow: ${({ theme, $disabled }) =>
     $disabled ? 'none' : theme.shadow['glass']};
-  background: ${({ theme, $disabled }) =>
-    $disabled ? theme.background['button'] : theme.background['button']};
+  background: ${({ theme, $disabled, $high }) =>
+    $disabled
+      ? theme.background['button']
+      : $high
+      ? theme.background['special']
+      : theme.background['button']};
   border: none;
   cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
 
   &:hover {
-    background: ${({ theme, $disabled }) =>
-      $disabled ? theme.background['button'] : theme.background['button_high']};
+    background: ${({ theme, $disabled, $high }) =>
+      $disabled
+        ? theme.background['button']
+        : $high
+        ? theme.background['special']
+        : theme.background['button_high']};
   }
 
   > svg {
@@ -69,8 +65,9 @@ export const _button = styled(m.div)`
   > span {
     font-size: ${({ $big }) => ($big ? '14px' : '12px')};
     font-weight: 700;
-    color: ${({ theme, $disabled }) =>
-      theme.text[$disabled ? 'faded' : 'base']};
+    color: ${({ theme, $disabled, $high }) =>
+      theme.text[$disabled ? 'faded' : $high ? 'special' : 'base']};
+    text-shadow: ${({ theme }) => theme.shadow['text']};
     padding-left: ${({ $noIcon }) => ($noIcon ? '0' : '6px')};
     white-space: nowrap;
   }
@@ -88,9 +85,9 @@ export const _or = styled.span`
 export const _option = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 export const _estimate = styled.div`
@@ -108,4 +105,13 @@ export const _estimate = styled.div`
     white-space: nowrap;
     line-height: 10px;
   }
+`;
+
+export const _cost = styled.div`
+  font-size: 10px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['base']};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 8px;
 `;

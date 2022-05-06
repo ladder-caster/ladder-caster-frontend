@@ -67,6 +67,7 @@ export const _description = styled.p`
   font-weight: 500;
   letter-spacing: 0.5px;
   color: ${({ theme }) => theme.text['base']};
+  margin-bottom: 16px;
 `;
 
 export const _link = styled(m.a)`
@@ -342,4 +343,41 @@ export const _card = styled(m.div)`
   border: 3px solid ${({ theme }) => theme.border['high']};
   cursor: pointer;
   opacity: ${({ $active }) => ($active ? 1 : 0.52)};
+`;
+
+export const _beta = styled.div`
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 16px;
+  border: 2px solid ${({ theme }) => theme.border['high']};
+  padding: 0 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const _text = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  > span {
+    max-width: 52px;
+    text-align: center;
+    background: ${({ theme }) => theme.background['lowest']};
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: ${({ theme }) => theme.text['base']};
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    bottom: 10px;
+  }
+`;
+
+export const _warning = styled.div`
+  font-size: 12px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['base']};
+  letter-spacing: 0.5px;
 `;

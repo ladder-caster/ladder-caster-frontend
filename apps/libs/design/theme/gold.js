@@ -202,6 +202,7 @@ export const gold = {
     button_active: 'radial-gradient(circle,  #425176 0%, #2d3653 150%)',
     success: '#234334',
     error: '#43233d',
+    special: 'linear-gradient(45deg, #5f3781 0%, #37817f 100%)',
   },
   border: {
     highest: '#5f6f95',
@@ -259,6 +260,7 @@ export const gold = {
     error: '#c27092',
     logout: '#ba3d57',
     white: '#fff',
+    special: '#c1cad7',
   },
   font: {
     open_sauce: 'Open Sauce One',
