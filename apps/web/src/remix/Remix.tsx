@@ -26,6 +26,7 @@ import {
   GAME_INIT,
   ERROR_CODES,
   SEEN_PHASE,
+  GAME_OLD_SPELLCASTERS,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -38,6 +39,7 @@ import {
   CHAIN_LOCAL_CLIENT,
   CHAIN_NEXT_TURN,
   CHAIN_NFTS,
+  CHAIN_OLD_CASTERS,
   CHAIN_PLAYER,
   INIT_CHAIN_LOAD,
 } from '../../../libs/chain/hooks/state';
@@ -65,7 +67,9 @@ const Remix = () => {
   const [seen] = useRemixOrigin(SEEN_PHASE);
   const [items] = useRemixOrigin(CHAIN_ITEMS, []);
   const [casters] = useRemixOrigin(CHAIN_CASTERS, []);
+  const [oldCasters] = useRemixOrigin(CHAIN_OLD_CASTERS, []);
   const [, setSpellcasters] = useRemixOrigin(GAME_SPELLCASTERS, []);
+  const [, setOldSpellcasters] = useRemixOrigin(GAME_OLD_SPELLCASTERS, []);
   const [client] = useRemixOrigin(CHAIN_LOCAL_CLIENT);
   const [loading] = useRemixOrigin(RPC_LOADING, {});
   const [inventory, setInventory] = useRemixOrigin(GAME_INVENTORY, {
@@ -396,6 +400,12 @@ const Remix = () => {
   }, [casters]);
 
   useEffect(() => {
+    if (oldCasters) {
+      setOldSpellcasters(generateSpellCaster(oldCasters));
+    }
+  }, [oldCasters]);
+
+  useEffect(() => {
     if (items) {
       setInventory(generateInventory(items));
     }
@@ -407,22 +417,19 @@ const Remix = () => {
     // DO NOT REMOVE, the game breaks if removed
     switch (process.env.REACT_APP_ENV as Environment) {
       case 'devnet': {
-        localStorage.setItem('gamePK', (resources as ResourcesPK).gameAccount);
+        localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
         break;
       }
       case 'localprod':
       case 'mainnet-priv': {
         localStorage.setItem(
           'gamePK',
-          (resources as ResourcesPK).gameAccountProdPriv,
+          resources.seasons[1].gameAccountProdPriv,
         );
         break;
       }
       case 'mainnet': {
-        localStorage.setItem(
-          'gamePK',
-          (resources as ResourcesPK).gameAccountProd,
-        );
+        localStorage.setItem('gamePK', resources.seasons[1].gameAccountProd);
         break;
       }
     }
@@ -439,6 +446,12 @@ const Remix = () => {
       console.log('inventory', inventory);
     }
   }, [inventory]);
+
+  useEffect(() => {
+    if (oldCasters) {
+      console.log('old casters', oldCasters);
+    }
+  }, [oldCasters]);
 
   useEffect(() => {
     if (casters) {
