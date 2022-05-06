@@ -14,9 +14,9 @@ const Elements = () => {
       () =>
         dummy_order.map((orb) => {
           const element = {
-            [TYPE_RES1]: () => <IconResourcee1 />,
-            [TYPE_RES2]: () => <IconResource2 />,
-            [TYPE_RES3]: () => <IconResource3 />,
+            [TYPE_RES1]: () => <IconFiree />,
+            [TYPE_RES2]: () => <IconWater />,
+            [TYPE_RES3]: () => <IconEarth />,
           };
           return (
             <_orb key={nanoid()} $color={orb}>

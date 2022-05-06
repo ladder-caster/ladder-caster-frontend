@@ -91,9 +91,9 @@ const Queue = ({ spell_id }) => {
   const element = tile?.type;
 
   const IconElement = {
-    [TYPE_RES1]: IconResourcee1,
-    [TYPE_RES2]: IconResource2,
-    [TYPE_RES3]: IconResource3,
+    [TYPE_RES1]: IconFiree,
+    [TYPE_RES2]: IconWater,
+    [TYPE_RES3]: IconEarth,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconTreasure,
   }[element];
