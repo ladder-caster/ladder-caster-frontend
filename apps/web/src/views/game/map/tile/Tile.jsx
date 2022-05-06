@@ -110,14 +110,24 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   }[land?.tier?.toString()];
 
   const color = theme.tile[type];
-
+  const getCost = () => {
+    // incase future tile costs are added such as towers, fights, etc.
+    switch (type) {
+      case TYPE_RES1:
+      case TYPE_RES2:
+      case TYPE_RES3:
+        return level * COST_MULTIPLIER;
+      default:
+        return 0;
+    }
+  };
   const clickTile = () => {
     if (isModal) {
       if (status === TILE_GLOWING)
         actionMove({
           type: CONFIRM_MOVE,
           position,
-          cost: type === TYPE_CRAFT ? 0 : level * COST_MULTIPLIER,
+          cost: getCost(),
           tileType: type,
         });
       if (status === TILE_CHIP) cancelMove();
