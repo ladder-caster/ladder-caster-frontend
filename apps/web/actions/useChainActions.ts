@@ -413,6 +413,9 @@ export const useChainActions = () => {
       });
     },
     async nextTurn() {
+      setDrawer('');
+      setContext('');
+
       await fetchGame(async () => {
         return await stateHandler(
           async () => {
@@ -829,7 +832,7 @@ export const useChainActions = () => {
       });
     },
     async incrementXP(element, custom) {
-      let amount = context?.[element];
+      let amount = context?.[element] || 0;
       let max_amount = +resources?.[element];
       if (custom && amount + custom <= max_amount) {
         amount = amount + custom;
@@ -928,8 +931,7 @@ export const useChainActions = () => {
         localStorage.getItem('gamePK'),
       );
 
-      setDrawer('');
-      setContext({});
+      setContext(INIT_STATE_REDEEM);
       setModal('');
 
       await fetchPlayer(async () => {
@@ -1217,9 +1219,9 @@ export const useChainActions = () => {
         last_mint: 0,
       });
       setResources({
-        fire: 0,
-        earth: 0,
-        water: 0,
+        [TYPE_RES1]: 0,
+        [TYPE_RES2]: 0,
+        [TYPE_RES3]: 0,
         lada: 0,
       });
     },

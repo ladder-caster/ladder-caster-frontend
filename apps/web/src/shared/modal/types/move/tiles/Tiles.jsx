@@ -10,11 +10,7 @@ import {
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
 
-const Tiles = ({ level, position }) => {
-  const [map] = useRemix(GAME_MAP);
-
-  const levels = find(map, (row) => row.level === level);
-
+const Tiles = ({ caster, level, position }) => {
   const status = (col) => {
     const tile_position = `${col}${level}`;
     const caster_col = position?.[0];
@@ -24,8 +20,12 @@ const Tiles = ({ level, position }) => {
       if (col === 'b' || caster_col === 'b') return TILE_GLOWING;
       if (col === 'a' && caster_col === 'c') return TILE_DISABLED;
       if (col === 'c' && caster_col === 'a') return TILE_DISABLED;
-    } else if (Math.abs(caster_level - level) === 1) {
-      if (col === caster_col) return TILE_GLOWING;
+    } else if (Math.abs(caster_level - level) >= 1) {
+      if (
+        col === caster_col &&
+        (caster?.level === level || caster?.level > caster_level)
+      )
+        return TILE_GLOWING;
       else return TILE_DISABLED;
     } else return TILE_DISABLED;
   };

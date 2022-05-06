@@ -39,6 +39,11 @@ import { IconFireeIMG } from 'design/icons/firee.icon';
 import { IconWaterIMG } from 'design/icons/water.icon';
 import { IconEarthIMG } from 'design/icons/earth.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
+import { getTierNumber } from 'core/utils/switch';
+import {
+  IconMoney,
+  IconMoneyIMG,
+} from '../../../../../../libs/design/icons/money.icon';
 
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
@@ -62,6 +67,9 @@ const ModalMove = ({ height, options }) => {
   const position = caster?.casterActionPosition
     ? caster?.casterActionPosition
     : caster?.position;
+  const confirm_level = +confirm?.position?.slice(1);
+  const level_up = confirm_level > level;
+  const confirm_tier = getTierNumber(level_up);
 
   const Icon = {
     [TYPE_RES1]: IconFireeIMG,
@@ -83,7 +91,7 @@ const ModalMove = ({ height, options }) => {
             {next_level && (
               <_row>
                 <Level level={next_level} />
-                <Tiles level={next_level} position={position} />
+                <Tiles caster={caster} level={next_level} position={position} />
                 <Level level={next_level} $right />
               </_row>
             )}
@@ -97,14 +105,24 @@ const ModalMove = ({ height, options }) => {
               {isConfirm && (
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
+                  {level_up ? (
+                    <>
+                      <_icon $element={'lada'}>
+                        <IconMoneyIMG />
+                      </_icon>
+                      <_amount>{confirm_tier}</_amount>
+                    </>
+                  ) : null}
                   {confirm?.cost > 0 && (
                     <_icon $element={confirm?.tileType}>
                       <Icon />
                     </_icon>
                   )}
-                  <_amount>
-                    {confirm?.cost > 0 ? confirm?.cost : t('modal.move.free')}
-                  </_amount>
+                  {!(level_up && !confirm?.cost) && (
+                    <_amount>
+                      {confirm?.cost > 0 ? confirm?.cost : t('modal.move.free')}
+                    </_amount>
+                  )}
                 </_cost>
               )}
             </_float>
