@@ -8,9 +8,9 @@ import { IconEarth, IconEarthIMG } from 'design/icons/earth.icon';
 const IconResource = ({ type, isIMG }) => {
   const Icon = {
     [TYPE_GOLD]: IconMoneyBag,
-    [TYPE_RES1]: isIMG ? IconFireeIMG : IconFiree,
-    [TYPE_RES2]: isIMG ? IconWaterIMG : IconWater,
-    [TYPE_RES3]: isIMG ? IconEarthIMG : IconEarth,
+    [TYPE_RES1]: isIMG ? IconResourcee1IMG : IconResourcee1,
+    [TYPE_RES2]: isIMG ? IconResource2IMG : IconResource2,
+    [TYPE_RES3]: isIMG ? IconResource3IMG : IconResource3,
   }[type];
 
   return (!!Icon && <Icon />) || null;

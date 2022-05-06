@@ -14,9 +14,9 @@ const Resource = ({ type, value }) => {
   const { t } = useTranslation();
 
   const Icon = {
-    [ATTRIBUTE_RES1]: IconFiree,
-    [ATTRIBUTE_RES2]: IconWater,
-    [ATTRIBUTE_RES3]: IconEarth,
+    [ATTRIBUTE_RES1]: IconResourcee1,
+    [ATTRIBUTE_RES2]: IconResource2,
+    [ATTRIBUTE_RES3]: IconResource3,
   }[type];
 
   const element = {

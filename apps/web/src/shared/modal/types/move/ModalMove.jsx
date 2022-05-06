@@ -64,9 +64,9 @@ const ModalMove = ({ height, options }) => {
     : caster?.position;
 
   const Icon = {
-    [TYPE_RES1]: IconFireeIMG,
-    [TYPE_RES2]: IconWaterIMG,
-    [TYPE_RES3]: IconEarthIMG,
+    [TYPE_RES1]: IconResourcee1IMG,
+    [TYPE_RES2]: IconResource2IMG,
+    [TYPE_RES3]: IconResource3IMG,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];

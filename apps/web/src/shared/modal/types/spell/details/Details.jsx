@@ -44,13 +44,13 @@ const Details = ({ item }) => {
   const elementIcon = useMemo(() => {
     switch (item?.costFeature) {
       case [ATTRIBUTE_RES1]: {
-        return <IconFiree />;
+        return <IconResourcee1 />;
       }
       case [ATTRIBUTE_RES2]: {
-        return <IconWater />;
+        return <IconResource2 />;
       }
       case [ATTRIBUTE_RES3]: {
-        return <IconEarth />;
+        return <IconResource3 />;
       }
       default: {
         return <IconEarth />;
