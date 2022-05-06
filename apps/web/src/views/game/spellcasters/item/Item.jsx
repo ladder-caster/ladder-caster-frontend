@@ -19,7 +19,7 @@ const Item = ({ spell_id, isOld }) => {
   return (
     <_item>
       <_inventory onClick={() => tabCharacter(spell_id)}>
-        <Card spell_id={spell_id} mint={isBuy} isOld />
+        <Card spell_id={spell_id} mint={isBuy} isOld={isOld} />
       </_inventory>
       {isOld && (
         <_buy>

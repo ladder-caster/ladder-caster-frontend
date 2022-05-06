@@ -121,7 +121,7 @@
     "inventory.items": "All Items",
     "inventory.craft": "Craft Chest",
     "spellcasters.buy": "Mint Spellcaster",
-    "spellcasters.prestige": "Prestige me daddy",
+    "spellcasters.prestige": "Use Time Machine",
     "spellcasters.mint": "Create Caster",
     "spellcasters.stake": "Stake",
     "spellcasters.claim": "Claim Rewards!",
@@ -220,7 +220,7 @@
     "drawer.inventory.item.title": "Choose Item to Craft",
     "drawer.inventory.materials.title": "Choose Materials",
     "drawer.inventory.confirm.title": "Confirm Craft",
-    "drawer.inventory.confirm.text": "Craft item by burning three items to get a new one that has a 25% chance of increasing rarity",
+    "drawer.inventory.confirm.text": "Craft item by burning three items to get a new one that has a {{chance}}% chance of increasing rarity",
     "drawer.inventory.confirm.button": "Craft Item",
     "drawer.inventory.equip.title": "Equip {{type}}",
     "drawer.crank.title": "Turn Actions",
@@ -340,6 +340,11 @@
     "mutation.timeout": "Timed out. You may need to refresh to see if it worked.",
     "resources.resource1.symbol":"EMBA",
     "resources.resource2.symbol":"FRO",
-    "resources.resource3.symbol":"ROOT"
+    "resources.resource3.symbol":"ROOT",
+    "onboarding.google.warning": "Fractal support coming soon",
+    "prestige.caster": "Transfer to Season 1",
+    "prestige.confirm": "Confirm Transfer",
+    "prestige.cost": "Costs 500 LADA",
+    "heading.buy.lada": "Buy LADA"
   }
 }

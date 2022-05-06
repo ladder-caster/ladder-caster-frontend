@@ -19,6 +19,9 @@ import {
   _icon,
   _card,
   _circle,
+  _beta,
+  _text,
+  _warning,
 } from '../Dashboard.styled';
 import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
@@ -117,19 +120,24 @@ export const Onboarding = ({ home }) => {
               <IconWallet />
               <span>{t('connect.wallet')}</span>
             </_button>
-
-            {/*<_google*/}
-            {/*  $big*/}
-            {/*  $long*/}
-            {/*  onClick={() => {*/}
-            {/*    web3AuthConnect('google');*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  <_circle>*/}
-            {/*    <IconGoogle />*/}
-            {/*  </_circle>*/}
-            {/*  <span>{t('connect.web3Auth')}</span>*/}
-            {/*</_google>*/}
+            <_beta>
+              <_text>
+                <span>BETA</span>
+              </_text>
+              <_google
+                $big
+                $long
+                onClick={() => {
+                  web3AuthConnect('google');
+                }}
+              >
+                <_circle>
+                  <IconGoogle />
+                </_circle>
+                <span>{t('connect.web3Auth')}</span>
+              </_google>
+              <_warning>{t('onboarding.google.warning')}</_warning>
+            </_beta>
             {demo ? (
               <AnimateButton low>
                 <_button $long onClick={() => generateTestWallet()}>
@@ -217,7 +225,6 @@ export const Onboarding = ({ home }) => {
                   disabled={resources?.lada !== 0 || casters?.length !== 0}
                   $disabled={resources?.lada !== 0 || casters?.length !== 0}
                   style={{ marginLeft: 8 }}
-                  onClick={() => {}}
                   $noIcon
                 >
                   <span>{t('visit.buy.lada')}</span>

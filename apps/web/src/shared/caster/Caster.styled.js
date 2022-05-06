@@ -62,7 +62,8 @@ export const _img = styled.img`
   min-height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
   height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
   border-radius: 8px;
-  transform: scale(1.5);
+  transform: translateY(${({ $isOld }) => ($isOld ? '-20px' : '0px')})
+    scale(${({ $isOld }) => ($isOld ? 1 : 1.5)});
   top: 16px;
 `;
 

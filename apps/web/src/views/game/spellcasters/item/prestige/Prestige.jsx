@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   _prestige,
   _title,
   _options,
   _option,
   _button,
-  _estimate,
-  _or,
+  _cost,
 } from './Prestige.styled';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
@@ -17,6 +16,7 @@ import { find } from 'lodash';
 const Prestige = ({ spell_id }) => {
   const { t } = useTranslation();
   const { prestigeCaster } = useActions();
+  const [confirm, setConfirm] = useState(false);
 
   const [caster] = useRemix(GAME_OLD_SPELLCASTERS, (spellcasters) =>
     find(spellcasters, (caster) => caster.id === spell_id),
@@ -24,12 +24,24 @@ const Prestige = ({ spell_id }) => {
 
   return (
     <_prestige>
-      <_title>{t('buy.now')}</_title>
+      <_title>{t('prestige.caster')}</_title>
       <_options>
         <_option>
-          <_button onClick={() => prestigeCaster(caster.publicKey)}>
-            <span>{t('spellcasters.prestige')}</span>
-          </_button>
+          {!confirm ? (
+            <_button $high onClick={() => setConfirm(true)}>
+              <span>{t('spellcasters.prestige')}</span>
+            </_button>
+          ) : (
+            <_button
+              onClick={() => {
+                setConfirm(false);
+                prestigeCaster(caster.publicKey);
+              }}
+            >
+              <span>{t('prestige.confirm')}</span>
+            </_button>
+          )}
+          <_cost>{t('prestige.cost')}</_cost>
         </_option>
       </_options>
     </_prestige>

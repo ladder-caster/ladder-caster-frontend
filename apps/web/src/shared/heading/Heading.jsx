@@ -14,6 +14,7 @@ import {
 } from 'core/remix/state';
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
+import Trade from './trade/Trade';
 
 const Heading = ({ title, flat, marketplace }) => {
   const [initialized] = useRemix(GAME_INIT);
@@ -52,7 +53,7 @@ const Heading = ({ title, flat, marketplace }) => {
     <_heading key={'heading-component'}>
       <_title>
         <span>{title}</span>
-        {marketplace ? <Redeem /> : null}
+        {marketplace ? <Redeem /> : <Trade />}
       </_title>
       <Ticks />
       {!lootAll && <Phases />}

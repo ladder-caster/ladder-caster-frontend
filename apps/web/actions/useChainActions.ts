@@ -957,7 +957,10 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            if (context?.nft?.data.name === 'Caster') {
+            if(context?.nft?.data?.image === "https://arweave.net/9KF_5408KszsFlJpd0ZLheGfxOGSiw4QuGhD9oGfdMQ"){
+              return await playerContext.redeemNFTTwinPack(new anchor.web3.PublicKey(context?.nft?.mint));
+            }
+            else if (context?.nft?.data.name === 'Caster') {
               return await playerContext.redeemNFTCaster(
                 new anchor.web3.PublicKey(context?.nft?.mint),
               );
@@ -1296,18 +1299,18 @@ export const useChainActions = () => {
     },
     async web3AuthConnect(loginProvider: string) {
       try {
-        // if (!web3Auth) {
-        //   console.log('web3auth not initialized yet');
-        //   return;
-        // }
-        // const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-        //   loginProvider,
-        //   login_hint: '',
-        // });
-        //
-        // setProvider(provider);
-        // const user = await web3Auth.getUserInfo();
-        // console.log(user);
+        if (!web3Auth) {
+          console.log('web3auth not initialized yet');
+          return;
+        }
+        const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider,
+          login_hint: '',
+        });
+
+        setProvider(provider);
+        const user = await web3Auth.getUserInfo();
+        console.log(user);
       } catch (error) {
         console.error(error);
       }

@@ -275,7 +275,11 @@ const Materials = () => {
           <_container>
             {confirm ? (
               <_confirm>
-                <_text>{t('drawer.inventory.confirm.text')}</_text>
+                <_text>
+                  {t('drawer.inventory.confirm.text', {
+                    chance: different_types ? 25 : 40,
+                  })}
+                </_text>
                 <_odds>
                   <_lowest>
                     <_percent>
@@ -296,18 +300,6 @@ const Materials = () => {
                     <IconMoneyIMG />
                   </_icon>
                   <_amount>{craft_item?.lada_cost}</_amount>
-                  <_icon $element={confirm?.tileType}>
-                    <IconResourcee1IMG />
-                  </_icon>
-                  <_amount>{tile_level * COST_MULTIPLIER}</_amount>
-                  <_icon $element={confirm?.tileType}>
-                    <IconResource2IMG />
-                  </_icon>
-                  <_amount>{tile_level * COST_MULTIPLIER}</_amount>
-                  <_icon $element={confirm?.tileType}>
-                    <IconResource3IMG />
-                  </_icon>
-                  <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                 </_cost>
                 {(phase === PHASE_REWARDS || phase === PHASE_EQUIP) && (
                   <_warning>{t('drawer.craft.warning')}</_warning>
