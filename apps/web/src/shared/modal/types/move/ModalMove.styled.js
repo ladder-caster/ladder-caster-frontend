@@ -10,7 +10,7 @@ export const _move = styled(m.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 4px 0;
   overflow-y: scroll;
 `;
 
@@ -22,8 +22,8 @@ export const _board = styled(m.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 16px 110px 16px;
-  margin-bottom: 24px;
+  padding: 8px 16px 104px 16px;
+  margin-bottom: 20px;
 `;
 
 export const _row = styled.div`
@@ -66,11 +66,11 @@ export const _title = styled.div`
   font-weight: 700;
   text-shadow: ${({ theme }) => theme.shadow['text']};
   color: ${({ theme }) => theme.highlight['background']};
-  padding-bottom: 12px;
+  padding-bottom: 4px;
 `;
 
 export const _description = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   text-shadow: ${({ theme }) => theme.shadow['text']};
   color: ${({ theme }) => theme.highlight['background']};
@@ -113,7 +113,7 @@ export const _amount = styled.div`
   text-shadow: ${({ theme }) => theme.shadow['text']};
   display: flex;
   align-items: center;
-  padding-left: 4px;
+  padding-left: 2px;
 `;
 
 export const _icon = styled.div`
@@ -124,7 +124,7 @@ export const _icon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 4px;
+  margin-left: 8px;
   > img {
     max-width: 100%;
     height: auto;
@@ -144,7 +144,7 @@ export const _cost = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  padding: 24px 8px 0 0;
+  padding: 16px 8px 0 0;
 `;
 
 export const _cost_text = styled.div`

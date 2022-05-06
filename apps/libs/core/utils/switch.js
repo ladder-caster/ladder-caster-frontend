@@ -27,6 +27,14 @@ export const getTier = (level) => {
   return tier;
 };
 
+export const getTierNumber = (level) => {
+  if (level <= 5) return 1;
+  else if (level > 5 && level <= 10) return 2;
+  else if (level > 10 && level <= 15) return 3;
+  else if (level > 16) return 4;
+  else return 0;
+};
+
 export const ICON_EQUIP_MAP = {
   [ITEM_HAT]: IconHat,
   [ITEM_ROBE]: IconCloak,

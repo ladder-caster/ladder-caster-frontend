@@ -77,9 +77,9 @@ const Remix = () => {
     chests: [],
   });
   useRemixOrigin(GAME_RESOURCES, {
-    fire: 0,
-    earth: 0,
-    water: 0,
+    [TYPE_RES1]: 0,
+    [TYPE_RES2]: 0,
+    [TYPE_RES3]: 0,
     lada: 0,
   });
 
@@ -369,7 +369,9 @@ const Remix = () => {
       poll();
       interval = setInterval(() => {
         poll();
-      }, 10000);
+      }, process.env.REACT_APP_ENV === 'mainnet' ||
+                process.env.REACT_APP_ENV === 'mainnet-priv' ||
+                process.env.REACT_APP_ENV === 'localprod' ? 10000 : 1000000);
     };
 
     if (game) {
