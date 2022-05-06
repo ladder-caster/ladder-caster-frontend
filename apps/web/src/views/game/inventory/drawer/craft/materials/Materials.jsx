@@ -53,9 +53,9 @@ import Item from '../../../../../../shared/item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../../actions';
-import { IconFireeIMG } from 'design/icons/firee.icon';
-import { IconWaterIMG } from 'design/icons/water.icon';
-import { IconEarthIMG } from 'design/icons/earth.icon';
+import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
+import { IconResource2IMG } from 'design/icons/resource2.icon';
+import { IconResource3IMG } from 'design/icons/resource3.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
 import { findIndex } from 'lodash';
 import { IconMoneyIMG } from 'design/icons/money.icon';
@@ -87,7 +87,7 @@ const Materials = () => {
   const different_types = useMemo(() => {
     if (materials?.length === 3) {
       let material_type = '';
-      for (let i = 0;i < materials?.length;i++) {
+      for (let i = 0; i < materials?.length; i++) {
         const next_type = materials?.[i]?.type;
         console.log('next_type', next_type);
         if (material_type === '') material_type = next_type;
@@ -95,7 +95,7 @@ const Materials = () => {
       }
     }
   }, [materials, JSON.stringify(materials)]);
-  
+
   const position_type = useMemo(() => {
     for (let i = 0; i < board?.length; i++) {
       let col = position?.[0];
@@ -164,8 +164,6 @@ const Materials = () => {
         max_level++;
       } else max_rarity++;
     }
-    
-    
 
     return {
       type: item_type,
@@ -175,7 +173,7 @@ const Materials = () => {
       max_rarity: rarity_rank[max_rarity],
       max_level,
       max_tier,
-      lada_cost: indexOf(tier_range[0], min_tier) + 1
+      lada_cost: indexOf(tier_range[0], min_tier) + 1,
     };
   }, [item_type, materials?.length]);
 
@@ -295,19 +293,19 @@ const Materials = () => {
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
                   <_icon $element={confirm?.tileType}>
-                    <IconMoneyIMG/>
+                    <IconMoneyIMG />
                   </_icon>
                   <_amount>{craft_item?.lada_cost}</_amount>
                   <_icon $element={confirm?.tileType}>
-                    <IconFireeIMG />
+                    <IconResourcee1IMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                   <_icon $element={confirm?.tileType}>
-                    <IconWaterIMG />
+                    <IconResource2IMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                   <_icon $element={confirm?.tileType}>
-                    <IconEarthIMG />
+                    <IconResource3IMG />
                   </_icon>
                   <_amount>{tile_level * COST_MULTIPLIER}</_amount>
                 </_cost>

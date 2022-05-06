@@ -43,9 +43,9 @@ import {
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { IconBeaker } from 'design/icons/beaker.icon';
 import { withTheme } from 'styled-components';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconWater } from 'design/icons/water.icon';
-import { IconEarth } from 'design/icons/earth.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 import { AnimateBackground } from './animations/AnimateBackground';
 import { AnimateEnchant } from './animations/AniamteEnchant';
 import { IconTreasure } from 'design/icons/treasure.icon';
@@ -95,9 +95,9 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
     modal?.options?.caster?.position === position;
 
   const Icon = {
-    [TYPE_RES1]: IconFiree,
-    [TYPE_RES2]: IconWater,
-    [TYPE_RES3]: IconEarth,
+    [TYPE_RES1]: IconResourcee1,
+    [TYPE_RES2]: IconResource2,
+    [TYPE_RES3]: IconResource3,
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconMap,
   }[type];

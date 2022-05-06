@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { _elements, _orb } from './Elements.styled';
-import { IconFiree } from 'design/icons/firee.icon';
-import { IconEarth } from 'design/icons/earth.icon';
-import { IconWater } from 'design/icons/water.icon';
+import { IconResourcee1 } from 'design/icons/resourcee1.icon';
+import { IconResource2 } from 'design/icons/resource2.icon';
+import { IconResource3 } from 'design/icons/resource3.icon';
 import { nanoid } from 'nanoid';
 import { TYPE_RES3, TYPE_RES1, TYPE_RES2 } from 'core/remix/state';
 
@@ -14,9 +14,9 @@ const Elements = () => {
       () =>
         dummy_order.map((orb) => {
           const element = {
-            [TYPE_RES1]: () => <IconFiree />,
-            [TYPE_RES2]: () => <IconWater />,
-            [TYPE_RES3]: () => <IconEarth />,
+            [TYPE_RES1]: () => <IconResourcee1 />,
+            [TYPE_RES2]: () => <IconResource2 />,
+            [TYPE_RES3]: () => <IconResource3 />,
           };
           return (
             <_orb key={nanoid()} $color={orb}>

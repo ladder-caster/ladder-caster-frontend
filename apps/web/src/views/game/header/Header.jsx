@@ -17,9 +17,9 @@ import {
   _after,
 } from './Header.styled';
 import { withTheme } from 'styled-components';
-import { IconWaterIMG } from 'design/icons/water.icon';
-import { IconEarthIMG } from 'design/icons/earth.icon';
-import { IconFireeIMG } from 'design/icons/firee.icon';
+import { IconResource2IMG } from 'design/icons/resource2.icon';
+import { IconResource3IMG } from 'design/icons/resource3.icon';
+import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
@@ -64,7 +64,6 @@ const Header = withTheme(({ theme }) => {
         </_controls>
       ) : null;
   }, [game?.turnInfo?.turn, demo?.num_ticks, casters?.length, initialized]);
-
   return (
     <_header>
       <_container>
@@ -77,19 +76,19 @@ const Header = withTheme(({ theme }) => {
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES2]}>
-              <IconWaterIMG />
+              <IconResource2IMG />
             </_icon>
             <Counter from={prevWater} to={+resources?.[TYPE_RES2]} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES1]}>
-              <IconFireeIMG />
+              <IconResourcee1IMG />
             </_icon>
             <Counter from={prevFire} to={+resources?.[TYPE_RES1]} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES3]}>
-              <IconEarthIMG />
+              <IconResource3IMG />
             </_icon>
             <Counter from={prevEarth} to={+resources?.[TYPE_RES3]} />
           </_coin>

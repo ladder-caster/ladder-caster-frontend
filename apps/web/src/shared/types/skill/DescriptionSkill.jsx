@@ -18,23 +18,23 @@ const DescriptionSkill = ({ level, attribute, value, spell }) => {
   const Description = {
     [ATTRIBUTE_RES1]: (
       <_value $attribute={attribute}>
-        {`${t(`attribute${spell ? '.spell' : ''}.fire.desc1`)}`}
+        {`${t(`attribute${spell ? '.spell' : ''}.resource1.desc1`)}`}
         <b>+{value}</b>
-        {`${t('attribute.fire.desc2')}`}
+        {`${t('attribute.resource1.desc2')}`}
       </_value>
     ),
     [ATTRIBUTE_RES2]: (
       <_value $attribute={attribute}>
-        {`${t(`attribute${spell ? '.spell' : ''}.water.desc1`)}`}
+        {`${t(`attribute${spell ? '.spell' : ''}.resource2.desc1`)}`}
         <b>+{value}</b>
-        {`${t('attribute.water.desc2')}`}
+        {`${t('attribute.resource2.desc2')}`}
       </_value>
     ),
     [ATTRIBUTE_RES3]: (
       <_value $attribute={attribute}>
-        {`${t(`attribute${spell ? '.spell' : ''}.earth.desc1`)}`}
+        {`${t(`attribute${spell ? '.spell' : ''}.resource3.desc1`)}`}
         <b>+{value}</b>
-        {`${t('attribute.earth.desc2')}`}
+        {`${t('attribute.resource3.desc2')}`}
       </_value>
     ),
     [ATTRIBUTE_CRIT]: (
