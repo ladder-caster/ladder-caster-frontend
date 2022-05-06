@@ -275,6 +275,7 @@ export const gold = {
     },
   },
   socials: {
-    google: '#4285f4',
+    google: '#3f67a6',
+    google_hover: '#4175c8',
   },
 };

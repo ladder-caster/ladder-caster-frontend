@@ -32,6 +32,7 @@ import { clusterApiUrl } from '@solana/web3.js';
 import { useOffline } from 'core/hooks/useOffline';
 import { Helmet } from 'react-helmet-async';
 import { Redirect } from 'react-router';
+import Web3AuthInjecter from './src/web3auth/Web3Auth';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -45,7 +46,7 @@ const withThemes = ({ palette = 'dark' }) => ({
 const ticks_key = nanoid();
 
 const App = () => {
-  const [autoConnect, setAutoConnect] = useState(false);
+  const [, setAutoConnect] = useState(false);
 
   useOffline();
   const { vh } = useMobileHeight();
@@ -92,6 +93,7 @@ const App = () => {
             <_app>
               {/*<Demo />*/}
               <Remix />
+              <Web3AuthInjecter />
               <GlobalStyles />
               <Header />
               <_view $vh={vh}>

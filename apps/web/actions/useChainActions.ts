@@ -43,11 +43,20 @@ import {
   BURNER_TYPE,
   WALLET_TYPE,
   GAME_MAP,
+  WEB3AUTH_CLIENT,
+  WEB3AUTH_PROVIDER,
+  WEB3AUTH_PLUGIN_STORE,
+  W3A_TYPE,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
 } from 'core/remix/state';
-import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
+import {
+  TAB_REDEEM,
+  TAB_WALLET,
+  TABS_MINT_REDEEM,
+  TAB_MINT,
+} from 'core/remix/tabs';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -97,6 +106,7 @@ import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
+import { WALLET_ADAPTERS } from '@web3auth/base';
 
 let retry_count = {};
 
@@ -130,6 +140,9 @@ export const useChainActions = () => {
   const [, setWalletType] = useRemix(WALLET_TYPE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
   const [, setNfts] = useRemix(CHAIN_NFTS);
+  const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
+  const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
+  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
 
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
@@ -909,6 +922,11 @@ export const useChainActions = () => {
       setWalletTab(TAB_REDEEM);
       setContext(INIT_STATE_REDEEM);
     },
+    async openDrawerMint() {
+      setDrawer({ type: DRAWER_WALLET });
+      setWalletTab(TAB_MINT);
+      setContext(INIT_STATE_REDEEM);
+    },
     async openDrawerSettings() {
       setDrawer({ type: DRAWER_SETTINGS });
     },
@@ -939,24 +957,22 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            try {
-              console.log(context?.nft);
-              return await playerContext.redeemNFTTwinPack(
+            if (context?.nft?.data.name === 'Caster') {
+              return await playerContext.redeemNFTCaster(
                 new anchor.web3.PublicKey(context?.nft?.mint),
               );
-            } catch (e) {
-              console.log(e);
+            } else {
+              return await playerContext.redeemNFTItem(
+                new anchor.web3.PublicKey(context?.nft?.mint),
+              );
             }
-            // if (context?.nft?.data.name === 'Caster') {
-            // } else {
-            //   return await playerContext.redeemNFTItem(
-            //     new anchor.web3.PublicKey(context?.nft?.mint),
-            //   );
-            // }
           },
           INST_MINT_NFT,
           '',
         );
+      }).then(async () => {
+        if (context?.nft?.data.name === 'Caster')
+          setCasters(await playerContext.getCasters());
       });
     },
     async chooseMint(item) {
@@ -1006,6 +1022,9 @@ export const useChainActions = () => {
             INST_MINT_NFT,
             '',
           );
+        }).then(async () => {
+          if (caster || context?.caster)
+            setCasters(await playerContext.getCasters());
         });
       }
     },
@@ -1274,6 +1293,33 @@ export const useChainActions = () => {
           '',
         );
       });
+    },
+    async web3AuthConnect(loginProvider: string) {
+      try {
+        // if (!web3Auth) {
+        //   console.log('web3auth not initialized yet');
+        //   return;
+        // }
+        // const provider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        //   loginProvider,
+        //   login_hint: '',
+        // });
+        //
+        // setProvider(provider);
+        // const user = await web3Auth.getUserInfo();
+        // console.log(user);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async web3AuthDisconnect() {
+      if (!web3Auth) {
+        console.log('web3auth not initialized yet');
+        return;
+      }
+      console.log('logging out');
+      await web3Auth.logout();
+      setProvider(null);
     },
   };
 };
