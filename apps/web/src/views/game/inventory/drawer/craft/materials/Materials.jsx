@@ -87,7 +87,7 @@ const Materials = () => {
   const different_types = useMemo(() => {
     if (materials?.length === 3) {
       let material_type = '';
-      for (let i = 0;i < materials?.length;i++) {
+      for (let i = 0; i < materials?.length; i++) {
         const next_type = materials?.[i]?.type;
         console.log('next_type', next_type);
         if (material_type === '') material_type = next_type;
@@ -95,7 +95,7 @@ const Materials = () => {
       }
     }
   }, [materials, JSON.stringify(materials)]);
-  
+
   const position_type = useMemo(() => {
     for (let i = 0; i < board?.length; i++) {
       let col = position?.[0];
@@ -164,8 +164,6 @@ const Materials = () => {
         max_level++;
       } else max_rarity++;
     }
-    
-    
 
     return {
       type: item_type,
@@ -175,7 +173,7 @@ const Materials = () => {
       max_rarity: rarity_rank[max_rarity],
       max_level,
       max_tier,
-      lada_cost: indexOf(tier_range[0], min_tier) + 1
+      lada_cost: indexOf(tier_range[0], min_tier) + 1,
     };
   }, [item_type, materials?.length]);
 
@@ -294,6 +292,10 @@ const Materials = () => {
                 </_odds>
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
+                  <_icon $element={confirm?.tileType}>
+                    <IconMoneyIMG />
+                  </_icon>
+                  <_amount>{craft_item?.lada_cost}</_amount>
                   <_icon $element={confirm?.tileType}>
                     <IconResourcee1IMG />
                   </_icon>

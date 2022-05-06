@@ -13,9 +13,9 @@ const AttributeItem = ({ attribute }) => {
 
   return (
     {
-      [ATTRIBUTE_RES1]: t('attribute.name.fire'),
-      [ATTRIBUTE_RES2]: t('attribute.name.water'),
-      [ATTRIBUTE_RES3]: t('attribute.name.earth'),
+      [ATTRIBUTE_RES1]: t('attribute.name.resource1'),
+      [ATTRIBUTE_RES2]: t('attribute.name.resource2'),
+      [ATTRIBUTE_RES3]: t('attribute.name.resource3'),
       [ATTRIBUTE_MAGIC]: t('attribute.name.magic'),
       [ATTRIBUTE_CRIT]: t('attribute.name.crit'),
     }[attribute]?.toUpperCase() || null

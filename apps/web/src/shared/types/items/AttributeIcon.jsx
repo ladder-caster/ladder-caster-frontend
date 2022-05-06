@@ -15,9 +15,9 @@ import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 
 const AttributeIcon = ({ attribute }) => {
   const Attribute = {
-    [ATTRIBUTE_RES1]: IconFiree,
-    [ATTRIBUTE_RES2]: IconWater,
-    [ATTRIBUTE_RES3]: IconEarth,
+    [ATTRIBUTE_RES1]: IconResourcee1,
+    [ATTRIBUTE_RES2]: IconResource2,
+    [ATTRIBUTE_RES3]: IconResource3,
     [ATTRIBUTE_MAGIC]: IconTreasure,
     [ATTRIBUTE_CRIT]: IconExp,
   }[attribute];
