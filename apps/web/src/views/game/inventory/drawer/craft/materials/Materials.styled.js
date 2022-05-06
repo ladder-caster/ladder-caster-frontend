@@ -94,7 +94,7 @@ export const _text = styled.div`
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme }) => theme.text['base']};
-  margin-bottom: 40px;
+  margin-bottom: 48px;
   text-align: center;
 `;
 

@@ -48,7 +48,7 @@ import {
 import { gridList } from 'core/utils/lists';
 import { map } from 'lodash';
 import { _row } from '../character/Character.styled';
-import { filter, find, sortBy } from 'lodash';
+import { filter, find, indexOf } from 'lodash';
 import Item from '../../../../../../shared/item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +58,7 @@ import { IconWaterIMG } from 'design/icons/water.icon';
 import { IconEarthIMG } from 'design/icons/earth.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
 import { findIndex } from 'lodash';
+import { IconMoneyIMG } from 'design/icons/money.icon';
 
 const COST_MULTIPLIER = 5;
 
@@ -83,6 +84,18 @@ const Materials = () => {
   const materials = context?.materials;
   const { craftChooseMaterials, removeMaterials, craftItem } = useActions();
 
+  const different_types = useMemo(() => {
+    if (materials?.length === 3) {
+      let material_type = '';
+      for (let i = 0;i < materials?.length;i++) {
+        const next_type = materials?.[i]?.type;
+        console.log('next_type', next_type);
+        if (material_type === '') material_type = next_type;
+        else if (next_type !== material_type) return true;
+      }
+    }
+  }, [materials, JSON.stringify(materials)]);
+  
   const position_type = useMemo(() => {
     for (let i = 0; i < board?.length; i++) {
       let col = position?.[0];
@@ -113,7 +126,7 @@ const Materials = () => {
 
   const tier_range = [
     [TIER_I, TIER_II, TIER_III, TIER_IV],
-    [10, 15, 20, 30],
+    [5, 10, 15, 30],
   ];
 
   const craft_item = useMemo(() => {
@@ -151,6 +164,8 @@ const Materials = () => {
         max_level++;
       } else max_rarity++;
     }
+    
+    
 
     return {
       type: item_type,
@@ -160,6 +175,7 @@ const Materials = () => {
       max_rarity: rarity_rank[max_rarity],
       max_level,
       max_tier,
+      lada_cost: indexOf(tier_range[0], min_tier) + 1
     };
   }, [item_type, materials?.length]);
 
@@ -181,7 +197,7 @@ const Materials = () => {
 
   const filter_items = filter(
     inventory?.items,
-    (item) => item.type === item_type && item.level <= caster.level,
+    (item) => item.level <= caster.level,
   );
 
   const removeMaterial = async (item) => {
@@ -265,19 +281,23 @@ const Materials = () => {
                 <_odds>
                   <_lowest>
                     <_percent>
-                      <_chance>75%</_chance>
+                      <_chance>{different_types ? '75%' : '60%'}</_chance>
                     </_percent>
                     <Item all craft item={lowest_item} />
                   </_lowest>
                   <_highest>
                     <_percent>
-                      <_chance>25%</_chance>
+                      <_chance>{different_types ? '25%' : '40%'}</_chance>
                     </_percent>
                     <Item all craft item={highest_item} />
                   </_highest>
                 </_odds>
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
+                  <_icon $element={confirm?.tileType}>
+                    <IconMoneyIMG/>
+                  </_icon>
+                  <_amount>{craft_item?.lada_cost}</_amount>
                   <_icon $element={confirm?.tileType}>
                     <IconFireeIMG />
                   </_icon>
