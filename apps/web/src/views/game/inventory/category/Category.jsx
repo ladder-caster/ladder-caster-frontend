@@ -24,7 +24,8 @@ import { filter, sortBy, reverse } from 'lodash';
 import { EQUIP_MAP, ICON_EQUIP_MAP } from 'core/utils/switch';
 import Item from '../../../../shared/item/Item';
 import { useActions } from '../../../../../actions';
-
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { openDrawerInventory } = useActions();
@@ -106,7 +107,20 @@ const Category = ({ type }) => {
         {title}
         {amount ? <_amount>{amount}</_amount> : null}
       </_title>
-      <_items>{items()}</_items>
+      <_items>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              className="List"
+              height={height}
+              width={width}
+              itemCount={items_list.length}
+            >
+              {items()}
+            </List>
+          )}
+        </AutoSizer>
+      </_items>
     </_category>
   );
 };

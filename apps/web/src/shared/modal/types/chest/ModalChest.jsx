@@ -26,6 +26,8 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { filter, clamp } from 'lodash';
 import NFT from '../../../nft/NFT';
 import { _level, _overlay } from '../../../item/Item.styled';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List } from 'react-window';
 const ModalChest = () => {
   const { t } = useTranslation();
   const { modalClear, confirmChest } = useActions();
@@ -67,26 +69,32 @@ const ModalChest = () => {
         {t('modal.chests.title').toUpperCase()} {tierMap[modal?.tier]}
       </_grid_label>
       <_grid ref={grid_ref} rows={Math.floor(gridMap.length / 4)}>
-        {gridMap.map((chest, index) => {
-          if (chest?.tier) {
-            return (
-              <_grid_item_selectable
-                key={'chest_full_' + index}
-                onClick={() => confirmChest(chest?.mint || chest)}
-              >
-                <_overlay>
-                  <_level>
-                    <span>{chest.level}</span>
-                  </_level>
-                </_overlay>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List height={height} width={width} itemCount={gridMap.length}>
+              {gridMap.map((chest, index) => {
+                if (chest?.tier) {
+                  return (
+                    <_grid_item_selectable
+                      key={'chest_full_' + index}
+                      onClick={() => confirmChest(chest?.mint || chest)}
+                    >
+                      <_overlay>
+                        <_level>
+                          <span>{chest.level}</span>
+                        </_level>
+                      </_overlay>
 
-                <NFT type={ITEM_CHEST} tier={chest.tier} />
-              </_grid_item_selectable>
-            );
-          }
+                      <NFT type={ITEM_CHEST} tier={chest.tier} />
+                    </_grid_item_selectable>
+                  );
+                }
 
-          return <_grid_item key={'chest_empty_' + index}></_grid_item>;
-        })}
+                return <_grid_item key={'chest_empty_' + index}></_grid_item>;
+              })}
+            </List>
+          )}
+        </AutoSizer>
       </_grid>
       <_grid_close_button>
         <span>{t('drawer.close')}</span>

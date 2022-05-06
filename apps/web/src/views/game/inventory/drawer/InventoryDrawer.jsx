@@ -63,6 +63,7 @@ const InventoryDrawer = () => {
   return item ? (
     <_items $height={view_height}>
       <_header>
+        DEVELOP
         <_container>
           <_type>
             <IconItem type={item_type} />
