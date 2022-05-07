@@ -33,7 +33,7 @@ import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
 
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/C-spa46EfVVFX2PcbzcKwyf1Q3oZ-FwKqWFLaKyYgxM',
+    'https://arweave.net/8Zfw8lNAjJk-zrUYkicFpJ_Eq2OJOqlguUEMXWll6YE',
   );
 }
 
@@ -497,18 +497,18 @@ export class PlayerContext {
 
     const accountsFiltered = accountsDecodedMeta
       .filter((result) => result && result.status === 'fulfilled')
-      // .filter((t) => {
-      //   const uri = (t as PromiseFulfilledResult<
-      //     MetadataData
-      //   >).value.data?.uri?.replace?.(/\0/g, '');
-      //   return uri !== '' && uri !== undefined;
-      // })
-      // .filter((result) => {
-      //   return (
-      //     (result as PromiseFulfilledResult<MetadataData>)?.value?.data
-      //       ?.symbol === 'LC'
-      //   );
-      // })
+      .filter((t) => {
+        const uri = (t as PromiseFulfilledResult<
+          MetadataData
+        >).value.data?.uri?.replace?.(/\0/g, '');
+        return uri !== '' && uri !== undefined;
+      })
+      .filter((result) => {
+        return (
+          (result as PromiseFulfilledResult<MetadataData>)?.value?.data
+            ?.symbol === 'LC'
+        );
+      })
       .map((result) => {
         return (result as PromiseFulfilledResult<MetadataData>)?.value;
       });
@@ -552,29 +552,31 @@ export class PlayerContext {
     let itemType = 'combined';
     if (item.itemType.equipment || item.itemType.spellBook) {
       if (item.itemType.spellBook) {
-        itemType = 'spellBook';
+        itemType = 'spellbook';
       } else {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
-    
+
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
-    let syncedExecution = []
+    let syncedExecution = [];
     await getMerkleSingleton();
-    var leaf:Buffer;
+    var leaf: Buffer;
     syncedExecution.push(this.buildLeafItem(item, itemType));
-    var tree:MerkleTree;
-    syncedExecution.push(buildMerkleTree(
-      itemType === 'combined' || itemType === 'spellBook'
-        ? merkle['merkleLeaves'][itemType]
-        : merkle['merkleLeaves'][itemType][item.level],
-    ));
-    await Promise.all(syncedExecution).then(([lf,tr])=>{
-      leaf=lf;
-      tree=tr;
-    })
-    syncedExecution=[];
+    var tree: MerkleTree;
+    syncedExecution.push(
+      buildMerkleTree(
+        itemType === 'combined' || itemType === 'spellbook'
+          ? merkle['merkleLeaves'][itemType]
+          : merkle['merkleLeaves'][itemType][item.level],
+      ),
+    );
+    await Promise.all(syncedExecution).then(([lf, tr]) => {
+      leaf = lf;
+      tree = tr;
+    });
+    syncedExecution = [];
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
 
@@ -584,20 +586,22 @@ export class PlayerContext {
     }
 
     var mintOptions;
-    syncedExecution.push(this.buildMintOptions(
-      itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
-      nftMintKeys,
-    ));
+    syncedExecution.push(
+      this.buildMintOptions(
+        itemType,
+        itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
+        nftMintKeys,
+      ),
+    );
     var itemUri;
     syncedExecution.push(this.getItemUri(item, itemType));
-    await Promise.all(syncedExecution).then(([mint_options,uri])=>{
-      mintOptions=mint_options;
-      itemUri=uri;
+    await Promise.all(syncedExecution).then(([mint_options, uri]) => {
+      mintOptions = mint_options;
+      itemUri = uri;
     });
     return await this.client.program.rpc.mintItem(
-      itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
+      itemType === 'spellbook' ? 'spellBook' : itemType,
+      itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
       itemUri,
       validProof,
       {
@@ -671,7 +675,7 @@ export class PlayerContext {
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
-console.log(redeemOptions);
+    console.log(redeemOptions);
     return await this.client.program.rpc.redeemItem({
       ...redeemOptions,
       accounts: {
@@ -764,7 +768,7 @@ console.log(redeemOptions);
     nftMintKeys: PublicKey,
     generatedPubKey: Keypair,
   ) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
     const [nftMetadata] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from(anchor.utils.bytes.utf8.encode('metadata')),
@@ -792,6 +796,7 @@ console.log(redeemOptions);
         nftToken: nftToken,
         nftMetadata: nftMetadata,
         player: playerAccount,
+        season: season,
         authority: this.playerPubKey,
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -809,7 +814,7 @@ console.log(redeemOptions);
 
   private async getItemUri(item: Item, itemType: string) {
     const url =
-      itemType === 'combined' || itemType === 'spellBook'
+      itemType === 'combined' || itemType === 'spellbook'
         ? merkle['merkleStruct'][itemType]
         : merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
@@ -835,6 +840,9 @@ console.log(redeemOptions);
           ][Object.keys(item.itemType.spellBook.costFeature)[0]][
             Object.keys(item.itemType.spellBook.rarity)[0]
           ];
+        console.log(lookupRarity);
+        console.log(item.itemType.spellBook.cost);
+        console.log(item.itemType.spellBook.value);
         if (lookupRarity)
           return lookupRarity[item.itemType.spellBook.cost][
             item.itemType.spellBook.value
@@ -859,7 +867,7 @@ console.log(redeemOptions);
   }
 
   private async buildLeafItem(item: Item, itemType) {
-    switch (Object.keys(item.itemType)[0]) {
+    switch (itemType) {
       case 'equipment': {
         return keccak256(
           `${await this.getItemUri(item, itemType)}:${
@@ -869,7 +877,7 @@ console.log(redeemOptions);
           }:${item.itemType.equipment.value}`,
         );
       }
-      case 'spellBook': {
+      case 'spellbook': {
         return keccak256(
           `${await this.getItemUri(item, itemType)}:spellbook:${item.level}:${
             Object.keys(item.itemType.spellBook.spell)[0]

@@ -175,34 +175,59 @@ export const useChainActions = () => {
         type,
       });
 
-      if (validatorSignature) {
-        const confirmationResult = await client.connection.confirmTransaction(
-          validatorSignature,
-        );
+      const confirmationResult = await client.connection.confirmTransaction(
+        validatorSignature,
+      );
 
-        const e = confirmationResult?.value?.err;
+      const e = confirmationResult?.value?.err;
 
-        if (String(e).includes('Blockhash')) {
-          retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-          if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
-        } else {
-          let parsedMessage = handleCustomErrors(e);
-          if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
-          setMutation({
-            id,
-            rpc: false,
-            validator: false,
-            success: !e,
-            retry_id,
-            error: !!e,
-            type,
-            text: {
-              error: parsedMessage,
-            },
-          });
+      if (String(e).includes('Blockhash')) {
+        retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
+        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
+      } else {
+        let parsedMessage = handleCustomErrors(e);
+        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
+        setMutation({
+          id,
+          rpc: false,
+          validator: false,
+          success: !e,
+          retry_id,
+          error: !!e,
+          type,
+          text: {
+            error: parsedMessage,
+          },
+        });
+
+        if (validatorSignature) {
+          const confirmationResult = await client.connection.confirmTransaction(
+            validatorSignature,
+          );
+
+          const e = confirmationResult?.value?.err;
+
+          if (String(e).includes('Blockhash')) {
+            retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
+            if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
+          } else {
+            let parsedMessage = handleCustomErrors(e);
+            if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
+            setMutation({
+              id,
+              rpc: false,
+              validator: false,
+              success: !e,
+              retry_id,
+              error: !!e,
+              type,
+              text: {
+                error: parsedMessage,
+              },
+            });
+          }
+          return confirmationResult;
         }
-
-        return confirmationResult;
       }
     } catch (e) {
       if (String(e).includes('Blockhash')) {
