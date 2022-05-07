@@ -52,21 +52,15 @@ export class Client {
 
   static getIDL(env: Environment) {
     switch (env) {
+      case 'localprod':
       case 'mainnet': {
         return laddercasterIDLMain;
       }
       case 'mainnet-priv': {
-        return new anchor.web3.Connection(
-          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
-        );
+        return laddercasterIDLMainPriv;
       }
       case 'localnet': {
         return laddercasterIDLLocal;
-      }
-      case 'localprod': {
-        return new anchor.web3.Connection(
-          'https://wispy-cool-tree.solana-mainnet.quiknode.pro/e1f76d47c8ccec34e2b5b30dc2a87149120a5204/',
-        );
       }
       case 'devnet': {
         return laddercasterIDLDev;
@@ -76,17 +70,15 @@ export class Client {
 
   static getRPC(env: Environment) {
     switch (env) {
+      case 'mainnet-priv':
       case 'mainnet': {
-        return 'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/';
-      }
-      case 'mainnet-priv': {
-        return laddercasterIDLMainPriv;
+        return 'https://wispy-cool-tree.solana-mainnet.quiknode.pro/e1f76d47c8ccec34e2b5b30dc2a87149120a5204/';
       }
       case 'localnet': {
         return 'http://localhost:8899';
       }
       case 'localprod': {
-        return laddercasterIDLMainPriv;
+        return 'https://wispy-cool-tree.solana-mainnet.quiknode.pro/e1f76d47c8ccec34e2b5b30dc2a87149120a5204/';
       }
       case 'devnet': {
         return 'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/';

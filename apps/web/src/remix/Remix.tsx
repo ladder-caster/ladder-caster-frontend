@@ -27,6 +27,8 @@ import {
   ERROR_CODES,
   SEEN_PHASE,
   GAME_OLD_SPELLCASTERS,
+  EDITION_NORMAL,
+  EDITION_LIMITED
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -243,6 +245,7 @@ const Remix = () => {
         robe: generateModifier(caster.modifiers.robe),
         staff: generateModifier(caster.modifiers.staff),
         spell: generateModifier(caster.modifiers.spellBook),
+        edition: caster?.edition === 1 ? EDITION_NORMAL : EDITION_LIMITED,
         last_loot: caster?.turnCommit?.actions?.loot
           ? currentTurn
           : currentTurn - 1,
@@ -367,11 +370,16 @@ const Remix = () => {
       };
 
       poll();
-      interval = setInterval(() => {
-        poll();
-      }, process.env.REACT_APP_ENV === 'mainnet' ||
-                process.env.REACT_APP_ENV === 'mainnet-priv' ||
-                process.env.REACT_APP_ENV === 'localprod' ? 10000 : 1000000);
+      interval = setInterval(
+        () => {
+          poll();
+        },
+        process.env.REACT_APP_ENV === 'mainnet' ||
+          process.env.REACT_APP_ENV === 'mainnet-priv' ||
+          process.env.REACT_APP_ENV === 'localprod'
+          ? 10000
+          : 1000000,
+      );
     };
 
     if (game) {
@@ -422,7 +430,6 @@ const Remix = () => {
         localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
         break;
       }
-      case 'localprod':
       case 'mainnet-priv': {
         localStorage.setItem(
           'gamePK',
@@ -430,6 +437,7 @@ const Remix = () => {
         );
         break;
       }
+      case 'localprod':
       case 'mainnet': {
         localStorage.setItem('gamePK', resources.seasons[1].gameAccountProd);
         break;

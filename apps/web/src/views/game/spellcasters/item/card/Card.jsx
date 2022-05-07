@@ -19,8 +19,6 @@ const Card = ({ spell_id, oldCaster }) => {
     find(spellcasters, (caster) => caster.id === spell_id),
   );
 
-  console.log('old_casters', old_caster, spell_id);
-
   return (
     <_card $caster={old_caster || caster}>
       {old_caster || caster?.position ? (

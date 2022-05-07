@@ -12,6 +12,7 @@ import {
   STANDARD_TYPE,
   W3A_TYPE,
   WALLET_TYPE,
+  WEB3AUTH_PLUGIN_STORE,
 } from 'core/remix/state';
 import { useActions } from '../../../../../../actions';
 import { AnimateDots } from '../../../../../views/game/animations/AnimateSettings';
@@ -28,6 +29,7 @@ const KeysTab = () => {
   const [walletType, setWalletType] = useRemix(WALLET_TYPE);
   const { handleDisconnect } = useAutoSignIn();
   const adapterWallet = useWallet();
+  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
   const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
   const { closeDrawer, clearStates, web3AuthDisconnect } = useActions();
 
@@ -80,6 +82,17 @@ const KeysTab = () => {
 
   return (
     <_tab>
+      {publicKey && (
+        <_button
+          onClick={() => {
+            pluginStore.plugins['torusWallet'].torusWalletInstance.showWallet(
+              'home',
+            );
+          }}
+        >
+          {t('drawer.settings.key.web3auth')}
+        </_button>
+      )}
       {publicKey && (
         <_button onClick={() => setActiveMenu(MENU_EXPORT_PUBLIC_KEY)}>
           {t('drawer.settings.key.share.public')}

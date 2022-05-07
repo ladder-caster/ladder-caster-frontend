@@ -41,19 +41,21 @@ const Details = ({ item }) => {
     [RARITY_LEGENDARY]: t('modal.spell.odds.legendary'),
   }[item?.rarity];
 
+  console.log('costFeature', item?.costFeature);
+
   const elementIcon = useMemo(() => {
     switch (item?.costFeature) {
-      case [ATTRIBUTE_RES1]: {
+      case ATTRIBUTE_RES1: {
         return <IconResourcee1 />;
       }
-      case [ATTRIBUTE_RES2]: {
+      case ATTRIBUTE_RES2: {
         return <IconResource2 />;
       }
-      case [ATTRIBUTE_RES3]: {
+      case ATTRIBUTE_RES3: {
         return <IconResource3 />;
       }
       default: {
-        return <IconResource3 />;
+        return <IconResource2 />;
       }
     }
   }, [item?.costFeature]);

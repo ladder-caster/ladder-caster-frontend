@@ -12,6 +12,7 @@ import { useActions } from '../../../../../../actions';
 import { GAME_OLD_SPELLCASTERS } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
+import { CHAIN_OLD_CASTERS } from 'chain/hooks/state';
 
 const Prestige = ({ spell_id }) => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ const Prestige = ({ spell_id }) => {
     find(spellcasters, (caster) => caster.id === spell_id),
   );
 
+  const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
   return (
     <_prestige>
       <_title>{t('prestige.caster')}</_title>

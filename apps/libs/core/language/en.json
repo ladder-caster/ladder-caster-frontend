@@ -226,6 +226,7 @@
     "drawer.crank.title": "Turn Actions",
     "drawer.settings.title": "Settings",
     "drawer.settings.disconnect": "Disconnect",
+    "drawer.settings.key.web3auth": "Open web3auth Wallet",
     "drawer.settings.key.manage": "Manage Key",
     "drawer.settings.key.share.public": "Share Public Key",
     "drawer.settings.key.export.secret": "Export Secret Key",

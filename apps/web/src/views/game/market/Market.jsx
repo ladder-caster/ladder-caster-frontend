@@ -56,7 +56,7 @@ const Market = () => {
                   pluginStore.plugins[
                     'torusWallet'
                   ].torusWalletInstance.showWallet('discover', {
-                    url: 'https://www.fractal.is',
+                    url: 'https://www.fractal.is/laddercaster',
                   });
                 }}
               >

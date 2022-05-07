@@ -74,6 +74,7 @@ export interface Tile {
 export interface Caster {
   version: number; // 8
   level: number; // 8
+  edition: number;
   experience: anchor.BN; // 64
   /// Player
   owner: PublicKey;
