@@ -96,9 +96,9 @@ export class PlayerContext {
     }
 
     return {
-      fire: resourcesArray[0],
-      water: resourcesArray[1],
-      earth: resourcesArray[2],
+      resource1: resourcesArray[0],
+      resource2: resourcesArray[1],
+      resource3: resourcesArray[2],
       lada: resourcesArray[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
     };
@@ -449,18 +449,18 @@ export class PlayerContext {
 
     const accountsFiltered = accountsDecodedMeta
       .filter((result) => result && result.status === 'fulfilled')
-      // .filter((t) => {
-      //   const uri = (t as PromiseFulfilledResult<
-      //     MetadataData
-      //   >).value.data?.uri?.replace?.(/\0/g, '');
-      //   return uri !== '' && uri !== undefined;
-      // })
-      // .filter((result) => {
-      //   return (
-      //     (result as PromiseFulfilledResult<MetadataData>)?.value?.data
-      //       ?.symbol === 'LC'
-      //   );
-      // })
+      .filter((t) => {
+        const uri = (t as PromiseFulfilledResult<
+          MetadataData
+        >).value.data?.uri?.replace?.(/\0/g, '');
+        return uri !== '' && uri !== undefined;
+      })
+      .filter((result) => {
+        return (
+          (result as PromiseFulfilledResult<MetadataData>)?.value?.data
+            ?.symbol === 'LC'
+        );
+      })
       .map((result) => {
         return (result as PromiseFulfilledResult<MetadataData>)?.value;
       });

@@ -309,9 +309,9 @@ export const useDemoActions = () => {
           });
         }
 
-        const fire = (resources?.fire || 0) + (rewards?.fire || 0);
-        const water = (resources?.water || 0) + (rewards?.water || 0);
-        const earth = (resources?.earth || 0) + (rewards?.earth || 0);
+        const fire = (resources?.resource1 || 0) + (rewards?.resource1 || 0);
+        const water = (resources?.resource2 || 0) + (rewards?.resource2 || 0);
+        const earth = (resources?.resource3 || 0) + (rewards?.resource3 || 0);
 
         // Add resources
         setResources({ ...resources, fire, water, earth });

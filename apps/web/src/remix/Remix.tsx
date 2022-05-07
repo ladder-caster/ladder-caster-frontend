@@ -73,9 +73,9 @@ const Remix = () => {
     chests: [],
   });
   useRemixOrigin(GAME_RESOURCES, {
-    fire: 0,
-    earth: 0,
-    water: 0,
+    resource1: 0,
+    resource3: 0,
+    resource2: 0,
     lada: 0,
   });
 
@@ -115,16 +115,38 @@ const Remix = () => {
 
   const { request: requestCachePubKey } = useAutoSignIn();
 
-  const init_land = (tile: Tile, row: number, col: number) => ({
-    col,
-    id: nanoid(),
-    tier: getTier(row),
-    empty: false,
-    remaining: tile.life,
-    level: row,
-    cooldown: false,
-    type: Object.keys(tile.tileType)[0],
-  });
+  const init_land = (tile: Tile, row: number, col: number) => {
+    let type;
+    switch (Object.keys(tile.tileType)[0]) {
+      case 'fire': {
+        type = 'resource1';
+        break;
+      }
+      case 'water': {
+        type = 'resource2';
+        break;
+      }
+      case 'earth': {
+        type = 'resource3';
+        break;
+      }
+
+      default: {
+        type = Object.keys(tile.tileType)[0];
+      }
+    }
+
+    return {
+      col,
+      id: nanoid(),
+      tier: getTier(row),
+      empty: false,
+      remaining: tile.life,
+      level: row,
+      cooldown: false,
+      type,
+    };
+  };
 
   const empty_land = (col: string, level: number) => ({
     col,
@@ -369,7 +391,6 @@ const Remix = () => {
     };
 
     if (game) {
-      console.log(game);
       const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
       const timeDiff =
         new Date().getTime() -
@@ -410,7 +431,6 @@ const Remix = () => {
         localStorage.setItem('gamePK', (resources as ResourcesPK).gameAccount);
         break;
       }
-      case 'localprod':
       case 'mainnet-priv': {
         localStorage.setItem(
           'gamePK',
@@ -418,6 +438,7 @@ const Remix = () => {
         );
         break;
       }
+      case 'localprod':
       case 'mainnet': {
         localStorage.setItem(
           'gamePK',

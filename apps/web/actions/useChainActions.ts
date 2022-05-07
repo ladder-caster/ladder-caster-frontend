@@ -937,9 +937,9 @@ export const useChainActions = () => {
           async () => {
             try {
               console.log(context?.nft);
-              return await playerContext.redeemNFTTwinPack(
-                new anchor.web3.PublicKey(context?.nft?.mint),
-              );
+              // return await playerContext.redeemNFTTwinPack(
+              //   new anchor.web3.PublicKey(context?.nft?.mint),
+              // );
             } catch (e) {
               console.log(e);
             }
@@ -1217,9 +1217,9 @@ export const useChainActions = () => {
         last_mint: 0,
       });
       setResources({
-        fire: 0,
-        earth: 0,
-        water: 0,
+        resource1: 0,
+        resource3: 0,
+        resource2: 0,
         lada: 0,
       });
     },

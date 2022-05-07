@@ -47,9 +47,9 @@ const Header = withTheme(({ theme }) => {
   const [initialized] = useRemix(GAME_INIT);
 
   const prevGold = usePrevious(+resources?.lada || 0);
-  const prevFire = usePrevious(+resources?.fire || 0);
-  const prevWater = usePrevious(+resources?.water || 0);
-  const prevEarth = usePrevious(+resources?.earth || 0);
+  const prevFire = usePrevious(+resources?.resource1 || 0);
+  const prevWater = usePrevious(+resources?.resource2 || 0);
+  const prevEarth = usePrevious(+resources?.resource3 || 0);
 
   const TurnTitle = useMemo(() => {
     return () =>
@@ -79,19 +79,19 @@ const Header = withTheme(({ theme }) => {
             <_icon $background={theme.element[TYPE_RES2]}>
               <IconWaterIMG />
             </_icon>
-            <Counter from={prevWater} to={+resources?.water} />
+            <Counter from={prevWater} to={+resources?.resource2} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES1]}>
               <IconFireeIMG />
             </_icon>
-            <Counter from={prevFire} to={+resources?.fire} />
+            <Counter from={prevFire} to={+resources?.resource1} />
           </_coin>
           <_coin>
             <_icon $background={theme.element[TYPE_RES3]}>
               <IconEarthIMG />
             </_icon>
-            <Counter from={prevEarth} to={+resources?.earth} />
+            <Counter from={prevEarth} to={+resources?.resource3} />
           </_coin>
         </_left>
         <_right>

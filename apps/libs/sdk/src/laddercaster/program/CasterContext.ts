@@ -118,7 +118,7 @@ export class CasterContext {
         authority: this.playerPubKey,
         game: gameAccount,
         player: playerAccount,
-        caster: this.caster?.publicKey,
+        caster: new PublicKey(this.caster?.publicKey),
         gameTurnData,
       },
     });

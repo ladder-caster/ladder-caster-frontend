@@ -86,9 +86,9 @@ const Demo = () => {
   });
 
   const [resources, setResources] = useRemixOrigin(GAME_RESOURCES, {
-    fire: 99,
-    earth: 99,
-    water: 99,
+    resource1: 99,
+    resource3: 99,
+    resource2: 99,
     lada: 99,
   });
 

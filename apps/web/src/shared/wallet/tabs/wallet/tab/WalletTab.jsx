@@ -79,7 +79,7 @@ const WalletTab = () => {
           <_text>
             <_label>Fire</_label>
             <_amount>
-              {truncateDecimals(resources?.fire, TRUNCATE_DECIMAL)} FIYA
+              {truncateDecimals(resources?.resource1, TRUNCATE_DECIMAL)} FIYA
             </_amount>
           </_text>
         </_right>
@@ -92,7 +92,7 @@ const WalletTab = () => {
           <_text>
             <_label>Water</_label>
             <_amount>
-              {truncateDecimals(resources?.wate, TRUNCATE_DECIMAL)} WADA
+              {truncateDecimals(resources?.resource2, TRUNCATE_DECIMAL)} WADA
             </_amount>
           </_text>
         </_right>
@@ -105,7 +105,7 @@ const WalletTab = () => {
           <_text>
             <_label>Earth</_label>
             <_amount>
-              {truncateDecimals(resources?.earth, TRUNCATE_DECIMAL)} ERRA
+              {truncateDecimals(resources?.resource3, TRUNCATE_DECIMAL)} ERRA
             </_amount>
           </_text>
         </_right>
