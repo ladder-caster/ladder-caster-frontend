@@ -114,6 +114,9 @@ export const ITEM_BOOK = 'spellBook';
 export const ITEM_GEM = 'gem';
 export const ITEM_CHEST = 'chest';
 
+export const EDITION_NORMAL = 'normal';
+export const EDITION_LIMITED = 'limited';
+
 export const ATTRIBUTE_RES1 = 'resource1';
 export const ATTRIBUTE_RES2 = 'resource2';
 export const ATTRIBUTE_RES3 = 'resource3';

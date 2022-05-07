@@ -161,10 +161,10 @@ export class PlayerContext {
 
   static getGamePK(env: Environment, season: number) {
     switch (env) {
+      case 'localprod':
       case 'mainnet': {
         return resources.seasons[season].gameAccountProd;
       }
-      case 'localprod':
       case 'mainnet-priv': {
         return resources.seasons[season].gameAccountProdPriv;
       }
@@ -610,17 +610,10 @@ export class PlayerContext {
   }
 
   async redeemNFTTwinPack(nftMintKeys: PublicKey) {
-    console.log(nftMintKeys);
-    console.log('Your nft: ', nftMintKeys.toString());
-
     const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
-    console.log('game account', gameAccount.toString());
-    console.log('player account', playerAccount.toString());
     const caster1 = Keypair.generate();
     const caster2 = Keypair.generate();
 
-    console.log('caster 1 account', caster1.publicKey.toString());
-    console.log('caster 2 account', caster2.publicKey.toString());
     const nftToken = await Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
@@ -636,15 +629,6 @@ export class PlayerContext {
       ],
       MetadataProgram.PUBKEY,
     );
-    console.log('metaplexTokenMetadata', metaplexTokenMetadata.toString());
-
-    try {
-      console.log(
-        await this.client.connection.getAccountInfo(metaplexTokenMetadata),
-      );
-    } catch (e) {
-      console.log('fetching metaplextokenmetadata failed', e);
-    }
 
     return await this.client.program.rpc.redeemCasters({
       accounts: {

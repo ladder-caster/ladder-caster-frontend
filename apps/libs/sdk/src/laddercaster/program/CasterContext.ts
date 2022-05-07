@@ -662,6 +662,23 @@ export class CasterContext {
       game.ladaMintAccount,
     );
 
+    try {
+      console.log(
+        'old season',
+        await this.client.program.account.season.fetch(oldSeason),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    try {
+      console.log(
+        'new season',
+        await this.client.program.account.season.fetch(newSeason),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
     return await this.client.program.rpc.transferCaster({
       accounts: {
         systemProgram: anchor.web3.SystemProgram.programId,

@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { _tab, _grid, _row, _empty } from './RedeemTab.styled';
 import { gridList } from 'core/utils/lists';
 import NFT from '../../../nft/NFT';
-import { map } from 'lodash';
+import { map, filter } from 'lodash';
 import { useKeys } from 'core/hooks/useKeys';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -17,7 +17,7 @@ const RedeemTab = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [nfts, setNfts] = useRemix(CHAIN_NFTS);
-  
+
   useEffect(() => {
     const getAllNFTs = async () => {
       try {
@@ -26,22 +26,25 @@ const RedeemTab = () => {
           client?.program?.provider?.wallet?.publicKey,
           localStorage.getItem('gamePK'),
         );
-  
+
         return await playerContext.getNFTUris(await playerContext.getNFTS());
       } catch {
         // catch error
       }
     };
-    if (!nfts?.length) getAllNFTs().then(
-      success => {
+    if (!nfts?.length)
+      getAllNFTs().then((success) => {
         if (!nfts?.length) setNfts(success);
-      }
-    );
+      });
   }, [context, client]);
 
   const list_nfts = useMemo(() => {
     if (nfts?.length) {
-      const list = gridList(nfts);
+      const filter_nfts = filter(
+        nfts,
+        (nft) => nft?.data?.collection?.name === 'LadderCaster',
+      );
+      const list = gridList(filter_nfts);
 
       return map(list, (row) => {
         return (

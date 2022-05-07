@@ -55,11 +55,6 @@ const Spellcasters = () => {
       {(initialized && phase && casters?.length !== 0) ||
       oldSpellcasters?.length !== 0 ? (
         <_list>
-          {/*{casters?.length > 1 && (*/}
-          {/*  <_button onClick={() => lootAllResources()}>*/}
-          {/*    {t('drawer.crank.loot.all')}*/}
-          {/*  </_button>*/}
-          {/*)}*/}
           {render_spellcasters}
           {render_old_spellcasters}
           <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />

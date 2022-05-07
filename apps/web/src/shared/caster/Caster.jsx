@@ -10,6 +10,7 @@ import {
 } from './Caster.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useActions } from '../../../actions';
+import { EDITION_LIMITED } from 'core/remix/state';
 
 const Caster = ({ caster, grid, small, callback, isOld }) => {
   const caster_ref = useRef();
@@ -18,6 +19,8 @@ const Caster = ({ caster, grid, small, callback, isOld }) => {
 
   const src = isOld
     ? require('../../../../libs/design/assets/old_wizard.png')
+    : caster?.edition === EDITION_LIMITED
+    ? require('../../../../libs/design/assets/wizard_limited_edition.png')
     : require('../../../../libs/design/assets/wizard.png');
 
   return (

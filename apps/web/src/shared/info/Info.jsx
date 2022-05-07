@@ -84,11 +84,6 @@ const Info = ({ item, caster }) => {
             <span>{odds}</span>
           </_odds>
         )}
-        {!isSpellbook && (
-          <_text>
-            <span>{equip ? t('notice.unequip') : t('notice.equip')}</span>
-          </_text>
-        )}
       </_equipment>
       <_wrapper $spellbook={isSpellbook}>
         <Attributes spell={isSpellbook} info={item} />
