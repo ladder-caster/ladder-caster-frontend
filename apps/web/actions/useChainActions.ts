@@ -170,33 +170,35 @@ export const useChainActions = () => {
         type,
       });
 
-      const confirmationResult = await client.connection.confirmTransaction(
-        validatorSignature,
-      );
+      if (validatorSignature) {
+        const confirmationResult = await client.connection.confirmTransaction(
+          validatorSignature,
+        );
 
-      const e = confirmationResult?.value?.err;
+        const e = confirmationResult?.value?.err;
 
-      if (String(e).includes('Blockhash')) {
-        retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
-      } else {
-        let parsedMessage = handleCustomErrors(e);
-        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
-        setMutation({
-          id,
-          rpc: false,
-          validator: false,
-          success: !e,
-          retry_id,
-          error: !!e,
-          type,
-          text: {
-            error: parsedMessage,
-          },
-        });
+        if (String(e).includes('Blockhash')) {
+          retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
+          if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
+        } else {
+          let parsedMessage = handleCustomErrors(e);
+          if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
+          setMutation({
+            id,
+            rpc: false,
+            validator: false,
+            success: !e,
+            retry_id,
+            error: !!e,
+            type,
+            text: {
+              error: parsedMessage,
+            },
+          });
+        }
+
+        return confirmationResult;
       }
-
-      return confirmationResult;
     } catch (e) {
       if (String(e).includes('Blockhash')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
@@ -957,10 +959,14 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            if(context?.nft?.data?.image === "https://arweave.net/9KF_5408KszsFlJpd0ZLheGfxOGSiw4QuGhD9oGfdMQ"){
-              return await playerContext.redeemNFTTwinPack(new anchor.web3.PublicKey(context?.nft?.mint));
-            }
-            else if (context?.nft?.data.name === 'Caster') {
+            if (
+              context?.nft?.data?.image ===
+              'https://arweave.net/9KF_5408KszsFlJpd0ZLheGfxOGSiw4QuGhD9oGfdMQ'
+            ) {
+              return await playerContext.redeemNFTTwinPack(
+                new anchor.web3.PublicKey(context?.nft?.mint),
+              );
+            } else if (context?.nft?.data.name === 'Caster') {
               return await playerContext.redeemNFTCaster(
                 new anchor.web3.PublicKey(context?.nft?.mint),
               );
