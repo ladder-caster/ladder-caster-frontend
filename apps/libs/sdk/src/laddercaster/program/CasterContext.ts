@@ -8,6 +8,7 @@ import {
   SYSVAR_RENT_PUBKEY,
   SYSVAR_SLOT_HASHES_PUBKEY,
   Transaction,
+  TransactionSignature,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -222,9 +223,10 @@ export class CasterContext {
     return txSignature;
   }
 
-  private async fallbackRedeem() {
-    const tx = new Transaction();
-
+  async fallbackRedeem() {
+    const transactions = [];
+    const blockhash = (await this.client.connection.getRecentBlockhash())
+      .blockhash;
     const order = this.caster?.turnCommit.actions.actionOrder
       .map((value, key) => {
         return { type: key, value };
@@ -234,54 +236,67 @@ export class CasterContext {
         return a.value - b.value;
       });
 
-    let signers = [];
     for (const action of order) {
       switch (action.type) {
         case 0: {
+          const tx = new Transaction();
           const itemMove = Keypair.generate();
           tx.add(await this.redeemLoot(itemMove));
-          signers.push(itemMove);
+          tx.recentBlockhash = blockhash;
+          tx.feePayer = this.client.wallet.publicKey!;
+          tx.partialSign(itemMove);
+          transactions.push(tx);
           break;
         }
         case 1: {
+          const tx = new Transaction();
           const itemSpell = Keypair.generate();
           tx.add(await this.redeemSpell(itemSpell));
-          signers.push(itemSpell);
+          tx.recentBlockhash = blockhash;
+          tx.feePayer = this.client.wallet.publicKey!;
+          tx.partialSign(itemSpell);
+          transactions.push(tx);
           break;
         }
         case 2: {
+          const tx = new Transaction();
           tx.add(await this.redeemMove());
+          tx.recentBlockhash = blockhash;
+          tx.feePayer = this.client.wallet.publicKey!;
+          transactions.push(tx);
           break;
         }
         case 3: {
+          const tx = new Transaction();
           const itemCraft = Keypair.generate();
           tx.add(await this.redeemCraft(itemCraft));
-          signers.push(itemCraft);
+          tx.recentBlockhash = blockhash;
+          tx.feePayer = this.client.wallet.publicKey!;
+          tx.partialSign(itemCraft);
+          transactions.push(tx);
           break;
         }
       }
     }
-
-    tx.recentBlockhash = (
-      await this.client.connection.getRecentBlockhash()
-    ).blockhash;
-    tx.feePayer = this.client.wallet.publicKey!;
-
-    //Action redeem
-    await this.client.connection.confirmTransaction(
-      await this.client.program.provider.send(tx, signers),
-    );
-
     const txRewards = new Transaction();
 
     txRewards.add(await this.redeemActions());
-
-    txRewards.recentBlockhash = (
-      await this.client.connection.getRecentBlockhash()
-    ).blockhash;
+    txRewards.recentBlockhash = blockhash;
     txRewards.feePayer = this.client.wallet.publicKey!;
 
-    return await this.client.program.provider.send(txRewards);
+    transactions.push(txRewards);
+    const signedTxns = await this.client.program.provider.wallet.signAllTransactions(
+      transactions,
+    );
+
+    let txid;
+    for (let i = 0; i < signedTxns.length; i++) {
+      txid = await this.client.connection.sendRawTransaction(
+        signedTxns[i].serialize(),
+      );
+    }
+
+    return txid;
   }
 
   private async redeemActions() {
