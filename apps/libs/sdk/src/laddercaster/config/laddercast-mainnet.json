@@ -641,6 +641,11 @@
           "isSigner": false
         },
         {
+          "name": "season",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "gameSigner",
           "isMut": true,
           "isSigner": false
@@ -1021,6 +1026,11 @@
           "isSigner": false
         },
         {
+          "name": "season",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "item",
           "isMut": true,
           "isSigner": false
@@ -1048,6 +1058,11 @@
         },
         {
           "name": "caster",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "season",
           "isMut": true,
           "isSigner": false
         },
@@ -1456,6 +1471,11 @@
           "isSigner": false
         },
         {
+          "name": "season",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "nftMint",
           "isMut": true,
           "isSigner": false
@@ -1508,6 +1528,11 @@
         },
         {
           "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "season",
           "isMut": true,
           "isSigner": false
         },
@@ -3183,36 +3208,41 @@
     },
     {
       "code": 6040,
+      "name": "WrongSeasonUsed",
+      "msg": "Wrong season used."
+    },
+    {
+      "code": 6041,
       "name": "InvalidCasterTransfer",
       "msg": "Trying to transfer to old season."
     },
     {
-      "code": 6041,
+      "code": 6042,
       "name": "InvalidCasterLevelForTransfer",
       "msg": "Caster needs to be level 30 to transfer."
     },
     {
-      "code": 6042,
+      "code": 6043,
       "name": "CasterDoesNotBelongPlayer",
       "msg": "Caster does not belong to player."
     },
     {
-      "code": 6043,
+      "code": 6044,
       "name": "NFTMetadataNotBelongMint",
       "msg": "NFT Metadata does not belong to NFT mint."
     },
     {
-      "code": 6044,
+      "code": 6045,
       "name": "NFTTokenNotBelongMind",
       "msg": "NFT Token does not belong to NFT mint."
     },
     {
-      "code": 6045,
+      "code": 6046,
       "name": "InvalidUpdateAuthorityForMetadata",
       "msg": "Invalid update authority for collection."
     },
     {
-      "code": 6046,
+      "code": 6047,
       "name": "ItemRarityToLowForMint",
       "msg": "Item rarity too low to mint."
     }

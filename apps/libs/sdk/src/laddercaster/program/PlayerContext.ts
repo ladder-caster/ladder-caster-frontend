@@ -719,7 +719,7 @@ export class PlayerContext {
     nftMintKeys: PublicKey,
     generatedPubKey: Keypair,
   ) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
     const [nftMetadata] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from(anchor.utils.bytes.utf8.encode('metadata')),
@@ -748,6 +748,7 @@ export class PlayerContext {
         nftMetadata: nftMetadata,
         player: playerAccount,
         authority: this.playerPubKey,
+        season: season,
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
         rent: SYSVAR_RENT_PUBKEY,
