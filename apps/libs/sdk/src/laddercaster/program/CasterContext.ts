@@ -126,18 +126,9 @@ export class CasterContext {
   }
 
   async casterCommitCraft(item1: Item, item2: Item, item3: Item) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
+    const [gameAccount, playerAccount, game] = await this.getAccounts();
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
     const mintAccounts = await this.getMintAccounts(game);
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
 
     return await this.client.program.rpc.casterCommitCraft({
       accounts: {
@@ -153,7 +144,6 @@ export class CasterContext {
         item2: item2.publicKey,
         item3: item3.publicKey,
         gameTurnData,
-        season: season,
         ...mintAccounts,
       },
       signers: [this.client.wallet.payer],
@@ -483,7 +473,7 @@ export class CasterContext {
   }
 
   async equipItem(equipmentItem: Item) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
+    const [gameAccount, playerAccount, , ,] = await this.getAccounts();
 
     const itemType = Object.keys(
       equipmentItem.itemType.equipment?.equipmentType ||
@@ -503,7 +493,6 @@ export class CasterContext {
             authority: this.playerPubKey,
             player: playerAccount,
             caster: this.caster?.publicKey,
-            season: season,
             item: this.caster.modifiers[itemType],
           },
           signers: [this.client.wallet.payer],
@@ -517,7 +506,6 @@ export class CasterContext {
           authority: this.playerPubKey,
           player: playerAccount,
           caster: this.caster?.publicKey,
-          season: season,
           item: equipmentItem.publicKey,
         },
         signers: [this.client.wallet.payer],
@@ -540,7 +528,6 @@ export class CasterContext {
         authority: this.playerPubKey,
         player: playerAccount,
         caster: this.caster?.publicKey,
-        season: season,
         item: itemPK,
       },
       signers: [this.client.wallet.payer],
@@ -572,7 +559,6 @@ export class CasterContext {
             authority: this.playerPubKey,
             player: playerAccount,
             caster: this.caster?.publicKey,
-            season: season,
             item: this.caster?.modifiers?.spellBook,
           },
           signers: [this.client.wallet.payer],
@@ -585,7 +571,6 @@ export class CasterContext {
             authority: this.playerPubKey,
             player: playerAccount,
             caster: this.caster?.publicKey,
-            season: season,
             item: equipmentItem.publicKey,
           },
           signers: [this.client.wallet.payer],
@@ -599,7 +584,6 @@ export class CasterContext {
             authority: this.playerPubKey,
             player: playerAccount,
             caster: this.caster?.publicKey,
-            season: season,
             item: equipmentItem.publicKey,
           },
           signers: [this.client.wallet.payer],

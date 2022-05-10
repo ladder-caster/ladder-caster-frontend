@@ -413,11 +413,6 @@
           "isSigner": false
         },
         {
-          "name": "season",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "resource1MintAccount",
           "isMut": true,
           "isSigner": false
@@ -1026,11 +1021,6 @@
           "isSigner": false
         },
         {
-          "name": "season",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "item",
           "isMut": true,
           "isSigner": false
@@ -1058,11 +1048,6 @@
         },
         {
           "name": "caster",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "season",
           "isMut": true,
           "isSigner": false
         },
@@ -2081,6 +2066,27 @@
           "name": "item",
           "isMut": true,
           "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "fixStuckCaster",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caster",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "slots",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
