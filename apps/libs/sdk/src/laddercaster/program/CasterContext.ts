@@ -18,6 +18,7 @@ import {
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 import { PlayerContext } from './PlayerContext';
 import { Environment } from './Client';
+import {LADA_TOKEN_ACCOUNT,RESOURCE1_TOKEN_ACCOUNT,RESOURCE2_TOKEN_ACCOUNT,RESOURCE3_TOKEN_ACCOUNT} from '../../../../core/remix/state';
 
 export class CasterContext {
   private game: Game;
@@ -44,9 +45,7 @@ export class CasterContext {
       ,
       season,
     ] = await this.getAccounts();
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
     const casterKeys = anchor.web3.Keypair.generate();
 
     return await this.client.program.rpc.initCaster({
@@ -77,11 +76,16 @@ export class CasterContext {
       ,
       season,
     ] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
-    const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const asyncDispatch = [
+      this.getMintAccounts(game),
+      this.getGameTurnData(game, gameAccount)
+    ];
+    console.log('asyncGet')
+    var asyncDispatchResult = await Promise.all(asyncDispatch).then(res=>res);
+    console.log('async',asyncDispatchResult[1])
+    const mintAccounts = asyncDispatchResult[0];
+    const [gameTurnData] = asyncDispatchResult[1];
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
 
     return await this.client.program.rpc.casterCommitMoveS1(lvl, col, {
       accounts: {
@@ -139,9 +143,7 @@ export class CasterContext {
     ] = await this.getAccounts();
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
     const mintAccounts = await this.getMintAccounts(game);
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
 
     return await this.client.program.rpc.casterCommitCraftS1({
       accounts: {
@@ -311,9 +313,7 @@ export class CasterContext {
       gameSigner,
       season,
     ] = await this.getAccounts();
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
     const [gameTurnData] = await this.getGameTurnData(
       game,
       gameAccount,
@@ -380,9 +380,7 @@ export class CasterContext {
     ] = await this.getAccounts();
     const empty = Keypair.generate();
     const mintAccounts = await this.getMintAccounts(game);
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
     const [gameTurnData] = await this.getGameTurnData(
       game,
       gameAccount,
@@ -673,9 +671,7 @@ export class CasterContext {
       [Buffer.from('season'), new PublicKey(oldGameAccount).toBuffer()],
       this.client.program.programId,
     );
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount =new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
 
     try {
       console.log(
@@ -720,9 +716,7 @@ export class CasterContext {
   //DEBUG - Devnet only
   async giveLada() {
     const [gameAccount, , game, gameSigner] = await this.getAccounts();
-    const playerLadaTokenAccount = await this.getTokenAccount(
-      game.ladaMintAccount,
-    );
+    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
 
     return await this.client.program.rpc.giveLada(new anchor.BN(1000 * 1e9), {
       accounts: {
@@ -814,15 +808,9 @@ export class CasterContext {
   }
 
   private async getMintAccounts(game: Game) {
-    const ata_resourcemint1 = await this.getTokenAccount(
-      game.resource1MintAccount,
-    );
-    const ata_resourcemint2 = await this.getTokenAccount(
-      game.resource2MintAccount,
-    );
-    const ata_resourcemint3 = await this.getTokenAccount(
-      game.resource3MintAccount,
-    );
+    const ata_resourcemint1 = new PublicKey(localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT));
+    const ata_resourcemint2 = new PublicKey(localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT));
+    const ata_resourcemint3 = new PublicKey(localStorage.getItem(RESOURCE3_TOKEN_ACCOUNT));
 
     return {
       resource1MintAccount: game.resource1MintAccount,
@@ -834,13 +822,41 @@ export class CasterContext {
     };
   }
 
-  private async getTokenAccount(publicKey: anchor.web3.PublicKey) {
-    return await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      publicKey,
-      this.client.wallet.publicKey,
-    );
+  private async cacheTokenAccounts(game: Game) {
+    
+
+    const asyncDispatch = [
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        game.resource1MintAccount,
+        this.client.wallet.publicKey,
+      ),
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        game.resource2MintAccount,
+        this.client.wallet.publicKey,
+      ),
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        game.resource3MintAccount,
+        this.client.wallet.publicKey,
+      ),
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        game.ladaMintAccount,
+        this.client.wallet.publicKey,
+      )
+    ];
+    await Promise.all(asyncDispatch).then(([mint1,mint2,mint3,lada])=>{
+      localStorage.setItem(RESOURCE1_TOKEN_ACCOUNT,mint1.toString());
+      localStorage.setItem(RESOURCE2_TOKEN_ACCOUNT,mint2.toString());
+      localStorage.setItem(RESOURCE3_TOKEN_ACCOUNT,mint3.toString());
+      localStorage.setItem(LADA_TOKEN_ACCOUNT,lada.toString());
+    })
   }
 
   private async getAccounts(): Promise<
@@ -859,6 +875,7 @@ export class CasterContext {
         gameAccount,
       )) as Game;
       this.game = game;
+      this.cacheTokenAccounts(game);
     }
 
     if (!this.gameSigner) {

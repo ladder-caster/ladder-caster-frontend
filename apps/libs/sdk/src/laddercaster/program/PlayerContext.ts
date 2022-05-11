@@ -29,7 +29,7 @@ import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
-import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
+import { TYPE_RES1, TYPE_RES2, TYPE_RES3, RESOURCE1_TOKEN_ACCOUNT, RESOURCE2_TOKEN_ACCOUNT, RESOURCE3_TOKEN_ACCOUNT, LADA_TOKEN_ACCOUNT } from 'core/remix/state';
 
 async function getMerkle() {
   return await axios.get(
@@ -82,7 +82,7 @@ export class PlayerContext {
     private client: Client,
     private playerPubKey: anchor.web3.PublicKey,
     private gamePK: string,
-  ) {}
+  ) { }
 
   async getPlayer() {
     const [, playerAccount] = await this.getAccounts();
@@ -91,27 +91,23 @@ export class PlayerContext {
 
   async getResources() {
     const [, , , game] = await this.getAccounts();
-
-    const pkArray = [
-      game.resource1MintAccount,
-      game.resource2MintAccount,
-      game.resource3MintAccount,
-      game.ladaMintAccount,
-    ];
-
-    const resourcesArray = [];
-
-    for (let i = 0; i < pkArray.length; i++) {
-      resourcesArray.push(
-        await this.getResource(new anchor.web3.PublicKey(pkArray[i])),
-      );
+    if (!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)) {
+      this.cacheTokenAccounts(game);
     }
-
+    const asyncDispatch = [
+      this.getResource(new anchor.web3.PublicKey(localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT))),
+      this.getResource(new anchor.web3.PublicKey(localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT))),
+      this.getResource(new anchor.web3.PublicKey(localStorage.getItem(RESOURCE3_TOKEN_ACCOUNT))),
+      this.getResource(new anchor.web3.PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT)))
+    ];
+    // prevents sync stacking of time.. e.g 1s, 3s, 2s, 2s = 8s .. async dispatch reduces to 3s
+   const result = await Promise.all(asyncDispatch).then(res=>res);
+    
     return {
-      [TYPE_RES1]: resourcesArray[0],
-      [TYPE_RES2]: resourcesArray[1],
-      [TYPE_RES3]: resourcesArray[2],
-      lada: resourcesArray[3] / 1e9,
+      [TYPE_RES1]: result[0],
+      [TYPE_RES2]: result[1],
+      [TYPE_RES3]: result[2],
+      lada: result[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
     };
   }
@@ -682,8 +678,7 @@ export class PlayerContext {
 
   private async buildLeafCaster(caster: Caster) {
     return keccak256(
-      `${await this.getCasterUri(caster)}:caster:${caster.version}:${
-        caster.level
+      `${await this.getCasterUri(caster)}:caster:${caster.version}:${caster.level
       }`,
     );
   }
@@ -805,7 +800,7 @@ export class PlayerContext {
       case 'equipment': {
         const lookupRarity =
           lookupTable[Object.keys(item.itemType.equipment.feature)[0]][
-            Object.keys(item.itemType.equipment.rarity)[0]
+          Object.keys(item.itemType.equipment.rarity)[0]
           ];
         if (lookupRarity) return lookupRarity[item.itemType.equipment.value];
         else
@@ -818,9 +813,9 @@ export class PlayerContext {
       case 'spellBook': {
         const lookupRarity =
           lookupTable[item.level][
-            Object.keys(item.itemType.spellBook.spell)[0]
+          Object.keys(item.itemType.spellBook.spell)[0]
           ][Object.keys(item.itemType.spellBook.costFeature)[0]][
-            Object.keys(item.itemType.spellBook.rarity)[0]
+          Object.keys(item.itemType.spellBook.rarity)[0]
           ];
         if (lookupRarity)
           return lookupRarity[item.itemType.spellBook.cost][
@@ -849,40 +844,27 @@ export class PlayerContext {
     switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:${
-            Object.keys(item.itemType.equipment.equipmentType)[0]
-          }:${item.level}:${Object.keys(item.itemType.equipment.feature)[0]}:${
-            Object.keys(item.itemType.equipment.rarity)[0]
+          `${await this.getItemUri(item, itemType)}:${Object.keys(item.itemType.equipment.equipmentType)[0]
+          }:${item.level}:${Object.keys(item.itemType.equipment.feature)[0]}:${Object.keys(item.itemType.equipment.rarity)[0]
           }:${item.itemType.equipment.value}`,
         );
       }
       case 'spellBook': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:spellbook:${item.level}:${
-            Object.keys(item.itemType.spellBook.spell)[0]
-          }:${Object.keys(item.itemType.spellBook.costFeature)[0]}:${
-            Object.keys(item.itemType.spellBook.rarity)[0]
+          `${await this.getItemUri(item, itemType)}:spellbook:${item.level}:${Object.keys(item.itemType.spellBook.spell)[0]
+          }:${Object.keys(item.itemType.spellBook.costFeature)[0]}:${Object.keys(item.itemType.spellBook.rarity)[0]
           }:${item.itemType.spellBook.cost}:${item.itemType.spellBook.value}`,
         );
       }
       case 'chest': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
-            item.itemType.chest.tier
+          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${item.itemType.chest.tier
           }`,
         );
       }
     }
   }
-
-  private async getResource(publicKey: anchor.web3.PublicKey) {
-    const tokenAccount = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      publicKey,
-      this.client.wallet.publicKey,
-    );
-
+  private async getResource(tokenAccount: PublicKey){
     try {
       const resourceAmount = await this.client.connection.getTokenAccountBalance(
         tokenAccount,
@@ -891,6 +873,42 @@ export class PlayerContext {
       return resourceAmount.value.amount;
     } catch (_e) {
       return 0;
+    }
+  }
+  private async cacheTokenAccounts(game: Game) {
+    if (!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)) {
+      const asyncDispatch = [
+        Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          game.resource1MintAccount,
+          this.client.wallet.publicKey,
+        ),
+        Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          game.resource2MintAccount,
+          this.client.wallet.publicKey,
+        ),
+        Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          game.resource3MintAccount,
+          this.client.wallet.publicKey,
+        ),
+        Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          game.ladaMintAccount,
+          this.client.wallet.publicKey,
+        )
+      ];
+      await Promise.all(asyncDispatch).then(([mint1, mint2, mint3, lada]) => {
+        localStorage.setItem(RESOURCE1_TOKEN_ACCOUNT, mint1.toString());
+        localStorage.setItem(RESOURCE2_TOKEN_ACCOUNT, mint2.toString());
+        localStorage.setItem(RESOURCE3_TOKEN_ACCOUNT, mint3.toString());
+        localStorage.setItem(LADA_TOKEN_ACCOUNT, lada.toString());
+      })
     }
   }
 
@@ -911,6 +929,7 @@ export class PlayerContext {
         gameAccount,
       )) as Game;
       this.game = game;
+      this.cacheTokenAccounts(game);
     }
 
     if (!this.gameSigner) {
