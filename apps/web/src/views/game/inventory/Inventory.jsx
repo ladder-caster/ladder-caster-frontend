@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   _inventory,
-  _header,
-  _title,
   _chests,
   _subheader,
   _subtitle,
@@ -11,6 +9,7 @@ import {
   _loot,
   _divider,
   _wallet,
+  _open_inventory,
 } from './Inventory.styled';
 import { _feed } from '../home/Dashboard.styled';
 import { useTranslation } from 'react-i18next';
@@ -35,22 +34,45 @@ import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
+import {
+  _header,
+  _title,
+  _float,
+  _close,
+  _icon_close,
+} from '../trade/TradeDrawer.styled';
+import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
+import { IconClose } from 'design/icons/close.icon';
 
 const Inventory = () => {
   const { t } = useTranslation();
   const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
-
-  return (
-    <_inventory>
-      <Heading title={t('title.bag')} />
-      {!initialized || casters?.length === 0 ? (
+  const [inventoryPanel, setInventoryPanel] = useState(false);
+  const render = () => {
+    if (!initialized || casters.length === 0) {
+      return (
         <_feed>
           <Onboarding />
         </_feed>
-      ) : null}
-      {initialized && casters?.length !== 0 ? (
+      );
+    } else if (inventoryPanel) {
+      return (
         <>
+          <_header>
+            <_title>{t('tease.title')}</_title>
+          </_header>
+          <_open_inventory onClick={() => setInventoryPanel(false)}>
+            {t('drawer.close')}
+          </_open_inventory>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <_open_inventory onClick={() => setInventoryPanel(true)}>
+            {t('inventory.items')}
+          </_open_inventory>
           <_container>
             <Category type={ITEM_HAT} />
             <Category type={ITEM_ROBE} />
@@ -77,7 +99,13 @@ const Inventory = () => {
             </_chests>
           </Thumbar>
         </>
-      ) : null}
+      );
+    }
+  };
+  return (
+    <_inventory>
+      <Heading title={t('title.bag')} />
+      {render()}
     </_inventory>
   );
 };

@@ -12,4 +12,5 @@ export const _link = styled.a`
   color: ${({ theme }) => theme.text['special']};
   text-shadow: ${({ theme }) => theme.shadow['text']};
   bottom: 6px;
+  cursor: pointer;
 `;

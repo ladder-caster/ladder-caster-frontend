@@ -21,6 +21,7 @@ import {
   PHASE_EQUIP,
   PHASE_REWARDS,
   SEEN_PHASE,
+  MODAL_BURN,
 } from 'core/remix/state';
 
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -36,6 +37,7 @@ import ModalLoot from './types/loot/ModalLoot';
 import ModalCraft from './types/craft/ModalCraft';
 import ModalChest from './types/chest/ModalChest';
 import ModalRedeem from './types/redeem/ModalRedeem';
+import ModalBurn from './types/burn/ModalBurn';
 
 const Modal = ({ screen_height }) => {
   const { t } = useTranslation();
@@ -62,6 +64,7 @@ const Modal = ({ screen_height }) => {
     [MODAL_REDEEM]: ModalRedeem,
     [MODAL_CHEST]: ModalChest,
     [MODAL_IMPORT]: ModalImport,
+    [MODAL_BURN]: ModalBurn,
   }[modal?.type];
 
   // useLayoutEffect(() => {

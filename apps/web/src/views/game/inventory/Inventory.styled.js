@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { m } from 'framer-motion';
 import { bgTexture } from 'design/textures';
 import { TextureFur } from 'design/textures/fur.texture';
-
+import { _button } from '../../../shared/redeem/Redeem.styled';
 export const _inventory = styled(m.div)`
   width: 100%;
   height: 100%;
@@ -156,4 +156,18 @@ export const _wallet = styled.div`
     width: 16px;
     color: ${({ theme }) => theme.text['base']};
   }
+`;
+export const _open_inventory = styled(_button)`
+  width: 128px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  left: 128px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: ${({ theme }) => theme.background['highest']};
+    transform: scale(1.02);
+    color: ${({ theme }) => theme.text['active']};
+  }
+  bottom: 0;
 `;

@@ -105,22 +105,13 @@ export const _visual = styled.div`
   justify-content: space-between;
 `;
 
-export const _mint = styled.div`
+export const _mint = styled(_equip)`
   margin-left: 4px;
-  padding: 4px 12px;
-  color: ${({ theme }) => theme.highlight['background']};
-  border: 2px solid ${({ theme }) => theme.border['highest']};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.background['button_active']};
-  box-shadow: ${({ theme }) => theme.shadow['glass']};
-  text-shadow: ${({ theme }) => theme.shadow['text']};
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 700;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  background: ${({ theme, disabled }) =>
+    disabled
+      ? theme.background['button_disabled']
+      : theme.background['button_active']};
 `;
 
 export const _odds = styled.div`
@@ -143,4 +134,8 @@ export const _odds = styled.div`
     color: ${({ theme }) => theme.text['base']};
     padding-left: 12px;
   }
+`;
+
+export const _burn = styled(_equip)`
+  margin-left: 4px;
 `;

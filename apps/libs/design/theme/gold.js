@@ -280,4 +280,20 @@ export const gold = {
     google: '#3f67a6',
     google_hover: '#4175c8',
   },
+  checkbox: {
+    checked: '#cbcfe2',
+    unchecked: '#58627e',
+    hover: '#cbcfe2',
+    active: '#6d799c',
+    stroke: {
+      color: { unchecked: '#FFF', checked: '#4e577e' },
+      width: '4px',
+    },
+    border: {
+      checked: '2px solid #6d799c',
+      unchecked: '2px solid #6d799c',
+      hover: '2px solid #c1cad7',
+      active: '2px solid #4e577e',
+    },
+  },
 };

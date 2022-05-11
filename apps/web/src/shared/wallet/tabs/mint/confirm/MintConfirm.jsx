@@ -6,7 +6,9 @@ import { useActions } from '../../../../../../actions';
 import { _button } from '../../redeem/confirm/RedeemConfirm.styled';
 import Item from '../../../../../shared/item/Item';
 import Caster from '../../../../../shared/caster/Caster';
+import { useTranslation } from 'react-i18next';
 const MintConfirm = () => {
+  const { t } = useTranslation();
   const [context] = useRemix(DRAWER_CONTEXT);
   const { confirmMint } = useActions();
 
@@ -19,7 +21,7 @@ const MintConfirm = () => {
           <Item item={context?.item} />
         )}
       </_display>
-      <_button onClick={() => confirmMint()}>Confirm</_button>
+      <_button onClick={() => confirmMint()}>{t('modal.confirm')}</_button>
     </_confirm>
   );
 };
