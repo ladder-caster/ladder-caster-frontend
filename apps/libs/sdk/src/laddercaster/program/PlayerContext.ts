@@ -402,7 +402,7 @@ export class PlayerContext {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
+        rent: SYSVAR_RENT_PUBKEY,
         authority: this.playerPubKey,
         game: gameAccount,
         player: playerAccount,
@@ -557,17 +557,24 @@ export class PlayerContext {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
-
+    
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
+    let syncedExecution = []
     await getMerkleSingleton();
-    const leaf = await this.buildLeafItem(item, itemType);
-    const tree = await buildMerkleTree(
+    var leaf:Buffer;
+    syncedExecution.push(this.buildLeafItem(item, itemType));
+    var tree:MerkleTree;
+    syncedExecution.push(buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
         ? merkle['merkleLeaves'][itemType]
         : merkle['merkleLeaves'][itemType][item.level],
-    );
-
+    ));
+    await Promise.all(syncedExecution).then(([lf,tr])=>{
+      leaf=lf;
+      tree=tr;
+    })
+    syncedExecution=[];
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
 
@@ -576,16 +583,22 @@ export class PlayerContext {
       signers = [this.client.wallet.payer, ...signers];
     }
 
-    const mintOptions = await this.buildMintOptions(
+    var mintOptions;
+    syncedExecution.push(this.buildMintOptions(
       itemType,
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
       nftMintKeys,
-    );
-
+    ));
+    var itemUri;
+    syncedExecution.push(this.getItemUri(item, itemType));
+    await Promise.all(syncedExecution).then(([mint_options,uri])=>{
+      mintOptions=mint_options;
+      itemUri=uri;
+    });
     return await this.client.program.rpc.mintItem(
       itemType,
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
-      await this.getItemUri(item, itemType),
+      itemUri,
       validProof,
       {
         accounts: {
@@ -658,7 +671,7 @@ export class PlayerContext {
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
-
+console.log(redeemOptions);
     return await this.client.program.rpc.redeemItem({
       ...redeemOptions,
       accounts: {
