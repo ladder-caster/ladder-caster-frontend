@@ -50,6 +50,9 @@ import {
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
+  DRAWER_TRADE,
+  RARITY_COMMON,
+  MODAL_BURN
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -100,6 +103,7 @@ import {
   INST_UNEQUIP,
   RPC_ERROR,
   RPC_LOADING,
+  INST_BURN_NFT,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
@@ -107,7 +111,9 @@ import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
-
+import {
+  PublicKey,
+} from '@solana/web3.js';
 let retry_count = {};
 
 export const useChainActions = () => {
@@ -143,7 +149,6 @@ export const useChainActions = () => {
   const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
-
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
 
@@ -354,9 +359,32 @@ export const useChainActions = () => {
       localStorage.getItem('gamePK'),
     );
   };
-
+  const confirmBurn= async(item)=>{
+    setModal('');
+    const playerContext = new PlayerContext(
+      client,
+      client?.program?.provider?.wallet?.publicKey,
+      localStorage.getItem('gamePK'),
+    );
+    
+   if (item || context?.item ) {
+     const match_item = item ?? context?.item;
+      await fetchPlayer(async () => {
+        return await stateHandler(
+          async () => {
+            return await playerContext.manualItemBurn(
+              new PublicKey(match_item?.publicKey),
+            );
+          },
+          INST_BURN_NFT,
+          '',
+        );
+      });
+    }
+  }
   return {
     startDemo() {},
+    confirmBurn,
     closeDrawer() {
       setDrawer('');
       setEquip('');
@@ -549,6 +577,13 @@ export const useChainActions = () => {
         type: MODAL_CHEST,
         tier,
       });
+    },
+    modalBurn(item){
+      if(localStorage.getItem("hide_burn_modal")==='true'){
+        confirmBurn(item);
+        return;
+      }
+      setModal({active:true,type:MODAL_BURN,item});
     },
     async actionLoot(caster) {
       if (caster?.last_loot < game?.turnInfo?.turn) {
@@ -991,6 +1026,20 @@ export const useChainActions = () => {
       setContext({ ...context, caster });
     },
     async confirmMint(item, caster) {
+      if(item?.rarity===RARITY_COMMON || context?.item?.rarity===RARITY_COMMON){
+        setMutation({
+          id: nanoid(),
+          rpc: false,
+          validator: false,
+          success: false,
+          error: true,
+          done: false,
+          text: {
+            error: t('error.mint.item.tier_too_low'),
+          }
+        });
+        return
+    }
       const playerContext = new PlayerContext(
         client,
         client?.program?.provider?.wallet?.publicKey,
@@ -1330,5 +1379,11 @@ export const useChainActions = () => {
       await web3Auth.logout();
       setProvider(null);
     },
+    async openDrawerTrade(){
+      setDrawer({
+        type: DRAWER_TRADE,
+      });
+    },
+    
   };
 };

@@ -1,6 +1,7 @@
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useEventListener } from 'core/hooks/useEventListener';
 import { useSize } from 'core/hooks/useSize';
+import { DRAWER_TRADE } from 'core/remix/state';
 import {
   DRAWER_ACTIVE,
   DRAWER_CRAFT,
@@ -23,6 +24,7 @@ import { AnimatedViews } from '../animated/AnimatedViews';
 import { _container, _view } from '../Game.styled';
 import CraftDrawer from '../inventory/drawer/craft/CraftDrawer';
 import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
+import TradeDrawer from '../trade/TradeDrawer';
 import Player from '../spellcasters/drawer/Player';
 
 export const View = () => {
@@ -53,6 +55,7 @@ export const View = () => {
     [DRAWER_CRAFT]: CraftDrawer,
     [DRAWER_SPELLCASTER]: Player,
     [DRAWER_CRANK]: CrankDrawer,
+    [DRAWER_TRADE]: TradeDrawer,
   }[drawer?.type];
 
   return (

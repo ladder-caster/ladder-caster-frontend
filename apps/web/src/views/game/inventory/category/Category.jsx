@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   _category,
   _title,
@@ -6,6 +6,8 @@ import {
   _item,
   _cutout,
   _amount,
+  _container,
+  _icon,
 } from './Category.styled';
 import {
   ATTRIBUTE_CRIT,
@@ -24,13 +26,15 @@ import { filter, sortBy, reverse } from 'lodash';
 import { EQUIP_MAP, ICON_EQUIP_MAP } from 'core/utils/switch';
 import Item from '../../../../shared/item/Item';
 import { useActions } from '../../../../../actions';
-
+import { IconChevronLeft } from 'design/icons/chevron-left.icon';
+import { IconChevronRight } from 'design/icons/chevron-right.icon';
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { openDrawerInventory } = useActions();
   const [, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [inventory] = useRemix(GAME_INVENTORY);
-
+  const items_ref = useRef();
+  var scrollInterval = null;
   const title = {
     [ITEM_HAT]: t('inventory.title.hat'),
     [ITEM_ROBE]: t('inventory.title.robe'),
@@ -98,6 +102,12 @@ const Category = ({ type }) => {
     }
     return list;
   };
+  const chevronScroll = (left) => {
+    if (!items_ref || !items_ref.current) return;
+    scrollInterval = setInterval(() => {
+      items_ref.current.scrollLeft += left ? -40 : 40;
+    }, 40);
+  };
 
   return (
     <_category>
@@ -106,7 +116,21 @@ const Category = ({ type }) => {
         {title}
         {amount ? <_amount>{amount}</_amount> : null}
       </_title>
-      <_items>{items()}</_items>
+      <_container>
+        <_icon
+          onMouseDown={() => chevronScroll(true)}
+          onMouseUp={() => clearInterval(scrollInterval)}
+        >
+          <IconChevronLeft />
+        </_icon>
+        <_items ref={items_ref}>{items()}</_items>
+        <_icon
+          onMouseDown={() => chevronScroll(false)}
+          onMouseUp={() => clearInterval(scrollInterval)}
+        >
+          <IconChevronRight />
+        </_icon>
+      </_container>
     </_category>
   );
 };

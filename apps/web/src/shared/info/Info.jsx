@@ -9,6 +9,7 @@ import {
   _wrapper,
   _mint,
   _odds,
+  _burn,
 } from './Info.styled';
 import Item from '../item/Item';
 import { AnimateButton } from '../button/animations/AnimateButton';
@@ -30,7 +31,14 @@ import { IconDice } from 'design/icons/dice.icon';
 
 const Info = ({ item, caster }) => {
   const { t } = useTranslation();
-  const { unequipConfirm, equipChoose, castSpell, confirmMint } = useActions();
+  const {
+    unequipConfirm,
+    equipChoose,
+    castSpell,
+    confirmMint,
+    modalBurn,
+    closeDrawer,
+  } = useActions();
   const [context] = useRemix(DRAWER_CONTEXT);
   const image_ref = useRef();
   const { width } = useSize(image_ref);
@@ -45,7 +53,13 @@ const Info = ({ item, caster }) => {
   }[item?.rarity];
 
   const isSpellbook = item?.type === ITEM_BOOK;
-
+  const commonItem = item?.rarity === RARITY_COMMON;
+  const mint = () => {
+    if (commonItem) {
+      return;
+    }
+    confirmMint(item, caster);
+  };
   return (
     <_info>
       <_visual>
@@ -75,9 +89,17 @@ const Info = ({ item, caster }) => {
             </_equip>
           </AnimateButton>
         ) : null}
-        <_mint onClick={() => confirmMint(item, caster)}>
+        <_mint onClick={mint} disabled={commonItem}>
           {t('item.mint')}
         </_mint>
+        <_burn
+          onClick={() => {
+            closeDrawer();
+            modalBurn(item);
+          }}
+        >
+          {t('item.burn')}
+        </_burn>
         {isSpellbook && (
           <_odds>
             <IconDice />

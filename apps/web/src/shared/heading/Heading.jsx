@@ -15,7 +15,7 @@ import {
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
 import Trade from './trade/Trade';
-
+import ResourceTrade from '../resourceTrade/ResourceTrade';
 const Heading = ({ title, flat, marketplace }) => {
   const [initialized] = useRemix(GAME_INIT);
   const [game] = useRemix(CHAIN_GAME);
@@ -53,6 +53,7 @@ const Heading = ({ title, flat, marketplace }) => {
     <_heading key={'heading-component'}>
       <_title>
         <span>{title}</span>
+        <ResourceTrade />
         {marketplace ? <Redeem /> : <Trade />}
       </_title>
       <Ticks />
