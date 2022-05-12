@@ -230,6 +230,7 @@ export const useChainActions = () => {
         }
       }
     } catch (e) {
+      console.log(e);
       if (String(e).includes('Blockhash')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);

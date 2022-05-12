@@ -699,9 +699,9 @@ export class PlayerContext {
 
   private async buildLeafCaster(caster: Caster) {
     return keccak256(
-      `${await this.getCasterUri(caster)}:caster:${caster.version}:${
-        caster.level
-      }`,
+      `${await this.getCasterUri(caster)}:caster:${caster.seasonNumber}:${
+        caster.version
+      }:${caster.level}:${caster.edition === 1 ? 'normal' : 'limited'}`,
     );
   }
 
@@ -809,7 +809,10 @@ export class PlayerContext {
   private async getCasterUri(caster: Caster) {
     const lookupTable = (await axios.get(merkle['merkleStruct']['combined']))
       .data;
-    return lookupTable['caster'][caster.version][caster.level];
+
+    return lookupTable['caster'][caster.seasonNumber][caster.version][
+      caster.level
+    ][caster.edition === 1 ? 'normal' : 'limited'];
   }
 
   private async getItemUri(item: Item, itemType: string) {
@@ -867,7 +870,7 @@ export class PlayerContext {
   }
 
   private async buildLeafItem(item: Item, itemType) {
-    switch (itemType) {
+    switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
         return keccak256(
           `${await this.getItemUri(item, itemType)}:${
