@@ -82,7 +82,7 @@ export const _icon = styled(m.div)`
     min-width: 14px;
     width: 14px;
     aspect-ratio: 1;
-    color: ${({ theme }) => theme.text['clear']};
+    color: ${({ theme }) => theme.text['faded']};
     position: absolute;
   }
   > img {
@@ -97,7 +97,7 @@ export const _icon = styled(m.div)`
   transition: all 0.2s ease-in-out;
   &:hover {
     > svg {
-      color: ${({ theme }) => theme.text['active']};
+      color: ${({ theme }) => theme.text['base']};
       min-width: 18px;
       with: 18px;
     }

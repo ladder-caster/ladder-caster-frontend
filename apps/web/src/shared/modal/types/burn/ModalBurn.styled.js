@@ -63,7 +63,8 @@ export const _resource = styled(m.div)`
   }
 `;
 export const _button = styled(m.div)`
-  width: 90px;
+  min-width: 90px;
+  width: ${({ $burn }) => ($burn ? '100%' : '90px')};
   aspect-ratio: 2/1;
   display: flex;
   align-items: center;

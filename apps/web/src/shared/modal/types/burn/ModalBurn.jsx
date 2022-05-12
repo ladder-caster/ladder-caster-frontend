@@ -107,11 +107,11 @@ const ModalBurn = () => {
               <IconResource3 /> <span>{resourceGain}</span>
             </_resource>
           </_resource_gain>
-          <_float $gap={'124px'}>
+          <_float $gap={'96px'}>
+            <_button onClick={cancel}>{t('modal.item_burn.cancel')}</_button>
             <_button $burn onClick={burn}>
               {t('modal.item_burn.confirm')}
             </_button>
-            <_button onClick={cancel}>{t('modal.item_burn.cancel')}</_button>
           </_float>
         </_container_center>
       </_container>
