@@ -58,7 +58,7 @@ import {
 import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
-import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
+import { TAB_CHARACTER, TAB_WALLET, TAB_SWAP, TABS_MINT_REDEEM, TABS_SWAP_ORDER } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
 
 const Remix = () => {
@@ -102,6 +102,7 @@ const Remix = () => {
   useRemixOrigin(GAME_CONFIRM, {});
   useRemixOrigin(TABS_CHARACTER_ACTIONS, TAB_CHARACTER);
   useRemixOrigin(TABS_MINT_REDEEM, TAB_WALLET);
+  useRemixOrigin(TABS_SWAP_ORDER, TAB_SWAP);
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(GAME_BOOST, {

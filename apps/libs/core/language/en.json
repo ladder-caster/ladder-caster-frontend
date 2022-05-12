@@ -244,7 +244,9 @@
     "drawer.settings.key.warning.title": "Do not share your {{type}} key with anyone!",
     "drawer.settings.key.warning.desc": "If someone gets access to your {{type}} key, they could take control of your wallet.",
     "drawer.tokens.title": "Trade Resources",
+    "drawer.trade.title": "Trade",
     "drawer.trade.swap": "Swap",
+    "drawer.trade.order": "Place Order",
     "drawer.rank.level": "LEVEL",
     "drawer.rank.name": "Wizard",
     "drawer.rank.burn": "Add XP",
@@ -348,7 +350,7 @@
     "drawer.crank.loot.all": "Loot All Resources",
     "drawer.craft.warning": "By crafting now, you will need to wait until next turn to equip or unequip items",
     "modal.chests.title": "Tier",
-    "mutation.timeout": "Timed out. You may need to refresh to see if it worked.",
+    "mutations.timeout": "Action took longer than 60 seconds. You may need to refresh to see if it worked",
     "resources.resource1.symbol":"EMBA",
     "resources.resource2.symbol":"FRO",
     "resources.resource3.symbol":"ROOT",
@@ -357,6 +359,10 @@
     "prestige.caster": "Transfer to Season 1",
     "prestige.confirm": "Confirm Transfer",
     "prestige.cost": "Costs 500 LADA",
-    "heading.buy.lada": "Buy LADA"
+    "heading.buy.lada": "Buy LADA",
+    "drawer.trade.routing": "Serum DEX",
+    "dropdown.label.price": "Price",
+    "orderbook.label.price": "Price",
+    "orderbook.label.size": "Size"
   }
 }

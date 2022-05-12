@@ -37,7 +37,6 @@ import {
   PHASE_ACTIONS,
   PHASE_EQUIP,
   PHASE_REWARDS,
-  CRAFT_ITEM,
   CRAFT_CHARACTER,
   VIEW_NAVIGATION,
   BURNER_TYPE,
@@ -46,7 +45,6 @@ import {
   WEB3AUTH_CLIENT,
   WEB3AUTH_PROVIDER,
   WEB3AUTH_PLUGIN_STORE,
-  W3A_TYPE,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
@@ -105,7 +103,7 @@ import {
   RPC_LOADING,
   INST_BURN_NFT,
 } from 'core/remix/rpc';
-import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
+import { INIT_STATE_BOOST, INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
@@ -392,7 +390,7 @@ export const useChainActions = () => {
       client?.program?.provider?.wallet?.publicKey,
       localStorage.getItem('gamePK'),
     );
-    
+
    if (item || context?.item ) {
      const match_item = item ?? context?.item;
       await fetchPlayer(async () => {
@@ -1407,9 +1405,20 @@ export const useChainActions = () => {
     },
     async openDrawerTrade(){
       setDrawer({
-        type: DRAWER_TRADE,
+        type: DRAWER_TRADE
+      });
+      setContext(INIT_STATE_TRADE);
+    },
+    async switchTradeSymbols() {
+      setContext({
+        ...context,
+        base: context?.quote,
+        quote: context?.base
       });
     },
-    
+    async tradeDropdownClick(isBase, symbol) {
+      if (isBase) setContext({...context, base: symbol})
+      else setContext({...context, quote: symbol});
+    }
   };
 };

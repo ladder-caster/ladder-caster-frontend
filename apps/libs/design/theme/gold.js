@@ -200,6 +200,8 @@ export const gold = {
     button_low: 'radial-gradient(circle,  #232b43 0%, #232b43 60%)',
     button_high: 'radial-gradient(circle,  #283152 0%, #2d3653 60%)',
     button_active: 'radial-gradient(circle,  #425176 0%, #2d3653 150%)',
+    button_higher: 'radial-gradient(circle,  #465e8b 0%, #38405c 150%)',
+    button_highest: 'radial-gradient(circle,  #465e8b 0%, #465e8b 100%)',
     success: '#234334',
     error: '#43233d',
     special: 'linear-gradient(45deg, #5f3781 0%, #37817f 100%)',

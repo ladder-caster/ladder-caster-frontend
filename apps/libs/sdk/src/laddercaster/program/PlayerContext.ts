@@ -113,6 +113,7 @@ export class PlayerContext {
       [TYPE_RES3]: resourcesArray[2],
       lada: resourcesArray[3] / 1e9,
       sol: (await this.getSOLBalance()) / 1e9,
+      usdc: (await this.getUSDCBalance()) / 1e9
     };
   }
 
@@ -120,6 +121,16 @@ export class PlayerContext {
     try {
       return await this.client.connection.getBalance(
         this.client.wallet.publicKey,
+      );
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  async getUSDCBalance() {
+    try {
+      return await this.client.connection.getBalance(
+        this.client.wallet.usdcTokenAddress,
       );
     } catch (e) {
       return 0;
@@ -150,7 +161,7 @@ export class PlayerContext {
 
     const casterArray = (
       await this.client.program.account.caster.all([
-        { memcmp: { offset: 18, bytes: playerAccount.toBase58() } },
+        { memcmp: { offset: 18, bytes: playerAccount.toBase58() }},
       ])
     ).map((caster) => {
       return { ...caster.account, publicKey: caster.publicKey };

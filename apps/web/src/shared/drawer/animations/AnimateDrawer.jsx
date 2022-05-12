@@ -15,7 +15,7 @@ export const AnimateDrawer = withTheme(
       animate: {
         minHeight: `${drawer_height}px`,
         height: `${drawer_height}px`,
-        y: active ? -height + (height > 500 ? 76 : 24) : 16,
+        y: active ? -height + (height > 500 ? 62 : 8) : 16,
       },
       hover: {},
       tap: {},

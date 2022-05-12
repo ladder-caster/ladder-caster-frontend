@@ -16,6 +16,7 @@ import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
 import Trade from './trade/Trade';
 import ResourceTrade from '../resourceTrade/ResourceTrade';
+
 const Heading = ({ title, flat, marketplace }) => {
   const [initialized] = useRemix(GAME_INIT);
   const [game] = useRemix(CHAIN_GAME);
