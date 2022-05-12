@@ -82,6 +82,7 @@ export interface Caster {
   /// If filled cannot unequip/equip
   turnCommit?: TurnCommit;
   publicKey?: anchor.web3.PublicKey;
+  seasonNumber: number;
 }
 
 export interface CommittedActions {

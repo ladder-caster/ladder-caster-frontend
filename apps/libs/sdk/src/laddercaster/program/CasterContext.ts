@@ -156,9 +156,9 @@ export class CasterContext {
         item1: item1.publicKey,
         item2: item2.publicKey,
         item3: item3.publicKey,
-        season: season,
         ladaMint: game.ladaMintAccount,
         ladaTokenAccount: playerLadaTokenAccount,
+        season: season,
       },
       signers: [this.client.wallet.payer],
     });
@@ -377,6 +377,7 @@ export class CasterContext {
       playerAccount,
       game,
       gameSigner,
+      season,
     ] = await this.getAccounts();
     const empty = Keypair.generate();
     const mintAccounts = await this.getMintAccounts(game);
@@ -400,6 +401,7 @@ export class CasterContext {
         game: gameAccount,
         player: playerAccount,
         caster: this.caster?.publicKey,
+        season: season,
         gameSigner: gameSigner,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         ladaMintAccount: game.ladaMintAccount,
@@ -485,7 +487,7 @@ export class CasterContext {
   }
 
   async equipItem(equipmentItem: Item) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
 
     const itemType = Object.keys(
       equipmentItem.itemType.equipment?.equipmentType ||
@@ -533,7 +535,7 @@ export class CasterContext {
   }
 
   async unequipItem(itemPK: PublicKey) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     return await this.client.program.rpc.unequipItem({
       accounts: {
         game: gameAccount,
@@ -547,7 +549,13 @@ export class CasterContext {
   }
 
   async castSpell(equipmentItem: Item) {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
+    const [
+      gameAccount,
+      playerAccount,
+      game,
+      ,
+      season,
+    ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
     const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
 
