@@ -8,7 +8,12 @@ import {
 } from './Drawer.styled';
 import { AnimateDrawer } from './animations/AnimateDrawer';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { DRAWER_ACTIVE, EQUIP_ITEM, UNEQUIP_ITEM } from 'core/remix/state';
+import {
+  DRAWER_ACTIVE,
+  EQUIP_ITEM,
+  MODAL_ACTIVE,
+  UNEQUIP_ITEM,
+} from 'core/remix/state';
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { nanoid } from 'nanoid';
 import { useActions } from '../../../actions';
@@ -18,12 +23,17 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 const Drawer = ({ children, height }) => {
   const { closeDrawer } = useActions();
   const [drawer] = useRemixOrigin(DRAWER_ACTIVE, '');
+  const [modal] = useRemix(MODAL_ACTIVE);
   const [, setEquip] = useRemix(EQUIP_ITEM);
   const [, setUnequip] = useRemix(UNEQUIP_ITEM);
   const prevDrawer = usePrevious(drawer);
   const container_ref = useRef();
   const key = useMemo(() => nanoid(), [drawer]);
-  useClickOutside(container_ref, () => drawer?.type && closeDrawer());
+
+  useClickOutside(
+    container_ref,
+    () => drawer?.type && !modal?.type && closeDrawer(),
+  );
 
   const childrenWProps = useMemo(
     () =>

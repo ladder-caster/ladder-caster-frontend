@@ -184,6 +184,12 @@ class GameConstantsContext {
         game.ladaMintAccount,
         publicKey,
       ),
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+        publicKey,
+      ),
       PublicKey.findProgramAddress([Buffer.from('game_signer')], programId),
       PublicKey.findProgramAddress(
         [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
@@ -229,6 +235,7 @@ class GameConstantsContext {
       resource2,
       resource3,
       lada,
+      usdc,
       gameSigner,
       season,
       playerAccount,
@@ -248,14 +255,15 @@ class GameConstantsContext {
           res?.[1],
           res?.[2],
           res?.[3],
-          res?.[4]?.[0],
+          res?.[4],
           res?.[5]?.[0],
           res?.[6]?.[0],
-          res?.[6]?.[1],
           res?.[7]?.[0],
+          res?.[7]?.[1],
           res?.[8]?.[0],
           res?.[9]?.[0],
           res?.[10]?.[0],
+          res?.[11]?.[0],
         ];
       })
       .catch((err) => {
@@ -278,6 +286,7 @@ class GameConstantsContext {
         [TYPE_RES2]: resource2,
         [TYPE_RES3]: resource3,
         lada,
+        usdc,
       },
       previousGameAccount,
       previousPlayerAccount: previousPlayerAccount,
@@ -404,6 +413,9 @@ class GameConstantsContext {
   public get solBalance(): number {
     return this.balances.sol;
   }
+  public get usdcBalance(): number {
+    return this.balances.usdc;
+  }
   public get gameState(): Game {
     return this.game?.game;
   }
@@ -500,15 +512,27 @@ class GameConstantsContext {
         const res1 = res[0] ? res[0].value.amount : '0';
         const res2 = res[1] ? res[1].value.amount : '0';
         const res3 = res[2] ? res[2].value.amount : '0';
+        const usdc = res[5] ? res[5].value.amount / 1e6 : '0';
         const ladaValue = res[3] ? res[3].value.amount : 0;
-        return [res1, res2, res3, ladaValue / 1e9, res[4] / 1e9];
+        return [res1, res2, res3, ladaValue / 1e9, res[4] / 1e9, usdc];
       })
       .catch((err) => {
         console.error('Failed To Retrieve Account Balances:', err);
         return Array(5).fill(0);
       });
+
+    let usdc;
+    try {
+      usdc =
+        (await this.getTokenAccountBalance(this.accounts.tokenAccounts.usdc))
+          .value.amount / 1e6;
+    } catch (e) {
+      usdc = 0;
+    }
+
     this.balances = {
       sol: solana,
+      usdc,
       game: {
         [TYPE_RES1]: resource1,
         [TYPE_RES2]: resource2,

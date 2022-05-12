@@ -5,6 +5,7 @@ import { useActions } from '../../../../actions';
 
 const Trade = () => {
   const { t } = useTranslation();
+  const { openTradeDrawer } = useActions();
   const { openDrawerTrade } = useActions();
 
   return (

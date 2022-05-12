@@ -138,3 +138,50 @@ export const truncateDecimals = (number, offset) => {
   const regex = new RegExp('^-?\\d+(?:.\\d{0,' + (offset || -1) + '})?');
   return number ? number.toString().match(regex)[0] : 0;
 };
+
+export const largest = (number1, number2) => {
+  if (number1 > number2) return number1;
+  else return number2;
+};
+
+export const floorPrice = (number, decimals) => {
+  const multiple = Math.pow(10, decimals);
+  return Math.floor(number * multiple) / multiple;
+};
+
+export const decimalsToFloat = (decimals) => {
+  return Math.pow(1, -decimals);
+};
+
+export const orderbookFill = (quote_amount, orderbook) => {
+  let avg_price = 0;
+  let max_price = 0;
+  let filled_amount = 0;
+  let filled_price = 0;
+
+  for (let i = 0; i < orderbook?.length; i++) {
+    const order = orderbook?.[i];
+    const price = +order?.[0];
+    const amount = +order?.[1];
+    const next_fill = price * amount;
+
+    if (filled_price + next_fill < quote_amount) {
+      filled_amount += amount;
+      filled_price += price * amount;
+    } else {
+      const remaining_price = quote_amount - filled_price;
+      const remaining_amount = remaining_price / price;
+      filled_amount += remaining_amount;
+      filled_price += remaining_price;
+      avg_price += filled_price / filled_amount;
+      max_price = largest(max_price, price);
+      break;
+    }
+  }
+
+  return {
+    amount: filled_amount,
+    price: Math.floor(avg_price * 10000) / 10000,
+    max_price,
+  };
+};

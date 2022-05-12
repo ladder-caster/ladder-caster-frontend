@@ -1,5 +1,6 @@
 //import { Buffer } from "buffer";
 import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import * as anchor from '@project-serum/anchor';
 
 export interface Wallet {
   signTransaction(tx: Transaction): Promise<Transaction>;
@@ -41,5 +42,8 @@ export default class NodeWallet implements Wallet {
 
   get publicKey(): PublicKey {
     return this.payer.publicKey;
+  }
+  get usdcTokenAddress(): PublicKey {
+    return new anchor.web3.PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
   }
 }

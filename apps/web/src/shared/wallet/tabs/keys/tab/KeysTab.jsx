@@ -42,8 +42,6 @@ const KeysTab = () => {
     setWalletType(null);
     closeDrawer();
     clearStates();
-    console.log('wtf!');
-    console.log('wallet type', walletType);
     if (walletType === STANDARD_TYPE) handleDisconnect();
     else if (walletType === W3A_TYPE) web3AuthDisconnect();
   }, [adapterWallet, client, walletType]);

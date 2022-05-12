@@ -1,0 +1,139 @@
+{
+  "coins": [
+    {
+      "chainId": 101,
+      "address": "95bzgMCtKw2dwaWufV9iZyu64DQo1eqw6QWnFMUSnsuF",
+      "symbol": "LADA",
+      "name": "LADA Token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/95bzgMCtKw2dwaWufV9iZyu64DQo1eqw6QWnFMUSnsuF/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "DfB1NY8Ftv3rDTnyffSVj5sr3ycFjLoUeNBEkTDvPQYn",
+      "symbol": "ERRA",
+      "name": "Erra",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DfB1NY8Ftv3rDTnyffSVj5sr3ycFjLoUeNBEkTDvPQYn/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "BBUiBwwG2pLZFboPpbvqVXACs4r3HrNBaC73zzXspfYW",
+      "symbol": "FIYA",
+      "name": "Fiya",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BBUiBwwG2pLZFboPpbvqVXACs4r3HrNBaC73zzXspfYW/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "E5qNsCX91wqnLQQ25yEHTo3eujWGtqLe9daJvejRxikc",
+      "symbol": "WADA",
+      "name": "Wada",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/E5qNsCX91wqnLQQ25yEHTo3eujWGtqLe9daJvejRxikc/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "ACWkwWhjZE4JZZpcbMawQ7D5GZHnh1U3aQ5epZTxwQ2b",
+      "symbol": "EMBA",
+      "name": "Ember",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ACWkwWhjZE4JZZpcbMawQ7D5GZHnh1U3aQ5epZTxwQ2b/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "31RdZYE4qNMxy64gq252PHxH9eNmLVJ4oRX4g3zTpAgt",
+      "symbol": "FRO",
+      "name": "Frosty",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/31RdZYE4qNMxy64gq252PHxH9eNmLVJ4oRX4g3zTpAgt/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "5J3Pa7uXZvxL1pn18hq5rnK7h2ASQHknYuFB8fGsabaZ",
+      "symbol": "ROOT",
+      "name": "Root",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/5J3Pa7uXZvxL1pn18hq5rnK7h2ASQHknYuFB8fGsabaZ/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/LadderCaster",
+        "website": "https://laddercaster.com/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      }
+    },
+    {
+      "chainId": 101,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "SOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "serumV3Usdc": "9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT",
+        "serumV3Usdt": "HWHvQhFmJB3NUcu1aihKmrKegfVxBEHzwVX6yZCKEsi1",
+        "website": "https://solana.com/"
+      }
+    }
+  ]
+}

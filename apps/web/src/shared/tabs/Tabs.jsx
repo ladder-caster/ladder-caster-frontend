@@ -11,7 +11,7 @@ import {
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { IconChevronLeft } from '../../../../libs/design/icons/chevron-left.icon';
 
-const Tabs = ({ back, views, tab_id, ...props }) => {
+const Tabs = ({ padding, back, views, tab_id, ...props }) => {
   const [tab, setTab] = useRemix(tab_id);
 
   const titles = Object.entries(views)?.map(([key, value]) => {
@@ -44,7 +44,7 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
 
   return (
     <_tabs>
-      <_header>
+      <_header $padding={padding}>
         {back && (
           <_back onClick={onBackClick}>
             <IconChevronLeft />
