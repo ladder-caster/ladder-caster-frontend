@@ -18,6 +18,11 @@ import {
   INST_OPEN_CHEST,
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
+  INST_UPGRADE,
+  INST_PLACE_ORDER,
+  INST_CANCEL_ORDER,
+  INST_PRESTIGE_CASTER,
+  INST_SETTLE_FUNDS,
 } from './rpc';
 import { WALLET_AUTO_CONNECT, WALLET_DISCONNECT } from './state';
 
@@ -42,5 +47,10 @@ export const fetching = {
   [WALLET_AUTO_CONNECT]: 'auto.connect',
   [WALLET_DISCONNECT]: 'auto.disconnect',
   [INST_MINT_NFT]: 'action.mint',
+  [INST_PRESTIGE_CASTER]: 'action.prestige',
   [INST_CLAIM_ALL]: 'action.claim.all',
+  [INST_UPGRADE]: 'action.upgrade',
+  [INST_PLACE_ORDER]: 'action.place_order',
+  [INST_SETTLE_FUNDS]: 'action.settle',
+  [INST_CANCEL_ORDER]: 'action.cancel_order',
 };

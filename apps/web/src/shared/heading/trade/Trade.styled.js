@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const _trade = styled.div``;
 
-export const _link = styled.a`
+export const _link = styled.div`
   padding: 8px 16px;
   border-radius: 50px;
   box-shadow: ${({ theme }) => theme.shadow['glass']};

@@ -16,6 +16,7 @@ export interface Game {
   /// Authority is game signer
   resource3MintAccount: PublicKey;
 
+  ///
   /// Authority is auth
   ladaMintAccount: PublicKey;
   /// Authority is game
@@ -226,6 +227,7 @@ export interface GameBalances {
 export interface Balances {
   game: GameBalances;
   sol: number;
+  usdc: number;
 }
 export interface GameConstantsContextInterface {
   /**

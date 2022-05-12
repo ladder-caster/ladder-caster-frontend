@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { m } from 'framer-motion';
+import styled, { css } from 'styled-components';
+
 export const _tabs = styled.div`
   width: 100%;
   height: 100%;
@@ -15,6 +16,12 @@ export const _header = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 16px 0 20px 0;
+  ${({ $padding }) =>
+    $padding &&
+    css`
+      padding-left: 16px;
+      padding-right: 16px;
+    `};
 `;
 
 export const _view = styled.div`

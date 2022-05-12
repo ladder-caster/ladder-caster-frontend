@@ -41,6 +41,7 @@ export class PlayerContext {
       [TYPE_RES3]: gameConstantsContext.resource3Balance,
       lada: gameConstantsContext.ladaBalance,
       sol: gameConstantsContext.solBalance,
+      usdc: gameConstantsContext.usdcBalance,
     };
   }
 

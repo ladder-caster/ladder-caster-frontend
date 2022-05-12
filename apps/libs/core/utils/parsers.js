@@ -14,6 +14,8 @@ export const handleCustomErrors = (message = '') => {
     return error?.msg || message;
   } else if (message?.includes('0x1')) {
     return 'Not enough SOL for transaction signing';
+  } else if (message?.includes('0x22')) {
+    return 'Account cannot wash trade on this order';
   }
 
   return message;

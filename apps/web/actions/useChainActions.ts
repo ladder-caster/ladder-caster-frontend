@@ -23,6 +23,7 @@ import {
   EQUIP_ITEM,
   UNEQUIP_ITEM,
   MODAL_REDEEM,
+  MODAL_ORDER,
   GAME_RESOURCES,
   TOKENS_ACTIVE,
   GAME_BOOST,
@@ -37,7 +38,6 @@ import {
   PHASE_ACTIONS,
   PHASE_EQUIP,
   PHASE_REWARDS,
-  CRAFT_ITEM,
   CRAFT_CHARACTER,
   VIEW_NAVIGATION,
   BURNER_TYPE,
@@ -46,7 +46,6 @@ import {
   WEB3AUTH_CLIENT,
   WEB3AUTH_PROVIDER,
   WEB3AUTH_PLUGIN_STORE,
-  W3A_TYPE,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
@@ -55,6 +54,9 @@ import {
   RARITY_COMMON,
   MODAL_BURN,
   CASTER_UPGRADE_AVAILABLE,
+  SIDE_BUY,
+  TRADE_ORDERBOOK,
+  SIDE_SELL,
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -71,6 +73,8 @@ import {
   CHAIN_NFTS,
   CHAIN_OLD_CASTERS,
 } from 'chain/hooks/state';
+import { COINS } from 'core/utils/markets';
+import { floorPrice, decimalsToFloat } from 'core/utils/numbers';
 import { nanoid } from 'nanoid';
 import {
   VIEW_SPELLCASTERS,
@@ -83,7 +87,9 @@ import {
   GameContext,
   PlayerContext,
   Caster,
+  SerumContext,
 } from 'sdk/src/laddercaster/program';
+import { Market } from '@project-serum/serum';
 import * as anchor from '@project-serum/anchor';
 import {
   GIVE_ITEM,
@@ -91,6 +97,7 @@ import {
   GIVE_RESOURCES,
   INST_INIT_PLAYER,
   FETCH_PLAYER,
+  FETCH_ORDER,
   FETCH_CASTERS,
   INST_COMMIT_CRAFT,
   INST_COMMIT_LOOT,
@@ -108,50 +115,54 @@ import {
   RPC_LOADING,
   INST_BURN_NFT,
   INST_CLAIM_ALL,
+  INST_PRESTIGE_CASTER,
+  INST_PLACE_ORDER,
+  INST_CANCEL_ORDER,
 } from 'core/remix/rpc';
-import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
+import {
+  INIT_STATE_BOOST,
+  INIT_STATE_REDEEM,
+  INIT_STATE_TRADE,
+} from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf, filter, isArray } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
 import { PublicKey } from '@solana/web3.js';
+import { findMarket } from 'core/utils/markets';
 let retry_count = {};
 
 export const useChainActions = () => {
   const { t } = useTranslation();
   const [, setCasterTab] = useRemix(TABS_CHARACTER_ACTIONS);
   const [, setWalletTab] = useRemix(TABS_MINT_REDEEM);
-  const [modal, setModal] = useRemix(MODAL_ACTIVE);
+  const [, setModal] = useRemix(MODAL_ACTIVE);
   const [drawer, setDrawer, isSetDrawer] = useRemix(DRAWER_ACTIVE);
   const [context, setContext] = useRemix(DRAWER_CONTEXT);
   const [, setPhase] = useRemix(USER_PHASE);
   const [, setEquip] = useRemix(EQUIP_ITEM);
   const [, setUnequip] = useRemix(UNEQUIP_ITEM);
   const [confirm, setConfirm] = useRemix(GAME_CONFIRM);
-  const [mutation, setMutation] = useRemix(CREATE_MUTATION);
+  const [, setMutation] = useRemix(CREATE_MUTATION);
   const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
   const [, setPlayer] = useRemix(CHAIN_PLAYER);
   const [game, setGame] = useRemix(CHAIN_GAME);
   const [items, setItems] = useRemix(CHAIN_ITEMS);
   const [casters, setCasters] = useRemix(CHAIN_CASTERS);
-  const [oldCasters, setOldCasters] = useRemix(CHAIN_OLD_CASTERS);
+  const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
   const [resources, setResources] = useRemix(GAME_RESOURCES);
   const [spellcasters, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [boost, setBoost] = useRemix(GAME_BOOST);
+  const [orderbook, setOrderbook] = useRemix(TRADE_ORDERBOOK);
   const [inventory, setInventory] = useRemix(GAME_INVENTORY);
   const [board] = useRemix(GAME_MAP);
   const [tokens, setTokens] = useRemix(TOKENS_ACTIVE);
-  const [loading, setLoading] = useRemix(RPC_LOADING);
-  const [error, setError] = useRemix(RPC_ERROR);
   const { createLocalWallet } = useLocalWallet();
-  const [walletType, setWalletType] = useRemix(WALLET_TYPE);
-  const [view, setView] = useRemix(VIEW_NAVIGATION);
-  const [, setNfts] = useRemix(CHAIN_NFTS);
+  const [, setWalletType] = useRemix(WALLET_TYPE);
+  const [, setView] = useRemix(VIEW_NAVIGATION);
   const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
-  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
+
   const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
@@ -179,50 +190,35 @@ export const useChainActions = () => {
         type,
       });
 
-      if (validatorSignature) {
-        let sig = validatorSignature;
-        if (isArray(validatorSignature)) {
-          sig = validatorSignature[0];
-        }
-        const confirmationResult = await client.connection.confirmTransaction(
-          sig,
+      let confirmationResult: any = {};
+      if (typeof validatorSignature === 'string') {
+        confirmationResult = await client.connection.confirmTransaction(
+          validatorSignature,
         );
+      }
+      const e = confirmationResult?.value?.err;
 
-        const e = confirmationResult?.value?.err;
-
-        if (String(e).includes('Blockhash')) {
-          retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-          if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
-        } else {
-          let parsedMessage = handleCustomErrors(e);
-          if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
-          setMutation({
-            id,
-            rpc: false,
-            validator: false,
-            success: !e,
-            retry_id,
-            error: !!e,
-            type,
-            text: {
-              error: parsedMessage,
-            },
-          });
-        }
+      if (String(e).includes('Blockhash')) {
+        retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
+        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
+        let parsedMessage = handleCustomErrors(e);
+        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
           validator: false,
-          success: true,
+          success: !e,
           retry_id,
-          error: false,
+          error: !!e,
           type,
           text: {
-            error: '',
+            error: parsedMessage,
           },
         });
       }
+
+      return confirmationResult;
     } catch (e) {
       console.log(e);
       if (String(e).includes('Blockhash')) {
@@ -244,12 +240,13 @@ export const useChainActions = () => {
           type,
         });
       }
+      return null;
     }
   };
 
   const fetchPlayer = async (
     preInstructionsCallback,
-    casterInstance = null,
+    casterInstance: CasterContext | null = null,
   ) => {
     const result = await preInstructionsCallback();
     if (result && !result?.value?.err) {
@@ -273,38 +270,37 @@ export const useChainActions = () => {
           });
 
           setCasters(updatedCasters);
-        } else {
-          setMutation({
-            id: nanoid(),
-            rpc: false,
-            validator: false,
-            success: false,
-            error: false,
-            done: true,
-            text: {
-              error: t('error.refresh.caster'),
-            },
-            FETCH_CASTERS,
-          });
         }
+
+        setMutation({
+          id: nanoid(),
+          rpc: false,
+          validator: false,
+          success: false,
+          error: false,
+          done: true,
+          text: {
+            error: t('error.refresh.caster'),
+          },
+          FETCH_CASTERS,
+        });
       } else {
         setPlayer(await playerContext.getPlayer());
         setItems(await playerContext.getInventory());
       }
-    } else {
-      setMutation({
-        id: nanoid(),
-        rpc: false,
-        validator: false,
-        success: false,
-        error: false,
-        done: true,
-        text: {
-          error: t('error.refresh.player'),
-        },
-        FETCH_PLAYER,
-      });
     }
+    setMutation({
+      id: nanoid(),
+      rpc: false,
+      validator: false,
+      success: false,
+      error: false,
+      done: true,
+      text: {
+        error: t('error.refresh.player'),
+      },
+      FETCH_PLAYER,
+    });
   };
 
   const fetchGame = async (preInstructionsCallback) => {
@@ -312,14 +308,37 @@ export const useChainActions = () => {
     if (!result.value.err) {
       const gameContext = new GameContext(
         client,
-        localStorage.getItem('gamePK'),
+        localStorage.getItem('gamePK') || '',
       );
       const next_game = await gameContext.getGameAccount();
 
       setGame(next_game);
-    } else {
-      //TODO: display user error from blockchain
     }
+  };
+
+  const fetchOrder = async (preInstructionsCallback) => {
+    const result = await preInstructionsCallback();
+    if (result && !result?.value?.err) {
+      const playerContext = new PlayerContext();
+      setResources(playerContext.getResources());
+
+      const pair = findMarket(context?.base, context?.quote);
+      const market = `${pair?.base}/${pair?.quote}`;
+      const nextOrderbook = await getBidsAsks(pair);
+      setOrderbook({ ...orderbook, [market]: { ...nextOrderbook, pair } });
+    }
+    setMutation({
+      id: nanoid(),
+      rpc: false,
+      validator: false,
+      success: false,
+      error: false,
+      done: true,
+      text: {
+        error: t('error.refresh.order'),
+      },
+      FETCH_ORDER,
+    });
   };
 
   const claimRewards = async (caster) => {
@@ -365,6 +384,22 @@ export const useChainActions = () => {
   const createCasterContext = () => {
     return new CasterContext();
   };
+
+  const getBidsAsks = async (pair) => {
+    const market_id = new PublicKey(pair?.market_id);
+    const program_id = new PublicKey(pair?.program_id);
+
+    const market = await Market.load(
+      client?.connection,
+      market_id,
+      {},
+      program_id,
+    );
+    const serumContext = new SerumContext(market);
+
+    return await serumContext.getBidsAsks();
+  };
+
   const confirmBurn = async (item) => {
     setModal('');
     const playerContext = new PlayerContext();
@@ -464,7 +499,7 @@ export const useChainActions = () => {
           async () => {
             return await new GameContext(
               client,
-              localStorage.getItem('gamePK'),
+              localStorage.getItem('gamePK') || '',
             ).crank();
           },
           INST_CRANK,
@@ -1051,7 +1086,6 @@ export const useChainActions = () => {
       }
     },
     async testGiveLADA() {
-      console.log('Give Lada');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1063,7 +1097,6 @@ export const useChainActions = () => {
       );
     },
     async testInitCaster() {
-      console.log('Initialize Caster');
       const casterContext = createCasterContext();
 
       return await stateHandler(
@@ -1075,7 +1108,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveChest() {
-      console.log('Give Chest');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1091,7 +1123,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveResources() {
-      console.log('Give Resources');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1103,7 +1134,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveHat() {
-      console.log('Give Hat');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1122,7 +1152,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveRobe() {
-      console.log('Give Robe');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1141,7 +1170,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveStaff() {
-      console.log('Give Staff');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1160,7 +1188,6 @@ export const useChainActions = () => {
       );
     },
     async testGiveSpell() {
-      console.log('Give Spell');
       const casterContext = createCasterContext();
 
       await stateHandler(
@@ -1223,7 +1250,7 @@ export const useChainActions = () => {
     async refreshGame() {
       const gameContext = new GameContext(
         client,
-        localStorage.getItem('gamePK'),
+        localStorage.getItem('gamePK') || '',
       );
       setGame(await gameContext.getGameAccount());
     },
@@ -1264,11 +1291,9 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            const result = await new CasterContext().casterRedeemAllActions(
+            return await new CasterContext().casterRedeemAllActions(
               redeemableCasters,
             );
-            console.log('result', result);
-            return result;
           },
           INST_CLAIM_ALL,
           '',
@@ -1305,7 +1330,7 @@ export const useChainActions = () => {
           async () => {
             return await casterContext.prestigeCaster();
           },
-          INST_MINT_NFT,
+          INST_PRESTIGE_CASTER,
           '',
         );
       });
@@ -1333,7 +1358,6 @@ export const useChainActions = () => {
         console.log('web3auth not initialized yet');
         return;
       }
-      console.log('logging out');
       await web3Auth.logout();
       setProvider(null);
     },
@@ -1342,8 +1366,6 @@ export const useChainActions = () => {
 
       await stateHandler(
         async () => {
-          //Do not remove for testing
-          // console.log(client.program.provider.wallet.publicKey.toString());
           const result = await playerContext.initPlayer();
           setPlayer(await playerContext.getPlayer());
           return result;
@@ -1356,6 +1378,282 @@ export const useChainActions = () => {
       setDrawer({
         type: DRAWER_TRADE,
       });
+      setContext(INIT_STATE_TRADE);
+    },
+
+    async switchTradeSymbols() {
+      setContext({
+        ...context,
+        side: context?.side === SIDE_BUY ? SIDE_SELL : SIDE_BUY,
+        input: {
+          base: context?.input?.quote,
+          quote: context?.input?.base,
+        },
+      });
+    },
+    async tradeDropdownClick(isBase, symbol) {
+      if (isBase) setContext({ ...context, base: symbol });
+      else setContext({ ...context, quote: symbol });
+    },
+    async inputSwap(isBase, value) {
+      let input = { ...context?.input };
+      const pair = findMarket(context?.base, context?.quote);
+      const market = pair?.market;
+      let side = context?.side;
+      let liquid = false;
+      const isBuy = side === SIDE_BUY;
+      const isSell = side === SIDE_SELL;
+      const orders = orderbook?.[market];
+
+      const asks = orders?.asks;
+      const bids = orders?.bids;
+
+      const lowest_ask = +asks?.[0]?.[0];
+      const highest_bid = +bids?.[0]?.[0];
+
+      if (isBase) {
+        input.base = value;
+        if (isBuy)
+          input.quote = lowest_ask ? Math.floor(value / lowest_ask) : 0;
+        else input.quote = highest_bid ? Math.floor(value * highest_bid) : 0;
+        if (input.quote !== 0) liquid = true;
+      } else {
+        input.quote = value;
+        if (isBuy) input.base = lowest_ask ? Math.floor(lowest_ask * value) : 0;
+        else input.base = highest_bid ? Math.floor(value / highest_bid) : 0;
+        if (input.base !== 0) liquid = true;
+      }
+
+      setContext({
+        ...context,
+        input,
+        side,
+        liquid,
+      });
+    },
+    async inputOrder(isBase, value) {
+      let input = { ...context?.input };
+      const pair = findMarket(context?.base, context?.quote);
+      const market = pair?.market;
+      let side = context?.side;
+
+      if (isBase) {
+        const bids = orderbook?.[market]?.bids;
+        const asks = orderbook?.[market]?.asks;
+        const includes_asks = find(asks, (ask) => +ask[0] === +value);
+        const includes_bids = find(bids, (bid) => +bid[0] === +value);
+
+        let lowest_ask = Infinity;
+        let highest_bid = 0;
+        const decimals = pair?.decimals;
+        let valid = +value % Math.pow(1, -decimals) === 0;
+
+        if (includes_bids) side = SIDE_BUY;
+        if (includes_asks) side = SIDE_SELL;
+
+        if (!includes_bids && !includes_asks) {
+          if (bids?.length > 1) highest_bid = +bids[0][0];
+          if (asks?.length > 1) lowest_ask = +asks[0][0];
+          if (+value >= lowest_ask && valid) side = SIDE_SELL;
+          if (+value <= highest_bid && valid) side = SIDE_BUY;
+        }
+
+        if (valid) {
+          if (side === SIDE_BUY) {
+            // Calculate profit
+          }
+        }
+
+        input.base = value;
+      } else {
+        input.quote = value;
+      }
+
+      setContext({
+        ...context,
+        input,
+        side,
+      });
+    },
+    getBidsAsks,
+    async getOpenOrders(pair, isPersonal = false) {
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+      const serumContext = new SerumContext(market);
+
+      return await serumContext.openOrders(isPersonal);
+    },
+    async placeOrder(pair, side, price, size) {
+      const orderType = 'limit';
+
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      setContext({
+        ...context,
+        input: {
+          ...context?.input,
+          quote: '',
+        },
+      });
+
+      await fetchOrder(async () => {
+        return await stateHandler(
+          async () => {
+            await serumContext.placeOrder({ side, price, size, orderType });
+          },
+          INST_PLACE_ORDER,
+          '',
+        );
+      });
+    },
+    async cancelOrder(pair, order) {
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      await fetchPlayer(async () => {
+        return await stateHandler(
+          async () => {
+            console.log('start cancel');
+            await serumContext.cancelOrder(order);
+            console.log('end cancel');
+          },
+          INST_CANCEL_ORDER,
+          '',
+        );
+      });
+    },
+    async chooseOrderSide(side) {
+      if (side !== context?.side)
+        setContext({
+          ...context,
+          side,
+        });
+    },
+    async filledOrders(pair) {
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      return await serumContext.getFilledOrders();
+    },
+    async getUnsettledFunds(pair, openOrders) {
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      return await serumContext.getUnsettledFunds(openOrders);
+    },
+    async settleFunds(pair, unsettledFund) {
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      await fetchOrder(async () => {
+        return await stateHandler(
+          async () => {
+            return await serumContext.settleFunds(unsettledFund);
+          },
+          INST_PLACE_ORDER,
+          '',
+        );
+      });
+    },
+    async swapOrder(pair, side, size) {
+      const base_payer = find(COINS, (coin) => coin?.symbol === pair?.base)
+        ?.address;
+      const quote_payer = find(COINS, (coin) => coin?.symbol === pair?.quote)
+        ?.address;
+
+      const orderType = 'ioc';
+
+      const market_id = new PublicKey(pair?.market_id);
+      const program_id = new PublicKey(pair?.program_id);
+      const market = await Market.load(
+        client?.connection,
+        market_id,
+        {},
+        program_id,
+      );
+
+      const serumContext = new SerumContext(market);
+
+      setContext({
+        ...context,
+        input: {
+          ...context?.input,
+          quote: '',
+        },
+      });
+
+      const market_name = pair?.market;
+      const orders = orderbook?.[market_name];
+      const decimals = pair?.decimals;
+      let price = 0;
+
+      if (side === SIDE_BUY) {
+        const ask_price = orders?.asks?.[0]?.[0];
+        console.log('ask price', ask_price);
+        if (ask_price) price = floorPrice(ask_price * 3, decimals);
+      } else {
+        price = decimalsToFloat(decimals);
+      }
+
+      if (price) {
+        await fetchPlayer(async () => {
+          return await stateHandler(
+            async () => {
+              await serumContext.placeOrder({ side, price, size, orderType });
+            },
+            INST_PLACE_ORDER,
+            '',
+          );
+        });
+      }
     },
     async unequipAllItems(caster: Caster) {
       if (!caster) return;
@@ -1393,7 +1691,7 @@ export const useChainActions = () => {
 
       if (!casterWrapper) return;
       const keys = Object.keys(casterWrapper);
-      const casterItems = [];
+      const casterItems: any[] = [];
       for (let i = 0; i < keys.length; i++) {
         const items = casterWrapper[keys[i]]?.items;
         const item = upgradeAvailable.items.get(items?.[0]);
@@ -1401,7 +1699,6 @@ export const useChainActions = () => {
         casterItems.push(item);
       }
       upgradeAvailable.removeUpgrade(casterItems);
-      console.log('CASTER UPGRADE', casterContext, casterWrapper, casterItems);
 
       //if(casterItems.length == 0)return;
 
@@ -1412,6 +1709,15 @@ export const useChainActions = () => {
         INST_UNEQUIP,
         '',
       );
+    },
+    emptyInputs() {
+      setContext({
+        ...context,
+        input: {
+          base: '',
+          quote: '',
+        },
+      });
     },
   };
 };

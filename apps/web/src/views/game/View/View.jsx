@@ -1,7 +1,6 @@
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useEventListener } from 'core/hooks/useEventListener';
 import { useSize } from 'core/hooks/useSize';
-import { DRAWER_TRADE } from 'core/remix/state';
 import {
   DRAWER_ACTIVE,
   DRAWER_CRAFT,
@@ -10,6 +9,7 @@ import {
   DRAWER_SETTINGS,
   DRAWER_SPELLCASTER,
   DRAWER_TOKENS,
+  DRAWER_TRADE,
   DRAWER_WALLET,
   VIEW_SIZE,
 } from 'core/remix/state';
@@ -24,8 +24,9 @@ import { AnimatedViews } from '../animated/AnimatedViews';
 import { _container, _view } from '../Game.styled';
 import CraftDrawer from '../inventory/drawer/craft/CraftDrawer';
 import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
-import TradeDrawer from '../trade/TradeDrawer';
 import Player from '../spellcasters/drawer/Player';
+import TradeDrawer from '../../../shared/trade/TradeDrawer';
+import Price from '../../../shared/price/Price';
 
 export const View = () => {
   const view_ref = useRef();
@@ -66,6 +67,7 @@ export const View = () => {
         </LazyMotion>
       </_container>
       <Drawer height={dh}>{Drawers ? <Drawers /> : null}</Drawer>
+      {/* <Price /> */}
     </_view>
   );
 };

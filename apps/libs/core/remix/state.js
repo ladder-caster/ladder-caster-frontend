@@ -27,6 +27,12 @@ export const CRAFT_CONFIRM = 'CRAFT_CONFIRM';
 
 export const VIEW_SIZE = 'VIEW_SIZE';
 
+export const SIDE_BUY = 'buy';
+export const SIDE_SELL = 'sell';
+
+export const TRADE_ORDERBOOK = 'TRADE_ORDERBOOK';
+export const TRADE_CLIENT_ORDERS = 'TRADE_CLIENT_ORDERS';
+
 export const DRAWER_SETTINGS = 'DRAWER_SETTINGS';
 export const DRAWER_WALLET = 'DRAWER_WALLET';
 export const DRAWER_TOKENS = 'DRAWER_TOKENS';
@@ -79,6 +85,8 @@ export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
 export const MODAL_BURN = 'MODAL_BURN';
 export const PRESTIGE_TOGGLE = 'PRESTIGE_TOGGLE';
+export const MODAL_ORDER = 'MODAL_ORDER';
+export const MODAL_SWAP = 'MODAL_SWAP';
 
 export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
 export const ENCHANT_XP = 'ENCHANT_XP';

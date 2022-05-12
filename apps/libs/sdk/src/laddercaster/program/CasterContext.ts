@@ -30,7 +30,7 @@ export class CasterContext {
     return this.caster?.publicKey;
   }
 
-  async initCaster(count: number) {
+  async initCaster(count: number = 1) {
     var casterKP = anchor.web3.Keypair.generate();
     if (!count || count == 1) {
       return await gameConstantsContext.Client.program.rpc.initCaster({

@@ -34,6 +34,7 @@ import {
   CURRENT_SEASON,
   PRESTIGE_TOGGLE,
   ARWEAVE_UTILS,
+  TRADE_ORDERBOOK,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -62,10 +63,15 @@ import {
   Tile,
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
-
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
-import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
+import {
+  TAB_CHARACTER,
+  TAB_WALLET,
+  TAB_SWAP,
+  TABS_MINT_REDEEM,
+  TABS_SWAP_ORDER,
+} from 'core/remix/tabs';
 import { map, sortBy, reverse, union, intersection } from 'lodash';
 import { CasterUpgradeAvailable, CasterWrapper } from './Remix.types';
 //ensures presetup is done
@@ -77,8 +83,9 @@ const UpgradesAvailable: CasterUpgradeAvailable = {
     const casters = UpgradesAvailable.casters;
     if (!publicKey || !casters) return false;
     const caster = casters?.get(publicKey);
+    if (!caster) return false;
     var upgrade = false;
-    const keys = Object.keys(caster);
+    const keys = Object.keys(caster || {});
     for (let i = 0; i < keys.length; i++) {
       if (caster[keys[i]].items.length > 0) {
         upgrade = true;
@@ -89,13 +96,12 @@ const UpgradesAvailable: CasterUpgradeAvailable = {
   },
   getEquippedItems: (publicKey: String) => {
     const casters = UpgradesAvailable.casters;
-    console.log('PUBLIC KEY', casters, publicKey);
     if (!publicKey || !casters) return [];
     const caster = casters?.get(publicKey);
+    if (!caster) return [];
     // dynamic retrieval no need to update if new item types are added
-    const itemArray = [];
-    const keys = Object.keys(caster);
-    console.log('KEYS', keys, caster);
+    const itemArray: any[] = [];
+    const keys = Object.keys(caster || {});
     for (let i = 0; i < keys.length; i++) {
       const item = caster[keys[i]]?.currentItem;
       console.log(item, caster[keys[i]]);
@@ -159,8 +165,11 @@ const Remix = () => {
     [TYPE_RES2]: 0,
     [TYPE_RES3]: 0,
     lada: 0,
+    sol: 0,
+    usdc: 0,
   });
 
+  useRemixOrigin(TRADE_ORDERBOOK);
   useRemixOrigin(INIT_CHAIN_LOAD, true);
   useRemixOrigin(GAME_INIT);
   useRemixOrigin(USER_PHASE);
@@ -178,6 +187,7 @@ const Remix = () => {
   useRemixOrigin(GAME_CONFIRM, {});
   useRemixOrigin(TABS_CHARACTER_ACTIONS, TAB_CHARACTER);
   useRemixOrigin(TABS_MINT_REDEEM, TAB_WALLET);
+  useRemixOrigin(TABS_SWAP_ORDER, TAB_SWAP);
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
   useRemixOrigin(GAME_BOOST, {
@@ -220,7 +230,7 @@ const Remix = () => {
   });
 
   const generateMap = (game: Game) => {
-    const lands = [];
+    const lands: any[] = [];
     const map = game.map;
 
     if (map) {
@@ -274,7 +284,7 @@ const Remix = () => {
 
       const currentTurn = game?.turnInfo?.turn;
 
-      const generateModifier = (itemPK: anchor.web3.PublicKey) => {
+      const generateModifier = (itemPK: anchor.web3.PublicKey | undefined) => {
         if (!itemPK) return null;
 
         let item: Item = items.find(
@@ -300,8 +310,8 @@ const Remix = () => {
             id: 0,
             tier: getTier(item.level),
             level: item?.level,
-            attribute: Object.keys(item?.itemType?.spellBook?.spell)?.[0],
-            rarity: Object.keys(item?.itemType?.spellBook?.rarity)?.[0],
+            attribute: Object.keys(item?.itemType?.spellBook?.spell || {})?.[0],
+            rarity: Object.keys(item?.itemType?.spellBook?.rarity || {})?.[0],
             value: item?.itemType?.equipment?.value,
             publicKey: item?.publicKey?.toString(),
           };
@@ -609,7 +619,7 @@ const Remix = () => {
         currentItem.value < item.value &&
         item.level <= casterLevel
       : true;
-    const itemPublicKey = item.publicKey.toString();
+    const itemPublicKey = item?.publicKey?.toString();
     if (betterItem) {
       const index = updatedWrapper[item.type].items.indexOf(itemPublicKey);
       //not sure why this spagett logic works but welp
