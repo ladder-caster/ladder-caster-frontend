@@ -1,6 +1,5 @@
 import * as anchor from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-
 //Accounts
 export interface Game {
   version: number; // 8
@@ -192,4 +191,27 @@ export interface SpellType {
   experience?: {};
   craft?: {};
   item?: {};
+}
+
+export interface TokenAccounts{
+  [key:string]: PublicKey,
+  lada:PublicKey
+}
+export interface Accounts {
+  tokenAccounts:TokenAccounts,
+  game:PublicKey
+}
+export interface GameState {
+  game: Game,
+  gameSigner: PublicKey,
+  season: PublicKey
+}
+
+export interface GameBalances{
+  [key: string]: number,
+  lada: number,
+}
+export interface Balances{
+  game: GameBalances,
+  sol: number
 }

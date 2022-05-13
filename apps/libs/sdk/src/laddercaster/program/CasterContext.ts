@@ -18,7 +18,7 @@ import {
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 import { PlayerContext } from './PlayerContext';
 import { Environment } from './Client';
-import {LADA_TOKEN_ACCOUNT,RESOURCE1_TOKEN_ACCOUNT,RESOURCE2_TOKEN_ACCOUNT,RESOURCE3_TOKEN_ACCOUNT} from '../../../../core/remix/state';
+import {LADA_TOKEN_ACCOUNT,RESOURCE1_TOKEN_ACCOUNT,RESOURCE2_TOKEN_ACCOUNT,RESOURCE3_TOKEN_ACCOUNT} from 'core/remix/state';
 
 export class CasterContext {
   private game: Game;
@@ -76,12 +76,11 @@ export class CasterContext {
       ,
       season,
     ] = await this.getAccounts();
-    const asyncDispatch = [
+ 
+    var asyncDispatchResult = await Promise.all([
       this.getMintAccounts(game),
       this.getGameTurnData(game, gameAccount)
-    ];
-    console.log('asyncGet')
-    var asyncDispatchResult = await Promise.all(asyncDispatch).then(res=>res);
+    ]).then(res=>res);
     console.log('async',asyncDispatchResult[1])
     const mintAccounts = asyncDispatchResult[0];
     const [gameTurnData] = asyncDispatchResult[1];
@@ -875,9 +874,11 @@ export class CasterContext {
         gameAccount,
       )) as Game;
       this.game = game;
-      this.cacheTokenAccounts(game);
+      
     }
-
+    if(!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)){
+      this.cacheTokenAccounts(this.game)
+    }
     if (!this.gameSigner) {
       const [gameSigner] = findProgramAddressSync(
         [Buffer.from('game_signer')],

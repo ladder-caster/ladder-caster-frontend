@@ -4,3 +4,4 @@ export * from './Client';
 export * from './PlayerContext';
 export * from './CasterContext';
 export * from './GameContext';
+export * from './GameConstantsContext';

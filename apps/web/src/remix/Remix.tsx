@@ -28,7 +28,8 @@ import {
   SEEN_PHASE,
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
-  EDITION_LIMITED
+  EDITION_LIMITED,
+  GAME_CONSTANTS
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -54,6 +55,7 @@ import {
   Item,
   ResourcesPK,
   Tile,
+  gameConstantsContext
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/laddercaster/config/resources.json';
@@ -78,6 +80,7 @@ const Remix = () => {
     items: [],
     chests: [],
   });
+  useRemixOrigin(GAME_CONSTANTS,gameConstantsContext.initClient(client));
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
