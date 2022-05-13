@@ -50,6 +50,7 @@ import {
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
+  STANDARD_TYPE,
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -137,7 +138,7 @@ export const useChainActions = () => {
   const [loading, setLoading] = useRemix(RPC_LOADING);
   const [error, setError] = useRemix(RPC_ERROR);
   const { createLocalWallet } = useLocalWallet();
-  const [, setWalletType] = useRemix(WALLET_TYPE);
+  const [walletType, setWalletType] = useRemix(WALLET_TYPE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
   const [, setNfts] = useRemix(CHAIN_NFTS);
   const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
@@ -1330,5 +1331,25 @@ export const useChainActions = () => {
       await web3Auth.logout();
       setProvider(null);
     },
+    async fixAccount(){
+      console.log("WALLET",walletType)
+      const playerContext = new PlayerContext(
+        client,
+        client.program.provider.wallet.publicKey,
+        localStorage.getItem('gamePK'),
+      );
+
+      await stateHandler(
+        async () => {
+          //Do not remove for testing
+          // console.log(client.program.provider.wallet.publicKey.toString());
+          const result = await playerContext.initPlayer();
+          setPlayer(await playerContext.getPlayer());
+          return result;
+        },
+        INST_INIT_PLAYER,
+        '',
+      );
+    }
   };
 };

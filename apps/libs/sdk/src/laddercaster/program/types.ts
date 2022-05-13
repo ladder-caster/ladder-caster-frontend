@@ -193,3 +193,29 @@ export interface SpellType {
   craft?: {};
   item?: {};
 }
+
+export interface TokenAccounts{
+  resource1:PublicKey,
+  resource2:PublicKey,
+  resource3:PublicKey,
+  lada:PublicKey
+}
+export interface Accounts {
+  tokenAccounts:TokenAccounts,
+  game:PublicKey
+}
+export interface GameState {
+  game: Game,
+  gameSigner: PublicKey,
+  season: PublicKey
+}
+export interface GameBalances{
+  resource1: number,
+  resource2: number,
+  resource3: number,
+  lada: number,
+}
+export interface Balances{
+  game: GameBalances,
+  sol: number
+}

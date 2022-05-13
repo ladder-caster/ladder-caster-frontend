@@ -236,6 +236,7 @@
     "drawer.settings.key.tap": "Tap to reveal {{type}} key",
     "drawer.settings.key.warning.title": "Do not share your {{type}} key with anyone!",
     "drawer.settings.key.warning.desc": "If someone gets access to your {{type}} key, they could take control of your wallet.",
+    "drawer.settings.key.fix_account":"Fix Account",
     "drawer.tokens.title": "Trade Resources",
     "drawer.trade.swap": "Swap",
     "drawer.rank.level": "LEVEL",

@@ -256,46 +256,22 @@ export class PlayerContext {
         }),
       );
     }
-
-    const tokenAccount = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      game.ladaMintAccount,
-      this.client.wallet.publicKey,
-    );
-
-    const token1Account = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      game.resource1MintAccount,
-      this.client.wallet.publicKey,
-    );
-
-    const token2Account = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      game.resource2MintAccount,
-      this.client.wallet.publicKey,
-    );
-    const token3Account = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      game.resource3MintAccount,
-      this.client.wallet.publicKey,
-    );
+    if(!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)) {
+      await this.cacheTokenAccounts(game);
+    }
 
     const resources = [
       {
         mintAccount: game.resource1MintAccount,
-        tokenAccount: token1Account,
+        tokenAccount: new PublicKey(localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)),
       },
       {
         mintAccount: game.resource2MintAccount,
-        tokenAccount: token2Account,
+        tokenAccount: new PublicKey(localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT)),
       },
       {
         mintAccount: game.resource3MintAccount,
-        tokenAccount: token3Account,
+        tokenAccount: new PublicKey(localStorage.getItem(RESOURCE3_TOKEN_ACCOUNT)),
       },
     ];
 
@@ -317,21 +293,21 @@ export class PlayerContext {
     });
 
     try {
-      await this.client.connection.getTokenAccountBalance(tokenAccount);
+      await this.client.connection.getTokenAccountBalance(new PublicKey(LADA_TOKEN_ACCOUNT));
     } catch (e) {
       tx.add(
         Token.createAssociatedTokenAccountInstruction(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
           game.ladaMintAccount,
-          tokenAccount,
+          new PublicKey(LADA_TOKEN_ACCOUNT),
           this.client.wallet.publicKey,
           this.client.wallet.publicKey,
         ),
       );
     }
 
-    const blockhash = (await this.client.connection.getRecentBlockhash())
+    const blockhash = (await this.client.connection.getLatestBlockhash())
       .blockhash;
     tx.recentBlockhash = blockhash;
     tx.feePayer = this.client.wallet.publicKey;
@@ -412,15 +388,12 @@ export class PlayerContext {
   }
 
   private async getMintAccounts(game: Game) {
-    const ata_resourcemint1 = await this.getTokenAccount(
-      game.resource1MintAccount,
-    );
-    const ata_resourcemint2 = await this.getTokenAccount(
-      game.resource2MintAccount,
-    );
-    const ata_resourcemint3 = await this.getTokenAccount(
-      game.resource3MintAccount,
-    );
+    if(!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)){
+      await this.cacheTokenAccounts(game);
+    }
+    const ata_resourcemint1 = new PublicKey(localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT));
+    const ata_resourcemint2 = new PublicKey(localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT));
+    const ata_resourcemint3 = new PublicKey(localStorage.getItem(RESOURCE3_TOKEN_ACCOUNT));
 
     return {
       resource1MintAccount: game.resource1MintAccount,
@@ -430,15 +403,6 @@ export class PlayerContext {
       resource2TokenAccount: ata_resourcemint2,
       resource3TokenAccount: ata_resourcemint3,
     };
-  }
-
-  private async getTokenAccount(publicKey: anchor.web3.PublicKey) {
-    return await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      publicKey,
-      this.client.wallet.publicKey,
-    );
   }
 
   // https://github.com/NftEyez/sol-rayz/blob/main/packages/sol-rayz/src/getParsedNftAccountsByOwner.ts
@@ -451,74 +415,81 @@ export class PlayerContext {
         programId: new PublicKey(TOKEN_PROGRAM_ID),
       },
     );
+      const accountsFiltered = [];
+      // for loops with index incrementing iterates faster than for-of of maps
+      console.log('doing it')
+      for(let i = 0;i<splAccounts.length;i++){
+        let splAccount = splAccounts[i];
+        const amount = splAccount.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
+        const decimals = splAccount.account?.data?.parsed?.info?.tokenAmount?.decimals;
+        if(decimals !== 0 && amount <=0 )continue;
+        console.log('found nft')
+        const nft = MetadataProgram.findMetadataAccount(new PublicKey(splAccount.account?.data?.parsed?.info?.mint)).then(metaDataAddress=>{
+          console.log('metaDataAddress',metaDataAddress)
+          this.client.connection.getMultipleAccountsInfo([metaDataAddress[0]]).then(res=>console.log(res))
+          return this.client.connection.getAccountInfo(metaDataAddress[0]).then(rawMetaData=>{
+            console.log('rawMetaData',rawMetaData)
+            return deserializeUnchecked(
+              MetadataData.SCHEMA,
+              MetadataData,
+              (rawMetaData as AccountInfo<Buffer>)?.data,
+            )
+          }) as Promise<MetadataData>
+        })
+        accountsFiltered.push(nft)
+      }
+      await Promise.all(accountsFiltered);
+    // const metadataAcountsAddressPromises = await Promise.allSettled(
+    //   nftAccounts.map(MetadataProgram.findMetadataAccount),
+    // );
 
-    const nftAccounts = splAccounts
-      .filter((t) => {
-        const amount = t.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
-        const decimals = t.account?.data?.parsed?.info?.tokenAmount?.decimals;
-        return decimals === 0 && amount >= 1;
-      })
-      .map((t) => {
-        const address = t.account?.data?.parsed?.info?.mint;
-        return new PublicKey(address);
-      });
+    // const metadataAccounts = [];
+    // for (let i=0;i< metadataAcountsAddressPromises.length;i++) {
+    //   const account = metadataAcountsAddressPromises[i];
+    //   if(account && account.status === 'fulfilled'){
+    //     metadataAccounts.push((account as PromiseFulfilledResult<[PublicKey, number]>)?.value[0]);
+    //   }
+    // }
 
-    const metadataAcountsAddressPromises = await Promise.allSettled(
-      nftAccounts.map(MetadataProgram.findMetadataAccount),
-    );
+    // const accountsRawMeta: (AccountInfo<
+    //   Buffer | ParsedAccountData
+    // > | null)[] = (
+    //   await this.client.connection.getMultipleAccountsInfo(metadataAccounts)
+    // ).filter((result) => result);
 
-    const metadataAccounts = metadataAcountsAddressPromises
-      .filter((result) => result && result.status === 'fulfilled')
-      .map((p) => (p as PromiseFulfilledResult<[PublicKey, number]>)?.value[0]);
+    // if (!accountsRawMeta?.length || accountsRawMeta?.length === 0) {
+    //   return [];
+    // }
 
-    const accountsRawMeta: (AccountInfo<
-      Buffer | ParsedAccountData
-    > | null)[] = (
-      await this.client.connection.getMultipleAccountsInfo(metadataAccounts)
-    ).filter((result) => result);
+    // const accountsDecodedMeta = await Promise.allSettled(
+    //   accountsRawMeta.map((accountInfo) =>
+    //     deserializeUnchecked(
+    //       MetadataData.SCHEMA,
+    //       MetadataData,
+    //       (accountInfo as AccountInfo<Buffer>)?.data,
+    //     ),
+    //   ),
+    // );
 
-    if (!accountsRawMeta?.length || accountsRawMeta?.length === 0) {
-      return [];
-    }
-
-    const accountsDecodedMeta = await Promise.allSettled(
-      accountsRawMeta.map((accountInfo) =>
-        deserializeUnchecked(
-          MetadataData.SCHEMA,
-          MetadataData,
-          (accountInfo as AccountInfo<Buffer>)?.data,
-        ),
-      ),
-    );
-
-    const accountsFiltered = accountsDecodedMeta
-      .filter((result) => result && result.status === 'fulfilled')
-      // .filter((t) => {
-      //   const uri = (t as PromiseFulfilledResult<
-      //     MetadataData
-      //   >).value.data?.uri?.replace?.(/\0/g, '');
-      //   return uri !== '' && uri !== undefined;
-      // })
-      // .filter((result) => {
-      //   return (
-      //     (result as PromiseFulfilledResult<MetadataData>)?.value?.data
-      //       ?.symbol === 'LC'
-      //   );
-      // })
-      .map((result) => {
-        return (result as PromiseFulfilledResult<MetadataData>)?.value;
-      });
-
-    return accountsFiltered;
+    // const accountsFiltered = [];
+    // for(let i = 0;i<accountsDecodedMeta.length;i++){
+    //   const account = accountsDecodedMeta[i];
+    //   if(account && account.status === 'fulfilled'){
+    //     accountsFiltered.push((account as PromiseFulfilledResult<MetadataData>)?.value);
+    //   }
+    // }
+      console.log('accounts filtered',accountsFiltered)
+    return accountsFiltered.map(nft=>nft?.value);
   }
 
   async mintNFTCaster(caster: Caster) {
     const nftMintKeys = Keypair.generate();
     await getMerkleSingleton();
+
     //Merkle proof part
-    const leaf = await this.buildLeafCaster(caster);
-    // noinspection TypeScriptValidateTypes
-    const tree = await buildMerkleTree(merkle['merkleLeaves']['combined']);
+    let [leaf,tree]=await Promise.all([this.buildLeafCaster(caster),buildMerkleTree(merkle['merkleLeaves']['combined'])]);
+    
+    console.log(leaf,tree)
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
     const mintOptions = await this.buildMintOptions('combined', 0, nftMintKeys);
@@ -557,12 +528,11 @@ export class PlayerContext {
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
     await getMerkleSingleton();
-    const leaf = await this.buildLeafItem(item, itemType);
-    const tree = await buildMerkleTree(
+    const [leaf,tree]=await Promise.all([this.buildLeafItem(item, itemType),buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
         ? merkle['merkleLeaves'][itemType]
         : merkle['merkleLeaves'][itemType][item.level],
-    );
+    )]);
 
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
@@ -665,13 +635,19 @@ export class PlayerContext {
   }
 
   async getNFTUris(nfts: MetadataData[]) {
-    var data = Object.keys(nfts).map((key) => nfts[key]);
+    
+    // var data = Object.keys(nfts).map((key) => nfts[key]);
     let arr = [];
-    let n = data.length;
-    for (let i = 0; i < n; i++) {
-      let val = await axios.get(data[i].data.uri);
-      arr.push({ ...val, mint: data[i].mint });
+    // let n = data.length;
+    let keys = Object.keys(nfts)
+    for(let i = 0;i<keys.length;i++){
+      const nft = nfts[keys[i]];
+      arr.push(axios.get(nft.data.uri).then(res=>({...res,mint:nft.mint})));
     }
+    // for (let i = 0; i < n; i++) {
+    //   let val = await axios.get(data[i].data.uri);
+    //   arr.push({ ...val, mint: data[i].mint });
+    // }
 
     return arr;
   }
@@ -746,21 +722,21 @@ export class PlayerContext {
     nftMintKeys: PublicKey,
     generatedPubKey: Keypair,
   ) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
-    const [nftMetadata] = await anchor.web3.PublicKey.findProgramAddress(
+    const [accounts,nftMetaData,nftToken] = await Promise.all([this.getAccounts(),
+      anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from(anchor.utils.bytes.utf8.encode('metadata')),
         nftMintKeys.toBuffer(),
       ],
       this.client.program.programId,
-    );
-
-    const nftToken = await Token.getAssociatedTokenAddress(
+    ),
+    Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
       nftMintKeys,
       this.playerPubKey,
-    );
+    )
+  ]);
 
     let signers = [generatedPubKey];
     if (this.client.wallet.payer) {
@@ -769,11 +745,11 @@ export class PlayerContext {
 
     return {
       accounts: {
-        game: gameAccount,
+        game: accounts[0],
         nftMint: nftMintKeys,
         nftToken: nftToken,
-        nftMetadata: nftMetadata,
-        player: playerAccount,
+        nftMetadata: nftMetaData,
+        player: accounts[1],
         authority: this.playerPubKey,
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -929,9 +905,11 @@ export class PlayerContext {
         gameAccount,
       )) as Game;
       this.game = game;
-      this.cacheTokenAccounts(game);
+      
     }
-
+    if(!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)){
+      this.cacheTokenAccounts(this.game);
+    }
     if (!this.gameSigner) {
       const [gameSigner] = findProgramAddressSync(
         [Buffer.from('game_signer')],
