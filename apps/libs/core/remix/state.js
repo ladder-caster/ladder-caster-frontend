@@ -35,6 +35,7 @@ export const DRAWER_CRAFT = 'DRAWER_CRAFT';
 export const DRAWER_SPELLCASTER = 'DRAWER_SPELLCASTER';
 export const DRAWER_ITEM = 'DRAWER_ITEM';
 export const DRAWER_CRANK = 'DRAWER_CRANK';
+export const DRAWER_TRADE = 'DRAWER_TRADE';
 
 export const CREATE_MUTATION = 'CREATE_MUTATION';
 export const CREATE_QUERY = 'CREATE_QUERY';
@@ -74,6 +75,7 @@ export const MODAL_REDEEM = 'MODAL_REDEEM';
 export const MODAL_CRAFT = 'MODAL_CRAFT';
 export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
+export const MODAL_BURN = 'MODAL_BURN';
 
 export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
 export const ENCHANT_XP = 'ENCHANT_XP';

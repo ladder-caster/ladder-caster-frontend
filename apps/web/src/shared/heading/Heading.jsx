@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { _heading, _divider, _title } from './Heading.styled';
+import { _heading, _divider, _title, _container } from './Heading.styled';
 import Redeem from '../redeem/Redeem';
 import Phases from '../phases/Phases';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
@@ -15,7 +15,7 @@ import {
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
 import Trade from './trade/Trade';
-
+import ResourceTrade from '../resourceTrade/ResourceTrade';
 const Heading = ({ title, flat, marketplace }) => {
   const [initialized] = useRemix(GAME_INIT);
   const [game] = useRemix(CHAIN_GAME);
@@ -53,7 +53,10 @@ const Heading = ({ title, flat, marketplace }) => {
     <_heading key={'heading-component'}>
       <_title>
         <span>{title}</span>
-        {marketplace ? <Redeem /> : <Trade />}
+        <_container>
+          <ResourceTrade />
+          {marketplace ? <Redeem /> : <Trade />}
+        </_container>
       </_title>
       <Ticks />
       {!lootAll && <Phases />}

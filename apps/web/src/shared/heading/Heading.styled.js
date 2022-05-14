@@ -11,3 +11,9 @@ export const _title = styled.h3`
 export const _divider = styled.div`
   ${({ theme }) => theme.styles?.view?.['_divider']};
 `;
+
+export const _container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

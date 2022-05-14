@@ -40,11 +40,11 @@ const RedeemTab = () => {
 
   const list_nfts = useMemo(() => {
     if (nfts?.length) {
-      const filter_nfts = filter(
-        nfts,
-        (nft) => nft?.data?.collection?.name === 'LadderCaster',
-      );
-      const list = gridList(filter_nfts);
+      // const filter_nfts = filter(
+      //   nfts,
+      //   (nft) => nft?.data?.collection?.name === 'LadderCaster',
+      // );
+      const list = gridList(nfts);
 
       return map(list, (row) => {
         return (

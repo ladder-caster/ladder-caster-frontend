@@ -5,11 +5,11 @@ import { useActions } from '../../../../actions';
 
 const Trade = () => {
   const { t } = useTranslation();
-  const { openDrawerMint } = useActions();
+  const { openDrawerTrade } = useActions();
 
   return (
     <_trade>
-      <_link href={'https://jup.ag/swap/USDC-LADA'} target={'_self'}>
+      <_link href={'https://jup.ag/swap/USDC-LADA'} target={'_none'}>
         {t('heading.buy.lada')}
       </_link>
     </_trade>

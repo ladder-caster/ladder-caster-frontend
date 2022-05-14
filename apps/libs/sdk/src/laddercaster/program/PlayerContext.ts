@@ -33,7 +33,7 @@ import { TYPE_RES1, TYPE_RES2, TYPE_RES3, RESOURCE1_TOKEN_ACCOUNT, RESOURCE2_TOK
 //import {gameConstantsContext} from '../../laddercaster';
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/C-spa46EfVVFX2PcbzcKwyf1Q3oZ-FwKqWFLaKyYgxM',
+    'https://arweave.net/8Zfw8lNAjJk-zrUYkicFpJ_Eq2OJOqlguUEMXWll6YE',
   );
 }
 
@@ -376,7 +376,7 @@ export class PlayerContext {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
+        rent: SYSVAR_RENT_PUBKEY,
         authority: this.playerPubKey,
         game: gameAccount,
         player: playerAccount,
@@ -426,9 +426,8 @@ export class PlayerContext {
         const decimals = splAccount.account?.data?.parsed?.info?.tokenAmount?.decimals;
         if(decimals !== 0 && amount <=0 )continue;
         console.log('found nft')
-        const nft = MetadataProgram.findMetadataAccount(new PublicKey(splAccount.account?.data?.parsed?.info?.mint)).then(metaDataAddress=>{
+        MetadataProgram.findMetadataAccount(new PublicKey(splAccount.account?.data?.parsed?.info?.mint)).then(metaDataAddress=>{
           console.log('metaDataAddress',metaDataAddress)
-          this.client.connection.getMultipleAccountsInfo([metaDataAddress[0]]).then(res=>console.log(res))
           return this.client.connection.getAccountInfo(metaDataAddress[0]).then(rawMetaData=>{
             console.log('rawMetaData',rawMetaData)
             return deserializeUnchecked(
@@ -437,8 +436,13 @@ export class PlayerContext {
               (rawMetaData as AccountInfo<Buffer>)?.data,
             )
           }) as Promise<MetadataData>
-        })
-        accountsFiltered.push(nft)
+        }).finally(fin=>{
+          const uri = fin.value.data?.uri?.replace?.(/\0/g, '');
+          const symbol = fin.value.data?.symbol;
+          if((uri!=='' && uri!==undefined) && (symbol==='LC')){
+            accountsFiltered.push(fin.value)
+          }
+        }).catch(err=>console.error(err))
       }
       await Promise.all(accountsFiltered);
     // const metadataAcountsAddressPromises = await Promise.allSettled(
@@ -520,7 +524,7 @@ export class PlayerContext {
     let itemType = 'combined';
     if (item.itemType.equipment || item.itemType.spellBook) {
       if (item.itemType.spellBook) {
-        itemType = 'spellBook';
+        itemType = 'spellbook';
       } else {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
@@ -528,6 +532,7 @@ export class PlayerContext {
 
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
+    let syncedExecution = [];
     await getMerkleSingleton();
     const [leaf,tree]=await Promise.all([this.buildLeafItem(item, itemType),buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
@@ -543,16 +548,24 @@ export class PlayerContext {
       signers = [this.client.wallet.payer, ...signers];
     }
 
-    const mintOptions = await this.buildMintOptions(
-      itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
-      nftMintKeys,
+    var mintOptions;
+    syncedExecution.push(
+      this.buildMintOptions(
+        itemType,
+        itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
+        nftMintKeys,
+      ),
     );
-
+    var itemUri;
+    syncedExecution.push(this.getItemUri(item, itemType));
+    await Promise.all(syncedExecution).then(([mint_options, uri]) => {
+      mintOptions = mint_options;
+      itemUri = uri;
+    });
     return await this.client.program.rpc.mintItem(
-      itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
-      await this.getItemUri(item, itemType),
+      itemType === 'spellbook' ? 'spellBook' : itemType,
+      itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
+      itemUri,
       validProof,
       {
         accounts: {
@@ -625,7 +638,7 @@ export class PlayerContext {
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
-
+    console.log(redeemOptions);
     return await this.client.program.rpc.redeemItem({
       ...redeemOptions,
       accounts: {
@@ -655,8 +668,9 @@ export class PlayerContext {
 
   private async buildLeafCaster(caster: Caster) {
     return keccak256(
-      `${await this.getCasterUri(caster)}:caster:${caster.version}:${caster.level
-      }`,
+      `${await this.getCasterUri(caster)}:caster:${caster.seasonNumber}:${
+        caster.version
+      }:${caster.level}:${caster.edition === 1 ? 'normal' : 'limited'}`,
     );
   }
 
@@ -751,6 +765,7 @@ export class PlayerContext {
         nftToken: nftToken,
         nftMetadata: nftMetaData,
         player: accounts[1],
+        season:accounts[5],
         authority: this.playerPubKey,
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -763,12 +778,15 @@ export class PlayerContext {
   private async getCasterUri(caster: Caster) {
     const lookupTable = (await axios.get(merkle['merkleStruct']['combined']))
       .data;
-    return lookupTable['caster'][caster.version][caster.level];
+
+    return lookupTable['caster'][caster.seasonNumber][caster.version][
+      caster.level
+    ][caster.edition === 1 ? 'normal' : 'limited'];
   }
 
   private async getItemUri(item: Item, itemType: string) {
     const url =
-      itemType === 'combined' || itemType === 'spellBook'
+      itemType === 'combined' || itemType === 'spellbook'
         ? merkle['merkleStruct'][itemType]
         : merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
@@ -794,6 +812,9 @@ export class PlayerContext {
           ][Object.keys(item.itemType.spellBook.costFeature)[0]][
           Object.keys(item.itemType.spellBook.rarity)[0]
           ];
+        console.log(lookupRarity);
+        console.log(item.itemType.spellBook.cost);
+        console.log(item.itemType.spellBook.value);
         if (lookupRarity)
           return lookupRarity[item.itemType.spellBook.cost][
             item.itemType.spellBook.value
@@ -826,7 +847,7 @@ export class PlayerContext {
           }:${item.itemType.equipment.value}`,
         );
       }
-      case 'spellBook': {
+      case 'spellbook': {
         return keccak256(
           `${await this.getItemUri(item, itemType)}:spellbook:${item.level}:${Object.keys(item.itemType.spellBook.spell)[0]
           }:${Object.keys(item.itemType.spellBook.costFeature)[0]}:${Object.keys(item.itemType.spellBook.rarity)[0]
