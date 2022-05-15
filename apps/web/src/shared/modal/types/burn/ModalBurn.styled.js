@@ -60,6 +60,7 @@ export const _resource = styled(m.div)`
   > svg {
     width: 32px;
     height: 32px;
+    color: ${({ theme, $element }) => theme[$element]?.['resource']};
   }
 `;
 export const _button = styled(m.div)`
@@ -162,6 +163,7 @@ export const _icon = styled(m.svg)`
     transform: ${({ $checked }) => ($checked ? 'scale(1.25)' : 'scale(0)')};
     visibility: ${({ $checked }) => ($checked ? 'visible' : 'hidden')}
     backface-visibility: hidden;
+
   `;
 export const _checkbox = styled(m.div)`
   display: flex;

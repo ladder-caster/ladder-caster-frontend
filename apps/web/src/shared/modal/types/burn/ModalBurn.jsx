@@ -26,6 +26,9 @@ import {
   RARITY_RARE,
   RARITY_EPIC,
   RARITY_LEGENDARY,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES2,
+  ATTRIBUTE_RES1,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import Item from '../../../item/Item';
@@ -97,13 +100,13 @@ const ModalBurn = () => {
             {t('modal.item_burn.reward')}
           </_subtitle>
           <_resource_gain>
-            <_resource>
+            <_resource $element={ATTRIBUTE_RES1}>
               <IconFiree /> <span>{resourceGain}</span>
             </_resource>
-            <_resource>
+            <_resource $element={ATTRIBUTE_RES2}>
               <IconWater /> <span>{resourceGain}</span>
             </_resource>
-            <_resource>
+            <_resource $element={ATTRIBUTE_RES3}>
               <IconEarth /> <span>{resourceGain}</span>
             </_resource>
           </_resource_gain>
