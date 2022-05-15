@@ -538,8 +538,7 @@ export class PlayerContext {
       itemType,
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
       nftMintKeys,
-    );
-      console.log("MINT",item,itemType,mintOptions)
+    ); 
     return await this.client.program.rpc.mintItem(
       itemType,
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
@@ -775,7 +774,6 @@ export class PlayerContext {
         ? merkle['merkleStruct'][itemType]
         : merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
-   console.log('URI',item,url)
     var feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
     switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
@@ -824,7 +822,6 @@ export class PlayerContext {
 
   private async buildLeafItem(item: Item, itemType) {
     const feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
-    console.log(item,feature)
     const uri =await this.getItemUri(item, itemType);
    
     switch (Object.keys(item.itemType)[0]) {
