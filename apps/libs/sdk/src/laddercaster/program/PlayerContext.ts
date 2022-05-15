@@ -27,7 +27,7 @@ import axios from 'axios';
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 const { SystemProgram } = anchor.web3;
-
+import {ATTRIBUTE_RES1,ATTRIBUTE_RES2,ATTRIBUTE_RES3,MAPPED_ATTRIBUTE_RES1,MAPPED_ATTRIBUTE_RES2,MAPPED_ATTRIBUTE_RES3}from '../../../../core/remix/state'
 async function getMerkle() {
   return await axios.get(
     'https://arweave.net/C-spa46EfVVFX2PcbzcKwyf1Q3oZ-FwKqWFLaKyYgxM',
@@ -49,7 +49,6 @@ async function getMerkleSingleton() {
   if (merkle === undefined) {
     merkle = (await getMerkle()).data;
   }
-
   return merkle;
 }
 
@@ -58,7 +57,13 @@ export type ResourcesPK = {
   gameAccountProd: string;
   gameAccountProdPriv: string;
 };
-
+const featureMap = {
+  [ATTRIBUTE_RES1]: [MAPPED_ATTRIBUTE_RES1],
+  [ATTRIBUTE_RES2]: [MAPPED_ATTRIBUTE_RES2],
+  [ATTRIBUTE_RES3]: [MAPPED_ATTRIBUTE_RES3],
+  power: 'power',
+  magic: 'magic'
+}
 export class PlayerContext {
   private game: Game;
   private playerAccount: PublicKey;
@@ -129,7 +134,6 @@ export class PlayerContext {
     ).map((item) => {
       return { ...(item.account as Item), publicKey: item.publicKey };
     });
-
     return itemArray;
   }
 
@@ -500,7 +504,7 @@ export class PlayerContext {
 
   async mintNFTItem(item: Item) {
     const nftMintKeys = Keypair.generate();
-
+    
     let itemType = 'combined';
     if (item.itemType.equipment || item.itemType.spellBook) {
       if (item.itemType.spellBook) {
@@ -509,17 +513,19 @@ export class PlayerContext {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
-
+    
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
     await getMerkleSingleton();
+  
     const leaf = await this.buildLeafItem(item, itemType);
+    
     const tree = await buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
         ? merkle['merkleLeaves'][itemType]
         : merkle['merkleLeaves'][itemType][item.level],
     );
-
+    
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
 
@@ -533,7 +539,7 @@ export class PlayerContext {
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
       nftMintKeys,
     );
-
+      console.log("MINT",item,itemType,mintOptions)
     return await this.client.program.rpc.mintItem(
       itemType,
       itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
@@ -626,7 +632,7 @@ export class PlayerContext {
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
-
+  
     return await this.client.program.rpc.redeemItem({
       ...redeemOptions,
       accounts: {
@@ -762,33 +768,35 @@ export class PlayerContext {
       .data;
     return lookupTable['caster'][caster.version][caster.level];
   }
-
+  
   private async getItemUri(item: Item, itemType: string) {
     const url =
       itemType === 'combined' || itemType === 'spellBook'
         ? merkle['merkleStruct'][itemType]
         : merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
-
+   console.log('URI',item,url)
+    var feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
     switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
         const lookupRarity =
-          lookupTable[Object.keys(item.itemType.equipment.feature)[0]][
+          lookupTable[feature][
             Object.keys(item.itemType.equipment.rarity)[0]
           ];
         if (lookupRarity) return lookupRarity[item.itemType.equipment.value];
         else
-          return lookupTable[Object.keys(item.itemType.equipment.feature)[0]][
+          return lookupTable[feature][
             this.capitalizeFirstLetter(
               Object.keys(item.itemType.equipment.rarity)[0],
             )
           ][item.itemType.equipment.value];
       }
       case 'spellBook': {
+        feature = featureMap[Object.keys(item.itemType.spellBook.costFeature)[0]];
         const lookupRarity =
           lookupTable[item.level][
             Object.keys(item.itemType.spellBook.spell)[0]
-          ][Object.keys(item.itemType.spellBook.costFeature)[0]][
+          ][feature][
             Object.keys(item.itemType.spellBook.rarity)[0]
           ];
         if (lookupRarity)
@@ -798,7 +806,7 @@ export class PlayerContext {
         else
           return lookupTable[item.level][
             Object.keys(item.itemType.spellBook.spell)[0]
-          ][Object.keys(item.itemType.spellBook.costFeature)[0]][
+          ][feature][
             this.capitalizeFirstLetter(
               Object.keys(item.itemType.spellBook.rarity)[0],
             )
@@ -815,28 +823,32 @@ export class PlayerContext {
   }
 
   private async buildLeafItem(item: Item, itemType) {
+    const feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
+    console.log(item,feature)
+    const uri =await this.getItemUri(item, itemType);
+   
     switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:${
+          `${uri}:${
             Object.keys(item.itemType.equipment.equipmentType)[0]
-          }:${item.level}:${Object.keys(item.itemType.equipment.feature)[0]}:${
+          }:${item.level}:${feature}:${
             Object.keys(item.itemType.equipment.rarity)[0]
           }:${item.itemType.equipment.value}`,
         );
       }
       case 'spellBook': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:spellbook:${item.level}:${
+          `${uri}:spellbook:${item.level}:${
             Object.keys(item.itemType.spellBook.spell)[0]
-          }:${Object.keys(item.itemType.spellBook.costFeature)[0]}:${
+          }:${feature}:${
             Object.keys(item.itemType.spellBook.rarity)[0]
           }:${item.itemType.spellBook.cost}:${item.itemType.spellBook.value}`,
         );
       }
       case 'chest': {
         return keccak256(
-          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
+          `${uri}:chest:${item.level}:${
             item.itemType.chest.tier
           }`,
         );
