@@ -3,11 +3,14 @@ import { m } from 'framer-motion';
 
 export const _container = styled(m.div)``;
 export const _root_container = styled(m.div)`
-  backdrop-filter: ${({ filter }) => filter};
+  backdrop-filter: ${({ $filter }) => $filter};
   transform: scale(0.95);
   -webkit-font-smoothing: subpixel-antialiased;
-  margin-top: 56px;
+  margin-top: 90px;
   backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  padding-top: 32px;
 `;
 export const _container_center = styled(m.div)`
   display: flex;
@@ -29,6 +32,7 @@ export const _nft_container = styled(m.div)`
   }
   transform: scale(0.9);
   backface-visibility: hidden;
+  margin-top: 28px;
 `;
 
 export const _resource_gain = styled(m.div)`
@@ -60,6 +64,7 @@ export const _resource = styled(m.div)`
   > svg {
     width: 32px;
     height: 32px;
+    color: ${({ theme, $element }) => theme[$element]?.['resource']};
   }
 `;
 export const _button = styled(m.div)`
@@ -125,7 +130,6 @@ export const _header = styled(m.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 16px;
 `;
 export const _checkbox_container = styled(m.div)`
   display: inline-block;
@@ -162,6 +166,7 @@ export const _icon = styled(m.svg)`
     transform: ${({ $checked }) => ($checked ? 'scale(1.25)' : 'scale(0)')};
     visibility: ${({ $checked }) => ($checked ? 'visible' : 'hidden')}
     backface-visibility: hidden;
+
   `;
 export const _checkbox = styled(m.div)`
   display: flex;

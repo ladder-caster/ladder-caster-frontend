@@ -26,6 +26,9 @@ import {
   RARITY_RARE,
   RARITY_EPIC,
   RARITY_LEGENDARY,
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES2,
+  ATTRIBUTE_RES1,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import Item from '../../../item/Item';
@@ -78,7 +81,7 @@ const ModalBurn = () => {
             </_image>
           </_visual>
         </_nft_container>
-        <_float>
+        <_float onClick={modalToggle}>
           <_checkbox_container onClick={modalToggle}>
             <_checkbox_hidden checked={showHideModal} />
             <_checkbox $checked={showHideModal}>
@@ -92,21 +95,8 @@ const ModalBurn = () => {
             {t('modal.item_burn.go_away')}
           </_subtitle>
         </_float>
-        <_container_center $gap="8px" $marginTop={'8px'}>
-          <_subtitle $size={'20px'} $fontWeight={'bold'}>
-            {t('modal.item_burn.reward')}
-          </_subtitle>
-          <_resource_gain>
-            <_resource>
-              <IconFiree /> <span>{resourceGain}</span>
-            </_resource>
-            <_resource>
-              <IconWater /> <span>{resourceGain}</span>
-            </_resource>
-            <_resource>
-              <IconEarth /> <span>{resourceGain}</span>
-            </_resource>
-          </_resource_gain>
+
+        <_container_center $gap="8px" $marginTop={'72px'}>
           <_float $gap={'96px'}>
             <_button onClick={cancel}>{t('modal.item_burn.cancel')}</_button>
             <_button $burn onClick={burn}>
