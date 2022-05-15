@@ -358,7 +358,7 @@ export class PlayerContext {
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
+        rent: SYSVAR_RENT_PUBKEY,
         authority: this.playerPubKey,
         game: gameAccount,
         player: playerAccount,
@@ -482,7 +482,7 @@ export class PlayerContext {
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
     const mintOptions = await this.buildMintOptions('combined', 0, nftMintKeys);
-
+    const casterUri=await this.getCasterUri(caster);
     let signers = [nftMintKeys];
     if (this.client.wallet.payer) {
       signers = [this.client.wallet.payer, ...signers];
@@ -490,7 +490,7 @@ export class PlayerContext {
 
     return await this.client.program.rpc.mintCaster(
       0,
-      await this.getCasterUri(caster),
+      casterUri,
       validProof,
       {
         accounts: {
@@ -533,16 +533,17 @@ export class PlayerContext {
     if (this.client.wallet.payer) {
       signers = [this.client.wallet.payer, ...signers];
     }
-
+    const itemProperty = itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level
     const mintOptions = await this.buildMintOptions(
       itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
+      itemProperty,
       nftMintKeys,
     ); 
+    const itemUri =  await this.getItemUri(item, itemType)
     return await this.client.program.rpc.mintItem(
       itemType,
-      itemType === 'combined' || itemType === 'spellBook' ? 0 : item.level,
-      await this.getItemUri(item, itemType),
+      itemProperty,
+     itemUri,
       validProof,
       {
         accounts: {
@@ -774,7 +775,8 @@ export class PlayerContext {
         ? merkle['merkleStruct'][itemType]
         : merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
-    var feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
+    var feature=this.getFeature(item);
+    
     switch (Object.keys(item.itemType)[0]) {
       case 'equipment': {
         const lookupRarity =
@@ -790,7 +792,6 @@ export class PlayerContext {
           ][item.itemType.equipment.value];
       }
       case 'spellBook': {
-        feature = featureMap[Object.keys(item.itemType.spellBook.costFeature)[0]];
         const lookupRarity =
           lookupTable[item.level][
             Object.keys(item.itemType.spellBook.spell)[0]
@@ -819,9 +820,20 @@ export class PlayerContext {
   private capitalizeFirstLetter(value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
-
+  private getFeature(item: Item){
+    switch (Object.keys(item.itemType)[0]) {
+      case 'equipment': {
+        return featureMap[Object.keys(item.itemType.equipment.feature)[0]];
+      }
+      case 'spellBook': {
+        return featureMap[Object.keys(item.itemType.spellBook.costFeature)[0]];
+      }
+      default:
+        return null;
+    }
+  }
   private async buildLeafItem(item: Item, itemType) {
-    const feature = featureMap[Object.keys(item.itemType.equipment.feature)[0]]
+    var feature = this.getFeature(item)
     const uri =await this.getItemUri(item, itemType);
    
     switch (Object.keys(item.itemType)[0]) {
