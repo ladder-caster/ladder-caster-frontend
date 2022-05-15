@@ -73,6 +73,7 @@ export const MODAL_REDEEM = 'MODAL_REDEEM';
 export const MODAL_CRAFT = 'MODAL_CRAFT';
 export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
+export const MODAL_BURN = 'MODAL_BURN';
 
 export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
 export const ENCHANT_XP = 'ENCHANT_XP';

@@ -144,3 +144,20 @@ export const _odds = styled.div`
     padding-left: 12px;
   }
 `;
+export const _burn = styled(m.div)`
+  padding: 4px 12px;
+  color: ${({ theme }) => theme.highlight['background']};
+  border: 2px solid ${({ theme }) => theme.border['highest']};
+  border-radius: 8px;
+  background: ${({ theme }) => theme.background['button_active']};
+  box-shadow: ${({ theme }) => theme.shadow['glass']};
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 4px;
+`;

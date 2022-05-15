@@ -28,7 +28,7 @@ export const INST_UNEQUIP = 'INST_UNEQUIP';
 export const INST_REDEEM_CASTER = 'INST_REDEEM_CASTER';
 export const INST_REDEEM_ITEM = 'INST_REDEEM_ITEM';
 export const INST_MINT_NFT = 'INST_MINT_NFT';
-
+export const INST_BURN_NFT = 'INST_BURN_NFT';
 // RPC Connections
 export const CONNECT_RPC = 'CONNECT_RPC';
 
