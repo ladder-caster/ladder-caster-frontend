@@ -33,7 +33,7 @@ import { _controls, _speed } from '../header/Header.styled';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { CHAIN_CASTERS } from 'chain/hooks/state';
+import { CHAIN_CASTERS, CHAIN_ITEMS } from 'chain/hooks/state';
 import {
   _header,
   _title,
@@ -50,24 +50,7 @@ const Inventory = () => {
   const [casters] = useRemix(CHAIN_CASTERS);
   const [inventoryPanel, setInventoryPanel] = useState(false);
   const render = () => {
-    if (!initialized || casters.length === 0) {
-      return (
-        <_feed>
-          <Onboarding />
-        </_feed>
-      );
-    } else if (inventoryPanel) {
-      return (
-        <>
-          <_header>
-            <_title>{t('tease.title')}</_title>
-          </_header>
-          <_open_inventory onClick={() => setInventoryPanel(false)}>
-            {t('drawer.close')}
-          </_open_inventory>
-        </>
-      );
-    } else {
+    if (initialized && (casters?.length !== 0 || items.length !== 0)) {
       return (
         <>
           <_open_inventory onClick={() => setInventoryPanel(true)}>
@@ -100,8 +83,26 @@ const Inventory = () => {
           </Thumbar>
         </>
       );
+    } else if (inventoryPanel) {
+      return (
+        <>
+          <_header>
+            <_title>{t('tease.title')}</_title>
+          </_header>
+          <_open_inventory onClick={() => setInventoryPanel(false)}>
+            {t('drawer.close')}
+          </_open_inventory>
+        </>
+      );
+    } else {
+      return (
+        <_feed>
+          <Onboarding />
+        </_feed>
+      );
     }
   };
+
   return (
     <_inventory>
       <Heading title={t('title.bag')} />
