@@ -34,22 +34,18 @@ import { _controls, _speed } from '../header/Header.styled';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { CHAIN_CASTERS } from 'chain/hooks/state';
+import { CHAIN_CASTERS, CHAIN_ITEMS } from 'chain/hooks/state';
 
 const Inventory = () => {
   const { t } = useTranslation();
   const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
+  const [items] = useRemix(CHAIN_ITEMS);
 
   return (
     <_inventory>
       <Heading title={t('title.bag')} />
-      {!initialized || casters?.length === 0 ? (
-        <_feed>
-          <Onboarding />
-        </_feed>
-      ) : null}
-      {initialized && casters?.length !== 0 ? (
+      {initialized && (casters?.length !== 0 || items.length !== 0) ? (
         <>
           <_container>
             <Category type={ITEM_HAT} />
@@ -77,7 +73,11 @@ const Inventory = () => {
             </_chests>
           </Thumbar>
         </>
-      ) : null}
+      ) : (
+        <_feed>
+          <Onboarding />
+        </_feed>
+      )}
     </_inventory>
   );
 };
