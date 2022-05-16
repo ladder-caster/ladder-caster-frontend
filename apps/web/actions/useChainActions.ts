@@ -46,6 +46,8 @@ import {
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
+  MODAL_BURN,
+
 } from 'core/remix/state';
 import { TAB_REDEEM, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
@@ -90,6 +92,7 @@ import {
   INST_UNEQUIP,
   RPC_ERROR,
   RPC_LOADING,
+  INST_BURN_NFT
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
@@ -339,9 +342,32 @@ export const useChainActions = () => {
       localStorage.getItem('gamePK'),
     );
   };
-
+  const confirmBurn= async(item)=>{
+    setModal('');
+    const playerContext = new PlayerContext(
+      client,
+      client?.program?.provider?.wallet?.publicKey,
+      localStorage.getItem('gamePK'),
+    );
+    
+   if (item || context?.item ) {
+     const match_item = item ?? context?.item;
+      await fetchPlayer(async () => {
+        return await stateHandler(
+          async () => {
+            return await playerContext.manualItemBurn(
+              match_item?.publicKey,
+            );
+          },
+          INST_BURN_NFT,
+          '',
+        );
+      });
+    }
+  }
   return {
     startDemo() {},
+    confirmBurn,
     closeDrawer() {
       setDrawer('');
       setEquip('');
@@ -531,6 +557,13 @@ export const useChainActions = () => {
         type: MODAL_CHEST,
         tier,
       });
+    },
+    modalBurn(item){
+      if(localStorage.getItem("hide_burn_modal")==='true'){
+        confirmBurn(item);
+        return;
+      }
+      setModal({active:true,type:MODAL_BURN,item});
     },
     async actionLoot(caster) {
       if (caster?.last_loot < game?.turnInfo?.turn) {
@@ -1227,9 +1260,9 @@ export const useChainActions = () => {
         last_mint: 0,
       });
       setResources({
-        resource1: 0,
-        resource3: 0,
-        resource2: 0,
+        [TYPE_RES1]: 0,
+        [TYPE_RES2]: 0,
+        [TYPE_RES3]: 0,
         lada: 0,
       });
     },

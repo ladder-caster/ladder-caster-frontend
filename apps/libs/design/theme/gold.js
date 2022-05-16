@@ -202,6 +202,7 @@ export const gold = {
     button_active: 'radial-gradient(circle,  #425176 0%, #2d3653 150%)',
     success: '#234334',
     error: '#43233d',
+    special: 'linear-gradient(45deg, #5f3781 0%, #37817f 100%)',
   },
   border: {
     highest: '#5f6f95',
@@ -259,6 +260,7 @@ export const gold = {
     error: '#c27092',
     logout: '#ba3d57',
     white: '#fff',
+    special: '#c1cad7',
   },
   font: {
     open_sauce: 'Open Sauce One',
@@ -275,6 +277,23 @@ export const gold = {
     },
   },
   socials: {
-    google: '#4285f4',
+    google: '#3f67a6',
+    google_hover: '#4175c8',
+  },
+  checkbox: {
+    checked: '#cbcfe2',
+    unchecked: '#58627e',
+    hover: '#cbcfe2',
+    active: '#6d799c',
+    stroke: {
+      color: { unchecked: '#FFF', checked: '#4e577e' },
+      width: '4px',
+    },
+    border: {
+      checked: '2px solid #6d799c',
+      unchecked: '2px solid #6d799c',
+      hover: '2px solid #c1cad7',
+      active: '2px solid #4e577e',
+    },
   },
 };

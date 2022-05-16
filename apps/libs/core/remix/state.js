@@ -73,6 +73,7 @@ export const MODAL_REDEEM = 'MODAL_REDEEM';
 export const MODAL_CRAFT = 'MODAL_CRAFT';
 export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
+export const MODAL_BURN = 'MODAL_BURN';
 
 export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
 export const ENCHANT_XP = 'ENCHANT_XP';
@@ -116,6 +117,9 @@ export const ITEM_CHEST = 'chest';
 export const ATTRIBUTE_RES1 = 'resource1';
 export const ATTRIBUTE_RES2 = 'resource2';
 export const ATTRIBUTE_RES3 = 'resource3';
+export const MAPPED_ATTRIBUTE_RES1 = 'fire';
+export const MAPPED_ATTRIBUTE_RES2 = 'water';
+export const MAPPED_ATTRIBUTE_RES3 = 'earth';
 export const ATTRIBUTE_MAGIC = 'magic';
 export const ATTRIBUTE_CRIT = 'power';
 export const ATTRIBUTE_ITEM = 'item';
