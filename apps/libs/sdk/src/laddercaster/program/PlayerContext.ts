@@ -33,7 +33,7 @@ import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
 
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/8Zfw8lNAjJk-zrUYkicFpJ_Eq2OJOqlguUEMXWll6YE',
+    'https://arweave.net/m5iJHpCZWIaAJNd9YrQC7knBiCKjwFR-mLgc8tXYjNE',
   );
 }
 
@@ -599,6 +599,8 @@ export class PlayerContext {
       mintOptions = mint_options;
       itemUri = uri;
     });
+
+    console.log(itemUri);
     return await this.client.program.rpc.mintItem(
       itemType === 'spellbook' ? 'spellBook' : itemType,
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
@@ -890,6 +892,12 @@ export class PlayerContext {
         );
       }
       case 'chest': {
+        console.log('heyo');
+        console.log(
+          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
+            item.itemType.chest.tier
+          }`,
+        );
         return keccak256(
           `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
             item.itemType.chest.tier

@@ -49,6 +49,8 @@ const Inventory = () => {
   const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [inventoryPanel, setInventoryPanel] = useState(false);
+  const [items] = useRemix(CHAIN_ITEMS);
+
   const render = () => {
     if (initialized && (casters?.length !== 0 || items.length !== 0)) {
       return (
