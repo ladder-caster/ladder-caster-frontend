@@ -92,10 +92,7 @@ export class PlayerContext {
   }
 
   async getResources() {
-    const [, , , game] = await this.getAccounts();
-    if (!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)) {
-      this.cacheTokenAccounts(game);
-    }
+    
     const asyncDispatch = [
       this.getResource(new anchor.web3.PublicKey(localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT))),
       this.getResource(new anchor.web3.PublicKey(localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT))),
@@ -104,7 +101,11 @@ export class PlayerContext {
     ];
     // prevents sync stacking of time.. e.g 1s, 3s, 2s, 2s = 8s .. async dispatch reduces to 3s
    const result = await Promise.all(asyncDispatch).then(res=>res);
-    
+    console.log("RESULT",result,
+    localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT),
+    localStorage.getItem(RESOURCE2_TOKEN_ACCOUNT),
+    localStorage.getItem(RESOURCE3_TOKEN_ACCOUNT),
+    localStorage.getItem(LADA_TOKEN_ACCOUNT));
     return {
       [TYPE_RES1]: result[0],
       [TYPE_RES2]: result[1],
@@ -427,16 +428,17 @@ export class PlayerContext {
         if(decimals !== 0 && amount <=0 )continue;
         console.log('found nft')
         MetadataProgram.findMetadataAccount(new PublicKey(splAccount.account?.data?.parsed?.info?.mint)).then(metaDataAddress=>{
-          console.log('metaDataAddress',metaDataAddress)
+          //console.log('metaDataAddress',metaDataAddress)
           return this.client.connection.getAccountInfo(metaDataAddress[0]).then(rawMetaData=>{
-            console.log('rawMetaData',rawMetaData)
+            //console.log('rawMetaData',rawMetaData)
             return deserializeUnchecked(
               MetadataData.SCHEMA,
               MetadataData,
               (rawMetaData as AccountInfo<Buffer>)?.data,
             )
           }) as Promise<MetadataData>
-        }).finally(fin=>{
+        }).finally((fin)=>{
+          console.log("FINALLY",fin)
           const uri = fin.value.data?.uri?.replace?.(/\0/g, '');
           const symbol = fin.value.data?.symbol;
           if((uri!=='' && uri!==undefined) && (symbol==='LC')){
@@ -532,7 +534,7 @@ export class PlayerContext {
 
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
-    let syncedExecution = [];
+  
     await getMerkleSingleton();
     const [leaf,tree]=await Promise.all([this.buildLeafItem(item, itemType),buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
@@ -547,21 +549,15 @@ export class PlayerContext {
     if (this.client.wallet.payer) {
       signers = [this.client.wallet.payer, ...signers];
     }
-
-    var mintOptions;
-    syncedExecution.push(
+  
+    const [mintOptions, itemUri]=await Promise.all([
       this.buildMintOptions(
         itemType,
         itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
         nftMintKeys,
-      ),
+      ),this.getItemUri(item, itemType)]
     );
-    var itemUri;
-    syncedExecution.push(this.getItemUri(item, itemType));
-    await Promise.all(syncedExecution).then(([mint_options, uri]) => {
-      mintOptions = mint_options;
-      itemUri = uri;
-    });
+
     return await this.client.program.rpc.mintItem(
       itemType === 'spellbook' ? 'spellBook' : itemType,
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
@@ -867,37 +863,36 @@ export class PlayerContext {
       const resourceAmount = await this.client.connection.getTokenAccountBalance(
         tokenAccount,
       );
-
       return resourceAmount.value.amount;
     } catch (_e) {
       return 0;
     }
   }
-  private async cacheTokenAccounts(game: Game) {
-    if (!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)) {
+  private async cacheTokenAccounts() {
+    if (!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT) && this.game) {
       const asyncDispatch = [
         Token.getAssociatedTokenAddress(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
-          game.resource1MintAccount,
+          this.game.resource1MintAccount,
           this.client.wallet.publicKey,
         ),
         Token.getAssociatedTokenAddress(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
-          game.resource2MintAccount,
+          this.game.resource2MintAccount,
           this.client.wallet.publicKey,
         ),
         Token.getAssociatedTokenAddress(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
-          game.resource3MintAccount,
+          this.game.resource3MintAccount,
           this.client.wallet.publicKey,
         ),
         Token.getAssociatedTokenAddress(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
-          game.ladaMintAccount,
+          this.game.ladaMintAccount,
           this.client.wallet.publicKey,
         )
       ];
@@ -914,42 +909,53 @@ export class PlayerContext {
     [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]
   > {
     const gameAccount = new anchor.web3.PublicKey(this.gamePK);
+    const asyncDispatch = [];
     if (!this.playerAccount) {
-      const [playerAccount, playerBump] = findProgramAddressSync(
+      asyncDispatch.push("playerAccount",PublicKey.findProgramAddress(
         [gameAccount.toBuffer(), this.playerPubKey.toBuffer()],
         this.client.program.programId,
-      );
-      this.playerAccount = playerAccount;
-      this.playerBump = playerBump;
+      ));
     }
     if (!this.game) {
-      const game = (await this.client.program.account.game.fetch(
+      asyncDispatch.push("game",this.client.program.account.game.fetch(
         gameAccount,
-      )) as Game;
-      this.game = game;
-      
+      ));     
     }
-    if(!localStorage.getItem(RESOURCE1_TOKEN_ACCOUNT)){
-      this.cacheTokenAccounts(this.game);
-    }
+
     if (!this.gameSigner) {
-      const [gameSigner] = findProgramAddressSync(
+      asyncDispatch.push("gameSigner",PublicKey.findProgramAddress(
         [Buffer.from('game_signer')],
         this.client.program.programId,
-      );
-
-      this.gameSigner = gameSigner;
+      ));
     }
-
+    
     if (!this.season) {
-      const [season] = findProgramAddressSync(
+      asyncDispatch.push("season",PublicKey.findProgramAddress(
         [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
         this.client.program.programId,
-      );
-
-      this.season = season;
+      ));
     }
-
+    await Promise.all(asyncDispatch).then(res=>{
+      for (let i =0, j=1; i<res.length; i+=2,j+=2) {
+        switch(res[i]){
+          case "playerAccount":
+            this.playerAccount = res[j][0];
+            this.playerBump = res[j][1];
+            break;
+          case "game":
+            this.game = res[j] as Game;
+            break;
+          case "gameSigner":
+            this.gameSigner = res[j][0];
+            break;
+          case "season":
+            this.season =res[j][0];
+            break;
+          
+        }
+      }
+    });
+    await this.cacheTokenAccounts();
     return [
       gameAccount,
       this.playerAccount,
