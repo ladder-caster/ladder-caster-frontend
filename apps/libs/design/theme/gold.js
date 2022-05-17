@@ -296,4 +296,8 @@ export const gold = {
       active: '2px solid #4e577e',
     },
   },
+  opacity: {
+    disabled: 0.75,
+    enabled: 1,
+  },
 };

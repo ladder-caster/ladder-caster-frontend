@@ -14,6 +14,8 @@ export const _card = styled(m.div)`
   border: 3px solid
     ${({ theme, $caster }) => ($caster ? `transparent` : theme.border['high'])};
   cursor: pointer;
+  opacity: ${({ $disabled, theme }) =>
+    $disabled ? theme.opacity['disabled'] : theme.opacity['enabled']};
 `;
 
 export const _icon = styled(m.div)`

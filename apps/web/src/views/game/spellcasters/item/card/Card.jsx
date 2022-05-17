@@ -20,7 +20,10 @@ const Card = ({ spell_id, oldCaster }) => {
   );
 
   return (
-    <_card $caster={old_caster || caster}>
+    <_card
+      $caster={old_caster || caster}
+      $disabled={!!caster?.turnCommit || !!old_caster?.turnCommit}
+    >
       {old_caster || caster?.position ? (
         <Caster small caster={old_caster || caster} isOld={old_caster} />
       ) : (
