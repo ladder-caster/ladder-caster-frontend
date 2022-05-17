@@ -8,7 +8,11 @@ import {
 import { Game, GameState, Client, Accounts, Balances } from '.';
 
 import {TYPE_RES1, TYPE_RES2, TYPE_RES3} from 'core/remix/state'
-
+/**
+ * GameConstantsContext
+ * @function clientInitialized - checks whether client is initialized
+ * 
+ */
 class GameConstantsContext {
   private accounts: Accounts;
   private balances: Balances;
@@ -16,6 +20,9 @@ class GameConstantsContext {
   private game: GameState;
 
   constructor() { }
+  public clientInitialized(): boolean{
+    return !!this.client;
+  }
   public async hydrateGame() {
     const game = (await this.client.program.account.game.fetch(
       this.accounts?.game,

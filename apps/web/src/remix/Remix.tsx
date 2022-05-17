@@ -80,7 +80,7 @@ const Remix = () => {
     items: [],
     chests: [],
   });
-  useRemixOrigin(GAME_CONSTANTS,gameConstantsContext.initClient(client));
+  const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
@@ -347,7 +347,9 @@ const Remix = () => {
       //     });
       // }
     }
-
+    if(client && !gameConstants.clientInitialized()){
+      gameConstants.initClient(client);
+    }
     // return () => {
     //   console.log('unmounted wtf');
     //   if (client) client.program.removeEventListener(listener);
