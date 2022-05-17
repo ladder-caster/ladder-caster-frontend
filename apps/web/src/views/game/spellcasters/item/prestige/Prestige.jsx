@@ -18,7 +18,6 @@ const Prestige = ({ spell_id }) => {
   const { t } = useTranslation();
   const { prestigeCaster } = useActions();
   const [confirm, setConfirm] = useState(false);
-
   const [caster] = useRemix(GAME_OLD_SPELLCASTERS, (spellcasters) =>
     find(spellcasters, (caster) => caster.id === spell_id),
   );

@@ -357,6 +357,7 @@
     "prestige.caster": "Transfer to Season 1",
     "prestige.confirm": "Confirm Transfer",
     "prestige.cost": "Costs 500 LADA",
-    "heading.buy.lada": "Buy LADA"
+    "heading.buy.lada": "Buy LADA",
+    "hide.prestige":"Hide Old Spellcasters"
   }
 }
