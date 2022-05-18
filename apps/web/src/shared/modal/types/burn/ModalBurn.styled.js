@@ -8,7 +8,6 @@ export const _root_container = styled(m.div)`
   -webkit-font-smoothing: subpixel-antialiased;
   margin-top: 90px;
   backface-visibility: hidden;
-  width: 100%;
   height: 100%;
   padding-top: 32px;
 `;
@@ -19,6 +18,9 @@ export const _container_center = styled(m.div)`
   justify-content: center;
   gap: ${({ $gap }) => $gap ?? '8px'};
   margin-top: ${({ $marginTop }) => $marginTop ?? '0'};
+  @media (max-width: 450px) {
+    margin-top: 16px;
+  }
 `;
 export const _nft_container = styled(m.div)`
   display: flex;
@@ -33,6 +35,9 @@ export const _nft_container = styled(m.div)`
   transform: scale(0.9);
   backface-visibility: hidden;
   margin-top: 28px;
+  @media (max-width: 450px) {
+    margin-top: 0;
+  }
 `;
 
 export const _resource_gain = styled(m.div)`
