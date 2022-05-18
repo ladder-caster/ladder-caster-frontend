@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   _buy,
   _title,
@@ -13,15 +13,13 @@ import Toggle from '../../../../../../shared/button/toggle/Toggle';
 
 const PrestigeToggle = () => {
   const { t } = useTranslation();
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(
+    localStorage.getItem('hide_prestige') === 'true',
+  );
   const handleToggle = () => {
     setToggle(!toggle);
     localStorage.setItem('hide_prestige', !toggle);
   };
-  useEffect(() => {
-    setToggle(localStorage.getItem('hide_prestige') === 'true');
-  }, [localStorage.getItem('hide_prestige')]);
-  console.log('TOGGLE', toggle);
   return (
     <_buy>
       <_title>{t('hide.prestige')}</_title>

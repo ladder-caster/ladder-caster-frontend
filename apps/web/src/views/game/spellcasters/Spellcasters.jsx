@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { _spellcasters, _list, _button } from './Spellcasters.styled';
 import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,12 @@ const Spellcasters = () => {
   const [initialized] = useRemix(GAME_INIT);
   const [phase] = useRemix(USER_PHASE);
   const { lootAllResources } = useActions();
+  const [hidePrestige, setPrestige] = useState(
+    localStorage.getItem('hide_prestige') === 'true',
+  );
+  useEffect(() => {
+    setPrestige(localStorage.getItem('hide_prestige') === 'true');
+  }, [localStorage.getItem('hide_prestige')]);
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
       return sortBy(spellcasters, (sort) => sort?.hue).map((caster) => (
@@ -36,14 +42,12 @@ const Spellcasters = () => {
   }, [spellcasters]);
 
   const render_old_spellcasters = useMemo(() => {
-    const prestige = localStorage.getItem('hide_prestige');
-    const show = prestige == undefined ? true : !!prestige;
-    if (oldSpellcasters && oldSpellcasters.length >= 1 && show) {
+    if (oldSpellcasters && oldSpellcasters.length >= 1) {
       return sortBy(oldSpellcasters, (sort) => sort?.hue).map((caster) => (
         <Item key={nanoid()} spell_id={caster.id} isOld />
       ));
     }
-  }, [oldSpellcasters, localStorage.getItem('hide_prestige')]);
+  }, [oldSpellcasters]);
   const render = useMemo(() => {
     if (
       (!initialized || render_spellcasters?.length == 0) &&
@@ -60,10 +64,10 @@ const Spellcasters = () => {
         {render_spellcasters}
         <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
         <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
-        {render_old_spellcasters}
+        {!hidePrestige && render_old_spellcasters}
       </_list>
     );
-  }, [initialized, render_spellcasters, render_old_spellcasters]);
+  }, [initialized, render_spellcasters, render_old_spellcasters, hidePrestige]);
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />
