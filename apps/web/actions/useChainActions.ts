@@ -261,11 +261,7 @@ export const useChainActions = () => {
   ) => {
     const result = await preInstructionsCallback();
     if (result && !result?.value?.err) {
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setResources(await playerContext.getResources());
       if (casterInstance) {
@@ -336,9 +332,6 @@ export const useChainActions = () => {
 
   const claimRewards = async (caster) => {
     const casterContext = new CasterContext(
-      client,
-      client.program.provider.wallet.publicKey,
-      localStorage.getItem('gamePK'),
       find(
         casters,
         (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -359,9 +352,6 @@ export const useChainActions = () => {
   const lootResources = async (caster) => {
     if (caster?.last_loot < game?.turnInfo?.turn) {
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -381,19 +371,11 @@ export const useChainActions = () => {
   };
 
   const createCasterContext = () => {
-    return new CasterContext(
-      client,
-      client?.program?.provider?.wallet?.publicKey,
-      localStorage.getItem('gamePK'),
-    );
+    return new CasterContext();
   };
   const confirmBurn= async(item)=>{
     setModal('');
-    const playerContext = new PlayerContext(
-      client,
-      client?.program?.provider?.wallet?.publicKey,
-      localStorage.getItem('gamePK'),
-    );
+    const playerContext = new PlayerContext();
     
    if (item || context?.item ) {
      const match_item = item ?? context?.item;
@@ -449,11 +431,7 @@ export const useChainActions = () => {
         type: MODAL_MINT,
         description: t('modal.demo.description'),
         accept: async () => {
-          const casterContext = new CasterContext(
-            client,
-            client?.program?.provider?.wallet?.publicKey,
-            localStorage.getItem('gamePK'),
-          );
+          const casterContext = new CasterContext();
 
           await fetchPlayer(async () => {
             return await stateHandler(
@@ -501,11 +479,7 @@ export const useChainActions = () => {
           '',
         );
       });
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setCasters(await playerContext.getCasters());
       setPhase(PHASE_REWARDS);
@@ -559,11 +533,7 @@ export const useChainActions = () => {
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
-            return await new PlayerContext(
-              client,
-              client?.program?.provider?.wallet?.publicKey,
-              localStorage.getItem('gamePK'),
-            ).openChest(
+            return await new PlayerContext().openChest(
               find(
                 items,
                 (match) => match?.publicKey?.toString() === chest?.publicKey,
@@ -624,9 +594,6 @@ export const useChainActions = () => {
     },
     async confirmMove(caster) {
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -644,9 +611,6 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await new CasterContext(
-              client,
-              client.program.provider.wallet.publicKey,
-              localStorage.getItem('gamePK'),
               find(
                 casters,
                 (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -696,9 +660,6 @@ export const useChainActions = () => {
     },
     async equipItem(item = context?.item, caster = context?.caster) {
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -741,9 +702,6 @@ export const useChainActions = () => {
       const caster = context?.caster;
       try {
         const casterContext = new CasterContext(
-          client,
-          client.program.provider.wallet.publicKey,
-          localStorage.getItem('gamePK'),
           find(
             casters,
             (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -778,9 +736,6 @@ export const useChainActions = () => {
     },
     async castSpell(spell, caster) {
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -833,9 +788,6 @@ export const useChainActions = () => {
       const materials = context?.materials || [];
       const caster = context?.caster;
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -929,9 +881,6 @@ export const useChainActions = () => {
     async burnResourcesForXP() {
       const caster = find(spellcasters, (caster) => caster.id === drawer?.id);
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(
           casters,
           (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -1010,11 +959,7 @@ export const useChainActions = () => {
       setContext({ ...context, nft });
     },
     async confirmRedeem() {
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setContext(INIT_STATE_REDEEM);
       setModal('');
@@ -1068,11 +1013,7 @@ export const useChainActions = () => {
         });
         return
     }
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setContext({
         ...context,
@@ -1246,22 +1187,14 @@ export const useChainActions = () => {
       );
     },
     async testRefresh() {
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setPlayer(await playerContext.getPlayer());
       setResources(await playerContext.getResources());
       setItems(await playerContext.getInventory());
     },
     async initPlayer() {
-      const playerContext = new PlayerContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       await stateHandler(
         async () => {
@@ -1282,22 +1215,14 @@ export const useChainActions = () => {
       setPhase(PHASE_ACTIONS);
     },
     async fullRefresh() {
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       setPlayer(await playerContext.getPlayer());
       setResources(await playerContext.getResources());
       setItems(await playerContext.getInventory());
     },
     async refreshResources() {
-      const playerContext = new PlayerContext(
-        client,
-        client?.program?.provider?.wallet?.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
       setResources(await playerContext.getResources());
     },
     async refreshGame() {
@@ -1365,9 +1290,6 @@ export const useChainActions = () => {
     },
     async prestigeCaster(casterPK) {
       const casterContext = new CasterContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
         find(oldCasters, (match) => match?.publicKey?.toString() === casterPK),
       );
       await fetchPlayer(async () => {
@@ -1409,11 +1331,7 @@ export const useChainActions = () => {
     },
     async fixAccount(){
       console.log("WALLET",walletType)
-      const playerContext = new PlayerContext(
-        client,
-        client.program.provider.wallet.publicKey,
-        localStorage.getItem('gamePK'),
-      );
+      const playerContext = new PlayerContext();
 
       await stateHandler(
         async () => {

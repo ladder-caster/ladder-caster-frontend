@@ -51,18 +51,18 @@ import {
   Client,
   Environment,
   Game,
+  GameConstantsContextInterface,
   GameContext,
   Item,
   ResourcesPK,
   Tile,
-  gameConstantsContext
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
-
+const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -269,8 +269,10 @@ const Remix = () => {
   const generateInventory = (inventory: Item[]) => {
     let items = [];
     let chests = [];
-
-    inventory.forEach((item, key) => {
+    // https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/
+    // forEach does 33% less ops-per sec than a regular for loop/forOf
+    for(let key = 0;key<inventory.length;key++){
+      const item = inventory[key];
       if (Object.keys(item.itemType)[0] === 'chest') {
         chests.push({
           type: 'chest',
@@ -308,7 +310,7 @@ const Remix = () => {
           });
         }
       }
-    });
+    }
 
     return {
       items: reverse(
@@ -324,7 +326,11 @@ const Remix = () => {
     let listener;
     if (game) {
       setMap(generateMap(game));
-
+      console.log('game', game);
+      console.log(
+          'last crank',
+          new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+      );
       // if (client) {
       //   window.addEventListener('focus', () => {
       //     if (client.program._events._eventCallbacks.size === 0)
@@ -411,18 +417,21 @@ const Remix = () => {
   useEffect(() => {
     if (casters) {
       setSpellcasters(generateSpellCaster(casters));
+      console.log('casters', casters);
     }
   }, [casters]);
 
   useEffect(() => {
     if (oldCasters) {
       setOldSpellcasters(generateSpellCaster(oldCasters));
+      console.log('old casters', oldCasters);
     }
   }, [oldCasters]);
 
   useEffect(() => {
     if (items) {
       setInventory(generateInventory(items));
+      console.log('inventory', inventory);
     }
   }, [items]);
 
@@ -448,6 +457,15 @@ const Remix = () => {
         break;
       }
     }
+    const IDL = Client.getIDL(process.env.REACT_APP_ENV as Environment);
+    const errors = IDL?.errors;
+    const next_codes = {};
+    if (errors?.length) {
+      map(errors, ({ code, name, msg }) => {
+        next_codes[code] = { name, msg };
+      });
+      setCodes(next_codes);
+    }
   }, []);
 
   useEffect(() => {
@@ -455,34 +473,6 @@ const Remix = () => {
       console.log('player', player);
     }
   }, [player]);
-
-  useEffect(() => {
-    if (inventory) {
-      console.log('inventory', inventory);
-    }
-  }, [inventory]);
-
-  useEffect(() => {
-    if (oldCasters) {
-      console.log('old casters', oldCasters);
-    }
-  }, [oldCasters]);
-
-  useEffect(() => {
-    if (casters) {
-      console.log('casters', casters);
-    }
-  }, [casters]);
-
-  useEffect(() => {
-    if (game) {
-      console.log('game', game);
-      console.log(
-        'last crank',
-        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
-      );
-    }
-  }, [game]);
 
   useEffect(() => {
     if (loading) {
@@ -495,18 +485,6 @@ const Remix = () => {
       });
     }
   }, [loading]);
-
-  useEffect(() => {
-    const IDL = Client.getIDL(process.env.REACT_APP_ENV as Environment);
-    const errors = IDL?.errors;
-    const next_codes = {};
-    if (errors?.length) {
-      map(errors, ({ code, name, msg }) => {
-        next_codes[code] = { name, msg };
-      });
-      setCodes(next_codes);
-    }
-  }, []);
 
   return null;
 };
