@@ -84,7 +84,8 @@ class GameConstantsContext {
         publicKey,
       ),
       PublicKey.findProgramAddress([Buffer.from('game_signer')],
-        programId),
+        programId
+      ),
       PublicKey.findProgramAddress(
         [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
         programId,
@@ -125,10 +126,10 @@ class GameConstantsContext {
       }
       return [res?.[0], res?.[1], res?.[2], res?.[3], res?.[4]?.[0], res?.[5]?.[0], res?.[6]?.[0],res?.[6]?.[1],res?.[7]?.[0],res?.[8]?.[0],res?.[9]?.[0],res?.[10]?.[0]];
     }).catch(err=>{
-      if(!this.initInterval){this.initInterval=setInterval(()=>this.init(),1000)};
+      if(!this.initInterval){this.initInterval=setInterval(async ()=>{await this.init()},2500)};
       console.error("Tried To Init GameConstants:",err)
       // prevent crash
-      return ['', '', '', '', '', '', '',0,'','','','']
+      return ['', '', '', '', '', '', '', 0, '','','','']
     });
    
     this.accounts = {
@@ -152,7 +153,7 @@ class GameConstantsContext {
     const difference = this.lastCrankTime - new Date().getMinutes();
     const updateIntervalDuration = (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1;
     this.updateGameInterval = setInterval(this.handleGameUpdateInterval, updateIntervalDuration * 60000,updateIntervalDuration);
-    this.hydrateAccountBalances();
+    await this.hydrateAccountBalances();
   }
   private async handleGameUpdateInterval(duration: number){
     await this.hydrateGame();
@@ -332,6 +333,7 @@ class GameConstantsContext {
    */
      public async hydrateAccountBalances() {
       await this.checkInstance();
+      console.log("HYDRATION IS IMPORTANT",this,this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]))
       const asyncDispatch = [
         this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
         this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),
@@ -364,7 +366,7 @@ class GameConstantsContext {
     public async initClient(client: Client) {
       if (client && !this.client) {
         this.client = client;
-        this.init();
+        await this.init();
       }
     }
   // #endregion helpers
