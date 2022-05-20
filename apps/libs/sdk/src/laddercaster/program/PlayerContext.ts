@@ -33,7 +33,7 @@ import { TYPE_RES1, TYPE_RES2, TYPE_RES3,LADA_TOKEN_ACCOUNT } from 'core/remix/s
 //import {gameConstantsContext} from '../../laddercaster';
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/8Zfw8lNAjJk-zrUYkicFpJ_Eq2OJOqlguUEMXWll6YE',
+    'https://arweave.net/m5iJHpCZWIaAJNd9YrQC7knBiCKjwFR-mLgc8tXYjNE',
   );
 }
 
@@ -727,6 +727,12 @@ export class PlayerContext {
         );
       }
       case 'chest': {
+        console.log('heyo');
+        console.log(
+          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
+            item.itemType.chest.tier
+          }`,
+        );
         return keccak256(
           `${uri}:chest:${item.level}:${item.itemType.chest.tier
           }`,
