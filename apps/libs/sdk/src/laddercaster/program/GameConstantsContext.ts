@@ -7,7 +7,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { Game, GameState, Client, Accounts, Balances } from '.';
-import resources from 'sdk/src/laddercaster/config/resources.json';
+import resources from '../config/resources.json';
 import {TYPE_RES1, TYPE_RES2, TYPE_RES3, OLD_SEASON,ROUND_TIMELIMIT} from 'core/remix/state'
 import { Environment } from "./Client";
 /**
@@ -22,6 +22,7 @@ class GameConstantsContext {
   private game: GameState;
   private initInterval: any;
   private updateGameInterval: any;
+  private lastCrankTime: number;
   private lastTurnNumber: number;
   constructor() { }
   /**
@@ -44,6 +45,9 @@ class GameConstantsContext {
    * Initializes all data needed across caster context and player context
    */
   private async init() {
+    if(this.accounts?.gameAccount){
+      return;
+    }
     const gameAccount = new web3.PublicKey(localStorage.getItem('gamePK'));
     const previousGameAccount = new web3.PublicKey(
       this.getGamePK(process.env.REACT_APP_ENV as Environment, OLD_SEASON),
@@ -95,7 +99,7 @@ class GameConstantsContext {
       ),
       PublicKey.findProgramAddress(
         [Buffer.from('season'), new PublicKey(previousGameAccount).toBuffer()],
-        gameConstantsContext.Client.program.programId,
+        this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
       [
@@ -103,20 +107,28 @@ class GameConstantsContext {
         gameAccount.toBuffer(),
         Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
       ],
-      gameConstantsContext.Client.program.programId,
-      )
+      this.client.program.programId,
+      ),
+      PublicKey.findProgramAddress(
+        [
+          Buffer.from('turn_data'),
+          gameAccount.toBuffer(),
+          Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn+1))),
+        ],
+        this.client.program.programId,
+        )
     ];
-    const [resource1, resource2, resource3, lada, gameSigner, season, playerAccount, playerBump, previousPlayerAccount,previousSeason,turnData] = await Promise.all(asyncDispatch).then((res) => {
+    const [resource1, resource2, resource3, lada, gameSigner, season, playerAccount, playerBump, previousPlayerAccount,previousSeason,turnData,futureTurnData] = await Promise.all(asyncDispatch).then((res) => {
       if(this.initInterval){
         clearInterval(this.initInterval);
         this.initInterval=null;
       }
-      return [res?.[0], res?.[1], res?.[2], res?.[3], res?.[4]?.[0], res?.[5]?.[0], res?.[6]?.[0],res?.[6]?.[1],res?.[7]?.[0],res?.[8]?.[0],res?.[9]?.[0]];
+      return [res?.[0], res?.[1], res?.[2], res?.[3], res?.[4]?.[0], res?.[5]?.[0], res?.[6]?.[0],res?.[6]?.[1],res?.[7]?.[0],res?.[8]?.[0],res?.[9]?.[0],res?.[10]?.[0]];
     }).catch(err=>{
       if(!this.initInterval){this.initInterval=setInterval(()=>this.init(),1000)};
       console.error("Tried To Init GameConstants:",err)
       // prevent crash
-      return ['', '', '', '', '', '', '',0,'','','']
+      return ['', '', '', '', '', '', '',0,'','','','']
     });
    
     this.accounts = {
@@ -132,11 +144,13 @@ class GameConstantsContext {
       gameSigner,
       season,
       previousSeason,
-      turnData
+      turnData,
+      futureTurnData
     }
     this.lastTurnNumber = game.turnInfo.turn;
-    const lastCrankTime = new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1 - new Date().getMinutes();
-    const updateIntervalDuration = (ROUND_TIMELIMIT-lastCrankTime)>0?ROUND_TIMELIMIT-lastCrankTime:1;
+    this.lastCrankTime = new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
+    const difference = this.lastCrankTime - new Date().getMinutes();
+    const updateIntervalDuration = (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1;
     this.updateGameInterval = setInterval(this.handleGameUpdateInterval, updateIntervalDuration * 60000,updateIntervalDuration);
     this.hydrateAccountBalances();
   }
@@ -148,8 +162,9 @@ class GameConstantsContext {
      * set interval to 1 min until cranked
      */
     if(this.lastTurnNumber<this.game.game.turnInfo.turn){
-      const lastCrankTime = new Date(this.game.game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1 - new Date().getMinutes();
-      const updateIntervalDuration = (ROUND_TIMELIMIT-lastCrankTime)>0?ROUND_TIMELIMIT-lastCrankTime:1;
+      this.lastCrankTime = new Date(this.game.game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
+      const difference = this.lastCrankTime - new Date().getMinutes();
+      const updateIntervalDuration = (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1;
       this.lastTurnNumber=this.game.game.turnInfo.turn;
       clearInterval(this.updateGameInterval);
       this.updateGameInterval=setInterval(this.handleGameUpdateInterval, updateIntervalDuration*60000,1);
@@ -257,21 +272,47 @@ class GameConstantsContext {
       this.game.season
     ]
   }
-  public async hydrateGame() {
+  private async checkInstance(){
+    //initializes game incase of desync  
+    if(!this.accounts?.gameAccount){
+      await this.init();
+    }
+  }
+  public async hydrateGame(force?: boolean) {
+    await this.checkInstance();
+    const timeSince = this.lastCrankTime - new Date().getMinutes();
+    // unless force, only hydrate if it's been more than 20 min since last crank or 1 min intervals if net is dying
+    if(timeSince<=-20 && !force){
+      return;
+    }
     const game = (await this.client.program.account.game.fetch(
       this.accounts?.gameAccount,
     )) as Game;
     if(game.turnInfo.turn>this.game.game.turnInfo.turn){
       this.game.game = game;
-      PublicKey.findProgramAddress(
+      await Promise.all([PublicKey.findProgramAddress(
         [
         Buffer.from('turn_data'),
         this.accounts.gameAccount.toBuffer(),
-        Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
+        Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn-1))),
         ],
-        gameConstantsContext.Client.program.programId,
-        ).then(res=>this.game.turnData=res[0]).catch(err=>console.error("Failed To Hydrate TurnData:",err))
+        this.client.program.programId,
+        ),
+        PublicKey.findProgramAddress(
+          [
+            Buffer.from('turn_data'),
+            this.accounts.gameAccount.toBuffer(),
+            Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
+          ],
+          this.client.program.programId,
+          )]).then(res=>{
+            this.game.turnData = res[0][0];
+            this.game.futureTurnData = res[1][0];
+          }).catch(err=>console.error("FAILED TO GET TURN DATA:",err))
     }
+  }
+  public get futureTurnData():PublicKey{
+    return this.game.futureTurnData;
   }
   /**
    * 
@@ -290,6 +331,7 @@ class GameConstantsContext {
    * Refreshes account token balances
    */
      public async hydrateAccountBalances() {
+      await this.checkInstance();
       const asyncDispatch = [
         this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
         this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),

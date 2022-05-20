@@ -212,7 +212,8 @@ export interface GameState {
   gameSigner: PublicKey,
   season: PublicKey,
   previousSeason: PublicKey,
-  turnData: PublicKey
+  turnData: PublicKey,
+  futureTurnData: PublicKey
 }
 
 export interface GameBalances{
@@ -249,7 +250,8 @@ export interface GameConstantsContextInterface{
   gameSigner: PublicKey,
   season: PublicKey,
   previousSeason: PublicKey,
-  turnData: PublicKey
+  turnData: PublicKey,
+  futureTurnData: PublicKey,
   ladaBalance: number,
   resource1Balance: number,
   resource2Balance: number,

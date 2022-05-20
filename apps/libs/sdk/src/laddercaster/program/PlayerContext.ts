@@ -30,7 +30,6 @@ import keccak256 from 'keccak256';
 import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
 import { TYPE_RES1, TYPE_RES2, TYPE_RES3,LADA_TOKEN_ACCOUNT } from 'core/remix/state';
-import { GameConstantsContext } from './types';
 //import {gameConstantsContext} from '../../laddercaster';
 async function getMerkle() {
   return await axios.get(
