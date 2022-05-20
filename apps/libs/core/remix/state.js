@@ -171,3 +171,4 @@ export const LADA_TOKEN_ACCOUNT = 'LADA_TOKEN_ACCOUNT';
 export const GAME_CONSTANTS = 'GAME_CONSTANTS';
 export const OLD_SEASON = 0;
 export const CURRENT_SEASON = 1;
+export const ROUND_TIMELIMIT = 20;

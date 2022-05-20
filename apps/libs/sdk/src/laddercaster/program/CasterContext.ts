@@ -1,5 +1,4 @@
-import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { Caster, Client, Game, Item, ItemFeature, ItemType,GameConstantsContextInterface } from '.';
+import { Caster, Game, Item, ItemFeature, ItemType,GameConstantsContextInterface } from '.';
 import * as anchor from '@project-serum/anchor';
 import {
   Keypair,
@@ -16,9 +15,6 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
-import { PlayerContext } from './PlayerContext';
-import { Environment } from './Client';
-import {LADA_TOKEN_ACCOUNT,OLD_SEASON} from 'core/remix/state';
 //constants of cached data used throughout the app
 const gameConstantsContext:GameConstantsContextInterface = require("../program/GameConstantsContext").default
 export class CasterContext {
@@ -302,7 +298,6 @@ export class CasterContext {
       gameSigner,
       season,
     ] = await this.getAccounts();
-    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
     const [gameTurnData] = await this.getGameTurnData(
       game,
       gameAccount,
@@ -337,7 +332,7 @@ export class CasterContext {
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         ladaMintAccount: game.ladaMintAccount,
         gameLadaTokenAccount: game.ladaTokenAccount,
-        ladaTokenAccount: playerLadaTokenAccount,
+        ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         gameTurnData,
       },
       signers: [gameConstantsContext.Client.wallet.payer],
@@ -370,7 +365,6 @@ export class CasterContext {
     ] = await this.getAccounts();
     const empty = Keypair.generate();
     const mintAccounts = await this.getMintAccounts(game);
-    const playerLadaTokenAccount = new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
     const [gameTurnData] = await this.getGameTurnData(
       game,
       gameAccount,
@@ -393,7 +387,7 @@ export class CasterContext {
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         ladaMintAccount: game.ladaMintAccount,
         gameLadaTokenAccount: game.ladaTokenAccount,
-        ladaTokenAccount: playerLadaTokenAccount,
+        ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         gameTurnData,
         item: item.publicKey,
         staff: this.caster?.modifiers?.staff
@@ -513,7 +507,7 @@ export class CasterContext {
       }),
     );
 
-    const blockhash = (await gameConstantsContext.Client.connection.getRecentBlockhash())
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
       .blockhash;
     tx.recentBlockhash = blockhash;
     tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
@@ -612,7 +606,7 @@ export class CasterContext {
         signers: [gameConstantsContext.Client.wallet.payer],
       }),
     );
-    const blockhash = (await gameConstantsContext.Client.connection.getRecentBlockhash())
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
       .blockhash;
     tx.recentBlockhash = blockhash;
     tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
@@ -647,33 +641,12 @@ export class CasterContext {
   }
 
   async prestigeCaster() {
-    const [
-      newGameAccount,
-      newPlayerAccount,
-      game,
-      ,
-      newSeason,
-    ] = await this.getAccounts();
     const newCaster = Keypair.generate();
-    const oldGameAccount = new anchor.web3.PublicKey(
-      PlayerContext.getGamePK(process.env.REACT_APP_ENV as Environment, 0),
-    );
-
-    const [oldPlayerAccount] = findProgramAddressSync(
-      [oldGameAccount.toBuffer(), gameConstantsContext.Client.program.provider.wallet.publicKey.toBuffer()],
-      gameConstantsContext.Client.program.programId,
-    );
-
-    const [oldSeason] = findProgramAddressSync(
-      [Buffer.from('season'), new PublicKey(oldGameAccount).toBuffer()],
-      gameConstantsContext.Client.program.programId,
-    );
-    const playerLadaTokenAccount =new PublicKey(localStorage.getItem(LADA_TOKEN_ACCOUNT));
 
     try {
       console.log(
         'old season',
-        await gameConstantsContext.Client.program.account.season.fetch(oldSeason),
+        await gameConstantsContext.Client.program.account.season.fetch(gameConstantsContext.previousSeason),
       );
     } catch (e) {
       console.log(e);
@@ -681,7 +654,7 @@ export class CasterContext {
     try {
       console.log(
         'new season',
-        await gameConstantsContext.Client.program.account.season.fetch(newSeason),
+        await gameConstantsContext.Client.program.account.season.fetch(gameConstantsContext.season),
       );
     } catch (e) {
       console.log(e);
@@ -693,18 +666,18 @@ export class CasterContext {
         tokenProgram: TOKEN_PROGRAM_ID,
         rent: SYSVAR_RENT_PUBKEY,
         authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
-        oldGame: oldGameAccount,
-        newGame: newGameAccount,
-        oldPlayer: oldPlayerAccount,
-        newPlayer: newPlayerAccount,
-        oldSeason: oldSeason,
-        newSeason: newSeason,
+        oldGame: gameConstantsContext.previousGameTokenAccount,
+        newGame: gameConstantsContext.gameTokenAccount,
+        oldPlayer: gameConstantsContext.previousPlayerTokenAccount,
+        newPlayer: gameConstantsContext.playerTokenAccount,
+        oldSeason: gameConstantsContext.previousSeason,
+        newSeason: gameConstantsContext.season,
         oldCaster: this.caster?.publicKey,
         newCaster: newCaster.publicKey,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-        ladaMint: game.ladaMintAccount,
-        ladaTokenAccount: playerLadaTokenAccount,
+        ladaMint: gameConstantsContext.gameState.ladaMintAccount,
+        ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
       },
       signers: [gameConstantsContext.Client.wallet.payer, newCaster],
     });
@@ -792,15 +765,17 @@ export class CasterContext {
   //HELPERS
   private async getGameTurnData(game: Game, gameAccount: PublicKey, turn = -1) {
     const turnNumber = turn !== -1 ? turn : game?.turnInfo?.turn;
-
-    return await anchor.web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('turn_data'),
-        gameAccount.toBuffer(),
-        Buffer.from(anchor.utils.bytes.utf8.encode(String(turnNumber))),
-      ],
-      gameConstantsContext.Client.program.programId,
-    );
+    if(turn!=-1 && turn!=game?.turnInfo?.turn){
+      return await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from('turn_data'),
+          gameAccount.toBuffer(),
+          Buffer.from(anchor.utils.bytes.utf8.encode(String(turnNumber))),
+        ],
+        gameConstantsContext.Client.program.programId,
+      );
+    }
+   return [gameConstantsContext.turnData,123]
   }
 
   private async getMintAccounts(game: Game) {

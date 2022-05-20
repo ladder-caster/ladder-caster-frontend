@@ -210,7 +210,9 @@ export interface Accounts {
 export interface GameState {
   game: Game,
   gameSigner: PublicKey,
-  season: PublicKey
+  season: PublicKey,
+  previousSeason: PublicKey,
+  turnData: PublicKey
 }
 
 export interface GameBalances{
@@ -246,11 +248,14 @@ export interface GameConstantsContextInterface{
   resource3TokenAccount: PublicKey,
   gameSigner: PublicKey,
   season: PublicKey,
+  previousSeason: PublicKey,
+  turnData: PublicKey
   ladaBalance: number,
   resource1Balance: number,
   resource2Balance: number,
   resource3Balance: number,
   solBalance: number,
   gameState: Game,
-  clientInitialized: boolean
+  clientInitialized: boolean,
+  
 }

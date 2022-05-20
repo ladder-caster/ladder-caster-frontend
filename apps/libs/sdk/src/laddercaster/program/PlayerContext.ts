@@ -380,7 +380,7 @@ export class PlayerContext {
   async mintNFTCaster(caster: Caster) {
     const nftMintKeys = Keypair.generate();
     await getMerkleSingleton();
-    const uri = await this.getCasterUri(caster);
+    const uri:string = await this.getCasterUri(caster);
     //Merkle proof part
     let [leaf,tree]=await Promise.all([this.buildLeafCaster(caster, uri),buildMerkleTree(merkle['merkleLeaves']['combined'])]);
     
@@ -418,7 +418,7 @@ export class PlayerContext {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
-    const uri = await this.getItemUri(item, itemType);
+    const uri:string = await this.getItemUri(item, itemType);
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
   
