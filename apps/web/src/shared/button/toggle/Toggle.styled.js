@@ -8,6 +8,8 @@ export const _container = styled(m.div)`
   width: 60px;
   padding: 8px;
   cursor: pointer;
+  transform: scale(${({$scale})=>$scale??1}) translateZ(0);
+  backface-visibility: hidden;
 `;
 export const _toggle_background = styled(m.div)`
   display: flex;
