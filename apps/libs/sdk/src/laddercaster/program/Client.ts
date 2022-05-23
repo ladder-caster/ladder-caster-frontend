@@ -78,7 +78,7 @@ export class Client {
         return 'http://localhost:8899';
       }
       case 'localprod': {
-        return 'https://wispy-cool-tree.solana-mainnet.quiknode.pro/e1f76d47c8ccec34e2b5b30dc2a87149120a5204/';
+        return 'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/';
       }
       case 'devnet': {
         return 'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/';
