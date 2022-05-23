@@ -1,11 +1,13 @@
 {
   "seasons": {
     "0": {
+      "gameAccountLocal": "6UjK81jFndxR1BLCtdERshNiWWcL9P2bNESm1JBV7RFL",
       "gameAccount": "8qpHdgYeWUYPe1CSJsY3jYrntEaUixSP4kjubaNFyjtQ",
       "gameAccountProd": "HzrPJcBjx42wYnccH5sxvDyu9JWGbKH9Qb8BTdRAsQA4",
       "gameAccountProdPriv": "GdTEDRZwfXQcdCDb5mK1NLicP599e2wJGXFhooANonMq"
     },
     "1": {
+      "gameAccountLocal": "6UjK81jFndxR1BLCtdERshNiWWcL9P2bNESm1JBV7RFL",
       "gameAccount": "5D3sppW752LDoGrv4zRX5NdPANJDidv4ZnCTEMCEE3x3",
       "gameAccountProd": "2kd1PwgQ26uTqBx2ynxKWKUTBQ8gU9tAdVEJwpz5jYQa",
       "gameAccountProdPriv": "GdTEDRZwfXQcdCDb5mK1NLicP599e2wJGXFhooANonMq"

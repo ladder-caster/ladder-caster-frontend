@@ -52,7 +52,7 @@ import {
   ATTRIBUTE_RES3,
   DRAWER_TRADE,
   RARITY_COMMON,
-  MODAL_BURN
+  MODAL_BURN,
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -111,9 +111,7 @@ import { map, find, indexOf } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
-import {
-  PublicKey,
-} from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 let retry_count = {};
 
 export const useChainActions = () => {
@@ -235,19 +233,19 @@ export const useChainActions = () => {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
       } else {
-        let parsedMessage = handleCustomErrors(e.message);
-        if (e.message?.includes('Solana'))
-          parsedMessage = t('mutations.timeout');
+        let parsedMessage = handleCustomErrors(e);
+        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
           validator: false,
-          success: false,
-          error: true,
+          success: !e,
+          retry_id,
+          error: !!e,
+          type,
           text: {
             error: parsedMessage,
           },
-          type,
         });
       }
     }
@@ -385,16 +383,16 @@ export const useChainActions = () => {
       localStorage.getItem('gamePK'),
     );
   };
-  const confirmBurn= async(item)=>{
+  const confirmBurn = async (item) => {
     setModal('');
     const playerContext = new PlayerContext(
       client,
       client?.program?.provider?.wallet?.publicKey,
       localStorage.getItem('gamePK'),
     );
-    
-   if (item || context?.item ) {
-     const match_item = item ?? context?.item;
+
+    if (item || context?.item) {
+      const match_item = item ?? context?.item;
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
@@ -407,7 +405,7 @@ export const useChainActions = () => {
         );
       });
     }
-  }
+  };
   return {
     startDemo() {},
     confirmBurn,
@@ -604,12 +602,12 @@ export const useChainActions = () => {
         tier,
       });
     },
-    modalBurn(item){
-      if(localStorage.getItem("hide_burn_modal")==='true'){
+    modalBurn(item) {
+      if (localStorage.getItem('hide_burn_modal') === 'true') {
         confirmBurn(item);
         return;
       }
-      setModal({active:true,type:MODAL_BURN,item});
+      setModal({ active: true, type: MODAL_BURN, item });
     },
     async actionLoot(caster) {
       if (caster?.last_loot < game?.turnInfo?.turn) {
@@ -1052,7 +1050,10 @@ export const useChainActions = () => {
       setContext({ ...context, caster });
     },
     async confirmMint(item, caster) {
-      if(item?.rarity===RARITY_COMMON || context?.item?.rarity===RARITY_COMMON){
+      if (
+        item?.rarity === RARITY_COMMON ||
+        context?.item?.rarity === RARITY_COMMON
+      ) {
         setMutation({
           id: nanoid(),
           rpc: false,
@@ -1062,10 +1063,10 @@ export const useChainActions = () => {
           done: false,
           text: {
             error: t('error.mint.item.tier_too_low'),
-          }
+          },
         });
-        return
-    }
+        return;
+      }
       const playerContext = new PlayerContext(
         client,
         client?.program?.provider?.wallet?.publicKey,
@@ -1405,11 +1406,10 @@ export const useChainActions = () => {
       await web3Auth.logout();
       setProvider(null);
     },
-    async openDrawerTrade(){
+    async openDrawerTrade() {
       setDrawer({
         type: DRAWER_TRADE,
       });
     },
-    
   };
 };
