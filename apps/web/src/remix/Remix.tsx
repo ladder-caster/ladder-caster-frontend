@@ -28,7 +28,7 @@ import {
   SEEN_PHASE,
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
-  EDITION_LIMITED
+  EDITION_LIMITED,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -426,6 +426,10 @@ const Remix = () => {
 
     // DO NOT REMOVE, the game breaks if removed
     switch (process.env.REACT_APP_ENV as Environment) {
+      case 'localnet': {
+        localStorage.setItem('gamePK', resources.seasons[1].gameAccountLocal);
+        break;
+      }
       case 'devnet': {
         localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
         break;

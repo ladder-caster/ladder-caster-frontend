@@ -59,11 +59,13 @@ async function getMerkleSingleton() {
 export type ResourcesPK = {
   seasons: {
     0: {
+      gameAccountLocal: string;
       gameAccount: string;
       gameAccountProd: string;
       gameAccountProdPriv: string;
     };
     1: {
+      gameAccountLocal: string;
       gameAccount: string;
       gameAccountProd: string;
       gameAccountProdPriv: string;
@@ -153,6 +155,7 @@ export class PlayerContext {
         { memcmp: { offset: 18, bytes: playerAccount.toBase58() } },
       ])
     ).map((caster) => {
+      console.log(caster.publicKey.toString());
       return { ...caster.account, publicKey: caster.publicKey };
     });
 
@@ -526,24 +529,19 @@ export class PlayerContext {
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
     const mintOptions = await this.buildMintOptions('combined', 0, nftMintKeys);
-
+    const casterUri = await this.getCasterUri(caster);
     let signers = [nftMintKeys];
     if (this.client.wallet.payer) {
       signers = [this.client.wallet.payer, ...signers];
     }
 
-    return await this.client.program.rpc.mintCaster(
-      0,
-      await this.getCasterUri(caster),
-      validProof,
-      {
-        accounts: {
-          ...mintOptions,
-          caster: caster.publicKey,
-        },
-        signers,
+    return await this.client.program.rpc.mintCaster(0, casterUri, validProof, {
+      accounts: {
+        ...mintOptions,
+        caster: caster.publicKey,
       },
-    );
+      signers,
+    });
   }
 
   async mintNFTItem(item: Item) {
@@ -677,7 +675,6 @@ export class PlayerContext {
   async redeemNFTItem(nftMintKeys: PublicKey) {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
-    console.log(redeemOptions);
     return await this.client.program.rpc.redeemItem({
       ...redeemOptions,
       accounts: {
