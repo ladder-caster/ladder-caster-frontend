@@ -151,10 +151,14 @@ class GameConstantsContext {
     this.lastTurnNumber = game.turnInfo.turn;
     this.lastCrankTime = new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
     const difference = this.lastCrankTime - new Date().getMinutes();
-    const updateIntervalDuration = (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1;
-    this.updateGameInterval = setInterval(this.handleGameUpdateInterval, updateIntervalDuration * 60000,updateIntervalDuration);
+    const updateIntervalDuration =( (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1)*60000;
+    this.updateGameInterval = setInterval(()=>{this.handleGameUpdateInterval(updateIntervalDuration)}, updateIntervalDuration);
     await this.hydrateAccountBalances();
   }
+  /**
+   * 
+   * @param duration duration of the interval in ms
+   */
   private async handleGameUpdateInterval(duration: number){
     await this.hydrateGame();
     /**
@@ -165,13 +169,13 @@ class GameConstantsContext {
     if(this.lastTurnNumber<this.game.game.turnInfo.turn){
       this.lastCrankTime = new Date(this.game.game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
       const difference = this.lastCrankTime - new Date().getMinutes();
-      const updateIntervalDuration = (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1;
+      const updateIntervalDuration = ((ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1)*60000;
       this.lastTurnNumber=this.game.game.turnInfo.turn;
       clearInterval(this.updateGameInterval);
-      this.updateGameInterval=setInterval(this.handleGameUpdateInterval, updateIntervalDuration*60000,1);
+      this.updateGameInterval=setInterval(()=>{this.handleGameUpdateInterval(updateIntervalDuration)}, updateIntervalDuration);
     }else if(duration>1){
       clearInterval(this.updateGameInterval);
-      this.updateGameInterval=setInterval(this.handleGameUpdateInterval, 60000,1);
+      this.updateGameInterval=setInterval(()=>{this.handleGameUpdateInterval(60000)}, 60000);
     }
   }
   private getGamePK(env: Environment, season: number):PublicKey {

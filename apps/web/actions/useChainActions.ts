@@ -1330,7 +1330,7 @@ export const useChainActions = () => {
       setProvider(null);
     },
     async fixAccount(){
-      console.log("WALLET",walletType)
+      
       const playerContext = new PlayerContext();
 
       await stateHandler(

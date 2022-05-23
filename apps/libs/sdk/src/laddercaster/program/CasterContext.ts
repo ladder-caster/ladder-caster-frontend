@@ -120,15 +120,8 @@ export class CasterContext {
   }
 
   async casterCommitCraft(item1: Item, item2: Item, item3: Item) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
-    const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
-    const mintAccounts = await this.getMintAccounts(game);
+    // const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
+    //const mintAccounts = await this.getMintAccounts(game);
 
     return await gameConstantsContext.Client.program.rpc.casterCommitCraftS1({
       accounts: {
@@ -137,15 +130,15 @@ export class CasterContext {
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         rent: SYSVAR_RENT_PUBKEY,
         authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        player: playerAccount,
+        game: gameConstantsContext.gameTokenAccount,
+        player: gameConstantsContext.playerTokenAccount,
         caster: this.caster?.publicKey,
         item1: item1.publicKey,
         item2: item2.publicKey,
         item3: item3.publicKey,
-        ladaMint: game.ladaMintAccount,
+        ladaMint: gameConstantsContext.gameState.ladaMintAccount,
         ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
-        season: season,
+        season: gameConstantsContext.season,
       },
       signers: [gameConstantsContext.Client.wallet.payer],
     });

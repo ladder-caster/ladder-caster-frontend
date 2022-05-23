@@ -161,7 +161,7 @@ export class PlayerContext {
   async getItem(itemPK: anchor.web3.PublicKey) {
     return await gameConstantsContext.Client.program.account.item.fetch(itemPK);
   }
-
+  
   async initPlayer() {
     const [
       gameAccount,
@@ -417,11 +417,11 @@ export class PlayerContext {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
+    await getMerkleSingleton();
     const uri:string = await this.getItemUri(item, itemType);
     //Merkle proof part
     // noinspection TypeScriptValidateTypes
   
-    await getMerkleSingleton();
     const [leaf,tree]=await Promise.all([this.buildLeafItem(item, uri),buildMerkleTree(
       itemType === 'combined' || itemType === 'spellBook'
         ? merkle['merkleLeaves'][itemType]
@@ -435,11 +435,12 @@ export class PlayerContext {
     if (gameConstantsContext.Client.wallet.payer) {
       signers = [gameConstantsContext.Client.wallet.payer, ...signers];
     }
+    
     const mintOptions = await this.buildMintOptions(
       itemType,
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
       nftMintKeys);
-
+      console.log("SIGNERS",signers,mintOptions)
     return await gameConstantsContext.Client.program.rpc.mintItem(
       itemType === 'spellbook' ? 'spellBook' : itemType,
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
@@ -552,7 +553,6 @@ export class PlayerContext {
     nftMintKeys: Keypair,
   ) {
     const asyncDispatch = [ 
-      this.getAccounts(),
       anchor.web3.PublicKey.findProgramAddress(
         [
           Buffer.from(anchor.utils.bytes.utf8.encode('metadata')),
@@ -570,32 +570,28 @@ export class PlayerContext {
         nftMintKeys.publicKey,
       ),
     ]
-    const [accounts, nftMetadata,nftToken,metaplexMetadataAccount] = await Promise.all(asyncDispatch);
+    const [nftMetadataTuple,nftToken,metaplexMetadataAccount] = await Promise.all(asyncDispatch);
 
-   const gameAccount = accounts[0];
-   const playerAccount = accounts[1];
-   const gameSigner = accounts[4];
-   const season = accounts[5];
     const [merkleRootNft] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('merkle_roots'),
-        gameAccount.toBuffer(),
+        gameConstantsContext.gameTokenAccount.toBuffer(),
         Buffer.from(itemType),
         Buffer.from(anchor.utils.bytes.utf8.encode(String(level))),
       ],
       gameConstantsContext.Client.program.programId,
     );
-
+    const [nftMetadata]=nftMetadataTuple;
     return {
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: anchor.web3.SystemProgram.programId,
       rent: SYSVAR_RENT_PUBKEY,
       authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
-      game: gameAccount,
-      gameSigner: gameSigner,
-      season: season,
-      player: playerAccount,
+      game: gameConstantsContext.gameTokenAccount,
+      gameSigner: gameConstantsContext.gameSigner,
+      season: gameConstantsContext.season,
+      player: gameConstantsContext.playerTokenAccount,
       metaplexMetadataAccount: metaplexMetadataAccount,
       metaplexTokenMetadataProgram: MetadataProgram.PUBKEY,
       merkleRootNft,
@@ -609,7 +605,7 @@ export class PlayerContext {
     nftMintKeys: PublicKey,
     generatedPubKey: Keypair,
   ) {
-    const [accounts,nftMetaData,nftToken] = await Promise.all([this.getAccounts(),
+    const [nftMetadataTuple,nftToken] = await Promise.all([
       anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from(anchor.utils.bytes.utf8.encode('metadata')),
@@ -629,15 +625,15 @@ export class PlayerContext {
     if (gameConstantsContext.Client.wallet.payer) {
       signers = [gameConstantsContext.Client.wallet.payer, ...signers];
     }
-
+    const [nftMetadata,]=nftMetadataTuple;
     return {
       accounts: {
-        game: accounts[0],
+        game: gameConstantsContext.gameTokenAccount,
         nftMint: nftMintKeys,
         nftToken: nftToken,
-        nftMetadata: nftMetaData,
-        player: accounts[1],
-        season:accounts[5],
+        nftMetadata: nftMetadata,
+        player: gameConstantsContext.playerTokenAccount,
+        season:gameConstantsContext.season,
         authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
         tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -729,7 +725,7 @@ export class PlayerContext {
       case 'chest': {
         console.log('heyo');
         console.log(
-          `${await this.getItemUri(item, itemType)}:chest:${item.level}:${
+          `${uri}:chest:${item.level}:${
             item.itemType.chest.tier
           }`,
         );
