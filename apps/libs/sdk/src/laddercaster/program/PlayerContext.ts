@@ -161,7 +161,7 @@ export class PlayerContext {
   async getItem(itemPK: anchor.web3.PublicKey) {
     return await gameConstantsContext.Client.program.account.item.fetch(itemPK);
   }
-  
+
   async initPlayer() {
     const [
       gameAccount,
@@ -191,7 +191,7 @@ export class PlayerContext {
       );
     }
 
-    const resources = [
+    const gameResources = [
       {
         mintAccount: game.resource1MintAccount,
         tokenAccount:gameConstantsContext.resource1TokenAccount,
@@ -206,7 +206,7 @@ export class PlayerContext {
       },
     ];
 
-    resources.forEach(async (item) => {
+    gameResources.forEach(async (item) => {
       try {
         await gameConstantsContext.Client.connection.getTokenAccountBalance(item.tokenAccount);
       } catch (e) {
