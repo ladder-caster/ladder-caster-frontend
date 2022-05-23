@@ -71,8 +71,7 @@ export class CasterContext {
       this.getGameTurnData(game, gameAccount)
     ]).then(res=>res);
     const mintAccounts = asyncDispatchResult[0];
-    const [gameTurnData] = asyncDispatchResult[1];
-   
+    const gameTurnData = asyncDispatchResult[1];
     return await gameConstantsContext.Client.program.rpc.casterCommitMoveS1(lvl, col, {
       accounts: {
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -101,7 +100,7 @@ export class CasterContext {
 
   async casterCommitLoot() {
     const [gameAccount, playerAccount, game] = await this.getAccounts();
-    const [gameTurnData] = await this.getGameTurnData(
+    const gameTurnData = await this.getGameTurnData(
       game,
       gameAccount,
       this.caster.turnCommit?.turn,
@@ -291,7 +290,7 @@ export class CasterContext {
       gameSigner,
       season,
     ] = await this.getAccounts();
-    const [gameTurnData] = await this.getGameTurnData(
+    const gameTurnData = await this.getGameTurnData(
       game,
       gameAccount,
       this.caster?.turnCommit?.turn,
@@ -358,7 +357,7 @@ export class CasterContext {
     ] = await this.getAccounts();
     const empty = Keypair.generate();
     const mintAccounts = await this.getMintAccounts(game);
-    const [gameTurnData] = await this.getGameTurnData(
+    const gameTurnData = await this.getGameTurnData(
       game,
       gameAccount,
       this.caster?.turnCommit?.turn,
@@ -531,7 +530,7 @@ export class CasterContext {
       season,
     ] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
-    const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
+    const gameTurnData = await this.getGameTurnData(game, gameAccount);
 
     const tx = new Transaction();
 
@@ -610,7 +609,7 @@ export class CasterContext {
   async manualResourceBurn(itemFeature: ItemFeature, amount: number) {
     const [gameAccount, playerAccount, game] = await this.getAccounts();
     const mintAccounts = await this.getMintAccounts(game);
-    const [gameTurnData] = await this.getGameTurnData(game, gameAccount);
+    const gameTurnData = await this.getGameTurnData(game, gameAccount);
 
     return await gameConstantsContext.Client.program.rpc.manualResourceBurn(
       itemFeature,
@@ -759,7 +758,7 @@ export class CasterContext {
   private async getGameTurnData(game: Game, gameAccount: PublicKey, turn = -1) {
     const turnNumber = turn !== -1 ? turn : game?.turnInfo?.turn;
     if(turn!=-1 && turn!=game?.turnInfo?.turn){
-      return await anchor.web3.PublicKey.findProgramAddress(
+      const [turnData] = await anchor.web3.PublicKey.findProgramAddress(
         [
           Buffer.from('turn_data'),
           gameAccount.toBuffer(),
@@ -767,8 +766,9 @@ export class CasterContext {
         ],
         gameConstantsContext.Client.program.programId,
       );
+      return turnData;
     }
-   return [gameConstantsContext.turnData,123]
+   return gameConstantsContext.turnData;
   }
 
   private async getMintAccounts(game: Game) {
