@@ -6,6 +6,8 @@ export const _buy = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 16px 0 24px;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const _title = styled.div`
@@ -14,6 +16,10 @@ export const _title = styled.div`
   color: ${({ theme }) => theme.text['base']};
   margin-bottom: 8px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
 `;
 
 export const _options = styled.div`

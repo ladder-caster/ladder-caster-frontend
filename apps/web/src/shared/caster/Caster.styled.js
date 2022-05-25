@@ -1,5 +1,53 @@
 import styled from 'styled-components';
-
+import { m } from 'framer-motion';
+import {
+  ATTRIBUTE_RES3,
+  ATTRIBUTE_RES2,
+  RARITY_COMMON,
+  RARITY_RARE,
+} from 'core/remix/state';
+export const _upgrade = styled(m.div).attrs(({ theme, $hue }) => {
+  return {
+    initial: {
+      backgroundColor:
+        $hue !== undefined
+          ? `hsla(${$hue},60%,34%,100%)`
+          : `hsla(360,60%,100%,100%)`,
+    },
+    animate: {
+      backgroundColor:
+        $hue !== undefined
+          ? `hsla(${Math.min(Math.max($hue + 10, 0), 360)},30%,60%,100%)`
+          : `hsla(360,60%,100%,100%)`,
+      scale: 0.75,
+    },
+    transition: {
+      ease: [0.56, -0.28, 0, 1.53],
+      duration: 3,
+      repeat: Infinity,
+      repeatType: 'mirror',
+      repeatDelay: 0.1,
+    },
+  };
+})`
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 8px;
+  right: 56px;
+  background-color: ${({ theme, $hue }) =>
+    $hue !== undefined
+      ? `hsla(${$hue},60%,34%,100%)`
+      : `hsla(360,60%,100%,100%)`};
+  border-radius: 50%;
+  border: 2px solid
+    ${({ theme, $hue }) =>
+      $hue !== undefined
+        ? `hsla(${Math.min(Math.max($hue + 10, 0), 360)},30%,70%,100%)`
+        : `hsla(360,60%,100%,100%)`};
+  box-shadow: ${({ theme }) => theme.shadow['frost']};
+  z-index: 183;
+`;
 export const _caster = styled.div`
   min-width: ${({ $grid }) => ($grid ? `calc(50% - 8px)` : '100%')};
   width: ${({ $grid }) => ($grid ? `calc(50% - 8px)` : '100%')};

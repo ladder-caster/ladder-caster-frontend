@@ -22,12 +22,10 @@ const PrestigeToggle = () => {
   };
   return (
     <_buy>
-      <_title>{t('hide.prestige')}</_title>
-      <_options>
-        <_option>
-          <Toggle onClick={handleToggle} checked={toggle}></Toggle>
-        </_option>
-      </_options>
+      <_title>
+        {t('hide.prestige')}
+        <Toggle onClick={handleToggle} checked={toggle} scale={1.1}></Toggle>
+      </_title>
     </_buy>
   );
 };

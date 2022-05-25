@@ -57,7 +57,7 @@ import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
-import { findIndex } from 'lodash';
+import { findIndex, clamp } from 'lodash';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 
 const COST_MULTIPLIER = 5;
@@ -81,18 +81,17 @@ const Materials = () => {
 
   const position = context?.caster?.position;
   const item_type = context?.item;
-  const materials = context?.materials;
+  const materials = context?.materials ?? [];
   const { craftChooseMaterials, removeMaterials, craftItem } = useActions();
 
   const different_types = useMemo(() => {
     if (materials?.length === 3) {
-      let material_type = '';
-      for (let i = 0; i < materials?.length; i++) {
-        const next_type = materials?.[i]?.type;
-        console.log('next_type', next_type);
-        if (material_type === '') material_type = next_type;
-        else if (next_type !== material_type) return true;
-      }
+      // transitive ... x = y, y = z then x = z
+      return (
+        materials[0].type !== materials[1].type &&
+        materials[1].type !== materials[2].type &&
+        materials[0].type !== materials[2].type
+      );
     }
   }, [materials, JSON.stringify(materials)]);
 
@@ -130,26 +129,22 @@ const Materials = () => {
   ];
 
   const craft_item = useMemo(() => {
-    let min_rarity = 4;
-    let min_level = 30;
-    let min_tier = TIER_IV;
+    const rarities = [];
+    const levels = [];
+    materials.map((mat) => {
+      rarities.push(rank_rarities[mat.rarity]);
+      levels.push(mat.tier);
+    });
+    let min_rarity = Math.min(4, ...rarities);
+    let min_level = Math.min(30, ...levels);
+    // clamps to lvl/5 (-1 for bounds e.g 10/15)... due to clamping to 3 even 20,25,30 produces similar results
+    const isCategoryBounds = min_level % 5 === 0;
+    let index =
+      min_level > 5
+        ? clamp(Math.floor(min_level / 5) - (isCategoryBounds ? 1 : 0), 1, 3)
+        : 0;
+    let min_tier = tier_range[1][index];
     let max_tier = TIER_I;
-
-    for (let i = 0; i < materials?.length; i++) {
-      const item = materials?.[i];
-      const rank = rank_rarities?.[item?.rarity];
-      min_rarity = rank < min_rarity ? rank : min_rarity;
-      min_level = item?.level < min_level ? item?.level : min_level;
-    }
-    for (let i = 0; i < materials?.length; i++) {
-      const item_level = materials?.[i]?.level;
-      for (let t = 0; t < tier_range[0].length; t++) {
-        if (item_level <= tier_range[1][t]) {
-          min_tier = tier_range[0][t];
-          break;
-        }
-      }
-    }
 
     const isLegendary = position_type === TYPE_LEGENDARY;
     let max_rarity = min_rarity;
@@ -173,7 +168,7 @@ const Materials = () => {
       max_rarity: rarity_rank[max_rarity],
       max_level,
       max_tier,
-      lada_cost: indexOf(tier_range[0], min_tier) + 1,
+      lada_cost: index + 1,
     };
   }, [item_type, materials?.length]);
 

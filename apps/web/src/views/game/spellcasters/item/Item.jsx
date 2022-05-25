@@ -46,9 +46,11 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
   }, [isBuy, isOld, isPrestigeHide]);
   return (
     <_item>
-      <_inventory onClick={() => tabCharacter(spell_id)}>
-        <Card spell_id={spell_id} mint={isBuy} isOld={isOld} />
-      </_inventory>
+      {!isPrestigeHide && (
+        <_inventory onClick={() => tabCharacter(spell_id)}>
+          <Card spell_id={spell_id} mint={isBuy} isOld={isOld} />
+        </_inventory>
+      )}
       {render}
     </_item>
   );
