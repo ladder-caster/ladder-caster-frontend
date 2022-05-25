@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-
+import { Client } from './Client';
 //Accounts
 export interface Game {
   version: number; // 8
@@ -193,4 +193,71 @@ export interface SpellType {
   experience?: {};
   craft?: {};
   item?: {};
+}
+
+export interface TokenAccounts{
+  [key:string]: PublicKey,
+  lada:PublicKey
+}
+export interface Accounts {
+  tokenAccounts:TokenAccounts,
+  gameAccount:PublicKey,
+  playerAccount:PublicKey,
+  playerBump: number,
+  previousGameAccount: PublicKey,
+  previousPlayerAccount: PublicKey,
+}
+export interface GameState {
+  game: Game,
+  gameSigner: PublicKey,
+  season: PublicKey,
+  previousSeason: PublicKey,
+  turnData: PublicKey,
+  futureTurnData: PublicKey
+}
+
+export interface GameBalances{
+  [key: string]: number,
+  lada: number,
+}
+export interface Balances{
+  game: GameBalances,
+  sol: number
+}
+export interface GameConstantsContextInterface{
+  /**
+   * Client containing RPC, program and wallet info
+   */
+  Client: Client,
+  /**
+   * @returns [PublicKey, PublicKey,  Game, PublicKey,PublicKey ]
+   */
+  getCasterAccounts: [PublicKey, PublicKey,  Game, PublicKey,PublicKey ],
+  getPlayerAccounts: [PublicKey, PublicKey, number, Game, PublicKey, PublicKey],
+  hydrateGame: Function,
+  hydrateAccountBalances: Function,
+  getTokenBalances: Function,
+  initClient: Function,
+  playerTokenAccount: PublicKey,
+  previousPlayerTokenAccount: PublicKey,
+  playerBump: number,
+  gameTokenAccount: PublicKey,
+  previousGameTokenAccount: PublicKey,
+  ladaTokenAccount: PublicKey,
+  resource1TokenAccount: PublicKey,
+  resource2TokenAccount: PublicKey,
+  resource3TokenAccount: PublicKey,
+  gameSigner: PublicKey,
+  season: PublicKey,
+  previousSeason: PublicKey,
+  turnData: PublicKey,
+  futureTurnData: PublicKey,
+  ladaBalance: number,
+  resource1Balance: number,
+  resource2Balance: number,
+  resource3Balance: number,
+  solBalance: number,
+  gameState: Game,
+  clientInitialized: boolean,
+  
 }

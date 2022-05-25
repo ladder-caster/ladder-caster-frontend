@@ -31,7 +31,12 @@ const KeysTab = () => {
   const adapterWallet = useWallet();
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
   const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
-  const { closeDrawer, clearStates, web3AuthDisconnect } = useActions();
+  const {
+    closeDrawer,
+    clearStates,
+    web3AuthDisconnect,
+    fixAccount,
+  } = useActions();
 
   const handleLogout = useCallback(async () => {
     setWalletType(null);
@@ -79,11 +84,12 @@ const KeysTab = () => {
         close={() => setActiveMenu(null)}
       />
     );
-
-  return (
-    <_tab>
-      {publicKey && (
+  const renderMenu = useMemo(() => {
+    let renderItems = [];
+    if (publicKey) {
+      renderItems.push(
         <_button
+          key="torusOpen"
           onClick={() => {
             pluginStore.plugins['torusWallet'].torusWalletInstance.showWallet(
               'home',
@@ -91,27 +97,52 @@ const KeysTab = () => {
           }}
         >
           {t('drawer.settings.key.web3auth')}
-        </_button>
-      )}
-      {publicKey && (
-        <_button onClick={() => setActiveMenu(MENU_EXPORT_PUBLIC_KEY)}>
+        </_button>,
+      );
+      renderItems.push(
+        <_button
+          key="share"
+          onClick={() => setActiveMenu(MENU_EXPORT_PUBLIC_KEY)}
+        >
           {t('drawer.settings.key.share.public')}
-        </_button>
-      )}
-      {secretKey && (
-        <_button onClick={() => setActiveMenu(MENU_EXPORT_SECRET_KEY)}>
-          {t('drawer.settings.key.export.secret')}
-        </_button>
-      )}
-      {publicKey && (
+        </_button>,
+      );
+      renderItems.push(
         <_link
+          key="explorer"
           href={`https://solscan.io/account/${publicKey}${network}`}
           target="_blank"
           rel="noreferrer"
         >
           {t('drawer.settings.key.block.explorer')} <IconHyperlink />
-        </_link>
-      )}
+        </_link>,
+      );
+    }
+    if (secretKey) {
+      renderItems = [
+        ...renderItems.splice(0, 1),
+        <_link
+          key="explorer"
+          href={`https://solscan.io/account/${publicKey}${network}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t('drawer.settings.key.block.explorer')} <IconHyperlink />
+        </_link>,
+        renderItems.slice(2),
+      ];
+    }
+    renderItems.push(
+      <_button key="fixaccount" onClick={() => fixAccount()}>
+        {t('drawer.settings.key.fix_account')}
+      </_button>,
+    );
+    return renderItems;
+  }, [publicKey, secretKey]);
+  return (
+    <_tab>
+      {renderMenu}
+
       <AnimateDots>
         <_disconnect onClick={() => handleLogout()}>
           {t('drawer.settings.disconnect')}

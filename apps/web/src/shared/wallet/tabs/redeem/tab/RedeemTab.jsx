@@ -21,12 +21,8 @@ const RedeemTab = () => {
   useEffect(() => {
     const getAllNFTs = async () => {
       try {
-        const playerContext = new PlayerContext(
-          client,
-          client?.program?.provider?.wallet?.publicKey,
-          localStorage.getItem('gamePK'),
-        );
-
+        const playerContext = new PlayerContext();
+        console.log('PLAYER CONTEXT', playerContext);
         return await playerContext.getNFTUris(await playerContext.getNFTS());
       } catch {
         // catch error
