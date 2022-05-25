@@ -28,7 +28,8 @@ import {
   SEEN_PHASE,
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
-  EDITION_LIMITED
+  EDITION_LIMITED,
+  CASTER_UPGRADE_AVAILABLE
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -60,7 +61,8 @@ import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
-
+import { CasterUpgradeAvailable } from './Remix.types';
+const CasterUpgradesAvailable:CasterUpgradeAvailable = {loaded:false,items:{},upgradesAvailable:false}
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -78,6 +80,7 @@ const Remix = () => {
     items: [],
     chests: [],
   });
+  const [upgradeAvailable,setUpgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,CasterUpgradesAvailable)
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
