@@ -41,12 +41,7 @@ export const useGame = () => {
 
           setGame(next_game);
 
-          const playerContext = new PlayerContext(
-            client,
-            client.program.provider.wallet.publicKey,
-            localStorage.getItem('gamePK'),
-          );
-
+          const playerContext = new PlayerContext();
           try {
             setPlayer(await playerContext.getPlayer());
           } catch (e) {
