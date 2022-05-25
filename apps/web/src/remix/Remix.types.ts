@@ -1,26 +1,21 @@
 import { Item } from 'sdk/src/laddercaster/program/types'
-import {
-  PublicKey,
-} from '@solana/web3.js';
+import {PublicKey} from '@solana/web3.js';
 export interface CasterUpgradeAvailable {
-  loaded:false,
-  items:{
-    /**
-     * Category of the item e.g hat, robe, staff
-     */
-    [key:string]:{
-      /**
-       * Filtered array of items per type
-       */
-      items: Item[],
-      /**
-       * Precomputed array of Caster PublicKeys which could use an upgrade
-       */
-      casters: PublicKey[],
-    }
-  },
+  loadedItems: false,
+  casters: Map<String, CasterWrapper>,
   /**
-   * Boolean stating if any caster has an upgrade available - used to prevent going through the upgrade process if no upgrades are available
-   */
-  upgradesAvailable: boolean,
+  * Filtered array of items per type
+  */
+  items: Map<String,Item>,
+  /**
+  * Boolean stating if any caster has an upgrade available - used to prevent going through the upgrade process if no upgrades are available
+  */
+  canUpgrade: (publicKey: String,casters: Map<String, CasterWrapper>)=>boolean,
+}
+
+export interface CasterWrapper{
+  [key:string]:{
+    items: PublicKey[],
+    currentItem: Item
+  }
 }

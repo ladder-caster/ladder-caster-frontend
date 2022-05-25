@@ -59,13 +59,25 @@ import {
   Tile,
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
+
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
-import { CasterUpgradeAvailable } from './Remix.types';
+import { CasterUpgradeAvailable,CasterWrapper } from './Remix.types';
 //ensures presetup is done
-const UpgradesAvailable:CasterUpgradeAvailable = {loadedItems:false,loadedCasters:false,items:{},upgradesAvailable:false}
+const UpgradesAvailable:CasterUpgradeAvailable = {
+  loadedItems:false,
+  items:new Map<String, Item>(),
+  casters:new Map<String, CasterWrapper>(),
+  canUpgrade:(publicKey: String,casters: Map<String,CasterWrapper>)=>{
+      console.log('CANUPGRADE',casters,publicKey)
+    const hat = casters.get(publicKey)?.head?.items?.length > 0;
+    const robe = casters.get(publicKey)?.robe?.items?.length > 0;
+    const staff = casters.get(publicKey)?.staff?.items?.length > 0;
+    return hat || robe || staff
+  }
+}
 const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -236,7 +248,23 @@ const Remix = () => {
           };
         }
       };
-
+      const hat =generateModifier(caster.modifiers.head)
+      const robe = generateModifier(caster.modifiers.robe)
+      const staff = generateModifier(caster.modifiers.staff)
+      upgradeAvailable.casters.set(caster?.publicKey?.toString(),{
+        head:{
+          items: [],
+          currentItem:hat
+        },
+        robe:{
+          items: [],
+          currentItem:robe
+        },
+        staff:{
+          items: [],
+          currentItem:staff
+        }
+      })
       spellcastersArr.push({
         index: i,
         publicKey: caster?.publicKey?.toString(),
@@ -250,9 +278,9 @@ const Remix = () => {
         position: position,
         id: nanoid(),
         xp: caster.experience.toNumber(),
-        hat: generateModifier(caster.modifiers.head),
-        robe: generateModifier(caster.modifiers.robe),
-        staff: generateModifier(caster.modifiers.staff),
+        hat: hat,
+        robe: robe,
+        staff: staff,
         spell: generateModifier(caster.modifiers.spellBook),
         edition: caster?.edition === 1 ? EDITION_NORMAL : EDITION_LIMITED,
         last_loot: caster?.turnCommit?.actions?.loot
@@ -301,14 +329,8 @@ const Remix = () => {
             publicKey: item?.publicKey?.toString(),
             equippedOwner: item.equippedOwner,
           }
-          // key not yet in items
-          if(!(itemType in upgradeAvailable.items)){
-            upgradeAvailable.items[itemType] = {
-              items: [],
-              casters:[]
-            }
-          }
-          if(!item.equippedOwner)upgradeAvailable.items[itemType].items.push(arrayItem);
+         
+          if(!item.equippedOwner)upgradeAvailable.items.set(arrayItem.publicKey,arrayItem);
           items.push(arrayItem);
         } else if (item.itemType.spellBook) {
           items.push({
@@ -502,7 +524,41 @@ const Remix = () => {
       });
     }
   }, [loading]);
+  const getCasterUpgrades= async()=>{
+    const items = [...upgradeAvailable.items.values()];
+    for(let i = 0;i<casters.length;i++){
+      const casterWrapper = upgradeAvailable.casters.get(casters[i].publicKey.toString());
+      for(let j = 0;j<items.length;j++){
+        const item = items[j];
+        getCasterUpgradesAsyncCheck(casterWrapper,item,casters[i].publicKey.toString(),casters[i].level)
+      }
+    }
+  }
+  const getCasterUpgradesAsyncCheck = async (casterWrapper: CasterWrapper,item: Item,publicKey: string,casterLevel:number) => {
+    const updatedWrapper = Object.assign({},casterWrapper)
+    const currentItem = updatedWrapper[item.type].currentItem;
 
+    const isResource = [TYPE_RES1,TYPE_RES2,TYPE_RES3].includes(item.type);
+    const sameType = currentItem?.attribute === item.attribute;
+    console.log('IS RESOURCE',isResource,sameType,item,currentItem);
+    const betterItem = currentItem ? (isResource || sameType) && currentItem.value < item.value && item.level<=casterLevel : true;
+    const itemPublicKey = item.publicKey.toString();
+    if(betterItem){
+      const index = updatedWrapper[item.type].items.indexOf(itemPublicKey)
+      //not sure why this spagett logic works but welp
+      if(!upgradeAvailable.items.get(itemPublicKey) && index!==-1){
+        updatedWrapper[item.type].items.splice(index,1)
+      }else if(upgradeAvailable.items.get(itemPublicKey) && index===-1){
+        updatedWrapper[item.type].items.push(itemPublicKey)
+      }
+      upgradeAvailable.casters.set(publicKey,updatedWrapper)
+    }
+  }
+  useEffect(()=>{
+    if(upgradeAvailable.loadedItems && casters.length>0){
+     getCasterUpgrades()
+    }
+  },[upgradeAvailable,casters])
   return null;
 };
 

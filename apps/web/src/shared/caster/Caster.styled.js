@@ -13,17 +13,18 @@ export const _upgrade = styled(m.div).attrs(({ theme, $hue }) => {
         $hue !== undefined
           ? `hsla(${$hue},60%,34%,100%)`
           : `hsla(360,60%,100%,100%)`,
+      scale: 0.75,
     },
     animate: {
       backgroundColor:
         $hue !== undefined
           ? `hsla(${Math.min(Math.max($hue + 10, 0), 360)},30%,60%,100%)`
           : `hsla(360,60%,100%,100%)`,
-      scale: 0.75,
+      scale: 1,
     },
     transition: {
       ease: [0.56, -0.28, 0, 1.53],
-      duration: 3,
+      duration: 2.2,
       repeat: Infinity,
       repeatType: 'mirror',
       repeatDelay: 0.1,

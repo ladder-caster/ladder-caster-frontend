@@ -53,7 +53,8 @@ import {
   GAME_CONSTANTS,
   DRAWER_TRADE,
   RARITY_COMMON,
-  MODAL_BURN
+  MODAL_BURN,
+  CASTER_UPGRADE_AVAILABLE
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -151,6 +152,7 @@ export const useChainActions = () => {
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
 
