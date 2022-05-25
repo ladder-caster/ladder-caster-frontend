@@ -64,7 +64,8 @@ import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
 import { CasterUpgradeAvailable } from './Remix.types';
-const CasterUpgradesAvailable:CasterUpgradeAvailable = {loaded:false,items:{},upgradesAvailable:false}
+//ensures presetup is done
+const UpgradesAvailable:CasterUpgradeAvailable = {loadedItems:false,loadedCasters:false,items:{},upgradesAvailable:false}
 const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -83,7 +84,8 @@ const Remix = () => {
     items: [],
     chests: [],
   });
-  const [upgradeAvailable,setUpgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,CasterUpgradesAvailable)
+  const [upgradeAvailable,setUpgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,UpgradesAvailable)
+
   const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
@@ -287,8 +289,9 @@ const Remix = () => {
         });
       } else {
         if (item.itemType.equipment) {
-          items.push({
-            type: Object.keys(item.itemType.equipment.equipmentType)[0],
+          const itemType = Object.keys(item.itemType.equipment.equipmentType)[0]
+          const arrayItem = {
+            type: itemType,
             id: key,
             tier: getTier(item.level),
             level: item.level,
@@ -297,7 +300,16 @@ const Remix = () => {
             value: item.itemType.equipment.value,
             publicKey: item?.publicKey?.toString(),
             equippedOwner: item.equippedOwner,
-          });
+          }
+          // key not yet in items
+          if(!(itemType in upgradeAvailable.items)){
+            upgradeAvailable.items[itemType] = {
+              items: [],
+              casters:[]
+            }
+          }
+          if(!item.equippedOwner)upgradeAvailable.items[itemType].items.push(arrayItem);
+          items.push(arrayItem);
         } else if (item.itemType.spellBook) {
           items.push({
             type: Object.keys(item.itemType)[0],
@@ -315,7 +327,7 @@ const Remix = () => {
         }
       }
     }
-
+    upgradeAvailable.loadedItems = true;
     return {
       items: reverse(
         sortBy(items, ['level', 'attribute', 'rarity']).filter((item) => {
@@ -422,6 +434,7 @@ const Remix = () => {
     if (casters) {
       setSpellcasters(generateSpellCaster(casters));
       console.log('casters', casters);
+
     }
   }, [casters]);
 
