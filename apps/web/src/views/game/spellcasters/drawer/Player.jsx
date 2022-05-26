@@ -61,28 +61,35 @@ const Player = () => {
       View: Leaderboard,
     },
   };
-
+  const renderMain = useMemo(() => {
+    if (id === SPELLCASTER_BUY) {
+      return (
+        <_details>
+          <_title>{t('wizard.title')}</_title>
+          <_description>{t('wizard.description')}</_description>
+        </_details>
+      );
+    }
+    return <Rank caster={caster} />;
+  }, [id]);
+  const renderSecondary = useMemo(() => {
+    if (isBoost) return <Boost />;
+    if (confirm) return <Confirm type={CONFIRM_UNEQUIP} />;
+    return (
+      <Tabs
+        tab_id={TABS_CHARACTER_ACTIONS}
+        views={tabs_character_actions}
+        caster={caster}
+        back={context?.back}
+      />
+    );
+  }, [isBoost, confirm]);
   return (
     <_background>
       <_player>
-        {id === SPELLCASTER_BUY && (
-          <_details>
-            <_title>{t('wizard.title')}</_title>
-            <_description>{t('wizard.description')}</_description>
-          </_details>
-        )}
-        {id !== SPELLCASTER_BUY && <Rank caster={caster} />}
+        {renderMain}
         <_breakpoint />
-        {isBoost && <Boost />}
-        {!confirm && !isBoost && (
-          <Tabs
-            tab_id={TABS_CHARACTER_ACTIONS}
-            views={tabs_character_actions}
-            caster={caster}
-            back={context?.back}
-          />
-        )}
-        {confirm && !isBoost && <Confirm type={CONFIRM_UNEQUIP} />}
+        {renderSecondary}
       </_player>
     </_background>
   );

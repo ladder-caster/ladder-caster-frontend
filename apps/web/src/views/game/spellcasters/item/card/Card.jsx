@@ -10,7 +10,6 @@ import { IconWizard } from 'design/icons/wizard.icon';
 import Caster from '../../../../../shared/caster/Caster';
 
 const Card = ({ spell_id, oldCaster }) => {
-  const { t } = useTranslation();
   const [old_caster] =
     useRemix(GAME_OLD_SPELLCASTERS, (oldCasters) =>
       find(oldCasters, (caster) => caster?.id === spell_id),

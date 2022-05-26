@@ -17,7 +17,6 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
   const { tabCharacter } = useActions();
   const isBuy = spell_id === SPELLCASTER_BUY;
   const render = useMemo(() => {
-    console.log('Item', isOld, isBuy, isPrestigeHide);
     if (isOld) {
       return (
         <_buy>
@@ -44,10 +43,14 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
       );
     }
   }, [isBuy, isOld, isPrestigeHide]);
+  // prevents rerenders - anon funcs rerender :/
+  const onClick = () => {
+    tabCharacter(spell_id);
+  };
   return (
     <_item>
       {!isPrestigeHide && (
-        <_inventory onClick={() => tabCharacter(spell_id)}>
+        <_inventory onClick={onClick}>
           <Card spell_id={spell_id} mint={isBuy} isOld={isOld} />
         </_inventory>
       )}

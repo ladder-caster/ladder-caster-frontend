@@ -36,7 +36,7 @@ const Spellcasters = () => {
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
       return sortBy(spellcasters, (sort) => sort?.hue).map((caster) => (
-        <Item key={nanoid()} spell_id={caster.id} />
+        <Item key={caster?.publicKey} spell_id={caster.id} />
       ));
     }
   }, [spellcasters]);
@@ -44,34 +44,20 @@ const Spellcasters = () => {
   const render_old_spellcasters = useMemo(() => {
     if (oldSpellcasters && oldSpellcasters.length >= 1) {
       return sortBy(oldSpellcasters, (sort) => sort?.hue).map((caster) => (
-        <Item key={nanoid()} spell_id={caster.id} isOld />
+        <Item key={caster?.publicKey} spell_id={caster.id} isOld />
       ));
     }
   }, [oldSpellcasters]);
-  const render = useMemo(() => {
-    if (
-      (!initialized || render_spellcasters?.length == 0) &&
-      render_old_spellcasters?.length == 0
-    ) {
-      return (
-        <_feed>
-          <Onboarding />
-        </_feed>
-      );
-    }
-    return (
+
+  return (
+    <_spellcasters>
+      <Heading title={t('title.casters')} />
       <_list>
         {render_spellcasters}
         <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
         <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
         {!hidePrestige && render_old_spellcasters}
       </_list>
-    );
-  }, [initialized, render_spellcasters, render_old_spellcasters, hidePrestige]);
-  return (
-    <_spellcasters>
-      <Heading title={t('title.casters')} />
-      {render}
     </_spellcasters>
   );
 };
