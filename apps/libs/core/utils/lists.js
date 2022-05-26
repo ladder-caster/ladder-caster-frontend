@@ -1,7 +1,7 @@
 export const gridList = (list) => {
   const grid_list = [];
   for (let i = 0; i < list?.length; i++) {
-    let row = Math.floor(i / 2);
+    let row = Math.floor(i / 3);
     const item = list?.[i];
 
     if (i === 0 || !grid_list[row]) {
