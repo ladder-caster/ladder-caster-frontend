@@ -128,8 +128,6 @@ const Queue = ({ spell_id }) => {
   const needsToRedeem = useMemo(() => {
     const turnCommitTurn = caster?.turnCommit;
 
-    const currentTurn = game?.turnInfo?.turn;
-
     return turnCommitTurn < currentTurn;
   }, [caster?.turnCommit?.turn, game?.turnInfo?.turn]);
   /**

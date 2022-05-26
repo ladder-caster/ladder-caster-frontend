@@ -24,7 +24,6 @@ const Character = ({ caster }) => {
   const equipment_ref = useRef();
   const { width } = useSize(equipment_ref);
   const unequip = !!context?.unequip;
-
   return (
     <_character>
       {unequip && <Info item={context?.item} caster={caster} />}

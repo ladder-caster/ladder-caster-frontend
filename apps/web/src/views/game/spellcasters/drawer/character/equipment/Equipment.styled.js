@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-
+import { m } from 'framer-motion';
+import { theme } from 'design';
 export const _equipment = styled.div`
   display: flex;
   flex-direction: row;
@@ -119,4 +120,34 @@ export const _inner = styled.div`
         ? `scale(${$scale})${$staff ? `rotate(${$staff})` : ''}`
         : 'scale(1)'};
   }
+`;
+// elastic out bezier curve
+export const _upgrade = styled(m.div).attrs(({ theme }) => {
+  return {
+    initial: {
+      scale: 0.5,
+      borderWidth: '3px',
+    },
+    animate: {
+      scale: 1.1,
+      borderWidth: '0px',
+    },
+    transition: {
+      duration: 2.9,
+      repeat: Infinity,
+      repeatType: 'mirror',
+      repeatDelay: 0.05,
+      ease: [0.64, 0.57, 0.67, 1.53],
+    },
+  };
+})`
+  display: relative;
+  width: 16px;
+  height: 16px;
+  top: 8px;
+  right: 56px;
+  background-color: ${({ theme }) => theme.text['logout']};
+  border-radius: 50%;
+  border: 3px solid ${({ theme }) => theme.border['error']};
+  box-shadow: ${({ theme }) => theme.shadow['error']};
 `;
