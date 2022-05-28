@@ -23,11 +23,8 @@ const Caster = ({ caster, grid, small, callback, isOld }) => {
   const { width } = useSize(caster_ref);
   const { craftChooseCharacter } = useActions();
   const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
-  const canUpgrade =
-    upgradeAvailable?.canUpgrade?.(
-      caster?.publicKey,
-      upgradeAvailable.casters,
-    ) ?? false;
+  const canUpgrade = upgradeAvailable?.canUpgrade?.(caster?.publicKey) ?? false;
+
   const src = isOld
     ? require('../../../../libs/design/assets/old_wizard.png')
     : caster?.edition === EDITION_LIMITED

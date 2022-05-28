@@ -137,15 +137,16 @@ export const _upgrade = styled(m.div).attrs(({ theme }) => {
       repeat: Infinity,
       repeatType: 'mirror',
       repeatDelay: 0.05,
-      ease: [0.64, 0.57, 0.67, 1.53],
+      ease: [0.68, 0.36, 0.09, 1.41],
     },
   };
 })`
-  display: relative;
+  position: absolute;
+  z-index: 183;
   width: 16px;
   height: 16px;
   top: 8px;
-  right: 56px;
+  right: 16px;
   background-color: ${({ theme }) => theme.text['logout']};
   border-radius: 50%;
   border: 3px solid ${({ theme }) => theme.border['error']};

@@ -27,6 +27,7 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
+  PLAYER_TAB_ACTIONS,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
@@ -35,7 +36,7 @@ import Boost from './boost/Boost';
 import { useActions } from '../../../../../actions';
 import Leaderboard from '../../../../shared/leaderboard/Leaderboard';
 import Confirm from '../../../../shared/confirm/Confirm';
-
+import TabAction from '../../../../shared/tabs/TabActions/TabActions';
 const Player = () => {
   const { t } = useTranslation();
   const { burnResourcesForXP } = useActions();
@@ -60,6 +61,10 @@ const Player = () => {
       name: t('player.leaderboard'),
       View: Leaderboard,
     },
+    [PLAYER_ACTIONS]: {
+      name: t('player.actions'),
+      View: TabAction,
+    },
   };
   const renderMain = useMemo(() => {
     if (id === SPELLCASTER_BUY) {
@@ -83,7 +88,7 @@ const Player = () => {
         back={context?.back}
       />
     );
-  }, [isBoost, confirm]);
+  }, [isBoost, confirm, caster]);
   return (
     <_background>
       <_player>

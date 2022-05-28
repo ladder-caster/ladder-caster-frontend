@@ -82,6 +82,7 @@ import {
   CasterContext,
   GameContext,
   PlayerContext,
+  Caster
 } from 'sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
 import {
@@ -1352,6 +1353,52 @@ export const useChainActions = () => {
         type: DRAWER_TRADE,
       });
     },
+    async unequipAllItems(caster: Caster){
+      if(!caster)return;
+      const casterContext = new CasterContext(find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),);
+
+      const casterItems = await upgradeAvailable?.getEquippedItems(caster.publicKey)
+      if(casterItems.length == 0)return;
+      await stateHandler(
+        async () => {
+          return await casterContext.unequipAllItems(casterItems);
+        },
+        INST_UNEQUIP,
+        '',
+      );
+    },
+    async upgradeAllItems(caster: Caster){
+      if(!caster)return;
+      const casterContext = new CasterContext(  find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),);
+
+      const casterWrapper = await upgradeAvailable?.casters?.get(caster?.publicKey)
+     
+      if(!casterWrapper)return;
+      const keys = Object.keys(casterWrapper)
+      const casterItems = []
+      for(let i = 0;i<keys.length;i++){
+        const items = casterWrapper[keys[i]]?.items;  
+        if(!items || items?.length <=0)continue;
+        casterItems.push(casterWrapper[keys[i]]?.items?.[0]);
+      }
+      console.log("CASTER UPGRADE",casterContext,casterWrapper,upgradeAvailable?.items?.get("8VhdH84bXkVqpLAjw3zyQTggiFkgQ4gucgppcnXJXiE"))
+
+      //if(casterItems.length == 0)return;
+
+      await stateHandler(
+        async () => {
+          return await casterContext.equipBestGear(casterItems);
+        },
+        INST_UNEQUIP,
+        '',
+      );
+    }
     
   };
 };

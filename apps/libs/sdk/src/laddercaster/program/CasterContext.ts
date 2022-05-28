@@ -466,9 +466,8 @@ export class CasterContext {
       equipmentItem.itemType.equipment?.equipmentType ||
         equipmentItem?.itemType,
     )[0];
-
+      console.log("EQUIP",this.caster,this.caster.modifiers[itemType])
     const tx = new Transaction();
-      console.log("EQUIP",this.caster,itemType)
     if (
       this.caster.modifiers[itemType] &&
       this.caster.modifiers[itemType].toString() !== equipmentItem.publicKey
@@ -506,7 +505,73 @@ export class CasterContext {
 
     return await gameConstantsContext.Client.program.provider.send(tx);
   }
+  async unequipAllItems (items: Item[]){
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
+    const tx = new Transaction();
+    for(let i = 0;i<items.length;i++){
+     const item = items[i];
+      tx.add(gameConstantsContext.Client.program.rpc.unequipItem({
+        accounts: {
+          game: gameAccount,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          player: playerAccount,
+          caster: this.caster?.publicKey,
+          item: new PublicKey(item.publicKey),
+        },
+        signers: [gameConstantsContext.Client.wallet.payer],
+      })
+    )
+    }
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+    .blockhash;
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!
+    return await gameConstantsContext.Client.program.provider.send(tx);
+  }
+  async equipBestGear(items:Item[]){
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
+    
+    const tx = new Transaction();
+    for(let i = 0;i<items.length;i++){
+     const item = items[i];
+     const itemType=item.type
+     if (
+      this.caster.modifiers[itemType] &&
+      this.caster.modifiers[itemType].toString() !== item.publicKey
+      ) {
+      tx.add(
+        gameConstantsContext.Client.program.instruction.unequipItem({
+          accounts: {
+            game: gameAccount,
+            authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+            player: playerAccount,
+            caster: this.caster?.publicKey,
+            item: this.caster.modifiers[itemType],
+          },
+          signers: [gameConstantsContext.Client.wallet.payer],
+        }),
+      );
+    }
+    tx.add(
+      gameConstantsContext.Client.program.instruction.equipItem({
+        accounts: {
+          game: gameAccount,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          player: playerAccount,
+          caster: this.caster?.publicKey,
+          item: item.publicKey,
+        },
+        signers: [gameConstantsContext.Client.wallet.payer],
+      }),
+    );
 
+    }
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+    .blockhash;
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!
+    return await gameConstantsContext.Client.program.provider.send(tx);
+  }
   async unequipItem(itemPK: PublicKey) {
     const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     return await gameConstantsContext.Client.program.rpc.unequipItem({

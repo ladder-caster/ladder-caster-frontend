@@ -209,7 +209,14 @@ const Queue = ({ spell_id }) => {
         </AnimateButton>
       );
     }
-  }, [needsToRedeem]);
+  }, [
+    needsToRedeem,
+    unlocked_loot,
+    unlocked_craft,
+    IconElement,
+    element,
+    clicked,
+  ]);
   const renderSecondary = useMemo(() => {
     if (!needsToRedeem) {
       return (
@@ -256,7 +263,7 @@ const Queue = ({ spell_id }) => {
         </>
       );
     }
-  }, [needsToRedeem]);
+  }, [needsToRedeem, unlocked_move, unlocked_spell, clicked]);
   return (
     <_queue>
       <_title $optimal={caster_tile}>

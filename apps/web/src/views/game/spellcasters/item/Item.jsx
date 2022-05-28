@@ -42,7 +42,7 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
         </_queue>
       );
     }
-  }, [isBuy, isOld, isPrestigeHide]);
+  }, [isBuy, isOld, isPrestigeHide, spell_id]);
   // prevents rerenders - anon funcs rerender :/
   const onClick = () => {
     tabCharacter(spell_id);

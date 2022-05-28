@@ -70,12 +70,37 @@ const UpgradesAvailable:CasterUpgradeAvailable = {
   loadedItems:false,
   items:new Map<String, Item>(),
   casters:new Map<String, CasterWrapper>(),
-  canUpgrade:(publicKey: String,casters: Map<String,CasterWrapper>)=>{
-      console.log('CANUPGRADE',casters,publicKey)
-    const hat = casters.get(publicKey)?.head?.items?.length > 0;
-    const robe = casters.get(publicKey)?.robe?.items?.length > 0;
-    const staff = casters.get(publicKey)?.staff?.items?.length > 0;
-    return hat || robe || staff
+  canUpgrade:(publicKey: String)=>{
+    const casters = UpgradesAvailable.casters;
+    if(!publicKey || !casters) return false;
+    const caster = casters?.get(publicKey);
+    var upgrade = false
+    const keys=  Object.keys(caster)
+    for(let i = 0;i<keys.length;i++){
+      if(caster[keys[i]].items.length>0){
+        upgrade = true
+        break
+      }
+    }
+    return upgrade
+  },
+  getEquippedItems:(publicKey:String)=>{
+    const casters = UpgradesAvailable.casters;
+    console.log("PUBLIC KEY",casters,publicKey)
+    if(!publicKey || !casters) return [];
+    const caster = casters?.get(publicKey);
+    // dynamic retrieval no need to update if new item types are added
+    const itemArray = []
+    const keys = Object.keys(caster);
+    console.log("KEYS",keys,caster)
+    for(let i = 0;i<keys.length;i++){
+      const item = caster[keys[i]]?.currentItem;
+      console.log(item,caster[keys[i]])
+      if(item){
+        itemArray.push(item)
+      }
+    }
+    return itemArray;
   }
 }
 const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
@@ -96,7 +121,7 @@ const Remix = () => {
     items: [],
     chests: [],
   });
-  const [upgradeAvailable,setUpgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,UpgradesAvailable)
+  const [upgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,UpgradesAvailable)
 
   const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
@@ -525,7 +550,16 @@ const Remix = () => {
     }
   }, [loading]);
   const getCasterUpgrades= async()=>{
-    const items = [...upgradeAvailable.items.values()];
+    const resources = [TYPE_RES1,TYPE_RES2,TYPE_RES3]
+    const items = [...upgradeAvailable.items.values()].sort((a: Item, b: Item)=>{
+      const valueIndex = a.value > b.value;
+      const attributeIndex = resources.includes(a.attribute) && resources.includes(b.attribute)
+      if(attributeIndex && valueIndex){
+        return -1
+      }
+      return 0
+    });
+
     for(let i = 0;i<casters.length;i++){
       const casterWrapper = upgradeAvailable.casters.get(casters[i].publicKey.toString());
       for(let j = 0;j<items.length;j++){
@@ -540,7 +574,6 @@ const Remix = () => {
 
     const isResource = [TYPE_RES1,TYPE_RES2,TYPE_RES3].includes(item.type);
     const sameType = currentItem?.attribute === item.attribute;
-    console.log('IS RESOURCE',isResource,sameType,item,currentItem);
     const betterItem = currentItem ? (isResource || sameType) && currentItem.value < item.value && item.level<=casterLevel : true;
     const itemPublicKey = item.publicKey.toString();
     if(betterItem){

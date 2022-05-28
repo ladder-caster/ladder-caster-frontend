@@ -44,17 +44,20 @@ const Mutations = withTheme(({ theme }) => {
   const [codes] = useRemix(ERROR_CODES);
   const [offline, setOffline] = useRemix(USER_OFFLINE);
   const [queue, setQueue] = useState([]);
-  const prev_queue = usePrevious(queue);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const previousTurn = usePrevious(
-    gameConstants.game?.game?.turnInfo?.turn ?? -1,
+    gameConstants?.gameState?.turnInfo?.turn ?? -1,
   );
-  // on game turn change clear queue
+
   useEffect(() => {
-    if (previousTurn !== gameConstants.game?.game?.turnInfo?.turn) {
+    if (
+      queue.length > 0 &&
+      gameConstants?.gameState &&
+      gameConstants?.gameState?.turnInfo?.turn > previousTurn
+    ) {
       setQueue([]);
     }
-  }, [gameConstants.game]);
+  }, [gameConstants?.gameState]);
   // Handle Mutation
   useEffect(() => {
     if (mutation?.id) {

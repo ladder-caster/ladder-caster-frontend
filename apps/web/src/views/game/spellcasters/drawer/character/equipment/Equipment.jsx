@@ -42,19 +42,20 @@ const Equipment = ({ caster }) => {
   const hatUpgrade = casterGear?.head?.items?.length > 0;
   const robeUpgrade = casterGear?.robe?.items?.length > 0;
   const staffUpgrade = casterGear?.staff?.items?.length > 0;
+
   return (
     <_equipment ref={equip_ref} $height={height}>
       <_body>
         <_hat onClick={() => chooseUnequip(hat, caster)}>
           <_inner $scale={0.95}>
-            {hat ? <Item item={hat} /> : <IconHat />}
             {hatUpgrade && <_upgrade />}
+            {hat ? <Item item={hat} /> : <IconHat />}
           </_inner>
         </_hat>
         <_cloak onClick={() => chooseUnequip(robe, caster)}>
           <_inner $scale={1.1}>
-            {robe ? <Item item={robe} /> : <IconCloak />}
             {robeUpgrade && <_upgrade />}
+            {robe ? <Item item={robe} /> : <IconCloak />}
           </_inner>
         </_cloak>
       </_body>
@@ -64,8 +65,8 @@ const Equipment = ({ caster }) => {
         </_spell>
         <_shaft $scale={1.2} onClick={() => chooseUnequip(staff, caster)}>
           <_inner $scale={1.4} $staff={'45deg'}>
-            {staff ? <Item item={staff} /> : <IconStaff />}
             {staffUpgrade && <_upgrade />}
+            {staff ? <Item item={staff} /> : <IconStaff />}
           </_inner>
         </_shaft>
       </_staff>

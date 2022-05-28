@@ -248,7 +248,7 @@ class GameConstantsContext {
     return this.balances.sol;
   }
   public get gameState(): Game{
-    return this.game.game;
+    return this.game?.game;
   }
   public clientInitialized(): boolean{
     return !!this.client;
@@ -269,12 +269,12 @@ class GameConstantsContext {
   public get getPlayerAccounts(): [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]{
     this.hydrateGame()
     return [
-      this.accounts.gameAccount,
-      this.accounts.playerAccount,
-      this.accounts.playerBump,
-      this.game.game,
-      this.game.gameSigner,
-      this.game.season
+      this.accounts?.gameAccount,
+      this.accounts?.playerAccount,
+      this.accounts?.playerBump,
+      this.game?.game,
+      this.game?.gameSigner,
+      this.game?.season
     ]
   }
   private async checkInstance(){
