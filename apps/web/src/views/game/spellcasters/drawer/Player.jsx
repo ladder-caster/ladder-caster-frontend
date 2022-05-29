@@ -28,6 +28,7 @@ import {
   TYPE_RES1,
   TYPE_RES2,
   PLAYER_TAB_ACTIONS,
+  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
@@ -43,6 +44,7 @@ const Player = () => {
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [context] = useRemix(DRAWER_CONTEXT);
+  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isBoost = drawer?.boost;
   const confirm = context?.confirm && context?.unequip;
   const id = drawer?.id;
@@ -51,7 +53,7 @@ const Player = () => {
     () => find(spellcasters, (caster) => caster.id === id),
     [drawer, spellcasters],
   );
-
+  const canUpgrade = upgradeAvailable?.canUpgrade(caster?.publicKey) ?? false;
   const tabs_character_actions = {
     [PLAYER_CHARACTER]: {
       name: t('player.character'),
@@ -64,6 +66,7 @@ const Player = () => {
     [PLAYER_ACTIONS]: {
       name: t('player.actions'),
       View: TabAction,
+      canUpgrade,
     },
   };
   const renderMain = useMemo(() => {

@@ -1,7 +1,24 @@
 import styled from 'styled-components';
 import { m } from 'framer-motion';
 
-export const _container = styled(m.div)`
+export const _container = styled(m.div).attrs(
+  ({ theme, $pulse, $disabled }) => {
+    const pulse = $pulse && !$disabled;
+    return {
+      animate: {
+        scale: pulse ? 1.05 : 1,
+        filter: pulse ? 'staturate(2.5)' : 'saturate(1)',
+      },
+      transition: {
+        duration: 1,
+        ease: 'easeOut',
+        repeat: pulse ? Infinity : 0,
+        repeatDelay: 0.5,
+        repeatType: 'mirror',
+      },
+    };
+  },
+)`
   width: 96px;
   height: 32px;
   transform: ${({ $scale, $disabled }) =>

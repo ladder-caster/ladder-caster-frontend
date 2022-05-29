@@ -19,7 +19,6 @@ const TabAction = ({ caster }) => {
     unequipAllItems(caster);
   };
   const upgrade = () => {
-    //todo:}
     upgradeAllItems(caster);
   };
   return (
@@ -36,7 +35,9 @@ const TabAction = ({ caster }) => {
               text={t('player.actions.main.unequip_all')}
             />
             <Pill
+              disabled={!canUpgrade || equipBlocked}
               onClick={upgrade}
+              $pulse={canUpgrade}
               text={t('player.actions.main.upgrade_all')}
             />
           </_row>

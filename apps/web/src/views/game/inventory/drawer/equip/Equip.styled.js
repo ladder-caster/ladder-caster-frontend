@@ -60,6 +60,7 @@ export const _image = styled.div`
 export const _caster = styled(m.div)`
   width: 100%;
   display: flex;
+  flex: none;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -69,6 +70,8 @@ export const _caster = styled(m.div)`
   box-shadow: ${({ theme }) => theme.shadow['cutout']};
   background: ${({ theme }) => theme.background['base']};
   cursor: pointer;
+  overflow-x: scroll;
+  overflow-y: auto;
 `;
 
 export const _item = styled.div`
@@ -279,5 +282,55 @@ export const _attribute = styled.div`
     height: 18px;
     color: ${({ theme, $attribute }) =>
       $attribute ? theme.attribute[$attribute] : theme.text['ghost']};
+  }
+`;
+export const _tile = styled(m.div)`
+  background-color: ${({ theme, $element }) =>
+    $element ? theme[$element]['dark_tile'] : theme.text['ghost']};
+  margin-left: 12px;
+
+  padding: 4px;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  flex: inherit;
+  background-image: url(${({ $image }) => ($image ? $image : '')});
+  background-size: cover;
+  box-shadow: ${({ theme }) =>
+    `${theme.shadow['glow_sphere']}, ${theme.shadow['glass']}`};
+  border: 2px solid
+    ${({ theme, $element }) =>
+      $element ? theme[$element]['texture'] : theme.text['faded']};
+`;
+export const _tile_text = styled(m.span)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 700;
+  color: ${({ theme, $element }) =>
+    $element ? theme[$element]['text'] : theme.text['ghost']};
+`;
+
+export const _tile_icon = styled(m.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  padding: 4px;
+  filter: blur(1px);
+  > svg {
+    width: 100%;
+    height: 100%;
+    color: ${({ theme, $element }) => theme[$element]?.['resource']};
+    transform: translateX(${({ $offset }) => `${$offset}%`});
+    opacity: ${({ $casters }) => ($casters ? 1 : 0.4)};
   }
 `;
