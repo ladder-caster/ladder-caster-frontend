@@ -11,7 +11,8 @@ export interface CasterUpgradeAvailable {
   * Boolean stating if any caster has an upgrade available - used to prevent going through the upgrade process if no upgrades are available
   */
   canUpgrade: (publicKey: String,casters: Map<String, CasterWrapper>)=>boolean,
-  getEquippedItems: (publicKey: String, casters: Map<String,CasterWrapper>)=>Item[]
+  getEquippedItems: (publicKey: String, casters: Map<String,CasterWrapper>)=>Item[],
+  removeUpgrade:(items:Item[])=>void
 }
 
 export interface CasterWrapper{

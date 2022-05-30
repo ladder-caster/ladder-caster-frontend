@@ -1387,7 +1387,8 @@ export const useChainActions = () => {
         if(!items || items?.length <=0)continue;
         casterItems.push(casterWrapper[keys[i]]?.items?.[0]);
       }
-      console.log("CASTER UPGRADE",casterContext,casterWrapper,upgradeAvailable?.items?.get("8VhdH84bXkVqpLAjw3zyQTggiFkgQ4gucgppcnXJXiE"))
+      upgradeAvailable.removeUpgrade(casterItems)
+      console.log("CASTER UPGRADE",casterContext,casterWrapper)
 
       //if(casterItems.length == 0)return;
 

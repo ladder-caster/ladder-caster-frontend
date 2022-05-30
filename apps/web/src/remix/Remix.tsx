@@ -63,7 +63,7 @@ import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
-import { map, sortBy, reverse } from 'lodash';
+import { map, sortBy, reverse, union, intersection } from 'lodash';
 import { CasterUpgradeAvailable,CasterWrapper } from './Remix.types';
 //ensures presetup is done
 const UpgradesAvailable:CasterUpgradeAvailable = {
@@ -101,6 +101,22 @@ const UpgradesAvailable:CasterUpgradeAvailable = {
       }
     }
     return itemArray;
+  },
+  removeUpgrade:(items:Item[])=>{
+    if(!items || items?.length==0)return;
+    const pks = items.map(item=> item.publicKey instanceof anchor.web3.PublicKey?item.publicKey.toString():item.publicKey)
+    for(const [key, value] of UpgradesAvailable.casters.entries() ){
+      const caster = value;
+      const keys = Object.keys(caster);
+      for(let i = 0;i<keys.length;i++){
+        const casterItems = caster[keys[i]]?.items;
+        const union = intersection(casterItems,pks);
+        if(union){
+          union.map(x=>casterItems.splice(casterItems.indexOf(x),1))
+        }
+      }
+      UpgradesAvailable.casters.set(key,value)
+    }
   }
 }
 const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
