@@ -35,8 +35,8 @@ export const _tab = styled(m.div)`
   }
 `;
 export const _tab_span = styled(m.span).attrs(
-  ({ theme, $active, $canUpgrade }) => {
-    const pulse = $canUpgrade && !$active;
+  ({ theme, $active, $pulse }) => {
+    const pulse = $pulse && !$active;
     return {
       animate: {
         scale: pulse ? 1.05 : 1,

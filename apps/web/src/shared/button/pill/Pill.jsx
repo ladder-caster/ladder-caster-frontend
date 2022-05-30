@@ -1,11 +1,12 @@
 import React from 'react';
 import { _container, _pill, _text } from './Pill.styled';
-function Pill({ onClick, scale, text, disabled, pulse }) {
+function Pill({ onClick, $scale, text, disabled, $pulse }) {
+  console.log("PILL",disabled,$pulse)
   return (
     <_container
       onClick={onClick}
-      $scale={scale}
-      $pulse={pulse}
+      $scale={$scale}
+      $pulse={$pulse}
       $disabled={disabled}
     >
       <_pill>

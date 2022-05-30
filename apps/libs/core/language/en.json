@@ -105,6 +105,7 @@
     "modal.move.action": "Move to",
     "modal.move.free": "Free",
     "modal.move.cost": "Cost",
+    "modal.move.caster_equipment":"Equipment",
     "modal.craft.description": "Crafting Station",
     "modal.chest.description": "Open Chest",
     "modal.chest.action": "Open Chest",

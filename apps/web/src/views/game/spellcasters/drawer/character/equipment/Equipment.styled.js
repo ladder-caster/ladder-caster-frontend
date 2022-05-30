@@ -120,6 +120,9 @@ export const _inner = styled.div`
         ? `scale(${$scale})${$staff ? `rotate(${$staff})` : ''}`
         : 'scale(1)'};
   }
+  > :nth-child(2) {
+    margin:0;
+  }
 `;
 // elastic out bezier curve
 export const _upgrade = styled(m.div).attrs(({ theme }) => {

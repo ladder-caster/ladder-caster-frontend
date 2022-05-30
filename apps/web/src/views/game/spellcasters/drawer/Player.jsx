@@ -54,6 +54,8 @@ const Player = () => {
     [drawer, spellcasters],
   );
   const canUpgrade = upgradeAvailable?.canUpgrade(caster?.publicKey) ?? false;
+  // data struct added to allow easier future parse of data,
+  // pulse used to make tab name pulse
   const tabs_character_actions = {
     [PLAYER_CHARACTER]: {
       name: t('player.character'),
@@ -66,7 +68,9 @@ const Player = () => {
     [PLAYER_ACTIONS]: {
       name: t('player.actions'),
       View: TabAction,
-      canUpgrade,
+      data:{
+        pulse:canUpgrade
+      },
     },
   };
   const renderMain = useMemo(() => {

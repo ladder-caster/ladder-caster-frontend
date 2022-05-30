@@ -138,10 +138,10 @@ const Equip = () => {
 
         const col = caster?.position?.substring(0, 1);
         const row = caster?.position?.substring(1);
-
-        const element = lands?.[row]?.[col]?.type;
+        const intRow = row? parseInt(row) - 1:0
+        const element = lands?.[intRow]?.[col]?.type;
         const Icon = TileIcons[element];
-
+        
         return (
           <_caster onClick={() => equipItem(item, caster)}>
             <_item>

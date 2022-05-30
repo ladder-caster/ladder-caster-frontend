@@ -13,9 +13,9 @@ import { IconChevronLeft } from '../../../../libs/design/icons/chevron-left.icon
 
 const Tabs = ({ back, views, tab_id, ...props }) => {
   const [tab, setTab] = useRemix(tab_id);
-  const canUpgrade = props?.canUpgrade ?? false;
-
+  
   const titles = Object.entries(views)?.map(([key, value]) => {
+    const pulse = views?.[key]?.data?.pulse ?? false;
     return (
       <_tab
         key={key}
@@ -24,7 +24,7 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
           setTab(key);
         }}
       >
-        <_tab_span $canUpgrade={canUpgrade} $active={tab === key}>
+        <_tab_span $pulse={pulse} $active={tab === key}>
           {value.name}
         </_tab_span>
         <_line $active={tab === key}>
@@ -39,6 +39,8 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
   const onBackClick = () => {
     back();
   };
+  const data = views[tab]?.data;
+  
   return (
     <_tabs>
       <_header>
@@ -49,7 +51,7 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
         )}
         {titles}
       </_header>
-      <_view>{View && <View {...props} />}</_view>
+      <_view>{View && <View {...props} {...data} />}</_view>
     </_tabs>
   );
 };

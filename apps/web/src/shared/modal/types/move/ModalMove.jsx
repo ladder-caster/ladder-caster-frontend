@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useMemo } from 'react';
 import {
   _move,
   _board,
@@ -14,6 +14,9 @@ import {
   _icon,
   _cost,
   _cost_text,
+  _caster_gear,
+  _caster_gear_text,
+  _caster_gear_icon
 } from './ModalMove.styled';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useTranslation } from 'react-i18next';
@@ -34,17 +37,22 @@ import {
   TYPE_RES1,
   TYPE_LEGENDARY,
   TYPE_RES2,
+  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
+import { IconHat } from 'design/icons/hat.icon';
+import { IconStaff } from 'design/icons/staff.icon';
+import {IconCloak} from 'design/icons/cloak.icon'
 import { getTierNumber } from 'core/utils/switch';
 import {
   IconMoney,
   IconMoneyIMG,
 } from '../../../../../../libs/design/icons/money.icon';
-
+import { IconSwirl } from 'design/icons/swirl.icon';
+import IconAttribute from '../../../../shared/types/icons/IconAttribute';
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
   const button_ref = useRef();
@@ -52,7 +60,7 @@ const ModalMove = ({ height, options }) => {
   const { t } = useTranslation();
   const { modalClear, confirmMove, modalChest } = useActions();
   const [confirm] = useRemix(GAME_CONFIRM);
-
+  const [upgradeAvailable]=useRemix(CASTER_UPGRADE_AVAILABLE)
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
   useClickOutside([confirm_ref, button_ref], () => modalClear());
 
@@ -78,6 +86,37 @@ const ModalMove = ({ height, options }) => {
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];
+  const EquipmentBaseIcon ={
+    head:IconHat,robe:IconCloak,staff:IconStaff
+  }
+  const casterEquipment = useMemo(()=>{
+    if(caster && upgradeAvailable){
+      const casterWrapper = upgradeAvailable?.casters?.get(caster?.publicKey);
+      //console.log("CASTER WRAPPER",casterWrapper)
+      if(!casterWrapper)return[]
+      const keys = Object.keys(casterWrapper);
+      const array = []
+      //console.log("KEYS",keys)
+      for(let i =0;i<keys.length;i++){
+        const currentItem = casterWrapper[keys[i]]?.currentItem;
+        //console.log("CurrentItem",currentItem)
+        if(!currentItem){
+          const BaseIcon = EquipmentBaseIcon[keys[i]]
+          array.push(<_caster_gear_icon 
+            key={keys[i]}
+          ><BaseIcon/></_caster_gear_icon>);
+          continue;
+        }
+        array.push(<_caster_gear_icon
+          key={currentItem.type}
+        >
+          <IconAttribute $attribute={currentItem.attribute}/>
+          </_caster_gear_icon>);
+      }
+      //console.log("ARRAY",array)
+      return array;
+    }
+  },[upgradeAvailable?.casters])
 
   return (
     <_move $height={height}>
@@ -95,13 +134,20 @@ const ModalMove = ({ height, options }) => {
                 <Level level={next_level} $right />
               </_row>
             )}
-            <_row>
+        <_row>
               <Level level={level} />
               <Tiles level={level} position={position} />
               <Level level={level} $right />
             </_row>
             <_float>
               <Letters />
+              <_float>
+              <_caster_gear>
+                <_caster_gear_text>{t('modal.move.caster_equipment')}:</_caster_gear_text>
+                <_float>
+                {casterEquipment}
+                </_float>
+              </_caster_gear>
               {isConfirm && (
                 <_cost>
                   <_cost_text>{t('modal.move.cost')}:</_cost_text>
@@ -125,6 +171,7 @@ const ModalMove = ({ height, options }) => {
                   )}
                 </_cost>
               )}
+              </_float>
             </_float>
           </_board>
         </AnimateBoard>

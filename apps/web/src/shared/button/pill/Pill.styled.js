@@ -6,11 +6,11 @@ export const _container = styled(m.div).attrs(
     const pulse = $pulse && !$disabled;
     return {
       animate: {
-        scale: pulse ? 1.05 : 1,
-        filter: pulse ? 'staturate(2.5)' : 'saturate(1)',
+        scale: pulse ? 1.1 : 1,
+        filter: pulse ? 'saturate(2.5), brightness(1.4)' : 'saturate(1)',
       },
       transition: {
-        duration: 1,
+        duration: 1.55,
         ease: 'easeOut',
         repeat: pulse ? Infinity : 0,
         repeatDelay: 0.5,

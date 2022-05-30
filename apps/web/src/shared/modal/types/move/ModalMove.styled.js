@@ -144,7 +144,7 @@ export const _cost = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  padding: 16px 8px 0 0;
+  padding: 0 8px 0 0;
 `;
 
 export const _cost_text = styled.div`
@@ -155,3 +155,21 @@ export const _cost_text = styled.div`
   text-shadow: ${({ theme }) => theme.shadow['text']};
   padding: 2px 2px 0 0;
 `;
+
+export const _caster_gear = styled(m.div)`
+display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 0 8px;`
+export const _caster_gear_text = styled(m.div)`
+font-size: 14px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['ghost']};
+  letter-spacing: -0.5px;
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  padding: 2px 2px 0 0;`
+export const _caster_gear_icon = styled(m.div)`
+  width:12px;
+  height:12px;
+`
