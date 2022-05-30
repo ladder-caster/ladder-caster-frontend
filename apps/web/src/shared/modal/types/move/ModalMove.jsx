@@ -105,7 +105,7 @@ const ModalMove = ({ height, options }) => {
         //console.log("CurrentItem",currentItem)
         if (!currentItem) {
           const BaseIcon = EquipmentBaseIcon[keys[i]];
-          console.log('baseicon', BaseIcon);
+
           array.push(
             <_caster_gear_icon key={keys[i]}>
               <BaseIcon />
@@ -113,10 +113,7 @@ const ModalMove = ({ height, options }) => {
           );
           continue;
         }
-        console.log(
-          'fancyicon',
-          <IconAttribute attribute={currentItem.attribute} />,
-        );
+
         array.push(
           <_caster_gear_icon
             key={currentItem.type}

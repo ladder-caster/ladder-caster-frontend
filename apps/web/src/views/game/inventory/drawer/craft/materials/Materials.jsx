@@ -88,12 +88,13 @@ const Materials = () => {
   const different_types = useMemo(() => {
     if (materials?.length === 3) {
       // transitive ... x = y, y = z then x = z
-      return (
-        materials[0].type !== materials[1].type &&
-        materials[1].type !== materials[2].type &&
-        materials[0].type !== materials[2].type
+      return !(
+        materials[0].type == materials[1].type &&
+        materials[1].type == materials[2].type &&
+        materials[0].type == materials[2].type
       );
     }
+    return false;
   }, [materials, JSON.stringify(materials)]);
 
   const position_type = useMemo(() => {
@@ -134,18 +135,20 @@ const Materials = () => {
     const levels = [];
     materials.map((mat) => {
       rarities.push(rank_rarities[mat.rarity]);
-      levels.push(mat.tier);
+      levels.push(mat.level);
     });
     let min_rarity = Math.min(4, ...rarities);
     let min_level = Math.min(30, ...levels);
+
     // clamps to lvl/5 (-1 for bounds e.g 10/15)... due to clamping to 3 even 20,25,30 produces similar results
     const isCategoryBounds = min_level % 5 === 0;
     let index =
       min_level > 5
         ? clamp(Math.floor(min_level / 5) - (isCategoryBounds ? 1 : 0), 1, 3)
         : 0;
-    let min_tier = tier_range[1][index];
-    let max_tier = TIER_I;
+
+    let min_tier = tier_range[0][index];
+    let max_tier = min_tier;
 
     const isLegendary = position_type === TYPE_LEGENDARY;
     let max_rarity = min_rarity;
@@ -162,7 +165,7 @@ const Materials = () => {
     }
 
     return {
-      type: item_type,
+      type: different_types ? item_type : materials?.[0]?.type,
       min_rarity: rarity_rank[min_rarity],
       min_level,
       min_tier,
@@ -186,7 +189,7 @@ const Materials = () => {
     rarity: craft_item?.max_rarity,
     tier: craft_item?.max_tier,
   };
-
+  console.log(item_type, context);
   const confirm = materials?.[0] && materials?.[1] && materials?.[2];
 
   const filter_items = filter(
@@ -206,7 +209,6 @@ const Materials = () => {
         return (
           <_grid_item key={item.publicKey}>
             <Item
-              grid
               item={item}
               selected={selected}
               callback={() =>
@@ -270,13 +272,13 @@ const Materials = () => {
                     <_percent>
                       <_chance>{different_types ? '75%' : '60%'}</_chance>
                     </_percent>
-                    <Item all craft item={lowest_item} />
+                    <Item all={different_types} craft item={lowest_item} />
                   </_lowest>
                   <_highest>
                     <_percent>
                       <_chance>{different_types ? '25%' : '40%'}</_chance>
                     </_percent>
-                    <Item all craft item={highest_item} />
+                    <Item all={different_types} craft item={highest_item} />
                   </_highest>
                 </_odds>
                 <_cost>
