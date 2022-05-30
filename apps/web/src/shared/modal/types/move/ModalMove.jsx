@@ -1,4 +1,4 @@
-import React, { useState, useRef,useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   _move,
   _board,
@@ -16,7 +16,8 @@ import {
   _cost_text,
   _caster_gear,
   _caster_gear_text,
-  _caster_gear_icon
+  _caster_gear_icon,
+  _caster_gear_icons,
 } from './ModalMove.styled';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +46,7 @@ import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
 import { IconHat } from 'design/icons/hat.icon';
 import { IconStaff } from 'design/icons/staff.icon';
-import {IconCloak} from 'design/icons/cloak.icon'
+import { IconCloak } from 'design/icons/cloak.icon';
 import { getTierNumber } from 'core/utils/switch';
 import {
   IconMoney,
@@ -60,7 +61,7 @@ const ModalMove = ({ height, options }) => {
   const { t } = useTranslation();
   const { modalClear, confirmMove, modalChest } = useActions();
   const [confirm] = useRemix(GAME_CONFIRM);
-  const [upgradeAvailable]=useRemix(CASTER_UPGRADE_AVAILABLE)
+  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
   useClickOutside([confirm_ref, button_ref], () => modalClear());
 
@@ -86,38 +87,50 @@ const ModalMove = ({ height, options }) => {
     [TYPE_CRAFT]: IconAnvil,
     [TYPE_LEGENDARY]: IconAnvil,
   }[confirm?.tileType];
-  const EquipmentBaseIcon ={
-    head:IconHat,robe:IconCloak,staff:IconStaff
-  }
-  const casterEquipment = useMemo(()=>{
-    if(caster && upgradeAvailable){
+  const EquipmentBaseIcon = {
+    head: IconHat,
+    robe: IconCloak,
+    staff: IconStaff,
+  };
+  const casterEquipment = useMemo(() => {
+    if (caster && upgradeAvailable) {
       const casterWrapper = upgradeAvailable?.casters?.get(caster?.publicKey);
       //console.log("CASTER WRAPPER",casterWrapper)
-      if(!casterWrapper)return[]
+      if (!casterWrapper) return [];
       const keys = Object.keys(casterWrapper);
-      const array = []
+      const array = [];
       //console.log("KEYS",keys)
-      for(let i =0;i<keys.length;i++){
+      for (let i = 0; i < keys.length; i++) {
         const currentItem = casterWrapper[keys[i]]?.currentItem;
         //console.log("CurrentItem",currentItem)
-        if(!currentItem){
-          const BaseIcon = EquipmentBaseIcon[keys[i]]
-          array.push(<_caster_gear_icon 
-            key={keys[i]}
-          ><BaseIcon/></_caster_gear_icon>);
+        if (!currentItem) {
+          const BaseIcon = EquipmentBaseIcon[keys[i]];
+          console.log('baseicon', BaseIcon);
+          array.push(
+            <_caster_gear_icon key={keys[i]}>
+              <BaseIcon />
+            </_caster_gear_icon>,
+          );
           continue;
         }
-        array.push(<_caster_gear_icon
-          key={currentItem.type}
-        >
-          <IconAttribute $attribute={currentItem.attribute}/>
-          </_caster_gear_icon>);
+        console.log(
+          'fancyicon',
+          <IconAttribute attribute={currentItem.attribute} />,
+        );
+        array.push(
+          <_caster_gear_icon
+            key={currentItem.type}
+            $attribute={currentItem.attribute}
+          >
+            <IconAttribute attribute={currentItem.attribute} />
+          </_caster_gear_icon>,
+        );
       }
       //console.log("ARRAY",array)
       return array;
     }
-  },[upgradeAvailable?.casters])
-
+  }, [upgradeAvailable?.casters, caster]);
+  console.log('CASTER MAP', casterEquipment);
   return (
     <_move $height={height}>
       <_actions ref={action_ref}>
@@ -134,7 +147,7 @@ const ModalMove = ({ height, options }) => {
                 <Level level={next_level} $right />
               </_row>
             )}
-        <_row>
+            <_row>
               <Level level={level} />
               <Tiles level={level} position={position} />
               <Level level={level} $right />
@@ -142,35 +155,39 @@ const ModalMove = ({ height, options }) => {
             <_float>
               <Letters />
               <_float>
-              <_caster_gear>
-                <_caster_gear_text>{t('modal.move.caster_equipment')}:</_caster_gear_text>
                 <_float>
-                {casterEquipment}
+                  <_caster_gear>
+                    <_caster_gear_text>
+                      {t('modal.move.caster_equipment')}:
+                    </_caster_gear_text>
+                    <_caster_gear_icons>{casterEquipment}</_caster_gear_icons>
+                  </_caster_gear>
                 </_float>
-              </_caster_gear>
-              {isConfirm && (
-                <_cost>
-                  <_cost_text>{t('modal.move.cost')}:</_cost_text>
-                  {level_up ? (
-                    <>
-                      <_icon $element={'lada'}>
-                        <IconMoneyIMG />
+                {isConfirm && (
+                  <_cost>
+                    <_cost_text>{t('modal.move.cost')}:</_cost_text>
+                    {level_up ? (
+                      <>
+                        <_icon $element={'lada'}>
+                          <IconMoneyIMG />
+                        </_icon>
+                        <_amount>{confirm_tier}</_amount>
+                      </>
+                    ) : null}
+                    {confirm?.cost > 0 && (
+                      <_icon $element={confirm?.tileType}>
+                        <Icon />
                       </_icon>
-                      <_amount>{confirm_tier}</_amount>
-                    </>
-                  ) : null}
-                  {confirm?.cost > 0 && (
-                    <_icon $element={confirm?.tileType}>
-                      <Icon />
-                    </_icon>
-                  )}
-                  {!(level_up && !confirm?.cost) && (
-                    <_amount>
-                      {confirm?.cost > 0 ? confirm?.cost : t('modal.move.free')}
-                    </_amount>
-                  )}
-                </_cost>
-              )}
+                    )}
+                    {!(level_up && !confirm?.cost) && (
+                      <_amount>
+                        {confirm?.cost > 0
+                          ? confirm?.cost
+                          : t('modal.move.free')}
+                      </_amount>
+                    )}
+                  </_cost>
+                )}
               </_float>
             </_float>
           </_board>

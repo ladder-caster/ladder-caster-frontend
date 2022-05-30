@@ -20,6 +20,7 @@ import {
   _cost,
   _cost_text,
   _warning,
+  _grid_item,
 } from './Materials.styled';
 import Rank from '../../../../spellcasters/drawer/rank/Rank';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -200,30 +201,19 @@ const Materials = () => {
 
   const list_items = useMemo(() => {
     if (filter_items?.length) {
-      const list = gridList(filter_items);
-
-      return map(list, (row) => {
+      return filter_items.map((item) => {
+        const selected = materials.indexOf(item) !== -1;
         return (
-          <_row>
-            {map(row, (item) => {
-              const selected = find(
-                materials,
-                (material) => material?.id === item?.id,
-              );
-              return (
-                <Item
-                  grid
-                  item={item}
-                  selected={selected}
-                  callback={() =>
-                    !selected
-                      ? craftChooseMaterials(item)
-                      : removeMaterial(item)
-                  }
-                />
-              );
-            })}
-          </_row>
+          <_grid_item key={item.publicKey}>
+            <Item
+              grid
+              item={item}
+              selected={selected}
+              callback={() =>
+                !selected ? craftChooseMaterials(item) : removeMaterial(item)
+              }
+            />
+          </_grid_item>
         );
       });
     }
