@@ -59,7 +59,7 @@ export class CasterContext {
     const tx = new Transaction();
     for(let i =0;i<count;i++){
       casterKP=anchor.web3.Keypair.generate();
-      tx.add(gameConstantsContext.Client.program.rpc.initCaster({
+      tx.add(gameConstantsContext.Client.program.instruction.initCaster({
         accounts: {
           systemProgram: anchor.web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,

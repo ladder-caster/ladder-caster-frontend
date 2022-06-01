@@ -13,9 +13,10 @@ import { IconChevronLeft } from '../../../../libs/design/icons/chevron-left.icon
 
 const Tabs = ({ back, views, tab_id, ...props }) => {
   const [tab, setTab] = useRemix(tab_id);
-  
+
   const titles = Object.entries(views)?.map(([key, value]) => {
     const pulse = views?.[key]?.data?.pulse ?? false;
+    const casterTurnCommit = !!!props?.caster?.turnCommit; // true if turn done invert it; false
     return (
       <_tab
         key={key}
@@ -24,7 +25,7 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
           setTab(key);
         }}
       >
-        <_tab_span $pulse={pulse} $active={tab === key}>
+        <_tab_span $pulse={pulse && casterTurnCommit} $active={tab === key}>
           {value.name}
         </_tab_span>
         <_line $active={tab === key}>
@@ -40,7 +41,7 @@ const Tabs = ({ back, views, tab_id, ...props }) => {
     back();
   };
   const data = views[tab]?.data;
-  
+
   return (
     <_tabs>
       <_header>

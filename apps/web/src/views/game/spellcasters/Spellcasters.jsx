@@ -9,6 +9,7 @@ import {
   SPELLCASTER_BUY,
   USER_PHASE,
   PRESTIGE_HIDE,
+  GAME_CONSTANTS,
 } from 'core/remix/state';
 import { _feed } from '../home/Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -24,7 +25,7 @@ const Spellcasters = () => {
   const [casters] = useRemix(CHAIN_CASTERS);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [oldSpellcasters] = useRemix(GAME_OLD_SPELLCASTERS);
-  const [initialized] = useRemix(GAME_INIT);
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [phase] = useRemix(USER_PHASE);
   const { lootAllResources } = useActions();
   const [hidePrestige, setPrestige] = useState(
@@ -48,16 +49,30 @@ const Spellcasters = () => {
       ));
     }
   }, [oldSpellcasters]);
-
+  const render = useMemo(() => {
+    if (
+      gameConstants?.gameState &&
+      (phase || casters?.length > 0 || oldSpellcasters?.length > 0)
+    ) {
+      return (
+        <_list>
+          {render_spellcasters}
+          <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
+          <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
+          {!hidePrestige && render_old_spellcasters}
+        </_list>
+      );
+    }
+    return (
+      <_feed>
+        <Onboarding />
+      </_feed>
+    );
+  }, [gameConstants?.gameState, spellcasters, oldSpellcasters]);
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />
-      <_list>
-        {render_spellcasters}
-        <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
-        <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
-        {!hidePrestige && render_old_spellcasters}
-      </_list>
+      {render}
     </_spellcasters>
   );
 };

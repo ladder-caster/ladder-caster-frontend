@@ -24,7 +24,7 @@ const Character = ({ caster }) => {
   const equipment_ref = useRef();
   const { width } = useSize(equipment_ref);
   const unequip = !!context?.unequip;
-  console.log('CASTER TAB', caster);
+  //console.log('CASTER TAB', caster);
   return (
     <_character>
       {unequip && <Info item={context?.item} caster={caster} />}
