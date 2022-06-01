@@ -175,3 +175,4 @@ export const GAME_CONSTANTS = 'GAME_CONSTANTS';
 export const OLD_SEASON = 0;
 export const CURRENT_SEASON = 1;
 export const ROUND_TIMELIMIT = 20;
+export const MINT_COST = 1000;

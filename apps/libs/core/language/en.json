@@ -80,7 +80,7 @@
     "wizard.title": "Wizard",
     "wizard.description": "The Alpha Wizard is the first adventurer to go searching for Grand Caster Mejulah. Will he be the spellcaster to find him?",
     "modal.confirm": "Confirm",
-    "modal.demo.description": "Are you sure you want to buy the Wizard for 1000 LADA?",
+    "modal.demo.description": "Are you sure you want to buy {{count}} {{name}} for {{cost}} LADA?",
     "modal.success": "Success",
     "modal.error": "Error",
     "modal.yes": "Yes!",

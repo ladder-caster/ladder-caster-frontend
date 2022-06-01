@@ -433,13 +433,13 @@ export const useChainActions = () => {
         active: true,
         type: MODAL_MINT,
         description: t('modal.demo.description'),
-        accept: async () => {
+        accept: async (count) => {
           const casterContext = new CasterContext();
 
           await fetchPlayer(async () => {
             return await stateHandler(
               async () => {
-                return await casterContext.initCaster();
+                return await casterContext.initCaster(count);
               },
               INST_INIT_CASTER,
               '',
@@ -1384,11 +1384,12 @@ export const useChainActions = () => {
       const casterItems = []
       for(let i = 0;i<keys.length;i++){
         const items = casterWrapper[keys[i]]?.items;  
-        if(!items || items?.length <=0)continue;
-        casterItems.push(casterWrapper[keys[i]]?.items?.[0]);
+        const item = upgradeAvailable.items.get(items?.[0])
+        if(!items || items?.length <=0 || !item)continue;
+        casterItems.push(item);
       }
       upgradeAvailable.removeUpgrade(casterItems)
-      console.log("CASTER UPGRADE",casterContext,casterWrapper)
+      console.log("CASTER UPGRADE",casterContext,casterWrapper,casterItems)
 
       //if(casterItems.length == 0)return;
 
