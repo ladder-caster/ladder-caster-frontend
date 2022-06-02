@@ -29,7 +29,8 @@ import {
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
   EDITION_LIMITED,
-  GAME_CONSTANTS
+  GAME_CONSTANTS,
+  CURRENT_SEASON,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -62,7 +63,8 @@ import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse } from 'lodash';
-const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
+const gameConstantsContext: GameConstantsContextInterface = require('../../../libs/sdk/src/laddercaster/program/GameConstantsContext')
+  .default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -80,7 +82,7 @@ const Remix = () => {
     items: [],
     chests: [],
   });
-  const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
+  const [gameConstants] = useRemixOrigin(GAME_CONSTANTS, gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
@@ -271,7 +273,7 @@ const Remix = () => {
     let chests = [];
     // https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/
     // forEach does 33% less ops-per sec than a regular for loop/forOf
-    for(let key = 0;key<inventory.length;key++){
+    for (let key = 0; key < inventory.length; key++) {
       const item = inventory[key];
       if (Object.keys(item.itemType)[0] === 'chest') {
         chests.push({
@@ -328,8 +330,8 @@ const Remix = () => {
       setMap(generateMap(game));
       console.log('game', game);
       console.log(
-          'last crank',
-          new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+        'last crank',
+        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
       );
       // if (client) {
       //   window.addEventListener('focus', () => {
@@ -353,7 +355,7 @@ const Remix = () => {
       //     });
       // }
     }
-    if(client && !gameConstants.clientInitialized()){
+    if (client && !gameConstants.clientInitialized()) {
       gameConstants.initClient(client);
     }
     // return () => {
@@ -441,19 +443,25 @@ const Remix = () => {
     // DO NOT REMOVE, the game breaks if removed
     switch (process.env.REACT_APP_ENV as Environment) {
       case 'devnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
+        localStorage.setItem(
+          'gamePK',
+          resources.seasons[CURRENT_SEASON].gameAccount,
+        );
         break;
       }
       case 'mainnet-priv': {
         localStorage.setItem(
           'gamePK',
-          resources.seasons[1].gameAccountProdPriv,
+          resources.seasons[CURRENT_SEASON].gameAccountProdPriv,
         );
         break;
       }
       case 'localprod':
       case 'mainnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccountProd);
+        localStorage.setItem(
+          'gamePK',
+          resources.seasons[CURRENT_SEASON].gameAccountProd,
+        );
         break;
       }
     }
