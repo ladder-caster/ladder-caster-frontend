@@ -86,7 +86,73 @@
       ]
     },
     {
+      "name": "updateGameStatus",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "isClosed",
+          "type": "bool"
+        }
+      ]
+    },
+    {
       "name": "initSeason",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "season",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "seasonNumber",
+          "type": "u8"
+        },
+        {
+          "name": "isCurrentSeason",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "updateSeason",
       "accounts": [
         {
           "name": "authority",
@@ -2071,6 +2137,22 @@
       "args": []
     },
     {
+      "name": "fixRedeemSpell",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caster",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "fixStuckCaster",
       "accounts": [
         {
@@ -2153,6 +2235,10 @@
           {
             "name": "ladaTokenAccount",
             "type": "publicKey"
+          },
+          {
+            "name": "isClosed",
+            "type": "bool"
           }
         ]
       }
@@ -3251,6 +3337,11 @@
       "code": 6047,
       "name": "ItemRarityToLowForMint",
       "msg": "Item rarity too low to mint."
+    },
+    {
+      "code": 6048,
+      "name": "ClosedGameAction",
+      "msg": "Closed games cannot perform this task."
     }
   ],
   "metadata": {
