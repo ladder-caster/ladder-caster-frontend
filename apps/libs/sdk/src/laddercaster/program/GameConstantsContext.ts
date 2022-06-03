@@ -1,5 +1,10 @@
-import { PublicKey,SignaturePubkeyPair,Transaction,TransactionInstruction } from "@solana/web3.js";
-import { web3,utils } from '@project-serum/anchor';
+import {
+  PublicKey,
+  SignaturePubkeyPair,
+  Transaction,
+  TransactionInstruction,
+} from '@solana/web3.js';
+import { web3, utils } from '@project-serum/anchor';
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -8,13 +13,19 @@ import {
 } from '@solana/spl-token';
 import { Game, GameState, Client, Accounts, Balances } from '.';
 import resources from '../config/resources.json';
-import {TYPE_RES1, TYPE_RES2, TYPE_RES3, OLD_SEASON,ROUND_TIMELIMIT} from 'core/remix/state'
-import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers'
-import { Environment } from "./Client";
+import {
+  TYPE_RES1,
+  TYPE_RES2,
+  TYPE_RES3,
+  OLD_SEASON,
+  ROUND_TIMELIMIT,
+} from 'core/remix/state';
+import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
+import { Environment } from './Client';
 /**
  * GameConstantsContext
  * @function clientInitialized - checks whether client is initialized
- * 
+ *
  */
 class GameConstantsContext {
   private accounts: Accounts;
@@ -25,85 +36,99 @@ class GameConstantsContext {
   private updateGameInterval: any;
   private lastCrankTime: number;
   private lastTurnNumber: number;
-  private transaction:Transaction|null;
-  constructor() { }
+  private transaction: Transaction | null;
+  constructor() {}
 
-  async addInstruction(instruction:TransactionInstruction,txn?:Transaction){
-    if(!this.transaction){this.transaction=new Transaction();}
-    if(txn){txn.add(instruction);return;}
+  async addInstruction(instruction: TransactionInstruction, txn?: Transaction) {
+    if (!this.transaction) {
+      this.transaction = new Transaction();
+    }
+    if (txn) {
+      txn.add(instruction);
+      return;
+    }
     this.transaction.add(instruction);
   }
-  async removeInstruction(instruction:TransactionInstruction,txn?:Transaction){
-    if(!this.transaction){
+  async removeInstruction(
+    instruction: TransactionInstruction,
+    txn?: Transaction,
+  ) {
+    if (!this.transaction) {
       return;
     }
     var index;
-    if(txn){
-      index = txn.instructions.indexOf(instruction)
-      if(index>-1)txn.instructions.splice(index,1)
-      return
+    if (txn) {
+      index = txn.instructions.indexOf(instruction);
+      if (index > -1) txn.instructions.splice(index, 1);
+      return;
     }
     index = this.transaction.instructions.indexOf(instruction);
-    if(index>-1)this.transaction.instructions.splice(index,1);
+    if (index > -1) this.transaction.instructions.splice(index, 1);
   }
-  async setFeePayer(txn?:Transaction){
-    if(!this.transaction)return;
-    if(txn){
-      txn.feePayer=this.client.wallet.publicKey;
-      return
+  async setFeePayer(txn?: Transaction) {
+    if (!this.transaction) return;
+    if (txn) {
+      txn.feePayer = this.client.wallet.publicKey;
+      return;
     }
-    this.transaction.feePayer=this.client.wallet.publicKey
+    this.transaction.feePayer = this.client.wallet.publicKey;
   }
-  async setTransactionBlockHash(txn?:Transaction){
-    if(!this.transaction)return;
+  async setTransactionBlockHash(txn?: Transaction) {
+    if (!this.transaction) return;
     const blockhash = (await this.client.connection.getLatestBlockhash())
-    .blockhash;
-    if(txn){
-      txn.recentBlockhash=blockhash;
+      .blockhash;
+    if (txn) {
+      txn.recentBlockhash = blockhash;
       return;
     }
     this.transaction.recentBlockhash = blockhash;
   }
-  async sendTransaction(txn?:Transaction){  
-    let toSend=txn?txn:this.transaction
-    try{
+  async sendTransaction(txn?: Transaction) {
+    let toSend = txn ? txn : this.transaction;
+    try {
       await this.client.program.provider.send(toSend);
-      if(this.transaction)this.transaction=null;
-    }catch (e) {
+      if (this.transaction) this.transaction = null;
+    } catch (e) {
       if (e.message.includes(TRANSACTION_TOO_LARGE)) {
         console.log(e);
-        await this.txnTooLarge(toSend)
+        await this.txnTooLarge(toSend);
       } else {
         throw new Error(e);
       }
     }
   }
-  
-  private async txnTooLarge(transaction: Transaction){
-    const half = Math.floor(transaction.instructions.length/2);
-    if(half<=0)return;
-    const firstHalf = transaction.instructions.slice(0,half);
+
+  private async txnTooLarge(transaction: Transaction) {
+    const half = Math.floor(transaction.instructions.length / 2);
+    if (half <= 0) return;
+    const firstHalf = transaction.instructions.slice(0, half);
     const secondHalf = transaction.instructions.slice(half);
     const firstHalfTxn = new Transaction();
     firstHalfTxn.instructions = firstHalf;
-    
+
     const secondHalfTxn = new Transaction();
     secondHalfTxn.instructions = secondHalf;
 
-    this.setFeePayer(firstHalfTxn)
-    this.setFeePayer(secondHalfTxn)
-    await Promise.all([this.setTransactionBlockHash(firstHalfTxn),
-    this.setTransactionBlockHash(secondHalfTxn)]);
-    await Promise.all([this.sendTransaction(firstHalfTxn),
-     this.sendTransaction(secondHalfTxn)]);
-      //TODO: signatures
+    this.setFeePayer(firstHalfTxn);
+    this.setFeePayer(secondHalfTxn);
+    await Promise.all([
+      this.setTransactionBlockHash(firstHalfTxn),
+      this.setTransactionBlockHash(secondHalfTxn),
+    ]);
+    await Promise.all([
+      this.sendTransaction(firstHalfTxn),
+      this.sendTransaction(secondHalfTxn),
+    ]);
+    //TODO: signatures
   }
-  private async getTransactionMemoryUsage(){
-    if(!this.transaction){return 0;}
+  private async getTransactionMemoryUsage() {
+    if (!this.transaction) {
+      return 0;
+    }
     //TODO: need to calculate, potentially using endian uint to do calculation for an approximation on compute units
   }
   /**
-   * 
+   *
    * @param account the account to get the balance of
    * @returns the current balance of the token account
    */
@@ -111,27 +136,27 @@ class GameConstantsContext {
     return this.client.connection.getTokenAccountBalance(account);
   }
   /**
-   * 
+   *
    * @returns the current SOL balance of the wallet
    */
   private async getSOLBalance() {
-    return this.client.connection.getBalance(this.client.wallet.publicKey)
+    return this.client.connection.getBalance(this.client.wallet.publicKey);
   }
 
   /**
    * Initializes all data needed across caster context and player context
    */
   private async init() {
-    if(this.accounts?.gameAccount){
+    if (this.accounts?.gameAccount) {
       return;
     }
     const gameAccount = new web3.PublicKey(localStorage.getItem('gamePK'));
     const previousGameAccount = new web3.PublicKey(
       this.getGamePK(process.env.REACT_APP_ENV as Environment, OLD_SEASON),
-    )
+    );
     const game = (await this.client.program.account.game.fetch(
       gameAccount,
-    )) as Game
+    )) as Game;
     const publicKey = this.client.wallet.publicKey;
     const programId = this.client.program.programId;
     //MAHOOSIVE get and wait for longest execution
@@ -160,19 +185,23 @@ class GameConstantsContext {
         game.ladaMintAccount,
         publicKey,
       ),
-      PublicKey.findProgramAddress([Buffer.from('game_signer')],
-        programId
-      ),
+      PublicKey.findProgramAddress([Buffer.from('game_signer')], programId),
       PublicKey.findProgramAddress(
         [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
         programId,
       ),
       PublicKey.findProgramAddress(
-        [gameAccount.toBuffer(), this?.client?.program?.provider?.wallet?.publicKey?.toBuffer()],
+        [
+          gameAccount.toBuffer(),
+          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
+        ],
         this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
-        [previousGameAccount.toBuffer(), this?.client?.program?.provider?.wallet?.publicKey?.toBuffer()],
+        [
+          previousGameAccount.toBuffer(),
+          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
+        ],
         this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
@@ -180,82 +209,134 @@ class GameConstantsContext {
         this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
-      [
-        Buffer.from('turn_data'),
-        gameAccount.toBuffer(),
-        Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
-      ],
-      this.client.program.programId,
+        [
+          Buffer.from('turn_data'),
+          gameAccount.toBuffer(),
+          Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
+        ],
+        this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
         [
           Buffer.from('turn_data'),
           gameAccount.toBuffer(),
-          Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn+1))),
+          Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn + 1))),
         ],
         this.client.program.programId,
-        )
+      ),
     ];
-    const [resource1, resource2, resource3, lada, gameSigner, season, playerAccount, playerBump, previousPlayerAccount,previousSeason,turnData,futureTurnData] = await Promise.all(asyncDispatch).then((res) => {
-      if(this.initInterval){
-        clearInterval(this.initInterval);
-        this.initInterval=null;
-      }
-      return [res?.[0], res?.[1], res?.[2], res?.[3], res?.[4]?.[0], res?.[5]?.[0], res?.[6]?.[0],res?.[6]?.[1],res?.[7]?.[0],res?.[8]?.[0],res?.[9]?.[0],res?.[10]?.[0]];
-    }).catch(err=>{
-      if(!this.initInterval){this.initInterval=setInterval(async ()=>{await this.init()},2500)};
-      console.error("Tried To Init GameConstants:",err)
-      // prevent crash
-      return ['', '', '', '', '', '', '', 0, '','','','']
-    });
-   
+    const [
+      resource1,
+      resource2,
+      resource3,
+      lada,
+      gameSigner,
+      season,
+      playerAccount,
+      playerBump,
+      previousPlayerAccount,
+      previousSeason,
+      turnData,
+      futureTurnData,
+    ] = await Promise.all(asyncDispatch)
+      .then((res) => {
+        if (this.initInterval) {
+          clearInterval(this.initInterval);
+          this.initInterval = null;
+        }
+        return [
+          res?.[0],
+          res?.[1],
+          res?.[2],
+          res?.[3],
+          res?.[4]?.[0],
+          res?.[5]?.[0],
+          res?.[6]?.[0],
+          res?.[6]?.[1],
+          res?.[7]?.[0],
+          res?.[8]?.[0],
+          res?.[9]?.[0],
+          res?.[10]?.[0],
+        ];
+      })
+      .catch((err) => {
+        if (!this.initInterval) {
+          this.initInterval = setInterval(async () => {
+            await this.init();
+          }, 2500);
+        }
+        console.error('Tried To Init GameConstants:', err);
+        // prevent crash
+        return ['', '', '', '', '', '', '', 0, '', '', '', ''];
+      });
+
     this.accounts = {
       gameAccount: gameAccount,
       playerAccount: playerAccount,
       playerBump: playerBump,
-      tokenAccounts: { [TYPE_RES1]:resource1, [TYPE_RES2]:resource2, [TYPE_RES3]:resource3, lada },
+      tokenAccounts: {
+        [TYPE_RES1]: resource1,
+        [TYPE_RES2]: resource2,
+        [TYPE_RES3]: resource3,
+        lada,
+      },
       previousGameAccount,
-      previousPlayerAccount: previousPlayerAccount
-    }
+      previousPlayerAccount: previousPlayerAccount,
+    };
     this.game = {
       game,
       gameSigner,
       season,
       previousSeason,
       turnData,
-      futureTurnData
-    }
+      futureTurnData,
+    };
     this.lastTurnNumber = game.turnInfo.turn;
-    this.lastCrankTime = new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
+    this.lastCrankTime =
+      new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes() +
+      1;
     const difference = this.lastCrankTime - new Date().getMinutes();
-    const updateIntervalDuration =( (ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1)*60000;
-    this.updateGameInterval = setInterval(()=>{this.handleGameUpdateInterval(updateIntervalDuration)}, updateIntervalDuration);
+    const updateIntervalDuration =
+      (ROUND_TIMELIMIT - difference > 0 ? ROUND_TIMELIMIT - difference : 1) *
+      60000;
+    this.updateGameInterval = setInterval(() => {
+      this.handleGameUpdateInterval(updateIntervalDuration);
+    }, updateIntervalDuration);
     await this.hydrateAccountBalances();
   }
   /**
-   * 
+   *
    * @param duration duration of the interval in ms
    */
-  private async handleGameUpdateInterval(duration: number){
+  private async handleGameUpdateInterval(duration: number) {
     await this.hydrateGame();
     /**
      * If new round, timer will be ~18-20 min else,
      * if last duration was greater than 1 i.e turn isnt over but we waited the expected duration;
      * set interval to 1 min until cranked
      */
-    if(this.lastTurnNumber<this.game.game.turnInfo.turn){
-      this.lastCrankTime = new Date(this.game.game.turnInfo.lastCrankSeconds.toNumber() * 1000).getMinutes()+1;
+    if (this.lastTurnNumber < this.game.game.turnInfo.turn) {
+      this.lastCrankTime =
+        new Date(
+          this.game.game.turnInfo.lastCrankSeconds.toNumber() * 1000,
+        ).getMinutes() + 1;
       const difference = this.lastCrankTime - new Date().getMinutes();
-      const updateIntervalDuration = ((ROUND_TIMELIMIT-difference)>0?ROUND_TIMELIMIT-difference:1)*60000;
-      this.lastTurnNumber=this.game.game.turnInfo.turn;
+      const updateIntervalDuration =
+        (ROUND_TIMELIMIT - difference > 0 ? ROUND_TIMELIMIT - difference : 1) *
+        60000;
+      this.lastTurnNumber = this.game.game.turnInfo.turn;
       clearInterval(this.updateGameInterval);
-      this.updateGameInterval=setInterval(()=>{this.handleGameUpdateInterval(updateIntervalDuration)}, updateIntervalDuration);
-    }else if(duration>1){
+      this.updateGameInterval = setInterval(() => {
+        this.handleGameUpdateInterval(updateIntervalDuration);
+      }, updateIntervalDuration);
+    } else if (duration > 1) {
       clearInterval(this.updateGameInterval);
-      this.updateGameInterval=setInterval(()=>{this.handleGameUpdateInterval(60000)}, 60000);
+      this.updateGameInterval = setInterval(() => {
+        this.handleGameUpdateInterval(60000);
+      }, 60000);
     }
   }
-  private getGamePK(env: Environment, season: number):PublicKey {
+  private getGamePK(env: Environment, season: number): PublicKey {
     switch (env) {
       case 'localprod':
       case 'mainnet': {
@@ -270,93 +351,106 @@ class GameConstantsContext {
     }
   }
   // #region helpers
-  public get turnData():PublicKey{
+  public get turnData(): PublicKey {
     return this.game.turnData;
   }
-  public get previousSeason():PublicKey{
+  public get previousSeason(): PublicKey {
     return this.game.previousSeason;
   }
-  public get playerTokenAccount():PublicKey{
+  public get playerTokenAccount(): PublicKey {
     return this.accounts.playerAccount;
   }
-  public get playerBump():number{
+  public get playerBump(): number {
     return this.accounts.playerBump;
   }
-  public get gameTokenAccount():PublicKey{
+  public get gameTokenAccount(): PublicKey {
     return this.accounts.gameAccount;
   }
-  public get previousGameTokenAccount():PublicKey{
+  public get previousGameTokenAccount(): PublicKey {
     return this.accounts.previousGameAccount;
   }
-  public get previousPlayerTokenAccount():PublicKey{
+  public get previousPlayerTokenAccount(): PublicKey {
     return this.accounts.previousPlayerAccount;
   }
-  public get ladaTokenAccount():PublicKey{
+  public get ladaTokenAccount(): PublicKey {
     return this.accounts.tokenAccounts.lada;
   }
-  public get resource1TokenAccount():PublicKey{
+  public get resource1TokenAccount(): PublicKey {
     return this.accounts.tokenAccounts[TYPE_RES1];
   }
-  public get resource2TokenAccount():PublicKey{
+  public get resource2TokenAccount(): PublicKey {
     return this.accounts.tokenAccounts[TYPE_RES2];
   }
-  public get resource3TokenAccount():PublicKey{
+  public get resource3TokenAccount(): PublicKey {
     return this.accounts.tokenAccounts[TYPE_RES3];
   }
-  public get gameSigner():PublicKey{
+  public get gameSigner(): PublicKey {
     return this.game.gameSigner;
   }
-  public get season():PublicKey{
+  public get season(): PublicKey {
     return this.game.season;
   }
-  public get ladaBalance():number{
+  public get ladaBalance(): number {
     return this.balances.game.lada;
   }
-  public get resource1Balance():number{
+  public get resource1Balance(): number {
     return this.balances.game[TYPE_RES1];
   }
-  public get resource2Balance():number{
+  public get resource2Balance(): number {
     return this.balances.game[TYPE_RES2];
   }
-  public get resource3Balance():number{
+  public get resource3Balance(): number {
     return this.balances.game[TYPE_RES3];
   }
-  public get solBalance(): number{
+  public get solBalance(): number {
     return this.balances.sol;
   }
-  public get gameState(): Game{
+  public get gameState(): Game {
     return this.game?.game;
   }
-  public clientInitialized(): boolean{
+  public clientInitialized(): boolean {
     return !!this.client;
   }
-  public get Client(): Client{
+  public get Client(): Client {
     return this.client;
   }
-  public get getCasterAccounts():[PublicKey, PublicKey,  Game, PublicKey,PublicKey ]{
-    this.hydrateGame()
+  public get getCasterAccounts(): [
+    PublicKey,
+    PublicKey,
+    Game,
+    PublicKey,
+    PublicKey,
+  ] {
+    this.hydrateGame();
     return [
       this.accounts.gameAccount,
       this.accounts.playerAccount,
       this.game.game,
       this.game.gameSigner,
-      this.game.season
-    ]
+      this.game.season,
+    ];
   }
-  public get getPlayerAccounts(): [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]{
-    this.hydrateGame()
+  public get getPlayerAccounts(): [
+    PublicKey,
+    PublicKey,
+    number,
+    Game,
+    PublicKey,
+    PublicKey,
+  ] {
+    this.hydrateGame();
     return [
       this.accounts?.gameAccount,
       this.accounts?.playerAccount,
       this.accounts?.playerBump,
       this.game?.game,
       this.game?.gameSigner,
-      this.game?.season
-    ]
+      this.game?.season,
+    ];
   }
-  private async checkInstance(){
-    //initializes game incase of desync  
-    if(!this.accounts?.gameAccount){
+  private async checkInstance() {
+    //initializes game incase of desync
+    if (!this.accounts?.gameAccount) {
       await this.init();
     }
   }
@@ -364,21 +458,24 @@ class GameConstantsContext {
     await this.checkInstance();
     const timeSince = this.lastCrankTime - new Date().getMinutes();
     // unless force, only hydrate if it's been more than 20 min since last crank or 1 min intervals if net is dying
-    if(timeSince<=-20 && !force){
+    if (timeSince <= -20 && !force) {
       return;
     }
     const game = (await this.client.program.account.game.fetch(
       this.accounts?.gameAccount,
     )) as Game;
-    if(game.turnInfo.turn>this.game.game.turnInfo.turn){
+    if (game.turnInfo.turn > this.game.game.turnInfo.turn) {
       this.game.game = game;
-      await Promise.all([PublicKey.findProgramAddress(
-        [
-        Buffer.from('turn_data'),
-        this.accounts.gameAccount.toBuffer(),
-        Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn-1))),
-        ],
-        this.client.program.programId,
+      await Promise.all([
+        PublicKey.findProgramAddress(
+          [
+            Buffer.from('turn_data'),
+            this.accounts.gameAccount.toBuffer(),
+            Buffer.from(
+              utils.bytes.utf8.encode(String(game.turnInfo.turn - 1)),
+            ),
+          ],
+          this.client.program.programId,
         ),
         PublicKey.findProgramAddress(
           [
@@ -387,17 +484,20 @@ class GameConstantsContext {
             Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
           ],
           this.client.program.programId,
-          )]).then(res=>{
-            this.game.turnData = res[0][0];
-            this.game.futureTurnData = res[1][0];
-          }).catch(err=>console.error("FAILED TO GET TURN DATA:",err))
+        ),
+      ])
+        .then((res) => {
+          this.game.turnData = res[0][0];
+          this.game.futureTurnData = res[1][0];
+        })
+        .catch((err) => console.error('FAILED TO GET TURN DATA:', err));
     }
   }
-  public get futureTurnData():PublicKey{
+  public get futureTurnData(): PublicKey {
     return this.game.futureTurnData;
   }
   /**
-   * 
+   *
    * @returns [resource1, resource2, resource3, lada, sol]
    */
   public getTokenBalances(): [number, number, number, number, number] {
@@ -406,50 +506,58 @@ class GameConstantsContext {
       this.balances.game[TYPE_RES2],
       this.balances.game[TYPE_RES3],
       this.balances.game.lada,
-      this.balances.sol
-    ]
+      this.balances.sol,
+    ];
   }
-    /**
+  /**
    * Refreshes account token balances
    */
-     public async hydrateAccountBalances() {
-      await this.checkInstance();
-      console.log("HYDRATION IS IMPORTANT",this,this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]))
-      const asyncDispatch = [
-        this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
-        this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),
-        this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES3]),
-        this.getTokenAccountBalance(this.accounts.tokenAccounts.lada),
-        this.getSOLBalance(),
-      ];
-  
-      const [resource1, resource2, resource3, lada, solana] = await Promise.all(asyncDispatch).then(res => {
+  public async hydrateAccountBalances() {
+    await this.checkInstance();
+    console.log(
+      'HYDRATION IS IMPORTANT',
+      this,
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
+    );
+    const asyncDispatch = [
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES3]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts.lada),
+      this.getSOLBalance(),
+    ];
+
+    const [resource1, resource2, resource3, lada, solana] = await Promise.all(
+      asyncDispatch,
+    )
+      .then((res) => {
         // value exists in return: {context:{},value:{}}
         const res1 = res[0] ? res[0].value.amount : '0';
         const res2 = res[1] ? res[1].value.amount : '0';
         const res3 = res[2] ? res[2].value.amount : '0';
         const ladaValue = res[3] ? res[3].value.amount : 0;
         return [res1, res2, res3, ladaValue / 1e9, res[4] / 1e9];
-      }).catch(err=>{
-        console.error("Failed To Retrieve Account Balances:",err)
+      })
+      .catch((err) => {
+        console.error('Failed To Retrieve Account Balances:', err);
         return Array(5).fill(0);
       });
-      this.balances = {
-        sol: solana,
-        game: {
-          [TYPE_RES1]:resource1,
-          [TYPE_RES2]:resource2,
-          [TYPE_RES3]:resource3,
-          lada,
-        }
-      }
+    this.balances = {
+      sol: solana,
+      game: {
+        [TYPE_RES1]: resource1,
+        [TYPE_RES2]: resource2,
+        [TYPE_RES3]: resource3,
+        lada,
+      },
+    };
+  }
+  public async initClient(client: Client) {
+    if (client && !this.client) {
+      this.client = client;
+      await this.init();
     }
-    public async initClient(client: Client) {
-      if (client && !this.client) {
-        this.client = client;
-        await this.init();
-      }
-    }
+  }
   // #endregion helpers
 }
 

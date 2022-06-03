@@ -219,11 +219,11 @@ export class PlayerContext {
       },
       {
         mintAccount: game.resource2MintAccount,
-        tokenAccount: gameConstantsContext.resource1TokenAccount,
+        tokenAccount: gameConstantsContext.resource2TokenAccount,
       },
       {
         mintAccount: game.resource3MintAccount,
-        tokenAccount: gameConstantsContext.resource1TokenAccount,
+        tokenAccount: gameConstantsContext.resource3TokenAccount,
       },
     ];
 
@@ -735,9 +735,6 @@ export class PlayerContext {
           ][Object.keys(item.itemType.spellBook.costFeature)[0]][
             Object.keys(item.itemType.spellBook.rarity)[0]
           ];
-        console.log(lookupRarity);
-        console.log(item.itemType.spellBook.cost);
-        console.log(item.itemType.spellBook.value);
         if (lookupRarity)
           return lookupRarity[item.itemType.spellBook.cost][
             item.itemType.spellBook.value
@@ -782,8 +779,6 @@ export class PlayerContext {
         );
       }
       case 'chest': {
-        console.log('heyo');
-        console.log(`${uri}:chest:${item.level}:${item.itemType.chest.tier}`);
         return keccak256(
           `${uri}:chest:${item.level}:${item.itemType.chest.tier}`,
         );
