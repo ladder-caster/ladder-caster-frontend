@@ -46,7 +46,7 @@ import {
 //import {gameConstantsContext} from '../../laddercaster';
 async function getMerkle() {
   return await axios.get(
-    'https://arweave.net/1Y6r-VCskZlbYBOw8c8V0kaYZVtEwf4PGXwWyBRzs20',
+    'https://arweave.net/ZFSrjFHHYKvTRy-5j4hpQtB4jboVx3ejCefdSZ8u9TE',
   );
 }
 
