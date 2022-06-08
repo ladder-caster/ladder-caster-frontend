@@ -122,6 +122,9 @@ export interface Item {
   equippedOwner: PublicKey;
 
   publicKey?: PublicKey;
+  type: string;
+  value: number;
+  attribute:string;
 }
 
 // Converted from Rust enums

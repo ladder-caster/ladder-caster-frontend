@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   _inventory,
   _chests,
@@ -19,6 +19,7 @@ import Thumbar from '../../../shared/thumbar/Thumbar';
 import Craft from './craft/Craft';
 import Category from './category/Category';
 import {
+  GAME_CONSTANTS,
   GAME_INIT,
   ITEM_BOOK,
   ITEM_HAT,
@@ -50,12 +51,18 @@ const Inventory = () => {
   const [casters] = useRemix(CHAIN_CASTERS);
   const [inventoryPanel, setInventoryPanel] = useState(false);
   const [items] = useRemix(CHAIN_ITEMS);
-
-  const render = () => {
-    if (initialized && (casters?.length !== 0 || items.length !== 0)) {
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const toggleInventoryPanel = () => {
+    setInventoryPanel(!inventoryPanel);
+  };
+  const render = useMemo(() => {
+    if (
+      gameConstants?.gameState &&
+      (casters?.length !== 0 || items.length !== 0)
+    ) {
       return (
         <>
-          <_open_inventory onClick={() => setInventoryPanel(true)}>
+          <_open_inventory onClick={toggleInventoryPanel}>
             {t('inventory.items')}
           </_open_inventory>
           <_container>
@@ -91,7 +98,7 @@ const Inventory = () => {
           <_header>
             <_title>{t('tease.title')}</_title>
           </_header>
-          <_open_inventory onClick={() => setInventoryPanel(false)}>
+          <_open_inventory onClick={toggleInventoryPanel}>
             {t('drawer.close')}
           </_open_inventory>
         </>
@@ -103,12 +110,12 @@ const Inventory = () => {
         </_feed>
       );
     }
-  };
+  }, [casters, gameConstants?.gameState, items]);
 
   return (
     <_inventory>
       <Heading title={t('title.bag')} />
-      {render()}
+      {render}
     </_inventory>
   );
 };

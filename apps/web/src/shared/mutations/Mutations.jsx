@@ -13,14 +13,19 @@ import {
   _spinner,
 } from './Mutations.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { CREATE_MUTATION, USER_OFFLINE, ERROR_CODES } from 'core/remix/state';
+import {
+  CREATE_MUTATION,
+  USER_OFFLINE,
+  ERROR_CODES,
+  GAME_CONSTANTS,
+} from 'core/remix/state';
 import usePrevious from 'core/hooks/usePrevious';
 import { AnimatePresence } from 'framer-motion';
 import { AnimateMutations } from './animations/AnimateMutations';
 import { useTranslation } from 'react-i18next';
 import { AnimateShimmer } from './animations/AnimateShimmer';
 import { useSize } from 'core/hooks/useSize';
-import { findIndex } from 'lodash';
+import { cloneDeep, findIndex, isEqual } from 'lodash';
 import { IconLoading } from 'design/icons/loading.icon';
 import { IconLightning } from 'design/icons/lightning.icon';
 import { IconEye } from 'design/icons/eye.icon';
@@ -39,8 +44,20 @@ const Mutations = withTheme(({ theme }) => {
   const [codes] = useRemix(ERROR_CODES);
   const [offline, setOffline] = useRemix(USER_OFFLINE);
   const [queue, setQueue] = useState([]);
-  const prev_queue = usePrevious(queue);
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const previousTurn = usePrevious(
+    gameConstants?.gameState?.turnInfo?.turn ?? -1,
+  );
 
+  useEffect(() => {
+    if (
+      queue.length > 0 &&
+      gameConstants?.gameState &&
+      gameConstants?.gameState?.turnInfo?.turn > previousTurn
+    ) {
+      setQueue([]);
+    }
+  }, [gameConstants?.gameState]);
   // Handle Mutation
   useEffect(() => {
     if (mutation?.id) {
@@ -80,9 +97,10 @@ const Mutations = withTheme(({ theme }) => {
 
   // Remove Queue
   const removeFromQueue = (item) => {
-    let next_queue = [...queue];
-    const index = findIndex(next_queue, (match) => match.id === item.id);
-    if (index !== -1) next_queue.splice(index, 1);
+    //filters out items of same type in queue
+    let next_queue = cloneDeep(queue).filter(
+      (queueItem) => !isEqual(queueItem.type, item.type),
+    );
     setQueue(next_queue);
   };
 

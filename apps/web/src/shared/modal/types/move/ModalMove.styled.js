@@ -144,7 +144,7 @@ export const _cost = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  padding: 16px 8px 0 0;
+  padding: 0 8px 0 0;
 `;
 
 export const _cost_text = styled.div`
@@ -154,4 +154,42 @@ export const _cost_text = styled.div`
   letter-spacing: -0.5px;
   text-shadow: ${({ theme }) => theme.shadow['text']};
   padding: 2px 2px 0 0;
+`;
+
+export const _caster_gear = styled(m.div)`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 8px;
+  align-items: baseline;
+  width: 100%;
+  padding: 0 0 0 8px;
+`;
+export const _caster_gear_text = styled(m.div)`
+  font-size: 14px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['ghost']};
+  letter-spacing: -0.5px;
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  padding: 2px 2px 0 0;
+`;
+export const _caster_gear_icon = styled(m.div)`
+  width: 12px;
+  height: 12px;
+  > svg {
+    min-width: 16px;
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
+    color: ${({ theme, $attribute }) =>
+      $attribute ? theme.attribute[$attribute] : theme.text['ghost']};
+  }
+`;
+export const _caster_gear_icons = styled(m.div)`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
 `;

@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey,SignaturePubkeyPair,Transaction,TransactionInstruction } from "@solana/web3.js";
 import { web3,utils } from '@project-serum/anchor';
 
 import {
@@ -9,6 +9,7 @@ import {
 import { Game, GameState, Client, Accounts, Balances } from '.';
 import resources from '../config/resources.json';
 import {TYPE_RES1, TYPE_RES2, TYPE_RES3, OLD_SEASON,ROUND_TIMELIMIT} from 'core/remix/state'
+import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers'
 import { Environment } from "./Client";
 /**
  * GameConstantsContext
@@ -24,7 +25,83 @@ class GameConstantsContext {
   private updateGameInterval: any;
   private lastCrankTime: number;
   private lastTurnNumber: number;
+  private transaction:Transaction|null;
   constructor() { }
+
+  async addInstruction(instruction:TransactionInstruction,txn?:Transaction){
+    if(!this.transaction){this.transaction=new Transaction();}
+    if(txn){txn.add(instruction);return;}
+    this.transaction.add(instruction);
+  }
+  async removeInstruction(instruction:TransactionInstruction,txn?:Transaction){
+    if(!this.transaction){
+      return;
+    }
+    var index;
+    if(txn){
+      index = txn.instructions.indexOf(instruction)
+      if(index>-1)txn.instructions.splice(index,1)
+      return
+    }
+    index = this.transaction.instructions.indexOf(instruction);
+    if(index>-1)this.transaction.instructions.splice(index,1);
+  }
+  async setFeePayer(txn?:Transaction){
+    if(!this.transaction)return;
+    if(txn){
+      txn.feePayer=this.client.wallet.publicKey;
+      return
+    }
+    this.transaction.feePayer=this.client.wallet.publicKey
+  }
+  async setTransactionBlockHash(txn?:Transaction){
+    if(!this.transaction)return;
+    const blockhash = (await this.client.connection.getLatestBlockhash())
+    .blockhash;
+    if(txn){
+      txn.recentBlockhash=blockhash;
+      return;
+    }
+    this.transaction.recentBlockhash = blockhash;
+  }
+  async sendTransaction(txn?:Transaction){  
+    let toSend=txn?txn:this.transaction
+    try{
+      await this.client.program.provider.send(toSend);
+      if(this.transaction)this.transaction=null;
+    }catch (e) {
+      if (e.message.includes(TRANSACTION_TOO_LARGE)) {
+        console.log(e);
+        await this.txnTooLarge(toSend)
+      } else {
+        throw new Error(e);
+      }
+    }
+  }
+  
+  private async txnTooLarge(transaction: Transaction){
+    const half = Math.floor(transaction.instructions.length/2);
+    if(half<=0)return;
+    const firstHalf = transaction.instructions.slice(0,half);
+    const secondHalf = transaction.instructions.slice(half);
+    const firstHalfTxn = new Transaction();
+    firstHalfTxn.instructions = firstHalf;
+    
+    const secondHalfTxn = new Transaction();
+    secondHalfTxn.instructions = secondHalf;
+
+    this.setFeePayer(firstHalfTxn)
+    this.setFeePayer(secondHalfTxn)
+    await Promise.all([this.setTransactionBlockHash(firstHalfTxn),
+    this.setTransactionBlockHash(secondHalfTxn)]);
+    await Promise.all([this.sendTransaction(firstHalfTxn),
+     this.sendTransaction(secondHalfTxn)]);
+      //TODO: signatures
+  }
+  private async getTransactionMemoryUsage(){
+    if(!this.transaction){return 0;}
+    //TODO: need to calculate, potentially using endian uint to do calculation for an approximation on compute units
+  }
   /**
    * 
    * @param account the account to get the balance of
@@ -248,7 +325,7 @@ class GameConstantsContext {
     return this.balances.sol;
   }
   public get gameState(): Game{
-    return this.game.game;
+    return this.game?.game;
   }
   public clientInitialized(): boolean{
     return !!this.client;
@@ -269,12 +346,12 @@ class GameConstantsContext {
   public get getPlayerAccounts(): [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]{
     this.hydrateGame()
     return [
-      this.accounts.gameAccount,
-      this.accounts.playerAccount,
-      this.accounts.playerBump,
-      this.game.game,
-      this.game.gameSigner,
-      this.game.season
+      this.accounts?.gameAccount,
+      this.accounts?.playerAccount,
+      this.accounts?.playerBump,
+      this.game?.game,
+      this.game?.gameSigner,
+      this.game?.season
     ]
   }
   private async checkInstance(){

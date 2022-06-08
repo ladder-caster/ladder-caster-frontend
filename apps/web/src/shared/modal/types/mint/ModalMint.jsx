@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import {
   _accept,
   _actions,
@@ -13,28 +13,47 @@ import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { MODAL_ACTIVE } from 'core/remix/state';
+import { GAME_CONSTANTS, MODAL_ACTIVE, MINT_COST } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
-
+import {
+  _count,
+  _count_button,
+  _count_counter,
+  _count_button_text,
+} from './ModalMint.styled';
 const ModalMint = () => {
   const { t } = useTranslation();
   const { modalClear } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
   const button_ref = useRef();
-
+  const [count, setCount] = useState(1);
+  const [cost, name] = useMemo(() => {
+    return [count * 1000, count > 1 ? 'Wizards' : 'Wizard'];
+  }, [count]);
   useClickOutside(button_ref, () => modalClear({}));
 
   const active = modal?.active;
 
-  const description = modal?.description;
   const accept = () => {
-    if (active && modal?.accept) modal?.accept();
+    if (active && modal?.accept) modal?.accept(count);
     modalClear();
   };
   const deny = () => {
     if (active && modal?.deny) modal?.deny();
   };
-
+  const handleSetCount = (value) => {
+    if (!value || isNaN(value)) return;
+    //clamp between 1 and infinity
+    const newCount = Math.max(1, Math.min(count + value, Infinity));
+    if (newCount * MINT_COST <= gameConstants.ladaBalance) setCount(newCount);
+  };
+  const decrement = () => {
+    handleSetCount(-1);
+  };
+  const increment = () => {
+    handleSetCount(1);
+  };
   return (
     <AnimateModal>
       <_window ref={button_ref}>
@@ -42,7 +61,18 @@ const ModalMint = () => {
           <span>{t('modal.confirm')}</span>
         </_title>
         <_breakpoint />
-        <_description>{description}</_description>
+        <_description>
+          {t('modal.demo.description', { count, cost, name })}
+        </_description>
+        <_count>
+          <_count_button onClick={decrement}>
+            <_count_button_text>-</_count_button_text>
+          </_count_button>
+          <_count_counter>{count}</_count_counter>
+          <_count_button onClick={increment}>
+            <_count_button_text>+</_count_button_text>
+          </_count_button>
+        </_count>
         <_actions>
           <_deny onClick={() => deny()}>{t('modal.no')}</_deny>
           <AnimateButton high>

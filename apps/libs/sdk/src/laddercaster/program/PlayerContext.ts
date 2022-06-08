@@ -29,7 +29,7 @@ import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
-import { TYPE_RES1, TYPE_RES2, TYPE_RES3,LADA_TOKEN_ACCOUNT } from 'core/remix/state';
+import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
 //import {gameConstantsContext} from '../../laddercaster';
 async function getMerkle() {
   return await axios.get(
@@ -231,7 +231,7 @@ export class PlayerContext {
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
           game.ladaMintAccount,
-          new PublicKey(LADA_TOKEN_ACCOUNT),
+          gameConstantsContext.ladaTokenAccount,
           gameConstantsContext.Client.wallet.publicKey,
           gameConstantsContext.Client.wallet.publicKey,
         ),

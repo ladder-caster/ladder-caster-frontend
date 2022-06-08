@@ -29,6 +29,7 @@ import {
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
   EDITION_LIMITED,
+  CASTER_UPGRADE_AVAILABLE,
   GAME_CONSTANTS
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
@@ -58,10 +59,66 @@ import {
   Tile,
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
+
 import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
-import { map, sortBy, reverse } from 'lodash';
+import { map, sortBy, reverse, union, intersection } from 'lodash';
+import { CasterUpgradeAvailable,CasterWrapper } from './Remix.types';
+//ensures presetup is done
+const UpgradesAvailable:CasterUpgradeAvailable = {
+  loadedItems:false,
+  items:new Map<String, Item>(),
+  casters:new Map<String, CasterWrapper>(),
+  canUpgrade:(publicKey: String)=>{
+    const casters = UpgradesAvailable.casters;
+    if(!publicKey || !casters) return false;
+    const caster = casters?.get(publicKey);
+    var upgrade = false
+    const keys=  Object.keys(caster)
+    for(let i = 0;i<keys.length;i++){
+      if(caster[keys[i]].items.length>0){
+        upgrade = true
+        break
+      }
+    }
+    return upgrade
+  },
+  getEquippedItems:(publicKey:String)=>{
+    const casters = UpgradesAvailable.casters;
+    console.log("PUBLIC KEY",casters,publicKey)
+    if(!publicKey || !casters) return [];
+    const caster = casters?.get(publicKey);
+    // dynamic retrieval no need to update if new item types are added
+    const itemArray = []
+    const keys = Object.keys(caster);
+    console.log("KEYS",keys,caster)
+    for(let i = 0;i<keys.length;i++){
+      const item = caster[keys[i]]?.currentItem;
+      console.log(item,caster[keys[i]])
+      if(item){
+        itemArray.push(item)
+      }
+    }
+    return itemArray;
+  },
+  removeUpgrade:(items:Item[])=>{
+    if(!items || items?.length==0)return;
+    const pks = items.map(item=> item.publicKey instanceof anchor.web3.PublicKey?item.publicKey.toString():item.publicKey)
+    for(const [key, value] of UpgradesAvailable.casters.entries() ){
+      const caster = value;
+      const keys = Object.keys(caster);
+      for(let i = 0;i<keys.length;i++){
+        const casterItems = caster[keys[i]]?.items;
+        const union = intersection(casterItems,pks);
+        if(union){
+          union.map(x=>casterItems.splice(casterItems.indexOf(x),1))
+        }
+      }
+      UpgradesAvailable.casters.set(key,value)
+    }
+  }
+}
 const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -80,6 +137,8 @@ const Remix = () => {
     items: [],
     chests: [],
   });
+  const [upgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,UpgradesAvailable)
+
   const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
@@ -230,7 +289,23 @@ const Remix = () => {
           };
         }
       };
-
+      const hat =generateModifier(caster.modifiers.head)
+      const robe = generateModifier(caster.modifiers.robe)
+      const staff = generateModifier(caster.modifiers.staff)
+      upgradeAvailable.casters.set(caster?.publicKey?.toString(),{
+        head:{
+          items: [],
+          currentItem:hat
+        },
+        robe:{
+          items: [],
+          currentItem:robe
+        },
+        staff:{
+          items: [],
+          currentItem:staff
+        }
+      })
       spellcastersArr.push({
         index: i,
         publicKey: caster?.publicKey?.toString(),
@@ -244,9 +319,9 @@ const Remix = () => {
         position: position,
         id: nanoid(),
         xp: caster.experience.toNumber(),
-        hat: generateModifier(caster.modifiers.head),
-        robe: generateModifier(caster.modifiers.robe),
-        staff: generateModifier(caster.modifiers.staff),
+        hat: hat,
+        robe: robe,
+        staff: staff,
         spell: generateModifier(caster.modifiers.spellBook),
         edition: caster?.edition === 1 ? EDITION_NORMAL : EDITION_LIMITED,
         last_loot: caster?.turnCommit?.actions?.loot
@@ -283,8 +358,9 @@ const Remix = () => {
         });
       } else {
         if (item.itemType.equipment) {
-          items.push({
-            type: Object.keys(item.itemType.equipment.equipmentType)[0],
+          const itemType = Object.keys(item.itemType.equipment.equipmentType)[0]
+          const arrayItem = {
+            type: itemType,
             id: key,
             tier: getTier(item.level),
             level: item.level,
@@ -293,7 +369,10 @@ const Remix = () => {
             value: item.itemType.equipment.value,
             publicKey: item?.publicKey?.toString(),
             equippedOwner: item.equippedOwner,
-          });
+          }
+         
+          if(!item.equippedOwner)upgradeAvailable.items.set(arrayItem.publicKey,arrayItem);
+          items.push(arrayItem);
         } else if (item.itemType.spellBook) {
           items.push({
             type: Object.keys(item.itemType)[0],
@@ -311,7 +390,7 @@ const Remix = () => {
         }
       }
     }
-
+    upgradeAvailable.loadedItems = true;
     return {
       items: reverse(
         sortBy(items, ['level', 'attribute', 'rarity']).filter((item) => {
@@ -418,6 +497,7 @@ const Remix = () => {
     if (casters) {
       setSpellcasters(generateSpellCaster(casters));
       console.log('casters', casters);
+
     }
   }, [casters]);
 
@@ -485,7 +565,49 @@ const Remix = () => {
       });
     }
   }, [loading]);
+  const getCasterUpgrades= async()=>{
+    const resources = [TYPE_RES1,TYPE_RES2,TYPE_RES3]
+    const items = [...upgradeAvailable.items.values()].sort((a: Item, b: Item)=>{
+      const valueIndex = a.value > b.value;
+      const attributeIndex = resources.includes(a.attribute) && resources.includes(b.attribute)
+      if(attributeIndex && valueIndex){
+        return -1
+      }
+      return 0
+    });
 
+    for(let i = 0;i<casters.length;i++){
+      const casterWrapper = upgradeAvailable.casters.get(casters[i].publicKey.toString());
+      for(let j = 0;j<items.length;j++){
+        const item = items[j];
+        getCasterUpgradesAsyncCheck(casterWrapper,item,casters[i].publicKey.toString(),casters[i].level)
+      }
+    }
+  }
+  const getCasterUpgradesAsyncCheck = async (casterWrapper: CasterWrapper,item: Item,publicKey: string,casterLevel:number) => {
+    const updatedWrapper = Object.assign({},casterWrapper)
+    const currentItem = updatedWrapper[item.type].currentItem;
+
+    const isResource = [TYPE_RES1,TYPE_RES2,TYPE_RES3].includes(item.type);
+    const sameType = currentItem?.attribute === item.attribute;
+    const betterItem = currentItem ? (isResource || sameType) && currentItem.value < item.value && item.level<=casterLevel : true;
+    const itemPublicKey = item.publicKey.toString();
+    if(betterItem){
+      const index = updatedWrapper[item.type].items.indexOf(itemPublicKey)
+      //not sure why this spagett logic works but welp
+      if(!upgradeAvailable.items.get(itemPublicKey) && index!==-1){
+        updatedWrapper[item.type].items.splice(index,1)
+      }else if(upgradeAvailable.items.get(itemPublicKey) && index===-1){
+        updatedWrapper[item.type].items.push(itemPublicKey)
+      }
+      upgradeAvailable.casters.set(publicKey,updatedWrapper)
+    }
+  }
+  useEffect(()=>{
+    if(upgradeAvailable.loadedItems && casters.length>0){
+     getCasterUpgrades()
+    }
+  },[upgradeAvailable,casters])
   return null;
 };
 

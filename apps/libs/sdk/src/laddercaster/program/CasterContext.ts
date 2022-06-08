@@ -27,7 +27,7 @@ export class CasterContext {
     return this.caster?.publicKey;
   }
 
-  async initCaster() {
+  async initCaster(count: number) {
     const [
       gameAccount,
       playerAccount,
@@ -35,26 +35,102 @@ export class CasterContext {
       ,
       season,
     ] = await this.getAccounts();
-    const casterKeys = anchor.web3.Keypair.generate();
+    var casterKP= anchor.web3.Keypair.generate();
+    if(!count || count ==1){
+      return await gameConstantsContext.Client.program.rpc.initCaster({
+        accounts: {
+          systemProgram: anchor.web3.SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          season: season,
+          game: gameAccount,
+          player: playerAccount,
+          slots: SYSVAR_SLOT_HASHES_PUBKEY,
+          instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
+          ladaMint: game.ladaMintAccount,
+          caster: casterKP.publicKey,
+          gameLadaTokenAccount: game.ladaTokenAccount,
+          ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
+        },
+        signers: [gameConstantsContext.Client.wallet.payer,casterKP],
+      })
+    }
+    const tx = new Transaction();
+    for(let i =0;i<count;i++){
+      casterKP=anchor.web3.Keypair.generate();
+      tx.add(gameConstantsContext.Client.program.instruction.initCaster({
+        accounts: {
+          systemProgram: anchor.web3.SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          season: season,
+          game: gameAccount,
+          player: playerAccount,
+          slots: SYSVAR_SLOT_HASHES_PUBKEY,
+          instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
+          ladaMint: game.ladaMintAccount,
+          caster: casterKP.publicKey,
+          gameLadaTokenAccount: game.ladaTokenAccount,
+          ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
+        },
+        signers: [gameConstantsContext.Client.wallet.payer, casterKP],
+      }))
+    }
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+      .blockhash;
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
 
-    return await gameConstantsContext.Client.program.rpc.initCaster({
-      accounts: {
-        systemProgram: anchor.web3.SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RENT_PUBKEY,
-        authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
-        season: season,
-        game: gameAccount,
-        player: playerAccount,
-        slots: SYSVAR_SLOT_HASHES_PUBKEY,
-        instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-        ladaMint: game.ladaMintAccount,
-        caster: casterKeys.publicKey,
-        gameLadaTokenAccount: game.ladaTokenAccount,
-        ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
-      },
-      signers: [gameConstantsContext.Client.wallet.payer, casterKeys],
-    });
+    let txSignature;
+    try {
+      txSignature = await gameConstantsContext.Client.program.provider.send(tx);
+    } catch (e) {
+      if (e.message.includes(TRANSACTION_TOO_LARGE)) {
+        console.log(e);
+        await this.txnTooLarge(tx)
+      } else {
+        throw new Error(e);
+      }
+    }
+
+    return txSignature;
+  }
+  async txnTooLarge(tx:Transaction) {
+    const newTXN = new Transaction();
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+      .blockhash;
+    newTXN.recentBlockhash = blockhash;
+    newTXN.feePayer = gameConstantsContext.Client.wallet.publicKey!;
+    const txLength = tx.signatures.length;
+    const halfLength = Math.floor(txLength / 2);
+    newTXN.signatures = tx.signatures.slice(0, halfLength);
+
+    let newTxSignature;
+    try {
+      newTxSignature = await gameConstantsContext.Client.program.provider.send(newTXN);
+    } catch (e) {
+      if (e.message.includes(TRANSACTION_TOO_LARGE)) {
+        console.log(e);
+        await this.txnTooLarge(newTXN)
+      } else {
+        throw new Error(e);
+      }
+    }
+    let txSignature;
+    try{
+      txSignature = await gameConstantsContext.Client.program.provider.send(tx);
+    }catch(e){
+      if (e.message.includes(TRANSACTION_TOO_LARGE)) {
+        console.log(e);
+        await this.txnTooLarge(tx)
+      } else {
+        throw new Error(e);
+      }
+    }
+    //console.log("TXN",newTxSignature,txSignature)
+    return newTxSignature;
   }
 
   async casterCommitMove(lvl: number, col: number) {
@@ -466,9 +542,8 @@ export class CasterContext {
       equipmentItem.itemType.equipment?.equipmentType ||
         equipmentItem?.itemType,
     )[0];
-
+      console.log("EQUIP",this.caster,this.caster.modifiers[itemType])
     const tx = new Transaction();
-      console.log("EQUIP",this.caster,itemType)
     if (
       this.caster.modifiers[itemType] &&
       this.caster.modifiers[itemType].toString() !== equipmentItem.publicKey
@@ -506,7 +581,73 @@ export class CasterContext {
 
     return await gameConstantsContext.Client.program.provider.send(tx);
   }
+  async unequipAllItems (items: Item[]){
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
+    const tx = new Transaction();
+    for(let i = 0;i<items.length;i++){
+     const item = items[i];
+      tx.add(gameConstantsContext.Client.program.rpc.unequipItem({
+        accounts: {
+          game: gameAccount,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          player: playerAccount,
+          caster: this.caster?.publicKey,
+          item: new PublicKey(item.publicKey),
+        },
+        signers: [gameConstantsContext.Client.wallet.payer],
+      })
+    )
+    }
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+    .blockhash;
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!
+    return await gameConstantsContext.Client.program.provider.send(tx);
+  }
+  async equipBestGear(items:Item[]){
+    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
+    
+    const tx = new Transaction();
+    for(let i = 0;i<items.length;i++){
+     const item = items[i];
+     const itemType=item.type
+     if (
+      this.caster.modifiers[itemType] &&
+      this.caster.modifiers[itemType].toString() !== item.publicKey
+      ) {
+      tx.add(
+        gameConstantsContext.Client.program.instruction.unequipItem({
+          accounts: {
+            game: gameAccount,
+            authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+            player: playerAccount,
+            caster: this.caster?.publicKey,
+            item: this.caster.modifiers[itemType],
+          },
+          signers: [gameConstantsContext.Client.wallet.payer],
+        }),
+      );
+    }
+    tx.add(
+      gameConstantsContext.Client.program.instruction.equipItem({
+        accounts: {
+          game: gameAccount,
+          authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
+          player: playerAccount,
+          caster: this.caster?.publicKey,
+          item: item.publicKey,
+        },
+        signers: [gameConstantsContext.Client.wallet.payer],
+      }),
+    );
 
+    }
+    const blockhash = (await gameConstantsContext.Client.connection.getLatestBlockhash())
+    .blockhash;
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!
+    return await gameConstantsContext.Client.program.provider.send(tx);
+  }
   async unequipItem(itemPK: PublicKey) {
     const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     return await gameConstantsContext.Client.program.rpc.unequipItem({

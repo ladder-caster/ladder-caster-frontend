@@ -1,13 +1,27 @@
 import styled from 'styled-components';
 import { m } from 'framer-motion';
 
-export const _container = styled(m.div)``;
+export const _container = styled(m.div)`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 450px) {
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    margin-bottom: 16px;
+  }
+`;
 export const _root_container = styled(m.div)`
-  backdrop-filter: ${({ filter }) => filter};
+  backdrop-filter: ${({ $filter }) => $filter};
   transform: scale(0.95);
   -webkit-font-smoothing: subpixel-antialiased;
   margin-top: 56px;
   backface-visibility: hidden;
+  height: 100%;
+  @media (max-width: 450px) {
+    padding-top: 24px;
+    margin-top: 40px;
+  }
 `;
 export const _container_center = styled(m.div)`
   display: flex;
@@ -16,6 +30,10 @@ export const _container_center = styled(m.div)`
   justify-content: center;
   gap: ${({ $gap }) => $gap ?? '8px'};
   margin-top: ${({ $marginTop }) => $marginTop ?? '0'};
+  @media (max-width: 450px) {
+    margin-top: 0;
+    gap: 0;
+  }
 `;
 export const _nft_container = styled(m.div)`
   display: flex;
@@ -29,6 +47,9 @@ export const _nft_container = styled(m.div)`
   }
   transform: scale(0.9);
   backface-visibility: hidden;
+  @media (max-width: 450px) {
+    margin-top: 0;
+  }
 `;
 
 export const _resource_gain = styled(m.div)`
@@ -149,6 +170,9 @@ export const _float = styled(m.div)`
   align-items: center;
   justify-content: center;
   gap: ${({ $gap }) => $gap ?? '8px'};
+  @media (max-width: 450px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export const _icon = styled(m.svg)`

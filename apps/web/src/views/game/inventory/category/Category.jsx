@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   _category,
   _title,
@@ -80,7 +80,7 @@ const Category = ({ type }) => {
 
   const min_items = items_list?.length > 7 ? items_list.length : 7;
 
-  const items = () => {
+  const items = useMemo(() => {
     let list = [];
 
     for (let i = 0; i < min_items; i++) {
@@ -101,14 +101,27 @@ const Category = ({ type }) => {
       );
     }
     return list;
-  };
+  }, [min_items, inventory]);
   const chevronScroll = (left) => {
-    if (!items_ref || !items_ref.current) return;
+    if (!items_ref || !items_ref.current) {
+      if (scrollInterval) {
+        clearInterval(scrollInterval);
+      }
+      return;
+    }
     scrollInterval = setInterval(() => {
       items_ref.current.scrollLeft += left ? -40 : 40;
     }, 40);
   };
-
+  const stopScroll = () => {
+    clearInterval(scrollInterval);
+  };
+  const scrollLeft = () => {
+    chevronScroll(true);
+  };
+  const scrollRight = () => {
+    chevronScroll(false);
+  };
   return (
     <_category>
       <_title>
@@ -117,17 +130,11 @@ const Category = ({ type }) => {
         {amount ? <_amount>{amount}</_amount> : null}
       </_title>
       <_container>
-        <_icon
-          onMouseDown={() => chevronScroll(true)}
-          onMouseUp={() => clearInterval(scrollInterval)}
-        >
+        <_icon onMouseDown={scrollLeft} onMouseUp={stopScroll}>
           <IconChevronLeft />
         </_icon>
-        <_items ref={items_ref}>{items()}</_items>
-        <_icon
-          onMouseDown={() => chevronScroll(false)}
-          onMouseUp={() => clearInterval(scrollInterval)}
-        >
+        <_items ref={items_ref}>{items}</_items>
+        <_icon onMouseDown={scrollRight} onMouseUp={stopScroll}>
           <IconChevronRight />
         </_icon>
       </_container>

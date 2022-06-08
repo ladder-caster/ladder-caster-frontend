@@ -26,7 +26,8 @@ const Chest = ({ tier }) => {
   const { modalChest, confirmChest } = useActions();
   const [chests] = useRemix(
     GAME_INVENTORY,
-    (inventory) => inventory?.chests || [],
+    (inventory) =>
+      inventory?.chests?.filter((chest) => chest.tier === tier) || [],
   );
 
   const show_tier = {

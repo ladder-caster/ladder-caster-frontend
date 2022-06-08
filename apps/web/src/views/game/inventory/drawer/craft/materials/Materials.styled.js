@@ -27,8 +27,19 @@ export const _breakpoint = styled.div`
 export const _grid = styled.div`
   width: 100%;
   overflow: scroll;
+  display: grid;
+  grid-template-columns: repeat(${({ $cols }) => $cols ?? 3}, 1fr);
+  grid-gap: 16px;
+  grid-auto-rows: minmax(100px, auto);
 `;
-
+export const _grid_item = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export const _container = styled.div`
   width: 100%;
   height: 100%;

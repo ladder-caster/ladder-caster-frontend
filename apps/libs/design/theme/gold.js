@@ -296,4 +296,26 @@ export const gold = {
       active: '2px solid #4e577e',
     },
   },
+  opacity: {
+    disabled: 0.75,
+    enabled: 1,
+  },
+  toggle: {
+    background: {
+      checked: '#cbcfe2',
+      unchecked: '#58627e',
+    },
+    border: {
+      checked: '3px solid #2e3548',
+      unchecked: '3px solid #2e3548',
+    },
+    orb: {
+      checked: '#eaeaea',
+      unchecked: '#eaeaea', //incase styling for future
+      border: {
+        active: '2px solid #3f67a6',
+        inactive: '0px solid #6d799c',
+      },
+    },
+  },
 };

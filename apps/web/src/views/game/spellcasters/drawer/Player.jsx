@@ -27,6 +27,8 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
+  PLAYER_TAB_ACTIONS,
+  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
@@ -35,13 +37,14 @@ import Boost from './boost/Boost';
 import { useActions } from '../../../../../actions';
 import Leaderboard from '../../../../shared/leaderboard/Leaderboard';
 import Confirm from '../../../../shared/confirm/Confirm';
-
+import TabAction from '../../../../shared/tabs/TabActions/TabActions';
 const Player = () => {
   const { t } = useTranslation();
   const { burnResourcesForXP } = useActions();
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [context] = useRemix(DRAWER_CONTEXT);
+  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isBoost = drawer?.boost;
   const confirm = context?.confirm && context?.unequip;
   const id = drawer?.id;
@@ -50,7 +53,9 @@ const Player = () => {
     () => find(spellcasters, (caster) => caster.id === id),
     [drawer, spellcasters],
   );
-
+  const canUpgrade = upgradeAvailable?.canUpgrade(caster?.publicKey) ?? false;
+  // data struct added to allow easier future parse of data,
+  // pulse used to make tab name pulse
   const tabs_character_actions = {
     [PLAYER_CHARACTER]: {
       name: t('player.character'),
@@ -60,29 +65,43 @@ const Player = () => {
       name: t('player.leaderboard'),
       View: Leaderboard,
     },
+    [PLAYER_ACTIONS]: {
+      name: t('player.actions'),
+      View: TabAction,
+      data:{
+        pulse:canUpgrade
+      },
+    },
   };
-
+  const renderMain = useMemo(() => {
+    if (id === SPELLCASTER_BUY) {
+      return (
+        <_details>
+          <_title>{t('wizard.title')}</_title>
+          <_description>{t('wizard.description')}</_description>
+        </_details>
+      );
+    }
+    return <Rank caster={caster} />;
+  }, [id]);
+  const renderSecondary = useMemo(() => {
+    if (isBoost) return <Boost />;
+    if (confirm) return <Confirm type={CONFIRM_UNEQUIP} />;
+    return (
+      <Tabs
+        tab_id={TABS_CHARACTER_ACTIONS}
+        views={tabs_character_actions}
+        caster={caster}
+        back={context?.back}
+      />
+    );
+  }, [isBoost, confirm, caster]);
   return (
     <_background>
       <_player>
-        {id === SPELLCASTER_BUY && (
-          <_details>
-            <_title>{t('wizard.title')}</_title>
-            <_description>{t('wizard.description')}</_description>
-          </_details>
-        )}
-        {id !== SPELLCASTER_BUY && <Rank caster={caster} />}
+        {renderMain}
         <_breakpoint />
-        {isBoost && <Boost />}
-        {!confirm && !isBoost && (
-          <Tabs
-            tab_id={TABS_CHARACTER_ACTIONS}
-            views={tabs_character_actions}
-            caster={caster}
-            back={context?.back}
-          />
-        )}
-        {confirm && !isBoost && <Confirm type={CONFIRM_UNEQUIP} />}
+        {renderSecondary}
       </_player>
     </_background>
   );

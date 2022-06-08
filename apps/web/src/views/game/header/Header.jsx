@@ -29,6 +29,7 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
+  GAME_CONSTANTS,
 } from 'core/remix/state';
 import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
@@ -43,7 +44,7 @@ const Header = withTheme(({ theme }) => {
   const [casters] = useRemix(CHAIN_CASTERS);
   const [demo] = useRemix(DEMO_MODE);
   const [resources] = useRemix(GAME_RESOURCES);
-  const [game] = useRemix(CHAIN_GAME);
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [initialized] = useRemix(GAME_INIT);
 
   const prevGold = usePrevious(+resources?.lada || 0);
@@ -52,18 +53,23 @@ const Header = withTheme(({ theme }) => {
   const prevEarth = usePrevious(+resources?.[TYPE_RES3] || 0);
 
   const TurnTitle = useMemo(() => {
-    return () =>
-      initialized && casters?.length !== 0 ? (
-        <_controls>
-          <_speed>
-            {t('header.day')}{' '}
-            {!isNaN(game?.turnInfo?.turn)
-              ? game?.turnInfo?.turn
-              : demo?.num_ticks}
-          </_speed>
-        </_controls>
-      ) : null;
-  }, [game?.turnInfo?.turn, demo?.num_ticks, casters?.length, initialized]);
+    return gameConstants?.gameState?.turnInfo?.turn ? (
+      <_controls>
+        <_speed>
+          {t('header.day')}{' '}
+          {!isNaN(gameConstants?.gameState?.turnInfo?.turn)
+            ? gameConstants?.gameState?.turnInfo?.turn
+            : demo?.num_ticks}
+        </_speed>
+      </_controls>
+    ) : null;
+  }, [
+    gameConstants?.gameState?.turnInfo?.turn,
+    demo?.num_ticks,
+    casters?.length,
+    initialized,
+  ]);
+
   return (
     <_header>
       <_container>
@@ -94,7 +100,7 @@ const Header = withTheme(({ theme }) => {
           </_coin>
         </_left>
         <_right>
-          <TurnTitle />
+          {TurnTitle}
           <Timer />
         </_right>
       </_container>

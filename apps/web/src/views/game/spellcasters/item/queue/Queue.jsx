@@ -128,11 +128,142 @@ const Queue = ({ spell_id }) => {
   const needsToRedeem = useMemo(() => {
     const turnCommitTurn = caster?.turnCommit;
 
-    const currentTurn = game?.turnInfo?.turn;
-
     return turnCommitTurn < currentTurn;
   }, [caster?.turnCommit?.turn, game?.turnInfo?.turn]);
+  /**
+   * Functions to reduce rerenders
+   */
+  const redeem = () => {
+    actionRedeem(caster);
+  };
+  const craft = () => {
+    !unlocked_craft ? setClicked('craft') : modalCraft(caster);
+  };
+  const loot = () => {
+    !unlocked_loot ? setClicked('loot') : actionLoot(caster);
+  };
+  const move = () => {
+    !unlocked_move ? setClicked('move') : modalMove(caster);
+  };
+  const spell = () => {
+    !unlocked_spell ? setClicked('spell') : modalSpell(caster);
+  };
 
+  const render = useMemo(() => {
+    if (needsToRedeem) {
+      return (
+        <AnimateRewards element={TYPE_LEGENDARY}>
+          <_claim onClick={redeem}>{t('spellcasters.claim')}</_claim>
+        </AnimateRewards>
+      );
+    } else if (element === TYPE_CRAFT || element === TYPE_LEGENDARY) {
+      return (
+        <AnimateButton
+          low
+          shake={clicked === 'craft' && !unlocked_craft}
+          element={element}
+        >
+          <_action onClick={craft}>
+            <_icon $element={element}>
+              {!!IconElement ? <IconElement /> : undefined}
+              <span>{t('spellcaster.action.craft')}</span>
+            </_icon>
+            <_float>
+              <AnimatePresence>
+                {!unlocked_craft && (
+                  <AnimateLock key={'animate-lock-craft'}>
+                    <_lock $element={element}>
+                      <IconLock />
+                    </_lock>
+                  </AnimateLock>
+                )}
+              </AnimatePresence>
+            </_float>
+          </_action>
+        </AnimateButton>
+      );
+    } else {
+      return (
+        <AnimateButton
+          low
+          shake={clicked === 'loot' && !unlocked_loot}
+          element={element}
+        >
+          <_action onClick={loot}>
+            <_icon $element={element}>
+              {!!IconElement ? <IconElement /> : undefined}
+              <span>{t('spellcaster.action.loot')}</span>
+            </_icon>
+            <_float>
+              <AnimatePresence>
+                {!unlocked_loot && (
+                  <AnimateLock key={'animate-lock-loot'}>
+                    <_lock $element={element}>
+                      <IconLock />
+                    </_lock>
+                  </AnimateLock>
+                )}
+              </AnimatePresence>
+            </_float>
+          </_action>
+        </AnimateButton>
+      );
+    }
+  }, [
+    needsToRedeem,
+    unlocked_loot,
+    unlocked_craft,
+    IconElement,
+    element,
+    clicked,
+  ]);
+  const renderSecondary = useMemo(() => {
+    if (!needsToRedeem) {
+      return (
+        <>
+          {' '}
+          <AnimateButton shake={clicked === 'move' && !unlocked_move}>
+            <_action onClick={move}>
+              <_icon $basic>
+                <IconMove />
+                <span>{t('spellcaster.action.move')}</span>
+              </_icon>
+              <_float>
+                <AnimatePresence>
+                  {!unlocked_move && (
+                    <AnimateLock key={'animate-lock-move'}>
+                      <_lock $basic>
+                        <IconLock />
+                      </_lock>
+                    </AnimateLock>
+                  )}
+                </AnimatePresence>
+              </_float>
+            </_action>
+          </AnimateButton>
+          <AnimateButton shake={clicked === 'spell' && !unlocked_spell}>
+            <_action onClick={spell}>
+              <_icon $basic>
+                <IconBook />
+                <span>{t('spellcaster.action.spell')}</span>
+              </_icon>
+              <_float>
+                <AnimatePresence>
+                  {!unlocked_spell && (
+                    <AnimateLock key={'animate-lock-spell'}>
+                      <_lock $basic>
+                        <IconLock />
+                      </_lock>
+                    </AnimateLock>
+                  )}
+                </AnimatePresence>
+              </_float>
+            </_action>
+          </AnimateButton>
+        </>
+      );
+    }
+  }, [needsToRedeem, unlocked_move, unlocked_spell, clicked]);
   return (
     <_queue>
       <_title $optimal={caster_tile}>
@@ -141,119 +272,8 @@ const Queue = ({ spell_id }) => {
         <PositionMemo />
       </_title>
       <_actions>
-        {needsToRedeem ? (
-          <AnimateRewards element={TYPE_LEGENDARY}>
-            <_claim onClick={() => actionRedeem(caster)}>
-              {t('spellcasters.claim')}
-            </_claim>
-          </AnimateRewards>
-        ) : (
-          <>
-            {element === TYPE_CRAFT || element === TYPE_LEGENDARY ? (
-              <AnimateButton
-                low
-                shake={clicked === 'craft' && !unlocked_craft}
-                element={element}
-              >
-                <_action
-                  onClick={() => {
-                    !unlocked_craft ? setClicked('craft') : modalCraft(caster);
-                  }}
-                >
-                  <_icon $element={element}>
-                    {!!IconElement ? <IconElement /> : undefined}
-                    <span>{t('spellcaster.action.craft')}</span>
-                  </_icon>
-                  <_float>
-                    <AnimatePresence>
-                      {!unlocked_craft && (
-                        <AnimateLock key={'animate-lock-craft'}>
-                          <_lock $element={element}>
-                            <IconLock />
-                          </_lock>
-                        </AnimateLock>
-                      )}
-                    </AnimatePresence>
-                  </_float>
-                </_action>
-              </AnimateButton>
-            ) : (
-              <AnimateButton
-                low
-                shake={clicked === 'loot' && !unlocked_loot}
-                element={element}
-              >
-                <_action
-                  onClick={() => {
-                    !unlocked_loot ? setClicked('loot') : actionLoot(caster);
-                  }}
-                >
-                  <_icon $element={element}>
-                    {!!IconElement ? <IconElement /> : undefined}
-                    <span>{t('spellcaster.action.loot')}</span>
-                  </_icon>
-                  <_float>
-                    <AnimatePresence>
-                      {!unlocked_loot && (
-                        <AnimateLock key={'animate-lock-loot'}>
-                          <_lock $element={element}>
-                            <IconLock />
-                          </_lock>
-                        </AnimateLock>
-                      )}
-                    </AnimatePresence>
-                  </_float>
-                </_action>
-              </AnimateButton>
-            )}
-            <AnimateButton shake={clicked === 'move' && !unlocked_move}>
-              <_action
-                onClick={() =>
-                  !unlocked_move ? setClicked('move') : modalMove(caster)
-                }
-              >
-                <_icon $basic>
-                  <IconMove />
-                  <span>{t('spellcaster.action.move')}</span>
-                </_icon>
-                <_float>
-                  <AnimatePresence>
-                    {!unlocked_move && (
-                      <AnimateLock key={'animate-lock-move'}>
-                        <_lock $basic>
-                          <IconLock />
-                        </_lock>
-                      </AnimateLock>
-                    )}
-                  </AnimatePresence>
-                </_float>
-              </_action>
-            </AnimateButton>
-            <AnimateButton shake={clicked === 'spell' && !unlocked_spell}>
-              <_action
-                onClick={() =>
-                  !unlocked_spell ? setClicked('spell') : modalSpell(caster)
-                }
-              >
-                <_icon $basic>
-                  <IconBook />
-                  <span>{t('spellcaster.action.spell')}</span>
-                </_icon>
-                <_float>
-                  <AnimatePresence>
-                    {!unlocked_spell && (
-                      <AnimateLock key={'animate-lock-spell'}>
-                        <_lock $basic>
-                          <IconLock />
-                        </_lock>
-                      </AnimateLock>
-                    )}
-                  </AnimatePresence>
-                </_float>
-              </_action>
-            </AnimateButton>
-          </>
-        )}
+        {render}
+        {renderSecondary}
       </_actions>
     </_queue>
   );

@@ -30,6 +30,9 @@
     "player.leaderboard": "Leaderboard",
     "player.initialize": "Create Account",
     "player.initialized": "Player Initialized",
+    "player.actions.main":"Caster Actions",
+    "player.actions.main.unequip_all":"Unequip All",
+    "player.actions.main.upgrade_all":"Upgrade Gear",
     "level": "Age",
     "buy.now": "Buy Spellcaster",
     "buy.lada": "Free!",
@@ -77,7 +80,7 @@
     "wizard.title": "Wizard",
     "wizard.description": "The Alpha Wizard is the first adventurer to go searching for Grand Caster Mejulah. Will he be the spellcaster to find him?",
     "modal.confirm": "Confirm",
-    "modal.demo.description": "Are you sure you want to buy the Wizard for 1000 LADA?",
+    "modal.demo.description": "Are you sure you want to buy {{count}} {{name}} for {{cost}} LADA?",
     "modal.success": "Success",
     "modal.error": "Error",
     "modal.yes": "Yes!",
@@ -102,6 +105,7 @@
     "modal.move.action": "Move to",
     "modal.move.free": "Free",
     "modal.move.cost": "Cost",
+    "modal.move.caster_equipment":"Equipment",
     "modal.craft.description": "Crafting Station",
     "modal.chest.description": "Open Chest",
     "modal.chest.action": "Open Chest",
@@ -358,6 +362,7 @@
     "prestige.caster": "Transfer to Season 1",
     "prestige.confirm": "Confirm Transfer",
     "prestige.cost": "Costs 500 LADA",
-    "heading.buy.lada": "Buy LADA"
+    "heading.buy.lada": "Buy LADA",
+    "hide.prestige":"Hide Old Spellcasters"
   }
 }

@@ -20,6 +20,7 @@ import {
   _cost,
   _cost_text,
   _warning,
+  _grid_item,
 } from './Materials.styled';
 import Rank from '../../../../spellcasters/drawer/rank/Rank';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -57,7 +58,7 @@ import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
-import { findIndex } from 'lodash';
+import { findIndex, clamp } from 'lodash';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 
 const COST_MULTIPLIER = 5;
@@ -81,19 +82,19 @@ const Materials = () => {
 
   const position = context?.caster?.position;
   const item_type = context?.item;
-  const materials = context?.materials;
+  const materials = context?.materials ?? [];
   const { craftChooseMaterials, removeMaterials, craftItem } = useActions();
 
   const different_types = useMemo(() => {
     if (materials?.length === 3) {
-      let material_type = '';
-      for (let i = 0; i < materials?.length; i++) {
-        const next_type = materials?.[i]?.type;
-        console.log('next_type', next_type);
-        if (material_type === '') material_type = next_type;
-        else if (next_type !== material_type) return true;
-      }
+      // transitive ... x = y, y = z then x = z
+      return !(
+        materials[0].type == materials[1].type &&
+        materials[1].type == materials[2].type &&
+        materials[0].type == materials[2].type
+      );
     }
+    return false;
   }, [materials, JSON.stringify(materials)]);
 
   const position_type = useMemo(() => {
@@ -130,26 +131,24 @@ const Materials = () => {
   ];
 
   const craft_item = useMemo(() => {
-    let min_rarity = 4;
-    let min_level = 30;
-    let min_tier = TIER_IV;
-    let max_tier = TIER_I;
+    const rarities = [];
+    const levels = [];
+    materials.map((mat) => {
+      rarities.push(rank_rarities[mat.rarity]);
+      levels.push(mat.level);
+    });
+    let min_rarity = Math.min(4, ...rarities);
+    let min_level = Math.min(30, ...levels);
 
-    for (let i = 0; i < materials?.length; i++) {
-      const item = materials?.[i];
-      const rank = rank_rarities?.[item?.rarity];
-      min_rarity = rank < min_rarity ? rank : min_rarity;
-      min_level = item?.level < min_level ? item?.level : min_level;
-    }
-    for (let i = 0; i < materials?.length; i++) {
-      const item_level = materials?.[i]?.level;
-      for (let t = 0; t < tier_range[0].length; t++) {
-        if (item_level <= tier_range[1][t]) {
-          min_tier = tier_range[0][t];
-          break;
-        }
-      }
-    }
+    // clamps to lvl/5 (-1 for bounds e.g 10/15)... due to clamping to 3 even 20,25,30 produces similar results
+    const isCategoryBounds = min_level % 5 === 0;
+    let index =
+      min_level > 5
+        ? clamp(Math.floor(min_level / 5) - (isCategoryBounds ? 1 : 0), 1, 3)
+        : 0;
+
+    let min_tier = tier_range[0][index];
+    let max_tier = min_tier;
 
     const isLegendary = position_type === TYPE_LEGENDARY;
     let max_rarity = min_rarity;
@@ -166,14 +165,14 @@ const Materials = () => {
     }
 
     return {
-      type: item_type,
+      type: different_types ? item_type : materials?.[0]?.type,
       min_rarity: rarity_rank[min_rarity],
       min_level,
       min_tier,
       max_rarity: rarity_rank[max_rarity],
       max_level,
       max_tier,
-      lada_cost: indexOf(tier_range[0], min_tier) + 1,
+      lada_cost: index + 1,
     };
   }, [item_type, materials?.length]);
 
@@ -190,7 +189,7 @@ const Materials = () => {
     rarity: craft_item?.max_rarity,
     tier: craft_item?.max_tier,
   };
-
+  console.log(item_type, context);
   const confirm = materials?.[0] && materials?.[1] && materials?.[2];
 
   const filter_items = filter(
@@ -205,30 +204,18 @@ const Materials = () => {
 
   const list_items = useMemo(() => {
     if (filter_items?.length) {
-      const list = gridList(filter_items);
-
-      return map(list, (row) => {
+      return filter_items.map((item) => {
+        const selected = materials.indexOf(item) !== -1;
         return (
-          <_row>
-            {map(row, (item) => {
-              const selected = find(
-                materials,
-                (material) => material?.id === item?.id,
-              );
-              return (
-                <Item
-                  grid
-                  item={item}
-                  selected={selected}
-                  callback={() =>
-                    !selected
-                      ? craftChooseMaterials(item)
-                      : removeMaterial(item)
-                  }
-                />
-              );
-            })}
-          </_row>
+          <_grid_item key={item.publicKey}>
+            <Item
+              item={item}
+              selected={selected}
+              callback={() =>
+                !selected ? craftChooseMaterials(item) : removeMaterial(item)
+              }
+            />
+          </_grid_item>
         );
       });
     }
@@ -285,13 +272,13 @@ const Materials = () => {
                     <_percent>
                       <_chance>{different_types ? '75%' : '60%'}</_chance>
                     </_percent>
-                    <Item all craft item={lowest_item} />
+                    <Item all={different_types} craft item={lowest_item} />
                   </_lowest>
                   <_highest>
                     <_percent>
                       <_chance>{different_types ? '25%' : '40%'}</_chance>
                     </_percent>
-                    <Item all craft item={highest_item} />
+                    <Item all={different_types} craft item={highest_item} />
                   </_highest>
                 </_odds>
                 <_cost>

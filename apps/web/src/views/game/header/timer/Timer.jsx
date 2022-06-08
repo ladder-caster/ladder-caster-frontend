@@ -18,7 +18,7 @@ import {
 } from '../Header.styled';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
-import { GAME_INIT } from 'core/remix/state';
+import { GAME_CONSTANTS, GAME_INIT } from 'core/remix/state';
 import dayjs from 'dayjs';
 import { IconSkip } from 'design/icons/skip.icon';
 import { AnimateCrank } from '../animations/AnimateCrank';
@@ -37,12 +37,12 @@ let position = 0;
 let interval;
 const Timer = () => {
   const { openCrankDrawer } = useActions();
-  const [initialized] = useRemix(GAME_INIT);
+  //const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
-  const [game] = useRemix(CHAIN_GAME);
-  const prev_game = usePrevious(game);
+  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const prev_game = usePrevious(gameConstants?.gameState);
   const [time, setTime] = useState();
-
+  const game = gameConstants?.gameState;
   const loader_ref = useRef();
   const border_ref = useRef();
 
@@ -52,7 +52,7 @@ const Timer = () => {
       (prev_game &&
         prev_game?.turnInfo?.lastCrankSeconds?.toNumber() !==
           game?.turnInfo?.lastCrankSeconds?.toNumber());
-    
+
     const next_second = () => {
       start = game?.turnInfo?.lastCrankSeconds?.toNumber();
       delay = game?.turnInfo?.turnDelay;
@@ -60,7 +60,6 @@ const Timer = () => {
       ended = elapsed >= delay;
       remaining = !ended ? delay - elapsed : 0;
       position = (remaining / delay) * 360;
-
       a = ended ? 180 : position + 180;
       a %= 360;
 
@@ -97,43 +96,39 @@ const Timer = () => {
   }, [game, game?.turnInfo?.lastCrankSeconds?.toNumber()]);
 
   const Button = useMemo(() => {
-    return () => {
-      return (
-        <AnimateCrank>
-          <_crank>
-            {!time?.ended ? (
-              <_square>
-                <_padding>
-                  <svg width="250" height="250" viewBox="0 0 250 250">
-                    <path
-                      ref={border_ref}
-                      id="border"
-                      transform="translate(125, 125)"
-                    />
-                    <path
-                      ref={loader_ref}
-                      id="loader"
-                      transform="translate(125, 125) scale(.84)"
-                    />
-                  </svg>
-                </_padding>
-              </_square>
-            ) : (
-              <IconSkip />
-            )}
-          </_crank>
-        </AnimateCrank>
-      );
-    };
+    return (
+      <AnimateCrank>
+        <_crank>
+          {!time?.ended ? (
+            <_square>
+              <_padding>
+                <svg width="250" height="250" viewBox="0 0 250 250">
+                  <path
+                    ref={border_ref}
+                    id="border"
+                    transform="translate(125, 125)"
+                  />
+                  <path
+                    ref={loader_ref}
+                    id="loader"
+                    transform="translate(125, 125) scale(.84)"
+                  />
+                </svg>
+              </_padding>
+            </_square>
+          ) : (
+            <IconSkip />
+          )}
+        </_crank>
+      </AnimateCrank>
+    );
   }, [time?.ended]);
 
-  if (!(initialized && casters?.length !== 0)) return null;
+  if (!(game && casters?.length !== 0)) return null;
 
   return (
     <AnimateButton>
-      <_button onClick={() => openCrankDrawer()}>
-        <Button />
-      </_button>
+      <_button onClick={() => openCrankDrawer()}>{Button}</_button>
     </AnimateButton>
   );
 };

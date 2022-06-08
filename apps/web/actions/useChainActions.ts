@@ -53,7 +53,8 @@ import {
   GAME_CONSTANTS,
   DRAWER_TRADE,
   RARITY_COMMON,
-  MODAL_BURN
+  MODAL_BURN,
+  CASTER_UPGRADE_AVAILABLE
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -81,6 +82,7 @@ import {
   CasterContext,
   GameContext,
   PlayerContext,
+  Caster
 } from 'sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
 import {
@@ -151,6 +153,7 @@ export const useChainActions = () => {
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
 
@@ -430,13 +433,13 @@ export const useChainActions = () => {
         active: true,
         type: MODAL_MINT,
         description: t('modal.demo.description'),
-        accept: async () => {
+        accept: async (count) => {
           const casterContext = new CasterContext();
 
           await fetchPlayer(async () => {
             return await stateHandler(
               async () => {
-                return await casterContext.initCaster();
+                return await casterContext.initCaster(count);
               },
               INST_INIT_CASTER,
               '',
@@ -1350,6 +1353,54 @@ export const useChainActions = () => {
         type: DRAWER_TRADE,
       });
     },
+    async unequipAllItems(caster: Caster){
+      if(!caster)return;
+      const casterContext = new CasterContext(find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),);
+
+      const casterItems = await upgradeAvailable?.getEquippedItems(caster.publicKey)
+      if(casterItems.length == 0)return;
+      await stateHandler(
+        async () => {
+          return await casterContext.unequipAllItems(casterItems);
+        },
+        INST_UNEQUIP,
+        '',
+      );
+    },
+    async upgradeAllItems(caster: Caster){
+      if(!caster)return;
+      const casterContext = new CasterContext(  find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      ),);
+
+      const casterWrapper = await upgradeAvailable?.casters?.get(caster?.publicKey)
+     
+      if(!casterWrapper)return;
+      const keys = Object.keys(casterWrapper)
+      const casterItems = []
+      for(let i = 0;i<keys.length;i++){
+        const items = casterWrapper[keys[i]]?.items;  
+        const item = upgradeAvailable.items.get(items?.[0])
+        if(!items || items?.length <=0 || !item)continue;
+        casterItems.push(item);
+      }
+      upgradeAvailable.removeUpgrade(casterItems)
+      console.log("CASTER UPGRADE",casterContext,casterWrapper,casterItems)
+
+      //if(casterItems.length == 0)return;
+
+      await stateHandler(
+        async () => {
+          return await casterContext.equipBestGear(casterItems);
+        },
+        INST_UNEQUIP,
+        '',
+      );
+    }
     
   };
 };

@@ -130,7 +130,7 @@ const Item = ({ item, grid, small, craft, selected, callback, all }) => {
         )}
       </_image>
       <_overlay $end>
-        {!all && (
+        {!all && !craft && (
           <_overview $small={small} $rarity={item?.rarity}>
             <_attribute $small={small} $attribute={item?.attribute}>
               <IconAttribute attribute={item?.attribute} />
