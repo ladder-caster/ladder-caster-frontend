@@ -30,7 +30,8 @@ import {
   EDITION_NORMAL,
   EDITION_LIMITED,
   CASTER_UPGRADE_AVAILABLE,
-  GAME_CONSTANTS
+  GAME_CONSTANTS,
+  CURRENT_SEASON,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -64,62 +65,67 @@ import resources from 'sdk/src/laddercaster/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import { TAB_CHARACTER, TAB_WALLET, TABS_MINT_REDEEM } from 'core/remix/tabs';
 import { map, sortBy, reverse, union, intersection } from 'lodash';
-import { CasterUpgradeAvailable,CasterWrapper } from './Remix.types';
+import { CasterUpgradeAvailable, CasterWrapper } from './Remix.types';
 //ensures presetup is done
-const UpgradesAvailable:CasterUpgradeAvailable = {
-  loadedItems:false,
-  items:new Map<String, Item>(),
-  casters:new Map<String, CasterWrapper>(),
-  canUpgrade:(publicKey: String)=>{
+const UpgradesAvailable: CasterUpgradeAvailable = {
+  loadedItems: false,
+  items: new Map<String, Item>(),
+  casters: new Map<String, CasterWrapper>(),
+  canUpgrade: (publicKey: String) => {
     const casters = UpgradesAvailable.casters;
-    if(!publicKey || !casters) return false;
+    if (!publicKey || !casters) return false;
     const caster = casters?.get(publicKey);
-    var upgrade = false
-    const keys=  Object.keys(caster)
-    for(let i = 0;i<keys.length;i++){
-      if(caster[keys[i]].items.length>0){
-        upgrade = true
-        break
+    var upgrade = false;
+    const keys = Object.keys(caster);
+    for (let i = 0; i < keys.length; i++) {
+      if (caster[keys[i]].items.length > 0) {
+        upgrade = true;
+        break;
       }
     }
-    return upgrade
+    return upgrade;
   },
-  getEquippedItems:(publicKey:String)=>{
+  getEquippedItems: (publicKey: String) => {
     const casters = UpgradesAvailable.casters;
-    console.log("PUBLIC KEY",casters,publicKey)
-    if(!publicKey || !casters) return [];
+    console.log('PUBLIC KEY', casters, publicKey);
+    if (!publicKey || !casters) return [];
     const caster = casters?.get(publicKey);
     // dynamic retrieval no need to update if new item types are added
-    const itemArray = []
+    const itemArray = [];
     const keys = Object.keys(caster);
-    console.log("KEYS",keys,caster)
-    for(let i = 0;i<keys.length;i++){
+    console.log('KEYS', keys, caster);
+    for (let i = 0; i < keys.length; i++) {
       const item = caster[keys[i]]?.currentItem;
-      console.log(item,caster[keys[i]])
-      if(item){
-        itemArray.push(item)
+      console.log(item, caster[keys[i]]);
+      if (item) {
+        itemArray.push(item);
       }
     }
     return itemArray;
   },
-  removeUpgrade:(items:Item[])=>{
-    if(!items || items?.length==0)return;
-    const pks = items.map(item=> item.publicKey instanceof anchor.web3.PublicKey?item.publicKey.toString():item.publicKey)
-    for(const [key, value] of UpgradesAvailable.casters.entries() ){
+  removeUpgrade: (items: Item[]) => {
+    if (!items || items?.length == 0) return;
+    const pks = items.map((item) =>
+      item.publicKey instanceof anchor.web3.PublicKey
+        ? item.publicKey.toString()
+        : item.publicKey,
+    );
+    for (const [key, value] of UpgradesAvailable.casters.entries()) {
       const caster = value;
       const keys = Object.keys(caster);
-      for(let i = 0;i<keys.length;i++){
+      for (let i = 0; i < keys.length; i++) {
         const casterItems = caster[keys[i]]?.items;
-        const union = intersection(casterItems,pks);
-        if(union){
-          union.map(x=>casterItems.splice(casterItems.indexOf(x),1))
+        const union = intersection(casterItems, pks);
+        if (union) {
+          union.map((x) => casterItems.splice(casterItems.indexOf(x), 1));
         }
       }
-      UpgradesAvailable.casters.set(key,value)
+      UpgradesAvailable.casters.set(key, value);
     }
-  }
-}
-const gameConstantsContext:GameConstantsContextInterface=require("../../../libs/sdk/src/laddercaster/program/GameConstantsContext").default;
+  },
+};
+const gameConstantsContext: GameConstantsContextInterface = require('../../../libs/sdk/src/laddercaster/program/GameConstantsContext')
+  .default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -137,9 +143,12 @@ const Remix = () => {
     items: [],
     chests: [],
   });
-  const [upgradeAvailable] = useRemixOrigin(CASTER_UPGRADE_AVAILABLE,UpgradesAvailable)
+  const [upgradeAvailable] = useRemixOrigin(
+    CASTER_UPGRADE_AVAILABLE,
+    UpgradesAvailable,
+  );
 
-  const[gameConstants]= useRemixOrigin(GAME_CONSTANTS,gameConstantsContext);
+  const [gameConstants] = useRemixOrigin(GAME_CONSTANTS, gameConstantsContext);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
@@ -289,23 +298,23 @@ const Remix = () => {
           };
         }
       };
-      const hat =generateModifier(caster.modifiers.head)
-      const robe = generateModifier(caster.modifiers.robe)
-      const staff = generateModifier(caster.modifiers.staff)
-      upgradeAvailable.casters.set(caster?.publicKey?.toString(),{
-        head:{
+      const hat = generateModifier(caster.modifiers.head);
+      const robe = generateModifier(caster.modifiers.robe);
+      const staff = generateModifier(caster.modifiers.staff);
+      upgradeAvailable.casters.set(caster?.publicKey?.toString(), {
+        head: {
           items: [],
-          currentItem:hat
+          currentItem: hat,
         },
-        robe:{
+        robe: {
           items: [],
-          currentItem:robe
+          currentItem: robe,
         },
-        staff:{
+        staff: {
           items: [],
-          currentItem:staff
-        }
-      })
+          currentItem: staff,
+        },
+      });
       spellcastersArr.push({
         index: i,
         publicKey: caster?.publicKey?.toString(),
@@ -346,7 +355,7 @@ const Remix = () => {
     let chests = [];
     // https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/
     // forEach does 33% less ops-per sec than a regular for loop/forOf
-    for(let key = 0;key<inventory.length;key++){
+    for (let key = 0; key < inventory.length; key++) {
       const item = inventory[key];
       if (Object.keys(item.itemType)[0] === 'chest') {
         chests.push({
@@ -358,7 +367,9 @@ const Remix = () => {
         });
       } else {
         if (item.itemType.equipment) {
-          const itemType = Object.keys(item.itemType.equipment.equipmentType)[0]
+          const itemType = Object.keys(
+            item.itemType.equipment.equipmentType,
+          )[0];
           const arrayItem = {
             type: itemType,
             id: key,
@@ -369,9 +380,10 @@ const Remix = () => {
             value: item.itemType.equipment.value,
             publicKey: item?.publicKey?.toString(),
             equippedOwner: item.equippedOwner,
-          }
-         
-          if(!item.equippedOwner)upgradeAvailable.items.set(arrayItem.publicKey,arrayItem);
+          };
+
+          if (!item.equippedOwner)
+            upgradeAvailable.items.set(arrayItem.publicKey, arrayItem);
           items.push(arrayItem);
         } else if (item.itemType.spellBook) {
           items.push({
@@ -407,8 +419,8 @@ const Remix = () => {
       setMap(generateMap(game));
       console.log('game', game);
       console.log(
-          'last crank',
-          new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
+        'last crank',
+        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
       );
       // if (client) {
       //   window.addEventListener('focus', () => {
@@ -432,7 +444,7 @@ const Remix = () => {
       //     });
       // }
     }
-    if(client && !gameConstants.clientInitialized()){
+    if (client && !gameConstants.clientInitialized()) {
       gameConstants.initClient(client);
     }
     // return () => {
@@ -497,7 +509,6 @@ const Remix = () => {
     if (casters) {
       setSpellcasters(generateSpellCaster(casters));
       console.log('casters', casters);
-
     }
   }, [casters]);
 
@@ -521,19 +532,25 @@ const Remix = () => {
     // DO NOT REMOVE, the game breaks if removed
     switch (process.env.REACT_APP_ENV as Environment) {
       case 'devnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccount);
+        localStorage.setItem(
+          'gamePK',
+          resources.seasons[CURRENT_SEASON].gameAccount,
+        );
         break;
       }
       case 'mainnet-priv': {
         localStorage.setItem(
           'gamePK',
-          resources.seasons[1].gameAccountProdPriv,
+          resources.seasons[CURRENT_SEASON].gameAccountProdPriv,
         );
         break;
       }
       case 'localprod':
       case 'mainnet': {
-        localStorage.setItem('gamePK', resources.seasons[1].gameAccountProd);
+        localStorage.setItem(
+          'gamePK',
+          resources.seasons[CURRENT_SEASON].gameAccountProd,
+        );
         break;
       }
     }
@@ -565,49 +582,68 @@ const Remix = () => {
       });
     }
   }, [loading]);
-  const getCasterUpgrades= async()=>{
-    const resources = [TYPE_RES1,TYPE_RES2,TYPE_RES3]
-    const items = [...upgradeAvailable.items.values()].sort((a: Item, b: Item)=>{
-      const valueIndex = a.value > b.value;
-      const attributeIndex = resources.includes(a.attribute) && resources.includes(b.attribute)
-      if(attributeIndex && valueIndex){
-        return -1
-      }
-      return 0
-    });
+  const getCasterUpgrades = async () => {
+    const resources = [TYPE_RES1, TYPE_RES2, TYPE_RES3];
+    const items = [...upgradeAvailable.items.values()].sort(
+      (a: Item, b: Item) => {
+        const valueIndex = a.value > b.value;
+        const attributeIndex =
+          resources.includes(a.attribute) && resources.includes(b.attribute);
+        if (attributeIndex && valueIndex) {
+          return -1;
+        }
+        return 0;
+      },
+    );
 
-    for(let i = 0;i<casters.length;i++){
-      const casterWrapper = upgradeAvailable.casters.get(casters[i].publicKey.toString());
-      for(let j = 0;j<items.length;j++){
+    for (let i = 0; i < casters.length; i++) {
+      const casterWrapper = upgradeAvailable.casters.get(
+        casters[i].publicKey.toString(),
+      );
+      for (let j = 0; j < items.length; j++) {
         const item = items[j];
-        getCasterUpgradesAsyncCheck(casterWrapper,item,casters[i].publicKey.toString(),casters[i].level)
+        getCasterUpgradesAsyncCheck(
+          casterWrapper,
+          item,
+          casters[i].publicKey.toString(),
+          casters[i].level,
+        );
       }
     }
-  }
-  const getCasterUpgradesAsyncCheck = async (casterWrapper: CasterWrapper,item: Item,publicKey: string,casterLevel:number) => {
-    const updatedWrapper = Object.assign({},casterWrapper)
+  };
+  const getCasterUpgradesAsyncCheck = async (
+    casterWrapper: CasterWrapper,
+    item: Item,
+    publicKey: string,
+    casterLevel: number,
+  ) => {
+    const updatedWrapper = Object.assign({}, casterWrapper);
     const currentItem = updatedWrapper[item.type].currentItem;
 
-    const isResource = [TYPE_RES1,TYPE_RES2,TYPE_RES3].includes(item.type);
+    const isResource = [TYPE_RES1, TYPE_RES2, TYPE_RES3].includes(item.type);
     const sameType = currentItem?.attribute === item.attribute;
-    const betterItem = currentItem ? (isResource || sameType) && currentItem.value < item.value && item.level<=casterLevel : true;
+    const betterItem = currentItem
+      ? (isResource || sameType) &&
+        currentItem.value < item.value &&
+        item.level <= casterLevel
+      : true;
     const itemPublicKey = item.publicKey.toString();
-    if(betterItem){
-      const index = updatedWrapper[item.type].items.indexOf(itemPublicKey)
+    if (betterItem) {
+      const index = updatedWrapper[item.type].items.indexOf(itemPublicKey);
       //not sure why this spagett logic works but welp
-      if(!upgradeAvailable.items.get(itemPublicKey) && index!==-1){
-        updatedWrapper[item.type].items.splice(index,1)
-      }else if(upgradeAvailable.items.get(itemPublicKey) && index===-1){
-        updatedWrapper[item.type].items.push(itemPublicKey)
+      if (!upgradeAvailable.items.get(itemPublicKey) && index !== -1) {
+        updatedWrapper[item.type].items.splice(index, 1);
+      } else if (upgradeAvailable.items.get(itemPublicKey) && index === -1) {
+        updatedWrapper[item.type].items.push(itemPublicKey);
       }
-      upgradeAvailable.casters.set(publicKey,updatedWrapper)
+      upgradeAvailable.casters.set(publicKey, updatedWrapper);
     }
-  }
-  useEffect(()=>{
-    if(upgradeAvailable.loadedItems && casters.length>0){
-     getCasterUpgrades()
+  };
+  useEffect(() => {
+    if (upgradeAvailable.loadedItems && casters.length > 0) {
+      getCasterUpgrades();
     }
-  },[upgradeAvailable,casters])
+  }, [upgradeAvailable, casters]);
   return null;
 };
 
