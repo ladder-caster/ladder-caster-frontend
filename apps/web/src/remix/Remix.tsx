@@ -32,6 +32,7 @@ import {
   CASTER_UPGRADE_AVAILABLE,
   GAME_CONSTANTS,
   CURRENT_SEASON,
+  PRESTIGE_TOGGLE,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -180,6 +181,10 @@ const Remix = () => {
     [TYPE_RES1]: 0,
     [TYPE_RES3]: 0,
   });
+  useRemixOrigin(
+    PRESTIGE_TOGGLE,
+    localStorage.getItem('hide_prestige') === 'true',
+  );
 
   // TODO: Remove! Only added for esthetics
   useRemixOrigin(GAME_OPTIONS, {

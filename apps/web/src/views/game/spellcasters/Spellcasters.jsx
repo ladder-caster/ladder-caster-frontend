@@ -10,6 +10,7 @@ import {
   USER_PHASE,
   PRESTIGE_HIDE,
   GAME_CONSTANTS,
+  PRESTIGE_TOGGLE,
 } from 'core/remix/state';
 import { _feed } from '../home/Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -28,12 +29,8 @@ const Spellcasters = () => {
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [phase] = useRemix(USER_PHASE);
   const { lootAllResources } = useActions();
-  const [hidePrestige, setPrestige] = useState(
-    localStorage.getItem('hide_prestige') === 'true',
-  );
-  useEffect(() => {
-    setPrestige(localStorage.getItem('hide_prestige') === 'true');
-  }, [localStorage.getItem('hide_prestige')]);
+  const [hidePrestige] = useRemix(PRESTIGE_TOGGLE);
+
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
       return sortBy(spellcasters, (sort) => sort?.hue).map((caster) => (
@@ -68,7 +65,7 @@ const Spellcasters = () => {
         <Onboarding />
       </_feed>
     );
-  }, [gameConstants?.gameState, spellcasters, oldSpellcasters]);
+  }, [gameConstants?.gameState, spellcasters, oldSpellcasters, hidePrestige]);
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />

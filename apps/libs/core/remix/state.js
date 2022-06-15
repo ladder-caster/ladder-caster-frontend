@@ -78,6 +78,7 @@ export const MODAL_CRAFT = 'MODAL_CRAFT';
 export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
 export const MODAL_BURN = 'MODAL_BURN';
+export const PRESTIGE_TOGGLE = 'PRESTIGE_TOGGLE';
 
 export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
 export const ENCHANT_XP = 'ENCHANT_XP';

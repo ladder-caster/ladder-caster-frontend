@@ -275,6 +275,9 @@ export const gold = {
       background: '#161616',
       text: '#fff',
     },
+    opensea: {
+      background: '#1868B7',
+    },
   },
   socials: {
     google: '#3f67a6',
