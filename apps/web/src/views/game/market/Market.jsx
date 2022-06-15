@@ -8,7 +8,7 @@ import {
   _fractal,
   _holaplex,
   _section,
-  _greyscale,
+  _opensea,
 } from './Market.styled';
 import { _feed } from '../home/Dashboard.styled';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +56,8 @@ const Market = () => {
                   pluginStore.plugins[
                     'torusWallet'
                   ].torusWalletInstance.showWallet('discover', {
-                    url: 'https://www.fractal.is/laddercaster',
+                    url:
+                      'https://www.fractal.is/laddercaster?orderByDirection=ASCENDING&orderByField=PRICE',
                   });
                 }}
               >
@@ -64,21 +65,29 @@ const Market = () => {
               </_fractal>
             ) : (
               <_fractal
-                href="https://www.fractal.is/laddercaster"
+                href="https://www.fractal.is/laddercaster?orderByDirection=ASCENDING&orderByField=PRICE"
                 target="_blank"
                 rel="noreferrer"
               >
                 <IconFractal />
               </_fractal>
             )}
-          </_section>
-          <_section>
-            <_title>{t('market.coming.soon')}:</_title>
-            <_greyscale>{magicEdenLogo()}</_greyscale>
-            <_greyscale $double>
+            <_opensea
+              $double
+              href="https://opensea.io/collection/laddercaster"
+              target="_blank"
+              rel="noreferrer"
+            >
               <IconOpenseaLogo />
               <IconOpensea />
-            </_greyscale>
+            </_opensea>
+            <_fractal
+              href="https://magiceden.io/marketplace/ladder_caster_season_1?activeTab=items"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {magicEdenLogo()}
+            </_fractal>
           </_section>
         </_body>
       ) : null}

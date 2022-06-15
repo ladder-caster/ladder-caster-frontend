@@ -60,6 +60,7 @@ export const _fractal = styled.a`
   min-height: 72px;
   height: 72px;
   padding: 12px 18px;
+  margin-bottom: 16px;
   font-size: 18px;
   border-radius: 12px;
   background: ${({ theme }) => theme.vendors.fractal['background']};
@@ -75,32 +76,8 @@ export const _fractal = styled.a`
   }
 `;
 
-export const _holaplex = styled.button`
-  min-width: 200px;
-  width: 200px;
-  min-height: 72px;
-  height: 72px;
-  padding: 12px 12px 12px 8px;
-  font-size: 32px;
-  border-radius: 12px;
-  text-align: center;
-  background: ${({ theme }) => theme.vendors.holaplex['background']};
-  box-shadow: ${({ theme }) => theme.shadow['frost']};
-  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  color: ${({ theme }) => theme.vendors.holaplex['text']};
-  cursor: pointer;
+export const _opensea = styled.a`
   border: none;
-  white-space: nowrap;
-  margin-bottom: 16px;
-  > span {
-    margin-right: 8px;
-    transform: scale(0.8);
-  }
-`;
-
-export const _greyscale = styled.div`
-  border: 2px solid ${({ theme }) => theme.border['highest']};
   border-radius: 12px;
   padding: 12px 16px;
   min-width: 200px;
@@ -110,9 +87,11 @@ export const _greyscale = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  background: ${({ theme }) => theme.vendors.opensea['background']};
+  box-shadow: ${({ theme }) => theme.shadow['frost']};
 
   > svg {
-    color: ${({ theme }) => theme.border['highest']};
+    color: ${({ theme }) => theme.text['white']};
     width: 100%;
 
     &:first-child {
