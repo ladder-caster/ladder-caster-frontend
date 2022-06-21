@@ -54,7 +54,7 @@ import {
   DRAWER_TRADE,
   RARITY_COMMON,
   MODAL_BURN,
-  CASTER_UPGRADE_AVAILABLE
+  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import {
   TAB_REDEEM,
@@ -82,7 +82,7 @@ import {
   CasterContext,
   GameContext,
   PlayerContext,
-  Caster
+  Caster,
 } from 'sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
 import {
@@ -107,16 +107,15 @@ import {
   RPC_ERROR,
   RPC_LOADING,
   INST_BURN_NFT,
+  INST_CLAIM_ALL,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
-import { map, find, indexOf } from 'lodash';
+import { map, find, indexOf, filter, isArray } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
-import {
-  PublicKey,
-} from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 let retry_count = {};
 
 export const useChainActions = () => {
@@ -180,59 +179,49 @@ export const useChainActions = () => {
         type,
       });
 
-      const confirmationResult = await client.connection.confirmTransaction(
-        validatorSignature,
-      );
+      if (validatorSignature) {
+        let sig = validatorSignature;
+        if (isArray(validatorSignature)) {
+          sig = validatorSignature[0];
+        }
+        const confirmationResult = await client.connection.confirmTransaction(
+          sig,
+        );
 
-      const e = confirmationResult?.value?.err;
+        const e = confirmationResult?.value?.err;
 
-      if (String(e).includes('Blockhash')) {
-        retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-        if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
+        if (String(e).includes('Blockhash')) {
+          retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
+          if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
+        } else {
+          let parsedMessage = handleCustomErrors(e);
+          if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
+          setMutation({
+            id,
+            rpc: false,
+            validator: false,
+            success: !e,
+            retry_id,
+            error: !!e,
+            type,
+            text: {
+              error: parsedMessage,
+            },
+          });
+        }
       } else {
-        let parsedMessage = handleCustomErrors(e);
-        if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
         setMutation({
           id,
           rpc: false,
           validator: false,
-          success: !e,
+          success: true,
           retry_id,
-          error: !!e,
+          error: false,
           type,
           text: {
-            error: parsedMessage,
+            error: '',
           },
         });
-
-        if (validatorSignature) {
-          const confirmationResult = await client.connection.confirmTransaction(
-            validatorSignature,
-          );
-
-          const e = confirmationResult?.value?.err;
-
-          if (String(e).includes('Blockhash')) {
-            retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-            if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
-          } else {
-            let parsedMessage = handleCustomErrors(e);
-            if (e?.includes('Solana')) parsedMessage = t('mutations.timeout');
-            setMutation({
-              id,
-              rpc: false,
-              validator: false,
-              success: !e,
-              retry_id,
-              error: !!e,
-              type,
-              text: {
-                error: parsedMessage,
-              },
-            });
-          }
-          return confirmationResult;
-        }
       }
     } catch (e) {
       console.log(e);
@@ -376,12 +365,12 @@ export const useChainActions = () => {
   const createCasterContext = () => {
     return new CasterContext();
   };
-  const confirmBurn= async(item)=>{
+  const confirmBurn = async (item) => {
     setModal('');
     const playerContext = new PlayerContext();
-    
-   if (item || context?.item ) {
-     const match_item = item ?? context?.item;
+
+    if (item || context?.item) {
+      const match_item = item ?? context?.item;
       await fetchPlayer(async () => {
         return await stateHandler(
           async () => {
@@ -394,7 +383,7 @@ export const useChainActions = () => {
         );
       });
     }
-  }
+  };
   return {
     startDemo() {},
     confirmBurn,
@@ -579,12 +568,12 @@ export const useChainActions = () => {
         tier,
       });
     },
-    modalBurn(item){
-      if(localStorage.getItem("hide_burn_modal")==='true'){
+    modalBurn(item) {
+      if (localStorage.getItem('hide_burn_modal') === 'true') {
         confirmBurn(item);
         return;
       }
-      setModal({active:true,type:MODAL_BURN,item});
+      setModal({ active: true, type: MODAL_BURN, item });
     },
     async actionLoot(caster) {
       if (caster?.last_loot < game?.turnInfo?.turn) {
@@ -1002,7 +991,10 @@ export const useChainActions = () => {
       setContext({ ...context, caster });
     },
     async confirmMint(item, caster) {
-      if(item?.rarity===RARITY_COMMON || context?.item?.rarity===RARITY_COMMON){
+      if (
+        item?.rarity === RARITY_COMMON ||
+        context?.item?.rarity === RARITY_COMMON
+      ) {
         setMutation({
           id: nanoid(),
           rpc: false,
@@ -1012,10 +1004,10 @@ export const useChainActions = () => {
           done: false,
           text: {
             error: t('error.mint.item.tier_too_low'),
-          }
+          },
         });
-        return
-    }
+        return;
+      }
       const playerContext = new PlayerContext();
 
       setContext({
@@ -1261,13 +1253,26 @@ export const useChainActions = () => {
       });
     },
     async claimAllRewards() {
-      map(spellcasters, (caster) => {
-        const turnCommitTurn = caster?.turnCommit;
-        const currentTurn = game?.turnInfo?.turn;
+      const redeemableCasters = filter(spellcasters, (caster) => {
+        return caster?.turnCommit < game?.turnInfo?.turn;
+      }).map((caster) => {
+        return find(casters, (c) => {
+          return c.publicKey.toString() === caster.publicKey;
+        });
+      });
 
-        if (turnCommitTurn < currentTurn) {
-          claimRewards(caster);
-        }
+      await fetchPlayer(async () => {
+        return await stateHandler(
+          async () => {
+            const result = await new CasterContext().casterRedeemAllActions(
+              redeemableCasters,
+            );
+            console.log('result', result);
+            return result;
+          },
+          INST_CLAIM_ALL,
+          '',
+        );
       });
     },
     async lootAllResources() {
@@ -1332,8 +1337,7 @@ export const useChainActions = () => {
       await web3Auth.logout();
       setProvider(null);
     },
-    async fixAccount(){
-      
+    async fixAccount() {
       const playerContext = new PlayerContext();
 
       await stateHandler(
@@ -1348,20 +1352,24 @@ export const useChainActions = () => {
         '',
       );
     },
-    async openDrawerTrade(){
+    async openDrawerTrade() {
       setDrawer({
         type: DRAWER_TRADE,
       });
     },
-    async unequipAllItems(caster: Caster){
-      if(!caster)return;
-      const casterContext = new CasterContext(find(
-        casters,
-        (match) => match?.publicKey?.toString() === caster?.publicKey,
-      ),);
+    async unequipAllItems(caster: Caster) {
+      if (!caster) return;
+      const casterContext = new CasterContext(
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
+      );
 
-      const casterItems = await upgradeAvailable?.getEquippedItems(caster.publicKey)
-      if(casterItems.length == 0)return;
+      const casterItems = await upgradeAvailable?.getEquippedItems(
+        caster.publicKey,
+      );
+      if (casterItems.length == 0) return;
       await stateHandler(
         async () => {
           return await casterContext.unequipAllItems(casterItems);
@@ -1370,26 +1378,30 @@ export const useChainActions = () => {
         '',
       );
     },
-    async upgradeAllItems(caster: Caster){
-      if(!caster)return;
-      const casterContext = new CasterContext(  find(
-        casters,
-        (match) => match?.publicKey?.toString() === caster?.publicKey,
-      ),);
+    async upgradeAllItems(caster: Caster) {
+      if (!caster) return;
+      const casterContext = new CasterContext(
+        find(
+          casters,
+          (match) => match?.publicKey?.toString() === caster?.publicKey,
+        ),
+      );
 
-      const casterWrapper = await upgradeAvailable?.casters?.get(caster?.publicKey)
-     
-      if(!casterWrapper)return;
-      const keys = Object.keys(casterWrapper)
-      const casterItems = []
-      for(let i = 0;i<keys.length;i++){
-        const items = casterWrapper[keys[i]]?.items;  
-        const item = upgradeAvailable.items.get(items?.[0])
-        if(!items || items?.length <=0 || !item)continue;
+      const casterWrapper = await upgradeAvailable?.casters?.get(
+        caster?.publicKey,
+      );
+
+      if (!casterWrapper) return;
+      const keys = Object.keys(casterWrapper);
+      const casterItems = [];
+      for (let i = 0; i < keys.length; i++) {
+        const items = casterWrapper[keys[i]]?.items;
+        const item = upgradeAvailable.items.get(items?.[0]);
+        if (!items || items?.length <= 0 || !item) continue;
         casterItems.push(item);
       }
-      upgradeAvailable.removeUpgrade(casterItems)
-      console.log("CASTER UPGRADE",casterContext,casterWrapper,casterItems)
+      upgradeAvailable.removeUpgrade(casterItems);
+      console.log('CASTER UPGRADE', casterContext, casterWrapper, casterItems);
 
       //if(casterItems.length == 0)return;
 
@@ -1400,7 +1412,6 @@ export const useChainActions = () => {
         INST_UNEQUIP,
         '',
       );
-    }
-    
+    },
   };
 };

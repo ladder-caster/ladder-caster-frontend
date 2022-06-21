@@ -3,6 +3,7 @@ import {
   GIVE_ITEM,
   GIVE_LADA,
   GIVE_RESOURCES,
+  INST_CLAIM_ALL,
   INST_COMMIT_CRAFT,
   INST_COMMIT_LOOT,
   INST_COMMIT_MOVE,
@@ -41,4 +42,5 @@ export const fetching = {
   [WALLET_AUTO_CONNECT]: 'auto.connect',
   [WALLET_DISCONNECT]: 'auto.disconnect',
   [INST_MINT_NFT]: 'action.mint',
+  [INST_CLAIM_ALL]: 'action.claim.all',
 };

@@ -1,5 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { _spellcasters, _list, _button } from './Spellcasters.styled';
+import {
+  _spellcasters,
+  _list,
+  _button,
+  _claim_all,
+} from './Spellcasters.styled';
 import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
 import {
@@ -28,7 +33,7 @@ const Spellcasters = () => {
   const [oldSpellcasters] = useRemix(GAME_OLD_SPELLCASTERS);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [phase] = useRemix(USER_PHASE);
-  const { lootAllResources } = useActions();
+  const { claimAllRewards } = useActions();
   const [hidePrestige] = useRemix(PRESTIGE_TOGGLE);
 
   const render_spellcasters = useMemo(() => {
@@ -52,12 +57,17 @@ const Spellcasters = () => {
       (phase || casters?.length > 0 || oldSpellcasters?.length > 0)
     ) {
       return (
-        <_list>
-          {render_spellcasters}
-          <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
-          <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
-          {!hidePrestige && render_old_spellcasters}
-        </_list>
+        <>
+          <_claim_all onClick={() => claimAllRewards()}>
+            {t('spellcasters.claim.all')}
+          </_claim_all>
+          <_list>
+            {render_spellcasters}
+            <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
+            <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
+            {!hidePrestige && render_old_spellcasters}
+          </_list>
+        </>
       );
     }
     return (

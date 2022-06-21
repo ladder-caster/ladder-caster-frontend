@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
+import { _button as __button } from '../../../shared/redeem/Redeem.styled';
 
 export const _spellcasters = styled(m.div)`
   width: 100%;
@@ -91,3 +92,18 @@ export const _buy = styled(Link)`
 `;
 
 export const _actions = styled.div``;
+
+export const _claim_all = styled(__button)`
+  width: 128px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  left: 128px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: ${({ theme }) => theme.background['highest']};
+    transform: scale(1.02);
+    color: ${({ theme }) => theme.text['active']};
+  }
+  bottom: 0;
+`;
