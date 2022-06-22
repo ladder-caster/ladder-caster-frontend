@@ -3,7 +3,7 @@ import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 import { ArweaveUtilInterface, Caster, Item } from '../program';
 
-export class ArweaveUtil implements ArweaveUtilInterface {
+class ArweaveUtil implements ArweaveUtilInterface {
   merkle: MerkleTree;
 
   constructor() {}
