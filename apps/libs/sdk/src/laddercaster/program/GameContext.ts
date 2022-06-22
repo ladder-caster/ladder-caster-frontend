@@ -10,7 +10,8 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 import { GameConstantsContextInterface } from './types';
-const gameConstantsContext:GameConstantsContextInterface = require("../program/GameConstantsContext").default;
+const gameConstantsContext: GameConstantsContextInterface = require('../program/GameConstantsContext')
+  .default;
 export class GameContext {
   constructor(private client: Client, private gamePK: string) {}
 
@@ -33,7 +34,7 @@ export class GameContext {
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         rent: SYSVAR_RENT_PUBKEY,
         gameTurnData: gameConstantsContext.futureTurnData,
-        currentGameTurnData:gameConstantsContext.turnData,
+        currentGameTurnData: gameConstantsContext.turnData,
       },
     });
   }
