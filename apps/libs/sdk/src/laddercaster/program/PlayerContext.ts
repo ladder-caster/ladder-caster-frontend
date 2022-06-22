@@ -1,13 +1,5 @@
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import {
-  Caster,
-  Client,
-  Game,
-  Item,
-  ItemFeature,
-  SLOTS_PUBKEY,
-  GameConstantsContextInterface,
-} from '.';
+import { Caster, Game, Item, ItemFeature } from '.';
 import * as anchor from '@project-serum/anchor';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -19,10 +11,8 @@ import { deserializeUnchecked } from 'borsh';
 import {
   AccountInfo,
   Keypair,
-  ParsedAccountData,
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
-  SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   SYSVAR_SLOT_HASHES_PUBKEY,
   Transaction,
@@ -33,66 +23,18 @@ import {
   MetadataProgram,
 } from '@metaplex-foundation/mpl-token-metadata';
 import axios from 'axios';
-import { MerkleTree } from 'merkletreejs';
-import keccak256 from 'keccak256';
 import { Environment } from './Client';
 const { SystemProgram } = anchor.web3;
-import {
-  TYPE_RES1,
-  TYPE_RES2,
-  TYPE_RES3,
-  LADA_TOKEN_ACCOUNT,
-} from 'core/remix/state';
-//import {gameConstantsContext} from '../../laddercaster';
-async function getMerkle() {
-  return await axios.get(
-    'https://arweave.net/ZFSrjFHHYKvTRy-5j4hpQtB4jboVx3ejCefdSZ8u9TE',
-  );
-}
+import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
+import gameConstantsContext from './GameConstantsContext';
+import arweaveUtil from '../utils/ArweaveUtil';
 
-async function buildMerkleTree(url: string): Promise<MerkleTree> {
-  const merkelTree = (await axios.get(url)).data;
-
-  return new MerkleTree(merkelTree, keccak256, {
-    sortPairs: true,
-    hashLeaves: true,
-  });
-}
-
-let merkle: any = undefined;
-
-async function getMerkleSingleton() {
-  if (merkle === undefined) {
-    merkle = (await getMerkle()).data;
-  }
-
-  return merkle;
-}
-
-export type ResourcesPK = {
-  seasons: {
-    0: {
-      gameAccount: string;
-      gameAccountProd: string;
-      gameAccountProdPriv: string;
-    };
-    1: {
-      gameAccount: string;
-      gameAccountProd: string;
-      gameAccountProdPriv: string;
-    };
-  };
-};
-//constants of cached data used throughout the app
-const gameConstantsContext: GameConstantsContextInterface = require('./GameConstantsContext')
-  .default;
 export class PlayerContext {
   constructor() {}
 
   async getPlayer() {
-    const [, playerAccount] = await this.getAccounts();
     return await gameConstantsContext.Client.program.account.player.fetch(
-      playerAccount,
+      gameConstantsContext.playerAccount,
     );
   }
 
@@ -114,14 +56,12 @@ export class PlayerContext {
   }
 
   async getInventory() {
-    const [, playerAccount] = await this.getAccounts();
-
     const itemArray = (
       await gameConstantsContext.Client.program.account.item.all([
         {
           memcmp: {
             offset: 40,
-            bytes: playerAccount.toBase58(),
+            bytes: gameConstantsContext.playerAccount.toBase58(),
           },
         },
       ])
@@ -133,11 +73,14 @@ export class PlayerContext {
   }
 
   async getCasters() {
-    const [, playerAccount] = await this.getAccounts();
-
     const casterArray = (
       await gameConstantsContext.Client.program.account.caster.all([
-        { memcmp: { offset: 18, bytes: playerAccount.toBase58() } },
+        {
+          memcmp: {
+            offset: 18,
+            bytes: gameConstantsContext.playerAccount.toBase58(),
+          },
+        },
       ])
     ).map((caster) => {
       return { ...caster.account, publicKey: caster.publicKey };
@@ -167,7 +110,7 @@ export class PlayerContext {
         {
           memcmp: {
             offset: 18,
-            bytes: gameConstantsContext.previousPlayerTokenAccount.toBase58(),
+            bytes: gameConstantsContext.previousPlayerAccount.toBase58(),
           },
         },
       ])
@@ -183,15 +126,6 @@ export class PlayerContext {
   }
 
   async initPlayer() {
-    const [
-      gameAccount,
-      playerAccount,
-      ,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
-
     const tx = new Transaction();
 
     try {
@@ -200,9 +134,9 @@ export class PlayerContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.initPlayer({
           accounts: {
-            game: gameAccount,
-            season: season,
-            playerAccount: playerAccount,
+            game: gameConstantsContext.gameAccount,
+            season: gameConstantsContext.season,
+            playerAccount: gameConstantsContext.playerAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
             systemProgram: SystemProgram.programId,
@@ -214,15 +148,15 @@ export class PlayerContext {
 
     const gameResources = [
       {
-        mintAccount: game.resource1MintAccount,
+        mintAccount: gameConstantsContext.gameState.resource1MintAccount,
         tokenAccount: gameConstantsContext.resource1TokenAccount,
       },
       {
-        mintAccount: game.resource2MintAccount,
+        mintAccount: gameConstantsContext.gameState.resource2MintAccount,
         tokenAccount: gameConstantsContext.resource2TokenAccount,
       },
       {
-        mintAccount: game.resource3MintAccount,
+        mintAccount: gameConstantsContext.gameState.resource3MintAccount,
         tokenAccount: gameConstantsContext.resource3TokenAccount,
       },
     ];
@@ -255,7 +189,7 @@ export class PlayerContext {
         Token.createAssociatedTokenAccountInstruction(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
-          game.ladaMintAccount,
+          gameConstantsContext.gameState.ladaMintAccount,
           gameConstantsContext.ladaTokenAccount,
           gameConstantsContext.Client.wallet.publicKey,
           gameConstantsContext.Client.wallet.publicKey,
@@ -273,20 +207,19 @@ export class PlayerContext {
   }
 
   async openChest(chestItem: Item) {
-    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
     const item1 = Keypair.generate();
     const item2 = Keypair.generate();
     const item3 = Keypair.generate();
     return await gameConstantsContext.Client.program.rpc.openChest({
       accounts: {
-        game: gameAccount,
+        game: gameConstantsContext.gameAccount,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        player: playerAccount,
+        player: gameConstantsContext.playerAccount,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         chest: chestItem.publicKey,
-        season: season,
+        season: gameConstantsContext.season,
         item1: item1.publicKey,
         item2: item2.publicKey,
         item3: item3.publicKey,
@@ -301,15 +234,14 @@ export class PlayerContext {
     resourceType: ItemFeature,
     amountToBurn: anchor.BN,
   ) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
     return await gameConstantsContext.Client.program.rpc.manualResourceburn(
       casterId,
       resourceType,
       amountToBurn,
       {
         accounts: {
-          game: gameAccount,
-          playerAccount: playerAccount,
+          game: gameConstantsContext.gameAccount,
+          playerAccount: gameConstantsContext.playerAccount,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
         },
@@ -318,15 +250,9 @@ export class PlayerContext {
   }
 
   async manualItemBurn(item: PublicKey) {
-    const [
-      gameAccount,
-      playerAccount,
-      ,
-      game,
-      gameSigner,
-      season,
-    ] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
+    const mintAccounts = await this.getMintAccounts(
+      gameConstantsContext.gameState,
+    );
 
     return gameConstantsContext.Client.program.rpc.manualItemBurn({
       accounts: {
@@ -336,10 +262,10 @@ export class PlayerContext {
         rent: SYSVAR_RENT_PUBKEY,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        player: playerAccount,
-        gameSigner,
-        season,
+        game: gameConstantsContext.gameAccount,
+        player: gameConstantsContext.playerAccount,
+        gameSigner: gameConstantsContext.gameSigner,
+        season: gameConstantsContext.season,
         item,
         ...mintAccounts,
       },
@@ -420,14 +346,11 @@ export class PlayerContext {
 
   async mintNFTCaster(caster: Caster) {
     const nftMintKeys = Keypair.generate();
-    await getMerkleSingleton();
-    const uri: string = await this.getCasterUri(caster);
-    //Merkle proof part
-    let [leaf, tree] = await Promise.all([
-      this.buildLeafCaster(caster, uri),
-      buildMerkleTree(merkle['merkleLeaves']['combined']),
-    ]);
-
+    const uri: string = await arweaveUtil.getCasterUri(caster);
+    const leaf = arweaveUtil.buildLeafCaster(caster, uri);
+    const tree = await arweaveUtil.buildMerkleTree(
+      arweaveUtil.merkle['merkleLeaves']['combined'],
+    );
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
     const mintOptions = await this.buildMintOptions('combined', 0, nftMintKeys);
@@ -462,19 +385,13 @@ export class PlayerContext {
         itemType = Object.keys(item.itemType.equipment.equipmentType)[0];
       }
     }
-    await getMerkleSingleton();
-    const uri: string = await this.getItemUri(item, itemType);
-    //Merkle proof part
-    // noinspection TypeScriptValidateTypes
-
-    const [leaf, tree] = await Promise.all([
-      this.buildLeafItem(item, uri),
-      buildMerkleTree(
-        itemType === 'combined' || itemType === 'spellBook'
-          ? merkle['merkleLeaves'][itemType]
-          : merkle['merkleLeaves'][itemType][item.level],
-      ),
-    ]);
+    const uri: string = await arweaveUtil.getItemUri(item, itemType);
+    const leaf = arweaveUtil.buildLeafItem(item, uri);
+    const tree = await arweaveUtil.buildMerkleTree(
+      itemType === 'combined' || itemType === 'spellBook'
+        ? arweaveUtil.merkle['merkleLeaves'][itemType]
+        : arweaveUtil.merkle['merkleLeaves'][itemType][item.level],
+    );
 
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
@@ -518,7 +435,6 @@ export class PlayerContext {
   }
 
   async redeemNFTTwinPack(nftMintKeys: PublicKey) {
-    const [gameAccount, playerAccount, , , , season] = await this.getAccounts();
     const caster1 = Keypair.generate();
     const caster2 = Keypair.generate();
 
@@ -545,9 +461,9 @@ export class PlayerContext {
         rent: SYSVAR_RENT_PUBKEY,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        player: playerAccount,
-        season: season,
+        game: gameConstantsContext.gameAccount,
+        player: gameConstantsContext.playerAccount,
+        season: gameConstantsContext.season,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         nftMint: nftMintKeys,
         nftToken: nftToken,
@@ -591,14 +507,6 @@ export class PlayerContext {
     return arr;
   }
 
-  private async buildLeafCaster(caster: Caster, uri: string) {
-    return keccak256(
-      `${uri}:caster:${caster.seasonNumber}:${caster.version}:${caster.level}:${
-        caster.edition === 1 ? 'normal' : 'limited'
-      }`,
-    );
-  }
-
   private async buildMintOptions(
     itemType: string,
     level: number,
@@ -629,7 +537,7 @@ export class PlayerContext {
     const [merkleRootNft] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('merkle_roots'),
-        gameConstantsContext.gameTokenAccount.toBuffer(),
+        gameConstantsContext.gameAccount.toBuffer(),
         Buffer.from(itemType),
         Buffer.from(anchor.utils.bytes.utf8.encode(String(level))),
       ],
@@ -642,10 +550,10 @@ export class PlayerContext {
       systemProgram: anchor.web3.SystemProgram.programId,
       rent: SYSVAR_RENT_PUBKEY,
       authority: gameConstantsContext.Client.program.provider.wallet.publicKey,
-      game: gameConstantsContext.gameTokenAccount,
+      game: gameConstantsContext.gameAccount,
       gameSigner: gameConstantsContext.gameSigner,
       season: gameConstantsContext.season,
-      player: gameConstantsContext.playerTokenAccount,
+      player: gameConstantsContext.playerAccount,
       metaplexMetadataAccount: metaplexMetadataAccount as anchor.web3.PublicKey,
       metaplexTokenMetadataProgram: MetadataProgram.PUBKEY,
       merkleRootNft,
@@ -682,11 +590,11 @@ export class PlayerContext {
     const [nftMetadata] = nftMetadataTuple;
     return {
       accounts: {
-        game: gameConstantsContext.gameTokenAccount,
+        game: gameConstantsContext.gameAccount,
         nftMint: nftMintKeys,
         nftToken: nftToken,
         nftMetadata: nftMetadata,
-        player: gameConstantsContext.playerTokenAccount,
+        player: gameConstantsContext.playerAccount,
         season: gameConstantsContext.season,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
@@ -696,99 +604,5 @@ export class PlayerContext {
       },
       signers,
     };
-  }
-
-  private async getCasterUri(caster: Caster) {
-    const lookupTable = (await axios.get(merkle['merkleStruct']['combined']))
-      .data;
-
-    return lookupTable['caster'][caster.seasonNumber][caster.version][
-      caster.level
-    ][caster.edition === 1 ? 'normal' : 'limited'];
-  }
-
-  private async getItemUri(item: Item, itemType: string) {
-    const url =
-      itemType === 'combined' || itemType === 'spellbook'
-        ? merkle['merkleStruct'][itemType]
-        : merkle['merkleStruct'][itemType][item.level];
-    const lookupTable = (await axios.get(url)).data;
-
-    switch (Object.keys(item.itemType)[0]) {
-      case 'equipment': {
-        const lookupRarity =
-          lookupTable[Object.keys(item.itemType.equipment.feature)[0]][
-            Object.keys(item.itemType.equipment.rarity)[0]
-          ];
-        if (lookupRarity) return lookupRarity[item.itemType.equipment.value];
-        else
-          return lookupTable[Object.keys(item.itemType.equipment.feature)[0]][
-            this.capitalizeFirstLetter(
-              Object.keys(item.itemType.equipment.rarity)[0],
-            )
-          ][item.itemType.equipment.value];
-      }
-      case 'spellBook': {
-        const lookupRarity =
-          lookupTable[item.level][
-            Object.keys(item.itemType.spellBook.spell)[0]
-          ][Object.keys(item.itemType.spellBook.costFeature)[0]][
-            Object.keys(item.itemType.spellBook.rarity)[0]
-          ];
-        if (lookupRarity)
-          return lookupRarity[item.itemType.spellBook.cost][
-            item.itemType.spellBook.value
-          ];
-        else
-          return lookupTable[item.level][
-            Object.keys(item.itemType.spellBook.spell)[0]
-          ][Object.keys(item.itemType.spellBook.costFeature)[0]][
-            this.capitalizeFirstLetter(
-              Object.keys(item.itemType.spellBook.rarity)[0],
-            )
-          ][item.itemType.spellBook.cost][item.itemType.spellBook.value];
-      }
-      case 'chest': {
-        return lookupTable['chest'][item.level][item.itemType.chest.tier];
-      }
-    }
-  }
-
-  private capitalizeFirstLetter(value) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
-  }
-
-  private async buildLeafItem(item: Item, uri: string) {
-    switch (Object.keys(item.itemType)[0]) {
-      case 'equipment': {
-        return keccak256(
-          `${uri}:${Object.keys(item.itemType.equipment.equipmentType)[0]}:${
-            item.level
-          }:${Object.keys(item.itemType.equipment.feature)[0]}:${
-            Object.keys(item.itemType.equipment.rarity)[0]
-          }:${item.itemType.equipment.value}`,
-        );
-      }
-      case 'spellbook': {
-        return keccak256(
-          `${uri}:spellbook:${item.level}:${
-            Object.keys(item.itemType.spellBook.spell)[0]
-          }:${Object.keys(item.itemType.spellBook.costFeature)[0]}:${
-            Object.keys(item.itemType.spellBook.rarity)[0]
-          }:${item.itemType.spellBook.cost}:${item.itemType.spellBook.value}`,
-        );
-      }
-      case 'chest': {
-        return keccak256(
-          `${uri}:chest:${item.level}:${item.itemType.chest.tier}`,
-        );
-      }
-    }
-  }
-
-  private async getAccounts(): Promise<
-    [PublicKey, PublicKey, number, Game, PublicKey, PublicKey]
-  > {
-    return await gameConstantsContext.getPlayerAccounts;
   }
 }

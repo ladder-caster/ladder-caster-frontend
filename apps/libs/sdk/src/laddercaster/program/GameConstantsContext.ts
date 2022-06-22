@@ -97,7 +97,6 @@ class GameConstantsContext {
       }
     }
   }
-
   private async txnTooLarge(transaction: Transaction) {
     const half = Math.floor(transaction.instructions.length / 2);
     if (half <= 0) return;
@@ -357,19 +356,19 @@ class GameConstantsContext {
   public get previousSeason(): PublicKey {
     return this.game.previousSeason;
   }
-  public get playerTokenAccount(): PublicKey {
+  public get playerAccount(): PublicKey {
     return this.accounts.playerAccount;
   }
   public get playerBump(): number {
     return this.accounts.playerBump;
   }
-  public get gameTokenAccount(): PublicKey {
+  public get gameAccount(): PublicKey {
     return this.accounts.gameAccount;
   }
-  public get previousGameTokenAccount(): PublicKey {
+  public get previousGameAccount(): PublicKey {
     return this.accounts.previousGameAccount;
   }
-  public get previousPlayerTokenAccount(): PublicKey {
+  public get previousPlayerAccount(): PublicKey {
     return this.accounts.previousPlayerAccount;
   }
   public get ladaTokenAccount(): PublicKey {
@@ -428,24 +427,6 @@ class GameConstantsContext {
       this.game.game,
       this.game.gameSigner,
       this.game.season,
-    ];
-  }
-  public get getPlayerAccounts(): [
-    PublicKey,
-    PublicKey,
-    number,
-    Game,
-    PublicKey,
-    PublicKey,
-  ] {
-    this.hydrateGame();
-    return [
-      this.accounts?.gameAccount,
-      this.accounts?.playerAccount,
-      this.accounts?.playerBump,
-      this.game?.game,
-      this.game?.gameSigner,
-      this.game?.season,
     ];
   }
   private async checkInstance() {

@@ -33,6 +33,7 @@ import {
   GAME_CONSTANTS,
   CURRENT_SEASON,
   PRESTIGE_TOGGLE,
+  ARWEAVE_UTILS,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -50,6 +51,7 @@ import {
   INIT_CHAIN_LOAD,
 } from '../../../libs/chain/hooks/state';
 import {
+  ArweaveUtilInterface,
   Caster,
   Client,
   Environment,
@@ -57,7 +59,6 @@ import {
   GameConstantsContextInterface,
   GameContext,
   Item,
-  ResourcesPK,
   Tile,
 } from '../../../libs/sdk/src/laddercaster/program';
 import * as anchor from '@project-serum/anchor';
@@ -127,6 +128,8 @@ const UpgradesAvailable: CasterUpgradeAvailable = {
 };
 const gameConstantsContext: GameConstantsContextInterface = require('../../../libs/sdk/src/laddercaster/program/GameConstantsContext')
   .default;
+const arweaveUtil: ArweaveUtilInterface = require('../../../libs/sdk/src/laddercaster/utils/ArweaveUtil')
+  .default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -150,6 +153,7 @@ const Remix = () => {
   );
 
   const [gameConstants] = useRemixOrigin(GAME_CONSTANTS, gameConstantsContext);
+  const [arweave, setArweave] = useRemixOrigin(ARWEAVE_UTILS, arweaveUtil);
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
@@ -422,40 +426,13 @@ const Remix = () => {
     let listener;
     if (game) {
       setMap(generateMap(game));
-      console.log('game', game);
-      console.log(
-        'last crank',
-        new Date(game.turnInfo.lastCrankSeconds.toNumber() * 1000),
-      );
-      // if (client) {
-      //   window.addEventListener('focus', () => {
-      //     if (client.program._events._eventCallbacks.size === 0)
-      //       listener = client.program.addEventListener('NewTurn', async () => {
-      //         const gameContext = new GameContext(
-      //           client,
-      //           localStorage.getItem('gamePK'),
-      //         );
-      //         setGame(await gameContext.getGameAccount());
-      //       });
-      //   });
-
-      //   if (client.program._events._eventCallbacks.size === 0)
-      //     listener = client.program.addEventListener('NewTurn', async () => {
-      //       const gameContext = new GameContext(
-      //         client,
-      //         localStorage.getItem('gamePK'),
-      //       );
-      //       setGame(await gameContext.getGameAccount());
-      //     });
-      // }
     }
     if (client && !gameConstants.clientInitialized()) {
       gameConstants.initClient(client);
     }
-    // return () => {
-    //   console.log('unmounted wtf');
-    //   if (client) client.program.removeEventListener(listener);
-    // };
+    if (client && !arweave.isMerkleInit) {
+      arweave.isMerkleInit();
+    }
   }, [game, client]);
 
   useEffect(() => {
