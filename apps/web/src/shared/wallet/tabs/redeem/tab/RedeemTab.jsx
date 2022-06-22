@@ -2,14 +2,14 @@ import React, { useMemo, useEffect } from 'react';
 import { _tab, _grid, _row, _empty } from './RedeemTab.styled';
 import { gridList } from 'core/utils/lists';
 import NFT from '../../../nft/NFT';
-import { map, filter } from 'lodash';
+import { map } from 'lodash';
 import { useKeys } from 'core/hooks/useKeys';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import RedeemConfirm from '../confirm/RedeemConfirm';
 import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
-import { PlayerContext } from 'sdk/src';
+import nftUtil from 'sdk/src/laddercaster/utils/NFTUtil';
 
 const RedeemTab = () => {
   const { t } = useTranslation();
@@ -21,10 +21,9 @@ const RedeemTab = () => {
   useEffect(() => {
     const getAllNFTs = async () => {
       try {
-        const playerContext = new PlayerContext();
-        console.log('PLAYER CONTEXT', playerContext);
-        return await playerContext.getNFTUris(await playerContext.getNFTS());
-      } catch {
+        return await nftUtil.getNFTS();
+      } catch (e) {
+        console.log('failed getting NFTs');
         // catch error
       }
     };
@@ -36,10 +35,6 @@ const RedeemTab = () => {
 
   const list_nfts = useMemo(() => {
     if (nfts?.length) {
-      // const filter_nfts = filter(
-      //   nfts,
-      //   (nft) => nft?.data?.collection?.name === 'LadderCaster',
-      // );
       const list = gridList(nfts);
 
       return map(list, (row) => {

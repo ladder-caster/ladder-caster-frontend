@@ -271,3 +271,7 @@ export interface ArweaveUtilInterface {
   getCasterUri: (caster: Caster) => Promise<string>;
   getItemUri: (item: Item, itemType: string) => Promise<string>;
 }
+
+export interface NFTUtilInterface {
+  getNFTS: () => Promise<string[]>;
+}
