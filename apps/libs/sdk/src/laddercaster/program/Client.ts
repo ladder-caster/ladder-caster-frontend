@@ -13,7 +13,6 @@ export type Environment =
   | 'localnet'
   | 'devnet'
   | 'localprod';
-export const SLOTS_PUBKEY = 'SysvarS1otHashes111111111111111111111111111';
 const LOCAL_SECRET = 'LOCAL_SECRET';
 
 export class Client {
