@@ -6,7 +6,6 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import resources from 'sdk/src/laddercaster/config/resources.json';
 import {
   Keypair,
   PublicKey,
