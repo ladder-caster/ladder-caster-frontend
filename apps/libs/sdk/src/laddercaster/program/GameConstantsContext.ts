@@ -21,6 +21,7 @@ import {
 } from 'core/remix/state';
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 import { Environment } from './Client';
+
 /**
  * GameConstantsContext
  * @function clientInitialized - checks whether client is initialized
@@ -411,22 +412,6 @@ class GameConstantsContext {
   }
   public get Client(): Client {
     return this.client;
-  }
-  public get getCasterAccounts(): [
-    PublicKey,
-    PublicKey,
-    Game,
-    PublicKey,
-    PublicKey,
-  ] {
-    this.hydrateGame();
-    return [
-      this.accounts.gameAccount,
-      this.accounts.playerAccount,
-      this.game.game,
-      this.game.gameSigner,
-      this.game.season,
-    ];
   }
   private async checkInstance() {
     //initializes game incase of desync

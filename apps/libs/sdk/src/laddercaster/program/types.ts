@@ -232,10 +232,6 @@ export interface GameConstantsContextInterface {
    * Client containing RPC, program and wallet info
    */
   Client: Client;
-  /**
-   * @returns [PublicKey, PublicKey,  Game, PublicKey,PublicKey ]
-   */
-  getCasterAccounts: [PublicKey, PublicKey, Game, PublicKey, PublicKey];
   hydrateGame: Function;
   hydrateAccountBalances: Function;
   getTokenBalances: Function;

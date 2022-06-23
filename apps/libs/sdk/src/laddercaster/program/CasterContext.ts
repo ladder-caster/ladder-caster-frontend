@@ -31,13 +31,6 @@ export class CasterContext {
   }
 
   async initCaster(count: number) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
     var casterKP = anchor.web3.Keypair.generate();
     if (!count || count == 1) {
       return await gameConstantsContext.Client.program.rpc.initCaster({
@@ -47,14 +40,14 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          season: season,
-          game: gameAccount,
-          player: playerAccount,
+          season: gameConstantsContext.season,
+          game: gameConstantsContext.gameAccount,
+          player: gameConstantsContext.playerAccount,
           slots: SYSVAR_SLOT_HASHES_PUBKEY,
           instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-          ladaMint: game.ladaMintAccount,
+          ladaMint: gameConstantsContext.gameState.ladaMintAccount,
           caster: casterKP.publicKey,
-          gameLadaTokenAccount: game.ladaTokenAccount,
+          gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
           ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         },
         signers: [gameConstantsContext.Client.wallet.payer, casterKP],
@@ -71,14 +64,15 @@ export class CasterContext {
             rent: SYSVAR_RENT_PUBKEY,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            season: season,
-            game: gameAccount,
-            player: playerAccount,
+            season: gameConstantsContext.season,
+            game: gameConstantsContext.gameAccount,
+            player: gameConstantsContext.playerAccount,
             slots: SYSVAR_SLOT_HASHES_PUBKEY,
             instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-            ladaMint: game.ladaMintAccount,
+            ladaMint: gameConstantsContext.gameState.ladaMintAccount,
             caster: casterKP.publicKey,
-            gameLadaTokenAccount: game.ladaTokenAccount,
+            gameLadaTokenAccount:
+              gameConstantsContext.gameState.ladaTokenAccount,
             ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
           },
           signers: [gameConstantsContext.Client.wallet.payer, casterKP],
@@ -145,17 +139,9 @@ export class CasterContext {
   }
 
   async casterCommitMove(lvl: number, col: number) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
-
-    var asyncDispatchResult = await Promise.all([
-      this.getMintAccounts(game),
-      this.getGameTurnData(game, gameAccount),
+    const asyncDispatchResult = await Promise.all([
+      this.getMintAccounts(),
+      this.getGameTurnData(),
     ]).then((res) => res);
     const mintAccounts = asyncDispatchResult[0];
     const gameTurnData = asyncDispatchResult[1];
@@ -170,13 +156,13 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          game: gameAccount,
-          player: playerAccount,
+          game: gameConstantsContext.gameAccount,
+          player: gameConstantsContext.playerAccount,
           caster: this.caster?.publicKey,
-          season: season,
+          season: gameConstantsContext.season,
           ...mintAccounts,
           gameTurnData,
-          ladaMint: game.ladaMintAccount,
+          ladaMint: gameConstantsContext.gameState.ladaMintAccount,
           ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         },
         signers: [gameConstantsContext.Client.wallet.payer],
@@ -191,10 +177,7 @@ export class CasterContext {
   }
 
   async casterCommitLoot() {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
     const gameTurnData = await this.getGameTurnData(
-      game,
-      gameAccount,
       this.caster.turnCommit?.turn,
     );
 
@@ -203,8 +186,8 @@ export class CasterContext {
         systemProgram: anchor.web3.SystemProgram.programId,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        player: playerAccount,
+        game: gameConstantsContext.gameAccount,
+        player: gameConstantsContext.playerAccount,
         caster: this.caster?.publicKey,
         gameTurnData,
       },
@@ -410,18 +393,7 @@ export class CasterContext {
   }
 
   private async redeemActions(caster: Caster) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      gameSigner,
-      season,
-    ] = await this.getAccounts();
-    const gameTurnData = await this.getGameTurnData(
-      game,
-      gameAccount,
-      caster?.turnCommit?.turn,
-    );
+    const gameTurnData = await this.getGameTurnData(caster?.turnCommit?.turn);
     const remainingAccounts =
       caster?.turnCommit?.actions.spell && caster?.modifiers?.spellBook
         ? {
@@ -443,14 +415,14 @@ export class CasterContext {
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        season: season,
-        player: playerAccount,
+        game: gameConstantsContext.gameAccount,
+        season: gameConstantsContext.season,
+        player: gameConstantsContext.playerAccount,
         caster: caster?.publicKey,
-        gameSigner: gameSigner,
+        gameSigner: gameConstantsContext.gameSigner,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
-        ladaMintAccount: game.ladaMintAccount,
-        gameLadaTokenAccount: game.ladaTokenAccount,
+        ladaMintAccount: gameConstantsContext.gameState.ladaMintAccount,
+        gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
         ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         gameTurnData,
       },
@@ -460,14 +432,12 @@ export class CasterContext {
   }
 
   private async redeemMove(caster: Caster) {
-    const [gameAccount, playerAccount] = await this.getAccounts();
-
     return gameConstantsContext.Client.program.instruction.casterRedeemMove({
       accounts: {
-        game: gameAccount,
+        game: gameConstantsContext.gameAccount,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        player: playerAccount,
+        player: gameConstantsContext.playerAccount,
         caster: caster?.publicKey,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
       },
@@ -476,20 +446,9 @@ export class CasterContext {
   }
 
   private async redeemLoot(item: Keypair, caster: Caster) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      gameSigner,
-      season,
-    ] = await this.getAccounts();
     const empty = Keypair.generate();
-    const mintAccounts = await this.getMintAccounts(game);
-    const gameTurnData = await this.getGameTurnData(
-      game,
-      gameAccount,
-      caster?.turnCommit?.turn,
-    );
+    const mintAccounts = await this.getMintAccounts();
+    const gameTurnData = await this.getGameTurnData(caster?.turnCommit?.turn);
 
     return gameConstantsContext.Client.program.instruction.casterRedeemLoot({
       accounts: {
@@ -500,14 +459,14 @@ export class CasterContext {
         rent: SYSVAR_RENT_PUBKEY,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        player: playerAccount,
+        game: gameConstantsContext.gameAccount,
+        player: gameConstantsContext.playerAccount,
         caster: caster?.publicKey,
-        season: season,
-        gameSigner: gameSigner,
+        season: gameConstantsContext.season,
+        gameSigner: gameConstantsContext.gameSigner,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
-        ladaMintAccount: game.ladaMintAccount,
-        gameLadaTokenAccount: game.ladaTokenAccount,
+        ladaMintAccount: gameConstantsContext.gameState.ladaMintAccount,
+        gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
         ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         gameTurnData,
         item: item.publicKey,
@@ -527,16 +486,14 @@ export class CasterContext {
   }
 
   private async redeemCraft(item: Keypair, caster: Caster) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
-
     return gameConstantsContext.Client.program.instruction.casterRedeemCraftS1({
       accounts: {
-        game: gameAccount,
+        game: gameConstantsContext.gameAccount,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        player: playerAccount,
+        player: gameConstantsContext.playerAccount,
         caster: caster?.publicKey,
-        season: season,
+        season: gameConstantsContext.season,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         rent: SYSVAR_RENT_PUBKEY,
@@ -548,15 +505,7 @@ export class CasterContext {
   }
 
   private async redeemSpell(item: Keypair, caster: Caster) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      gameSigner,
-      season,
-    ] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
-
+    const mintAccounts = await this.getMintAccounts();
     const empty = Keypair.generate();
 
     return gameConstantsContext.Client.program.instruction.casterRedeemSpell({
@@ -568,11 +517,11 @@ export class CasterContext {
         rent: SYSVAR_RENT_PUBKEY,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        game: gameAccount,
-        season: season,
-        player: playerAccount,
+        game: gameConstantsContext.gameAccount,
+        season: gameConstantsContext.season,
+        player: gameConstantsContext.playerAccount,
         caster: caster?.publicKey,
-        gameSigner: gameSigner,
+        gameSigner: gameConstantsContext.gameSigner,
         slots: SYSVAR_SLOT_HASHES_PUBKEY,
         item: item.publicKey,
         ...mintAccounts,
@@ -591,13 +540,10 @@ export class CasterContext {
   }
 
   async equipItem(equipmentItem: Item) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
-
     const itemType = Object.keys(
       equipmentItem.itemType.equipment?.equipmentType ||
         equipmentItem?.itemType,
     )[0];
-    console.log('EQUIP', this.caster, this.caster.modifiers[itemType]);
     const tx = new Transaction();
     if (
       this.caster.modifiers[itemType] &&
@@ -606,10 +552,10 @@ export class CasterContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.unequipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: this.caster.modifiers[itemType],
           },
@@ -620,10 +566,10 @@ export class CasterContext {
     tx.add(
       gameConstantsContext.Client.program.instruction.equipItem({
         accounts: {
-          game: gameAccount,
+          game: gameConstantsContext.gameAccount,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          player: playerAccount,
+          player: gameConstantsContext.playerAccount,
           caster: this.caster?.publicKey,
           item: equipmentItem.publicKey,
         },
@@ -641,17 +587,16 @@ export class CasterContext {
   }
 
   async unequipAllItems(items: Item[]) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     const tx = new Transaction();
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       tx.add(
         gameConstantsContext.Client.program.transaction.unequipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: new PublicKey(item.publicKey),
           },
@@ -668,8 +613,6 @@ export class CasterContext {
   }
 
   async equipBestGear(items: Item[]) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
-
     const tx = new Transaction();
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -681,10 +624,10 @@ export class CasterContext {
         tx.add(
           gameConstantsContext.Client.program.instruction.unequipItem({
             accounts: {
-              game: gameAccount,
+              game: gameConstantsContext.gameAccount,
               authority:
                 gameConstantsContext.Client.program.provider.wallet.publicKey,
-              player: playerAccount,
+              player: gameConstantsContext.playerAccount,
               caster: this.caster?.publicKey,
               item: this.caster.modifiers[itemType],
             },
@@ -695,10 +638,10 @@ export class CasterContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.equipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: item.publicKey,
           },
@@ -715,13 +658,12 @@ export class CasterContext {
   }
 
   async unequipItem(itemPK: PublicKey) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     return await gameConstantsContext.Client.program.rpc.unequipItem({
       accounts: {
-        game: gameAccount,
+        game: gameConstantsContext.gameAccount,
         authority:
           gameConstantsContext.Client.program.provider.wallet.publicKey,
-        player: playerAccount,
+        player: gameConstantsContext.playerAccount,
         caster: this.caster?.publicKey,
         item: itemPK,
       },
@@ -730,16 +672,8 @@ export class CasterContext {
   }
 
   async castSpell(equipmentItem: Item) {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      ,
-      season,
-    ] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
-    const gameTurnData = await this.getGameTurnData(game, gameAccount);
-
+    const mintAccounts = await this.getMintAccounts();
+    const gameTurnData = await this.getGameTurnData();
     const tx = new Transaction();
 
     if (
@@ -750,10 +684,10 @@ export class CasterContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.unequipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: this.caster?.modifiers?.spellBook,
           },
@@ -763,10 +697,10 @@ export class CasterContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.equipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: equipmentItem.publicKey,
           },
@@ -777,10 +711,10 @@ export class CasterContext {
       tx.add(
         gameConstantsContext.Client.program.instruction.equipItem({
           accounts: {
-            game: gameAccount,
+            game: gameConstantsContext.gameAccount,
             authority:
               gameConstantsContext.Client.program.provider.wallet.publicKey,
-            player: playerAccount,
+            player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
             item: equipmentItem.publicKey,
           },
@@ -799,8 +733,8 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          game: gameAccount,
-          player: playerAccount,
+          game: gameConstantsContext.gameAccount,
+          player: gameConstantsContext.playerAccount,
           caster: this.caster?.publicKey,
           slots: SYSVAR_SLOT_HASHES_PUBKEY,
           ...mintAccounts,
@@ -820,9 +754,8 @@ export class CasterContext {
   }
 
   async manualResourceBurn(itemFeature: ItemFeature, amount: number) {
-    const [gameAccount, playerAccount, game] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
-    const gameTurnData = await this.getGameTurnData(game, gameAccount);
+    const mintAccounts = await this.getMintAccounts();
+    const gameTurnData = await this.getGameTurnData();
 
     return await gameConstantsContext.Client.program.rpc.manualResourceBurn(
       itemFeature,
@@ -835,8 +768,8 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          game: gameAccount,
-          player: playerAccount,
+          game: gameConstantsContext.gameAccount,
+          player: gameConstantsContext.playerAccount,
           caster: this.caster?.publicKey,
           gameTurnData: gameTurnData,
           ...mintAccounts,
@@ -848,27 +781,6 @@ export class CasterContext {
 
   async prestigeCaster() {
     const newCaster = Keypair.generate();
-
-    try {
-      console.log(
-        'old season',
-        await gameConstantsContext.Client.program.account.season.fetch(
-          gameConstantsContext.previousSeason,
-        ),
-      );
-    } catch (e) {
-      console.log(e);
-    }
-    try {
-      console.log(
-        'new season',
-        await gameConstantsContext.Client.program.account.season.fetch(
-          gameConstantsContext.season,
-        ),
-      );
-    } catch (e) {
-      console.log(e);
-    }
 
     return await gameConstantsContext.Client.program.rpc.transferCaster({
       accounts: {
@@ -896,8 +808,6 @@ export class CasterContext {
 
   //DEBUG - Devnet only
   async giveLada() {
-    const [gameAccount, , game, gameSigner] = await this.getAccounts();
-
     return await gameConstantsContext.Client.program.rpc.giveLada(
       new anchor.BN(1000 * 1e9),
       {
@@ -908,10 +818,10 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          gameSigner: gameSigner,
-          game: gameAccount,
-          ladaMintAccount: game.ladaMintAccount,
-          gameLadaTokenAccount: game.ladaTokenAccount,
+          gameSigner: gameConstantsContext.gameSigner,
+          game: gameConstantsContext.gameAccount,
+          ladaMintAccount: gameConstantsContext.gameState.ladaMintAccount,
+          gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
           ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
         },
       },
@@ -919,13 +829,7 @@ export class CasterContext {
   }
 
   async giveResources() {
-    const [
-      gameAccount,
-      playerAccount,
-      game,
-      gameSigner,
-    ] = await this.getAccounts();
-    const mintAccounts = await this.getMintAccounts(game);
+    const mintAccounts = await this.getMintAccounts();
 
     return await gameConstantsContext.Client.program.rpc.giveResources(
       new anchor.BN(500),
@@ -937,9 +841,9 @@ export class CasterContext {
           rent: SYSVAR_RENT_PUBKEY,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          gameSigner: gameSigner,
-          game: gameAccount,
-          player: playerAccount,
+          gameSigner: gameConstantsContext.gameSigner,
+          game: gameConstantsContext.gameAccount,
+          player: gameConstantsContext.playerAccount,
           ...mintAccounts,
         },
         signers: [gameConstantsContext.Client.wallet.payer],
@@ -948,7 +852,6 @@ export class CasterContext {
   }
 
   async giveItem(itemType: ItemType) {
-    const [gameAccount, playerAccount, , , season] = await this.getAccounts();
     const item = Keypair.generate();
 
     return await gameConstantsContext.Client.program.rpc.giveItem(
@@ -957,11 +860,11 @@ export class CasterContext {
       {
         accounts: {
           systemProgram: anchor.web3.SystemProgram.programId,
-          game: gameAccount,
-          season: season,
+          game: gameConstantsContext.gameAccount,
+          season: gameConstantsContext.season,
           authority:
             gameConstantsContext.Client.program.provider.wallet.publicKey,
-          player: playerAccount,
+          player: gameConstantsContext.playerAccount,
           slots: SYSVAR_SLOT_HASHES_PUBKEY,
           item: item.publicKey,
         },
@@ -971,8 +874,6 @@ export class CasterContext {
   }
 
   async changeTile() {
-    const [gameAccount] = await this.getAccounts();
-
     return await gameConstantsContext.Client.program.rpc.changeTile(
       { crafting: {} },
       this.caster?.modifiers.tileLevel,
@@ -980,20 +881,21 @@ export class CasterContext {
       {
         accounts: {
           systemProgram: anchor.web3.SystemProgram.programId,
-          game: gameAccount,
+          game: gameConstantsContext.gameAccount,
         },
       },
     );
   }
 
   //HELPERS
-  private async getGameTurnData(game: Game, gameAccount: PublicKey, turn = -1) {
-    const turnNumber = turn !== -1 ? turn : game?.turnInfo?.turn;
-    if (turn != -1 && turn != game?.turnInfo?.turn) {
+  private async getGameTurnData(turn = -1) {
+    const turnNumber =
+      turn !== -1 ? turn : gameConstantsContext.gameState?.turnInfo?.turn;
+    if (turn != -1 && turn != gameConstantsContext.gameState?.turnInfo?.turn) {
       const [turnData] = await anchor.web3.PublicKey.findProgramAddress(
         [
           Buffer.from('turn_data'),
-          gameAccount.toBuffer(),
+          gameConstantsContext.gameAccount.toBuffer(),
           Buffer.from(anchor.utils.bytes.utf8.encode(String(turnNumber))),
         ],
         gameConstantsContext.Client.program.programId,
@@ -1003,20 +905,14 @@ export class CasterContext {
     return gameConstantsContext.turnData;
   }
 
-  private async getMintAccounts(game: Game) {
+  private async getMintAccounts() {
     return {
-      resource1MintAccount: game.resource1MintAccount,
-      resource2MintAccount: game.resource2MintAccount,
-      resource3MintAccount: game.resource3MintAccount,
+      resource1MintAccount: gameConstantsContext.gameState.resource1MintAccount,
+      resource2MintAccount: gameConstantsContext.gameState.resource2MintAccount,
+      resource3MintAccount: gameConstantsContext.gameState.resource3MintAccount,
       resource1TokenAccount: gameConstantsContext.resource1TokenAccount,
       resource2TokenAccount: gameConstantsContext.resource2TokenAccount,
       resource3TokenAccount: gameConstantsContext.resource3TokenAccount,
     };
-  }
-
-  private async getAccounts(): Promise<
-    [PublicKey, PublicKey, Game, PublicKey, PublicKey]
-  > {
-    return gameConstantsContext.getCasterAccounts;
   }
 }
