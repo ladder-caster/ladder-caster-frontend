@@ -33,7 +33,7 @@ export const _view = styled.div`
 
 export const _tab = styled(m.div)`
   backface-visibility: hidden;
-  margin-right: 16px;
+  margin-right: 8px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -41,33 +41,31 @@ export const _tab = styled(m.div)`
     margin-right: 0;
   }
 `;
-export const _tab_span = styled(m.span).attrs(
-  ({ theme, $active, $pulse }) => {
-    const pulse = $pulse && !$active;
-    return {
-      animate: {
-        scale: pulse ? 1.05 : 1,
-        color: pulse
-          ? theme.text['input']
-          : theme.text[$active ? 'active' : 'base'],
-      },
+export const _tab_span = styled(m.span).attrs(({ theme, $active, $pulse }) => {
+  const pulse = $pulse && !$active;
+  return {
+    animate: {
+      scale: pulse ? 1.05 : 1,
+      color: pulse
+        ? theme.text['input']
+        : theme.text[$active ? 'active' : 'base'],
+    },
+    transition: {
+      duration: 1,
+      ease: 'easeOut',
+      repeat: pulse ? Infinity : 0,
+      repeatDelay: 0.5,
+      repeatType: 'mirror',
+    },
+    whileHover: {
+      color: $active ? theme.text['active'] : theme.text['faded'],
       transition: {
-        duration: 1,
-        ease: 'easeOut',
-        repeat: pulse ? Infinity : 0,
-        repeatDelay: 0.5,
-        repeatType: 'mirror',
+        duration: 0.3,
+        ease: 'easeInOut',
       },
-      whileHover: {
-        color: $active ? theme.text['active'] : theme.text['faded'],
-        transition: {
-          duration: 0.3,
-          ease: 'easeInOut',
-        },
-      },
-    };
-  },
-)`
+    },
+  };
+})`
   backface-visibility: hidden;
   transform: translateZ(0);
   font-size: 16px;

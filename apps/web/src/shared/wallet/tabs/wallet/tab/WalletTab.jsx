@@ -11,8 +11,6 @@ import {
   _text,
 } from './WalletTab.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
 import { GAME_RESOURCES } from 'core/remix/state';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
@@ -27,16 +25,7 @@ const TRUNCATE_DECIMAL = 5;
 
 const WalletTab = () => {
   const { t } = useTranslation();
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [resources, setResources] = useRemix(GAME_RESOURCES);
-
-  const publicKey = useMemo(() => {
-    const key = client?.wallet?.payer?._keypair?.publicKey;
-
-    if (!key) return client?.wallet?.publicKey.toString();
-
-    return key ? bs58.encode(key) : '';
-  }, [client]);
+  const [resources] = useRemix(GAME_RESOURCES);
 
   return (
     <_tab>

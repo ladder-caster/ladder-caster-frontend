@@ -361,6 +361,7 @@
     "error.refresh.order": "Failed to update the order",
     "error.mint.item.tier_too_low": "You cannot mint common items this season",
     "wallet.mint": "Mint",
+    "wallet.staking": "Staking",
     "account.opt.in": "Opt In",
     "copy.clipboard": "Copy to clipboard",
     "copied.clipboard": "Copied!",
