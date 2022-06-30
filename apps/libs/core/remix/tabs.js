@@ -8,6 +8,7 @@ export const TAB_KEYS = 'TAB_KEYS';
 export const TAB_SWAP = 'TAB_SWAP';
 export const TAB_PLACE_ORDER = 'TAB_PLACE_ORDER';
 export const TAB_OPEN_ORDER = 'TAB_OPEN_ORDER';
+export const TAB_STAKING_HOME = 'TAB_STAKING_HOME';
 
 export const TABS_MINT_REDEEM = 'TABS_MINT_REDEEM';
 export const TABS_SWAP_ORDER = 'TABS_SWAP_ORDER';

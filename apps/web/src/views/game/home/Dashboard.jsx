@@ -36,6 +36,7 @@ import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { IconBag } from 'design/icons/bag.icon';
 import { Onboarding } from './onboarding/Onboarding';
 import { useActions } from '../../../../actions';
+import Menu from './menu/Menu';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -78,7 +79,7 @@ const Dashboard = () => {
     <_home>
       <Heading title={t('title.home')} />
       <_feed>
-        <Onboarding home />
+        <Menu />
       </_feed>
     </_home>
   );

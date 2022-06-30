@@ -11,6 +11,7 @@ import {
   DRAWER_TOKENS,
   DRAWER_TRADE,
   DRAWER_WALLET,
+  DRAWER_STAKING,
   VIEW_SIZE,
 } from 'core/remix/state';
 import { domMax, LazyMotion } from 'framer-motion';
@@ -27,6 +28,7 @@ import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
 import Player from '../spellcasters/drawer/Player';
 import TradeDrawer from '../../../shared/trade/TradeDrawer';
 import Price from '../../../shared/price/Price';
+import StakingDrawer from '../../../shared/staking/StakingDrawer';
 
 export const View = () => {
   const view_ref = useRef();
@@ -57,6 +59,7 @@ export const View = () => {
     [DRAWER_SPELLCASTER]: Player,
     [DRAWER_CRANK]: CrankDrawer,
     [DRAWER_TRADE]: TradeDrawer,
+    [DRAWER_STAKING]: StakingDrawer,
   }[drawer?.type];
 
   return (

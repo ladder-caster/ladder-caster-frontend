@@ -51,6 +51,7 @@ import {
   ATTRIBUTE_RES3,
   GAME_CONSTANTS,
   DRAWER_TRADE,
+  DRAWER_STAKING,
   RARITY_COMMON,
   MODAL_BURN,
   CASTER_UPGRADE_AVAILABLE,
@@ -123,6 +124,7 @@ import {
   INIT_STATE_BOOST,
   INIT_STATE_REDEEM,
   INIT_STATE_TRADE,
+  INIT_STATE_STAKING
 } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, indexOf, filter, isArray } from 'lodash';
@@ -981,6 +983,10 @@ export const useChainActions = () => {
     async openDrawerCraft() {
       setDrawer({ type: DRAWER_CRAFT });
       setContext({ type: CRAFT_CHARACTER });
+    },
+    async openDrawerStaking() {
+      setDrawer({ type: DRAWER_STAKING });
+      setContext(INIT_STATE_STAKING);
     },
     async chooseRedeem(nft) {
       setContext({ ...context, nft });
