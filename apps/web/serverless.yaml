@@ -1,8 +1,8 @@
 component: website
-name: ladder-caster-play
+name: ladder-caster-s2
 stage: prod
 
 inputs:
   src: ./build
-  domain: https://play.laddercaster.com
+  domain: https://s2.laddercaster.com
   region: us-east-1
