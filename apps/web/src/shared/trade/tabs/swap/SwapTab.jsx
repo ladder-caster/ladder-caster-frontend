@@ -13,6 +13,7 @@ import {
   _switch,
   _rate,
   _routing,
+  _settle,
 } from './SwapTab.styled';
 import Input from './input/Input';
 import Dropdown from '../../dropdown/Dropdown';
@@ -24,6 +25,7 @@ import { useActions } from '../../../../../actions';
 import { AnimateSwitch } from '../../animations/AnimateSwitch';
 import Submit from './submit/Submit';
 import Percent from './percent/Percent';
+import Settle from '../order/settle/Settle';
 
 const SwapTab = () => {
   const { t } = useTranslation();
@@ -87,6 +89,9 @@ const SwapTab = () => {
           <Percent weight={1} />
         </_row>
       </_form>
+      <_settle>
+        <Settle />
+      </_settle>
     </_swap>
   );
 };

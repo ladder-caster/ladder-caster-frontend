@@ -15,7 +15,7 @@ class ArweaveUtil implements ArweaveUtilInterface {
   async initMerkle() {
     this.merkle = (
       await axios.get(
-        'https://arweave.net/ZFSrjFHHYKvTRy-5j4hpQtB4jboVx3ejCefdSZ8u9TE',
+        'https://arweave.net/xL96M9byVljqp_x1EYCWwnC1lvmuocy6P58uM9EPoOo',
       )
     ).data;
   }

@@ -1,17 +1,17 @@
 {
-  "FIYA_USDC": {
-    "address": "AtUeL7BJzzUpBRsRxMojVt8zdCWyrdFcPg2v3F7jyHt9",
-    "name": "FIYA/USDC",
+  "LAVA_USDC": {
+    "address": "C37YXzhwcDEGJMiJqAR2TAnaKn8frSVcZFqgi7niMsG9",
+    "name": "LAVA/USDC",
     "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
   },
-  "WADA_USDC": {
-    "address": "HyDtN1n3Bcmmf95swdVHRZmfhR5E3FdstXqo2fBqjCPh",
-    "name": "WADA/USDC",
+  "TORM_USDC": {
+    "address": "7qHC2Vu24Hi2aEuW4zVeHqquE45BGjzWi1P1hBCtHyC1",
+    "name": "TORM/USDC",
     "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
   },
-  "ERRA_USDC": {
-    "address": "9fViHtiJMmVn2nwRBPcPNrBkzmDYwGNa64J74GGm2ScZ",
-    "name": "ERRA/USDC",
+  "POSO_USDC": {
+    "address": "GneKvoYAEbJJWZ2eY5wF1FvwyckCYC5s4UnFQbbsW1cW",
+    "name": "POSO/USDC",
     "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
   },
   "LADA_USDC": {
@@ -22,21 +22,6 @@
   "LADA_SOL": {
     "address": "74egdfDDBhrCqGMXxB7ykpNRT2qgpy9xwxc1cECT9Edw",
     "name": "LADA/SOL",
-    "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
-  },
-  "FIYA_WADA": {
-    "address": "3drCxiJ3PSDREGGYRUFeB8XzAqyvgWJ1cKVoy3ozgBY2",
-    "name": "FIYA/WADA",
-    "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
-  },
-  "FIYA_ERRA": {
-    "address": "6k1vUHheRCH4Zoi6Sb8aGdVg76Yt7oYq6oLpCh1bDx4n",
-    "name": "FIYA/ERRA",
-    "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
-  },
-  "ERRA_WADA": {
-    "address": "FsXS9K5KtzRf4UWpqkKFoCNnXwxk2CofZoEVQvXU2SMF",
-    "name": "ERRA/WADA",
     "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
   },
   "SOL_USDC": {

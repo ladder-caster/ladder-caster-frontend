@@ -157,3 +157,8 @@ export const _routing = styled.div`
   margin-top: 6px;
   margin-right: 16px;
 `;
+
+export const _settle = styled.div`
+  width: 100%;
+  padding: 16px 0;
+`;
