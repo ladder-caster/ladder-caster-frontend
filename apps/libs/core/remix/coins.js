@@ -6,3 +6,6 @@ export const COIN_ERRA = 'ERRA';
 export const COIN_EMBA = 'EMBA';
 export const COIN_FRO = 'FRO';
 export const COIN_ROOT = 'ROOT';
+export const COIN_TORM = 'TORM';
+export const COIN_POSO = 'POSO';
+export const COIN_LAVA = 'LAVA';

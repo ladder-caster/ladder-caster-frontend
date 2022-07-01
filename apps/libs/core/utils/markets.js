@@ -81,6 +81,30 @@ export const MARKETS = {
     decimals: 6,
     market: 'WINN/USDC',
   },
+  ['LAVA/USDC']: {
+    market_id: 'C37YXzhwcDEGJMiJqAR2TAnaKn8frSVcZFqgi7niMsG9',
+    program_id: '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',
+    base: 'LAVA',
+    quote: 'USDC',
+    decimals: 6,
+    market: 'LAVA/USDC',
+  },
+  ['TORM/USDC']: {
+    market_id: '7qHC2Vu24Hi2aEuW4zVeHqquE45BGjzWi1P1hBCtHyC1',
+    program_id: '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',
+    base: 'TORM',
+    quote: 'USDC',
+    decimals: 6,
+    market: 'TORM/USDC',
+  },
+  ['POSO/USDC']: {
+    market_id: 'GneKvoYAEbJJWZ2eY5wF1FvwyckCYC5s4UnFQbbsW1cW',
+    program_id: '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',
+    base: 'POSO',
+    quote: 'USDC',
+    decimals: 6,
+    market: 'POSO/USDC',
+  },
 };
 
 export const COINS = coinsList?.coins;

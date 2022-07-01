@@ -70,7 +70,7 @@ export const _description = styled.p`
   margin-bottom: 16px;
 `;
 
-export const _link = styled(m.a)`
+export const _link = styled(m.div)`
   padding: 12px 18px;
   display: flex;
   flex-direction: row;

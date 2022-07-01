@@ -64,6 +64,7 @@ export const Onboarding = ({ home }) => {
     visitCasters,
     modalBuyLADA,
     web3AuthConnect,
+    openDrawerTrade,
   } = useActions();
   const getFunds = async () => {
     setNoFunds((await client.getSOLBalance()) === 0);
@@ -212,16 +213,7 @@ export const Onboarding = ({ home }) => {
                 </_button>
                 <span>or</span>
                 <_link
-                  href={
-                    resources.lada !== 0 || casters?.length !== 0
-                      ? '#'
-                      : 'https://jup.ag/swap/USDC-LADA'
-                  }
-                  target={
-                    resources.lada !== 0 || casters?.length !== 0
-                      ? '_self'
-                      : '_blank'
-                  }
+                  onClick={() => openDrawerTrade()}
                   disabled={resources?.lada !== 0 || casters?.length !== 0}
                   $disabled={resources?.lada !== 0 || casters?.length !== 0}
                   style={{ marginLeft: 8 }}
