@@ -1,11 +1,12 @@
 import * as anchor from '@project-serum/anchor';
-import { Connection, Keypair } from '@solana/web3.js';
+import { Connection, ConnectionConfig, Keypair } from '@solana/web3.js';
 import laddercasterIDLMain from '../config/laddercast-mainnet.json';
 import laddercasterIDLMainPriv from '../config/laddercast-mainnet-priv.json';
 import laddercasterIDLDev from '../config/laddercast-dev.json';
 import laddercasterIDLLocal from '../config/laddercast-local.json';
 import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import jwt from 'jsonwebtoken';
 
 export type Environment =
   | 'mainnet'
@@ -23,7 +24,7 @@ export class Client {
   ) {}
 
   static async connect(wallet: NodeWallet, env: Environment): Promise<Client> {
-    const conn = Client.getConnection(env);
+    const conn = await Client.getConnection(env);
 
     const program = Client.getProgram(conn, wallet, env);
 
@@ -45,8 +46,12 @@ export class Client {
       : null;
   }
 
-  static getConnection(env: Environment): anchor.web3.Connection {
-    return new anchor.web3.Connection(this.getRPC(env));
+  static async getConnection(
+    env: Environment,
+  ): Promise<anchor.web3.Connection> {
+    const [url, config] = await this.getRPC(env);
+    if (config) return new anchor.web3.Connection(url, config);
+    return new anchor.web3.Connection(url);
   }
 
   static getIDL(env: Environment) {
@@ -67,22 +72,50 @@ export class Client {
     }
   }
 
-  static getRPC(env: Environment) {
+  static async getRPC(env: Environment): Promise<[string, ConnectionConfig]> {
     switch (env) {
       case 'mainnet-priv':
       case 'mainnet': {
-        return 'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/';
+        return [
+          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
+          {},
+        ];
       }
       case 'localnet': {
-        return 'http://localhost:8899';
+        return ['http://localhost:8899', {}];
       }
       case 'localprod': {
-        return 'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/';
+        console.log(`Bearer ${await this.getBearerToken()}`);
+        return [
+          'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/',
+          {
+            httpHeaders: {
+              Authorization: `Bearer ${await this.getBearerToken()}`,
+            },
+          },
+        ];
       }
       case 'devnet': {
-        return 'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/';
+        return [
+          'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/',
+          {},
+        ];
       }
     }
+  }
+
+  static async getBearerToken() {
+    // read private key
+
+    const privateKey = require('../../../../../../jwt/private_key.json');
+
+    //Create payload and JWT
+    var token = jwt.sign({}, privateKey, {
+      algorithm: 'RS256', //algo used to create JWT
+      expiresIn: '2d', // set a 2 day expiration
+    });
+
+    return token;
   }
 
   async getSOLBalance() {
