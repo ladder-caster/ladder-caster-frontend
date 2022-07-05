@@ -54,12 +54,13 @@ const Web3AuthInjecter = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        const [url] = await Client.getRPC(
+          (process.env.REACT_APP_ENV as Environment) || 'localnet',
+        );
         const web3AuthInstance = new Web3AuthCore({
           chainConfig: {
             chainNamespace: ADAPTER_NAMESPACES.SOLANA,
-            rpcTarget: Client.getRPC(
-              (process.env.REACT_APP_ENV as Environment) || 'localnet',
-            ),
+            rpcTarget: url,
           },
         });
 
