@@ -440,8 +440,8 @@ const Remix = () => {
     if (client && !gameConstants.clientInitialized()) {
       gameConstants.initClient(client);
     }
-    if (client && !arweave.isMerkleInit) {
-      arweave.isMerkleInit();
+    if (client && !arweave.isMerkleInit()) {
+      arweave.initMerkle();
     }
   }, [game, client]);
 

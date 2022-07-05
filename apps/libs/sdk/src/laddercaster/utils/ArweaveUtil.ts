@@ -67,7 +67,7 @@ class ArweaveUtil implements ArweaveUtilInterface {
 
   async getCasterUri(caster: Caster) {
     const lookupTable = (
-      await axios.get(arweaveUtil.merkle['merkleStruct']['combined'])
+      await axios.get(this.merkle['merkleStruct']['combined'])
     ).data;
 
     return lookupTable['caster'][caster.seasonNumber][caster.version][
@@ -78,8 +78,8 @@ class ArweaveUtil implements ArweaveUtilInterface {
   async getItemUri(item: Item, itemType: string) {
     const url =
       itemType === 'combined' || itemType === 'spellbook'
-        ? arweaveUtil.merkle['merkleStruct'][itemType]
-        : arweaveUtil.merkle['merkleStruct'][itemType][item.level];
+        ? this.merkle['merkleStruct'][itemType]
+        : this.merkle['merkleStruct'][itemType][item.level];
     const lookupTable = (await axios.get(url)).data;
 
     switch (Object.keys(item.itemType)[0]) {
