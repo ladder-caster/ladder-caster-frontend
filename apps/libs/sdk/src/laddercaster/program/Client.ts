@@ -85,7 +85,6 @@ export class Client {
         return ['http://localhost:8899', {}];
       }
       case 'localprod': {
-        console.log(`Bearer ${await this.getBearerToken()}`);
         return [
           'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/',
           {
