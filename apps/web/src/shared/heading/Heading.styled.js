@@ -10,6 +10,7 @@ export const _title = styled.h3`
 
 export const _divider = styled.div`
   ${({ theme }) => theme.styles?.view?.['_divider']};
+  margin-top: 0;
 `;
 
 export const _container = styled.div`

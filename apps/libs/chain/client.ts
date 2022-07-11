@@ -1,8 +1,8 @@
 import * as anchor from '@project-serum/anchor';
-import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import NodeWallet from 'sdk/src/utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import laddercasterIDL from './laddercast.json';
-import { Client, Environment } from 'sdk/src/laddercaster/program';
+import { Client, Environment } from 'sdk/src/program';
 
 export const LOCAL_SECRET = 'LOCAL_SECRET';
 

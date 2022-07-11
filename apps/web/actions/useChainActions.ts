@@ -88,7 +88,7 @@ import {
   PlayerContext,
   Caster,
   SerumContext,
-} from 'sdk/src/laddercaster/program';
+} from 'sdk/src/program';
 import { Market } from '@project-serum/serum';
 import * as anchor from '@project-serum/anchor';
 import {
@@ -111,8 +111,6 @@ import {
   INST_OPEN_CHEST,
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
-  RPC_ERROR,
-  RPC_LOADING,
   INST_BURN_NFT,
   INST_CLAIM_ALL,
   INST_PRESTIGE_CASTER,
