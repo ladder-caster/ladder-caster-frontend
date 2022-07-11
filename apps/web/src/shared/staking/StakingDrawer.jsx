@@ -6,7 +6,7 @@ import {
   _icon,
   _title,
   _breakpoint,
-  _body,
+  _card_container,
   _card,
   _card_icon,
   _card_text,
@@ -67,7 +67,10 @@ const StakingDrawer = () => {
         </_float>
       </_header>
       <_breakpoint />
-      <_body>{stakingCards}</_body>
+      <_card_container>{stakingCards}</_card_container>
+      <_breakpoint />
+      <_title>{t('drawer.staking.pfp.title')}</_title>
+      <_card_container></_card_container>
     </_staking>
   );
 };

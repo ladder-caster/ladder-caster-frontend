@@ -69,11 +69,11 @@ export const _breakpoint = styled.div`
   margin-bottom: 16px;
 `;
 
-export const _body = styled.div`
+export const _card_container = styled.div`
   display: flex;
   height: 100%;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   gap: 4px;
 `;
 export const _card = styled(m.div).attrs(({ theme }) => {
