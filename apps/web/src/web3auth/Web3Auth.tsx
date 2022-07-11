@@ -21,7 +21,7 @@ import {
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useW3A } from 'chain/hooks/useW3A';
-import { Client, Environment } from 'sdk/src';
+import { Client, Environment } from 'sdk/src/program';
 
 export const solanaChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,

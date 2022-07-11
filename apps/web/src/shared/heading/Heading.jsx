@@ -59,8 +59,6 @@ const Heading = ({ title, flat, marketplace }) => {
           {marketplace ? <Redeem /> : <Trade />}
         </_container>
       </_title>
-      <Ticks />
-      {!lootAll && <Phases />}
       {!flat || (flat && !initialized) || (flat && casters?.length === 0) ? (
         <_divider />
       ) : null}
