@@ -26,14 +26,8 @@ import {
 import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  DEMO_MODE,
-  GAME_INIT,
-  GAME_RESOURCES,
-  USER_PHASE,
-} from 'core/remix/state';
+import { GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
 import { IconWallet } from 'design/icons/wallet.icon';
@@ -47,7 +41,6 @@ import { IconGoogle } from '../../../../../../libs/design/icons/google.icon';
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
   const [noFunds, setNoFunds] = useState(false);
-  const [demo] = useRemix(DEMO_MODE);
   const [player] = useRemix(CHAIN_PLAYER);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [resources] = useRemix(GAME_RESOURCES);
@@ -59,7 +52,6 @@ export const Onboarding = ({ home }) => {
   const { openDrawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
-    startDemo,
     initPlayer,
     visitCasters,
     modalBuyLADA,
@@ -74,18 +66,13 @@ export const Onboarding = ({ home }) => {
     setVisible(true);
   };
 
-  const generateTestWallet = async () => {
-    createLocalWallet();
-    if (demo) startDemo();
-  };
-
   useEffect(() => {
     if (client) {
       getFunds();
     }
   }, [client]);
 
-  const { active, account, hasPlayer, initialized } = useMemo(() => {
+  const { active, account, initialized, hasPlayer } = useMemo(() => {
     if (client !== undefined) {
       const account = player;
       return {
@@ -95,14 +82,8 @@ export const Onboarding = ({ home }) => {
         hasPlayer: player,
       };
     }
-    const account = demo?.player && demo?.ladaAccount;
-    return {
-      active: demo?.active,
-      account,
-      initialized: account && demo?.active,
-      hasPlayer: demo?.player,
-    };
-  }, [client, demo, player]);
+    return {};
+  }, [client, player]);
 
   useEffect(() => {
     if (isSetInitReady) setInitalized(initialized);
@@ -139,14 +120,6 @@ export const Onboarding = ({ home }) => {
               </_google>
               <_warning>{t('onboarding.google.warning')}</_warning>
             </_beta>
-            {demo ? (
-              <AnimateButton low>
-                <_button $long onClick={() => generateTestWallet()}>
-                  <IconWallet />
-                  <span>{t('connect.local_wallet')}</span>
-                </_button>
-              </AnimateButton>
-            ) : null}
           </_actions>
         </_section>
       )}

@@ -62,7 +62,7 @@ const ModalMint = () => {
         </_title>
         <_breakpoint />
         <_description>
-          {t('modal.demo.description', { count, cost, name })}
+          {t('modal.buy.description', { count, cost, name })}
         </_description>
         <_count>
           <_count_button onClick={decrement}>

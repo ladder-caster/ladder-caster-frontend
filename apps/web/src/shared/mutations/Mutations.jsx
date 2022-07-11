@@ -16,7 +16,6 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   CREATE_MUTATION,
   USER_OFFLINE,
-  ERROR_CODES,
   GAME_CONSTANTS,
 } from 'core/remix/state';
 import usePrevious from 'core/hooks/usePrevious';
@@ -41,7 +40,6 @@ const Mutations = withTheme(({ theme }) => {
   const mutations_ref = useRef();
   const { width, height } = useSize(mutations_ref);
   const [mutation, setMutation] = useRemix(CREATE_MUTATION);
-  const [codes] = useRemix(ERROR_CODES);
   const [offline, setOffline] = useRemix(USER_OFFLINE);
   const [queue, setQueue] = useState([]);
   const [gameConstants] = useRemix(GAME_CONSTANTS);

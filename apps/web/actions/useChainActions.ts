@@ -23,10 +23,8 @@ import {
   EQUIP_ITEM,
   UNEQUIP_ITEM,
   MODAL_REDEEM,
-  MODAL_ORDER,
   GAME_RESOURCES,
   TOKENS_ACTIVE,
-  GAME_BOOST,
   TYPE_RES1,
   TYPE_RES2,
   TYPE_RES3,
@@ -45,15 +43,12 @@ import {
   GAME_MAP,
   WEB3AUTH_CLIENT,
   WEB3AUTH_PROVIDER,
-  WEB3AUTH_PLUGIN_STORE,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
-  GAME_CONSTANTS,
   DRAWER_TRADE,
   RARITY_COMMON,
   MODAL_BURN,
-  CASTER_UPGRADE_AVAILABLE,
   SIDE_BUY,
   TRADE_ORDERBOOK,
   SIDE_SELL,
@@ -70,7 +65,6 @@ import {
   CHAIN_ITEMS,
   CHAIN_LOCAL_CLIENT,
   CHAIN_PLAYER,
-  CHAIN_NFTS,
   CHAIN_OLD_CASTERS,
 } from 'chain/hooks/state';
 import { COINS } from 'core/utils/markets';
@@ -123,7 +117,7 @@ import {
   INIT_STATE_TRADE,
 } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
-import { map, find, indexOf, filter, isArray } from 'lodash';
+import { map, find, filter } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
@@ -136,7 +130,7 @@ export const useChainActions = () => {
   const [, setCasterTab] = useRemix(TABS_CHARACTER_ACTIONS);
   const [, setWalletTab] = useRemix(TABS_MINT_REDEEM);
   const [, setModal] = useRemix(MODAL_ACTIVE);
-  const [drawer, setDrawer, isSetDrawer] = useRemix(DRAWER_ACTIVE);
+  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [context, setContext] = useRemix(DRAWER_CONTEXT);
   const [, setPhase] = useRemix(USER_PHASE);
   const [, setEquip] = useRemix(EQUIP_ITEM);
@@ -161,7 +155,6 @@ export const useChainActions = () => {
   const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
 
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const stateHandler = async (rpcCallback, type, retry_id) => {
     const id = retry_id || nanoid();
 
@@ -418,7 +411,6 @@ export const useChainActions = () => {
     }
   };
   return {
-    startDemo() {},
     confirmBurn,
     closeDrawer() {
       setDrawer('');
@@ -454,7 +446,7 @@ export const useChainActions = () => {
       setModal({
         active: true,
         type: MODAL_MINT,
-        description: t('modal.demo.description'),
+        description: t('modal.buy.description'),
         accept: async (count) => {
           const casterContext = new CasterContext();
 
@@ -1655,54 +1647,22 @@ export const useChainActions = () => {
     },
     async unequipAllItems(caster: Caster) {
       if (!caster) return;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
+      const foundCaster = find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
       );
-
-      const casterItems = await upgradeAvailable?.getEquippedItems(
-        caster.publicKey,
-      );
-      if (casterItems.length == 0) return;
+      const casterContext = new CasterContext(foundCaster);
+      const casterItems: any[] = [];
+      const keys = Object.keys(caster || {});
+      for (let i = 0; i < keys.length; i++) {
+        const item = caster[keys[i]]?.currentItem;
+        if (item) {
+          casterItems.push(item);
+        }
+      }
       await stateHandler(
         async () => {
           return await casterContext.unequipAllItems(casterItems);
-        },
-        INST_UNEQUIP,
-        '',
-      );
-    },
-    async upgradeAllItems(caster: Caster) {
-      if (!caster) return;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
-
-      const casterWrapper = await upgradeAvailable?.casters?.get(
-        caster?.publicKey,
-      );
-
-      if (!casterWrapper) return;
-      const keys = Object.keys(casterWrapper);
-      const casterItems: any[] = [];
-      for (let i = 0; i < keys.length; i++) {
-        const items = casterWrapper[keys[i]]?.items;
-        const item = upgradeAvailable.items.get(items?.[0]);
-        if (!items || items?.length <= 0 || !item) continue;
-        casterItems.push(item);
-      }
-      upgradeAvailable.removeUpgrade(casterItems);
-
-      //if(casterItems.length == 0)return;
-
-      await stateHandler(
-        async () => {
-          return await casterContext.equipBestGear(casterItems);
         },
         INST_UNEQUIP,
         '',

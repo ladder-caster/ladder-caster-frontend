@@ -19,7 +19,6 @@ const Zindex = {
   modal_base: 148,
   modal_high: 149,
   mobile_header: 150,
-  mobile_demo: 151,
   drawer_low: 180,
   drawer_base: 181,
   drawer_high: 182,

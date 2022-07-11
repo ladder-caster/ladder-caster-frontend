@@ -47,8 +47,6 @@ export const CREATE_MUTATION = 'CREATE_MUTATION';
 export const CREATE_QUERY = 'CREATE_QUERY';
 
 export const SEEN_PHASE = 'SEEN_PHASE';
-export const ERROR_CODES = 'ERROR_CODES';
-export const DEMO_MODE = 'DEMO_MODE';
 export const DASHBOARD_STATE = 'DASHBOARD_STATE';
 export const GAME_RESOURCES = 'GAME_RESOURCES';
 export const GAME_INVENTORY = 'GAME_INVENTORY';
@@ -63,7 +61,6 @@ export const GAME_CONFIRM = 'GAME_CONFIRM';
 export const GAME_SPELL = 'GAME_CONFIRM';
 export const GAME_BOOST = 'GAME_BOOST';
 export const GAME_INIT = 'GAME_INIT';
-export const CASTER_UPGRADE_AVAILABLE = 'CASTER_UPGRADE_AVAILABLE';
 export const UNEQUIP_ALL = 'UNEQUIP_ALL';
 
 export const SPELLCASTER_BUY = 'SPELLCASTER_BUY';
