@@ -13,7 +13,6 @@ const Header = () => {
         <_left>
           <_link to={PUBLIC_HOME}>LadderCaster</_link>
         </_left>
-        <_right>{!isGame && <_link to={PUBLIC_GAME}>Demo</_link>}</_right>
       </_container>
     </_header>
   );

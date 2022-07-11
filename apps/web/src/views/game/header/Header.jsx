@@ -23,7 +23,6 @@ import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
-  DEMO_MODE,
   GAME_INIT,
   GAME_RESOURCES,
   TYPE_RES3,
@@ -42,7 +41,6 @@ const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const { openDrawerTokens } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
-  const [demo] = useRemix(DEMO_MODE);
   const [resources] = useRemix(GAME_RESOURCES);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [initialized] = useRemix(GAME_INIT);
@@ -59,21 +57,16 @@ const Header = withTheme(({ theme }) => {
           {t('header.day')}{' '}
           {!isNaN(gameConstants?.gameState?.turnInfo?.turn)
             ? gameConstants?.gameState?.turnInfo?.turn
-            : demo?.num_ticks}
+            : 0}
         </_speed>
       </_controls>
     ) : null;
-  }, [
-    gameConstants?.gameState?.turnInfo?.turn,
-    demo?.num_ticks,
-    casters?.length,
-    initialized,
-  ]);
+  }, [gameConstants?.gameState?.turnInfo?.turn, casters?.length, initialized]);
 
   return (
     <_header>
       <_container>
-        <_left onClick={() => demo && openDrawerTokens()}>
+        <_left>
           <_coin>
             <_icon $background={theme.element['legendary']}>
               <IconMoneyIMG />

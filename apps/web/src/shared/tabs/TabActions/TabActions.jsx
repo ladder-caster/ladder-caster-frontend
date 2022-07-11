@@ -3,10 +3,9 @@ import { _container, _row, _player_actions, _text } from './TabActions.styled';
 import { useTranslation } from 'react-i18next';
 import Pill from '../../button/pill/Pill';
 import { useActions } from '../../../../actions';
-const TabAction = ({ caster, pulse }) => {
+const TabAction = ({ caster }) => {
   const { t } = useTranslation();
   const { unequipAllItems, upgradeAllItems } = useActions();
-  const canUpgrade = pulse ?? false;
   const equipBlocked = !!caster?.turnCommit ?? false;
   const unequip = () => {
     unequipAllItems(caster);
@@ -31,7 +30,6 @@ const TabAction = ({ caster, pulse }) => {
             <Pill
               disabled={!canUpgrade || equipBlocked}
               onClick={upgrade}
-              $pulse={canUpgrade}
               text={t('player.actions.main.upgrade_all')}
             />
           </_row>

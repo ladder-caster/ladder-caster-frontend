@@ -16,13 +16,12 @@ import {
 import { AnimateButton } from '../button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { DEMO_MODE, VIEW_SIZE } from 'core/remix/state';
+import { VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 
 const SettingsDrawer = () => {
   const { t } = useTranslation();
-  const [demo] = useRemix(DEMO_MODE);
   const [view_height] = useRemix(VIEW_SIZE);
 
   const {
@@ -55,31 +54,17 @@ const SettingsDrawer = () => {
       <_breakpoint />
       <_body>
         <_actions>
-          {!demo && (
-            <>
-              <>
-                <_button onClick={() => testGiveLADA()}>Test Give LADA</_button>
-                <_button onClick={() => testInitCaster()}>
-                  Create Caster
-                </_button>
-                <_button onClick={() => testGiveChest()}>
-                  Test Give Chest
-                </_button>
-                <_button onClick={() => testGiveResources()}>
-                  Test Give Resources
-                </_button>
-                <_button onClick={() => testGiveHat()}>Test Give Hat</_button>
-                <_button onClick={() => testGiveRobe()}>Test Give Robe</_button>
-                <_button onClick={() => testGiveStaff()}>
-                  Test Give Staff
-                </_button>
-                <_button onClick={() => testGiveSpell()}>
-                  Test Give Spell
-                </_button>
-                <_button onClick={() => testRefresh()}>Refresh</_button>
-              </>
-            </>
-          )}
+          <_button onClick={() => testGiveLADA()}>Test Give LADA</_button>
+          <_button onClick={() => testInitCaster()}>Create Caster</_button>
+          <_button onClick={() => testGiveChest()}>Test Give Chest</_button>
+          <_button onClick={() => testGiveResources()}>
+            Test Give Resources
+          </_button>
+          <_button onClick={() => testGiveHat()}>Test Give Hat</_button>
+          <_button onClick={() => testGiveRobe()}>Test Give Robe</_button>
+          <_button onClick={() => testGiveStaff()}>Test Give Staff</_button>
+          <_button onClick={() => testGiveSpell()}>Test Give Spell</_button>
+          <_button onClick={() => testRefresh()}>Refresh</_button>
         </_actions>
       </_body>
     </_settings>

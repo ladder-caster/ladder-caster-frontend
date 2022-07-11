@@ -91,7 +91,6 @@ const App = () => {
               />
             </Helmet>
             <_app>
-              {/*<Demo />*/}
               <Remix />
               <Web3AuthInjecter />
               <GlobalStyles />

@@ -34,7 +34,6 @@ export const _left = styled.div`
   justify-content: flex-start;
   padding-left: 16px;
   height: 100%;
-  cursor: pointer;
   overflow-x: scroll;
 `;
 
