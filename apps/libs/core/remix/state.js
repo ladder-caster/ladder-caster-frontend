@@ -1,4 +1,3 @@
-export const USER_LANGUAGE = 'USER_LANGUAGE';
 export const USER_THEME = 'USER_THEME';
 export const USER_OFFLINE = 'USER_OFFLINE';
 export const USER_AUTO_CONNECT = 'USER_AUTO_CONNECT';
@@ -11,7 +10,6 @@ export const PHASE_ACTIONS = 'PHASE_ACTIONS';
 export const DRAWER_ACTIVE = 'DRAWER_ACTIVE';
 export const DRAWER_CONTEXT = 'DRAWER_CONTEXT';
 export const TOKENS_ACTIVE = 'TOKENS_ACTIVE';
-export const ACTION_VIEW = 'ACTION_VIEW';
 export const EQUIP_ITEM = 'EQUIP_ITEM';
 export const UNEQUIP_ITEM = 'UNEQUIP_ITEM';
 export const WALLET_AUTO_CONNECT = 'WALLET_AUTO_CONNECT';
@@ -23,7 +21,6 @@ export const CONFIRM_UNEQUIP = 'CONFIRM_UNEQUIP';
 export const CRAFT_MATERIALS = 'CRAFT_MATERIALS';
 export const CRAFT_ITEM = 'CRAFT_ITEM';
 export const CRAFT_CHARACTER = 'CRAFT_CHARACTER';
-export const CRAFT_CONFIRM = 'CRAFT_CONFIRM';
 
 export const VIEW_SIZE = 'VIEW_SIZE';
 
@@ -44,35 +41,24 @@ export const DRAWER_CRANK = 'DRAWER_CRANK';
 export const DRAWER_TRADE = 'DRAWER_TRADE';
 
 export const CREATE_MUTATION = 'CREATE_MUTATION';
-export const CREATE_QUERY = 'CREATE_QUERY';
 
 export const SEEN_PHASE = 'SEEN_PHASE';
-export const DASHBOARD_STATE = 'DASHBOARD_STATE';
 export const GAME_RESOURCES = 'GAME_RESOURCES';
 export const GAME_INVENTORY = 'GAME_INVENTORY';
-export const GAME_OPTIONS = 'GAME_OPTIONS';
 export const GAME_SPELLCASTERS = 'GAME_SPELLCASTERS';
 export const GAME_OLD_SPELLCASTERS = 'GAME_OLD_SPELLCASTERS';
 export const GAME_MAP = 'GAME_MAP';
-export const GAME_TICKS = 'GAME_TICKS';
-export const GAME_POSITIONS = 'GAME_POSITIONS';
-export const GAME_MOVES = 'GAME_MOVES';
 export const GAME_CONFIRM = 'GAME_CONFIRM';
-export const GAME_SPELL = 'GAME_CONFIRM';
-export const GAME_BOOST = 'GAME_BOOST';
+export const GAME_SPELL = 'GAME_SPELL';
 export const GAME_INIT = 'GAME_INIT';
-export const UNEQUIP_ALL = 'UNEQUIP_ALL';
 
 export const SPELLCASTER_BUY = 'SPELLCASTER_BUY';
 export const PLAYER_CHARACTER = 'PLAYER_CHARACTER';
 export const PLAYER_ACTIONS = 'PLAYER_ACTIONS';
 export const PLAYER_LEADERBOARD = 'PLAYER_LEADERBOARD';
 export const TABS_CHARACTER_ACTIONS = 'TABS_CHARACTER_ACTIONS';
-export const PLAYER_TAB_ACTIONS = 'PLAYER_TAB_ACTIONS';
 export const MODAL_ACTIVE = 'MODAL_ACTIVE';
 export const MODAL_MINT = 'MODAL_MINT';
-export const MODAL_SUCCESS = 'MODAL_SUCCESS';
-export const MODAL_ERROR = 'MODAL_ERROR';
 export const MODAL_LOOT = 'MODAL_LOOT';
 export const MODAL_SPELL = 'MODAL_SPELL';
 export const MODAL_MOVE = 'MODAL_MOVE';
@@ -84,21 +70,6 @@ export const MODAL_BURN = 'MODAL_BURN';
 export const PRESTIGE_TOGGLE = 'PRESTIGE_TOGGLE';
 export const MODAL_ORDER = 'MODAL_ORDER';
 export const MODAL_SWAP = 'MODAL_SWAP';
-
-export const ENCHANT_SHIELD = 'ENCHANT_SHIELD';
-export const ENCHANT_XP = 'ENCHANT_XP';
-export const ENCHANT_MOVE = 'ENCHANT_MOVE';
-export const ENCHANT_MAGIC = 'ENCHANT_MAGIC';
-export const ENCHANT_MINING = 'ENCHANT_MINING';
-export const ENCHANT_SPELL = 'ENCHANT_SPELL';
-export const ENCHANT_TREASURE = 'ENCHANT_TREASURE';
-export const ENCHANT_CRAFTING = 'ENCHANT_CRAFTING';
-
-export const ACTION_MINING = 'ACTION_MINING';
-export const ACTION_MOVE = 'ACTION_MOVE';
-export const ACTION_CRAFT = 'ACTION_CRAFT';
-export const ACTION_SPELL = 'ACTION_SPELL';
-export const ACTION_EQUIP = 'ACTION_EQUIP';
 
 export const TYPE_RES1 = 'resource1';
 export const TYPE_RES2 = 'resource2';
@@ -112,10 +83,8 @@ export const TILE_ACTIVE = 'TILE_ACTIVE';
 export const TILE_GLOWING = 'TILE_GLOWING';
 export const TILE_CHIP = 'TILE_CHIP';
 export const TILE_DISABLED = 'TILE_DISABLED';
-export const TILE_EMPTY = 'TILE_EMPTY';
 
 export const CONFIRM_MOVE = 'CONFIRM_MOVE';
-export const CONFIRM_CHEST = 'CONFIRM_CHEST';
 
 export const ITEM_HAT = 'head';
 export const ITEM_ROBE = 'robe';
@@ -165,18 +134,11 @@ export const STANDARD_TYPE = 'STANDARD_TYPE';
 export const W3A_TYPE = 'W3A_TYPE';
 export const BURNER_TYPE = 'BURNER_TYPE';
 
-export const LOADING_CASTERS = 'LOADING_CASTERS';
-export const FORCE_RERENDER = 'FORCE_RERENDER';
-
 export const WEB3AUTH_CLIENT = 'WEB3AUTH_CLIENT';
 export const WEB3AUTH_PROVIDER = 'WEB3AUTH_PROVIDER';
 export const WEB3AUTH_PLUGIN_STORE = 'WEB3AUTH_PLUGIN_STORE';
 
 export const PRESTIGE_HIDE = 'PRESTIGE_HIDE';
-export const RESOURCE1_TOKEN_ACCOUNT = 'RESOURCE1_TOKEN_ACCOUNT';
-export const RESOURCE2_TOKEN_ACCOUNT = 'RESOURCE2_TOKEN_ACCOUNT';
-export const RESOURCE3_TOKEN_ACCOUNT = 'RESOURCE3_TOKEN_ACCOUNT';
-export const LADA_TOKEN_ACCOUNT = 'LADA_TOKEN_ACCOUNT';
 export const GAME_CONSTANTS = 'GAME_CONSTANTS';
 export const ARWEAVE_UTILS = 'ARWEAVE_UTILS';
 export const OLD_SEASON = 2;

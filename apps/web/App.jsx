@@ -3,16 +3,10 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, _app, _view } from 'design/styles/global';
 import { styles, theme, zindex } from 'design';
 import { Route, Switch } from 'react-router-dom';
-import {
-  VIEW_SIZE,
-  USER_LANGUAGE,
-  USER_THEME,
-  USER_AUTO_CONNECT,
-} from 'core/remix/state';
+import { VIEW_SIZE, USER_THEME, USER_AUTO_CONNECT } from 'core/remix/state';
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
-import Header from './src/shared/header/Header';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import Remix from './src/remix/Remix';
 import { nanoid } from 'nanoid';
@@ -43,15 +37,12 @@ const withThemes = ({ palette = 'dark' }) => ({
   zindex,
 });
 
-const ticks_key = nanoid();
-
 const App = () => {
   const [, setAutoConnect] = useState(false);
 
   useOffline();
   const { vh } = useMobileHeight();
   useRemixOrigin(VIEW_SIZE, {});
-  useRemixOrigin(USER_LANGUAGE, 'en');
   const [theme] = useRemixOrigin(USER_THEME, 'gold');
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
@@ -94,7 +85,6 @@ const App = () => {
               <Remix />
               <Web3AuthInjecter />
               <GlobalStyles />
-              <Header />
               <_view $vh={vh}>
                 <Switch>
                   <Route exact path={`${PUBLIC_GAME}`}>

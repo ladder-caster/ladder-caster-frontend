@@ -2,11 +2,9 @@ import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { useAutoSignIn } from 'core/hooks/useAutoSignIn';
 import {
   EQUIP_ITEM,
-  GAME_BOOST,
   GAME_CONFIRM,
   GAME_INVENTORY,
   GAME_MAP,
-  GAME_OPTIONS,
   GAME_RESOURCES,
   GAME_SPELL,
   GAME_SPELLCASTERS,
@@ -119,24 +117,10 @@ const Remix = () => {
   useRemixOrigin(TABS_SWAP_ORDER, TAB_SWAP);
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
-  useRemixOrigin(GAME_BOOST, {
-    [TYPE_RES2]: 0,
-    [TYPE_RES1]: 0,
-    [TYPE_RES3]: 0,
-  });
   useRemixOrigin(
     PRESTIGE_TOGGLE,
     localStorage.getItem('hide_prestige') === 'true',
   );
-
-  // TODO: Remove! Only added for esthetics
-  useRemixOrigin(GAME_OPTIONS, {
-    base: 1200,
-    speed: 120,
-    reward: 10,
-    bars: 3,
-    land: 3,
-  });
 
   const { request: requestCachePubKey } = useAutoSignIn();
 
