@@ -12,7 +12,7 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { Client } from '../../sdk/src/program/Client';
 import { GameContext } from '../../sdk/src/program/GameContext';
 import { PlayerContext } from '../../sdk/src/program';
-import { GAME_RESOURCES, LOADING_CASTERS } from 'core/remix/state';
+import { GAME_RESOURCES } from 'core/remix/state';
 
 export const useGame = () => {
   const [game, setGame] = useRemix(CHAIN_GAME);
@@ -34,7 +34,7 @@ export const useGame = () => {
         if (client) {
           const gameContext = new GameContext(
             client,
-            localStorage.getItem('gamePK'),
+            localStorage.getItem('gamePK') as string,
           );
 
           const next_game = await gameContext.getGameAccount();

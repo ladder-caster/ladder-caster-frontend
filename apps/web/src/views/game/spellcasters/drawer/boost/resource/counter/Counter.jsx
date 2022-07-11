@@ -8,7 +8,7 @@ import {
   _big,
 } from './Counter.styled';
 import { useActions } from '../../../../../../../../actions';
-import { DRAWER_ACTIVE, DRAWER_CONTEXT, GAME_BOOST } from 'core/remix/state';
+import { DRAWER_ACTIVE, DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { IconMinus } from 'design/icons/minus.icon';
 import { IconPlus } from 'design/icons/plus.icon';
