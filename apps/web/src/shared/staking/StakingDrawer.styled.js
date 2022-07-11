@@ -68,3 +68,61 @@ export const _breakpoint = styled.div`
   box-shadow: ${({ theme }) => theme.shadow['divider']};
   margin-bottom: 16px;
 `;
+
+export const _body = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  gap: 4px;
+`;
+export const _card = styled(m.div).attrs(({ theme }) => {
+  //animations for card
+  return {
+    whileHover: {
+      scale: 1.05,
+      background: theme.background['high'],
+      borderColor: theme.border['higher'],
+    },
+    whileTap: {
+      scale: 0.95,
+    },
+  };
+})`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: ${({ theme }) => theme.background['base']};
+  box-shadow: ${({ theme }) => theme.shadow['glass']};
+  cursor: pointer;
+  border: 1px solid ${({ theme }) => theme.border['base']};
+`;
+export const _card_text = styled.div.attrs(({ theme }) => {
+  return {
+    whileHover: {
+      color: theme.text['higher'],
+    },
+  };
+})`
+  width: 100%;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text['high']};
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+`;
+export const _card_group = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+`;
+export const _card_icon = styled(m.div)`
+  width: 8px;
+  height: 8px;
+`;
