@@ -44,12 +44,7 @@ let end = '';
 
 const CrankDrawer = () => {
   const { t } = useTranslation();
-  const {
-    closeDrawer,
-    nextTurn,
-    claimAllRewards,
-    lootAllResources,
-  } = useActions();
+  const { closeDrawer, crankTurn } = useActions();
   const [game] = useRemix(CHAIN_GAME);
   const [time, setTime] = useState({});
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
@@ -155,23 +150,9 @@ const CrankDrawer = () => {
       <_description>{t('drawer.turn.description')}</_description>
       <_timer>{timer}</_timer>
       <_countdown>{!ended ? time?.end : t('drawer.turn.ended')}</_countdown>
-      <_button disabled={!ended} $disabled={!ended} onClick={() => nextTurn()}>
+      <_button disabled={!ended} $disabled={!ended} onClick={() => crankTurn()}>
         {t('drawer.turn.action')}
       </_button>
-      {/*<_button*/}
-      {/*  disabled={!claim}*/}
-      {/*  $disabled={!claim}*/}
-      {/*  onClick={() => claimAllRewards()}*/}
-      {/*>*/}
-      {/*  {t('drawer.crank.claim.all')}*/}
-      {/*</_button>*/}
-      {/*<_button*/}
-      {/*  disabled={!loot}*/}
-      {/*  $disabled={!loot}*/}
-      {/*  onClick={() => lootAllResources()}*/}
-      {/*>*/}
-      {/*  {t('drawer.crank.loot.all')}*/}
-      {/*</_button>*/}
     </_crank>
   );
 };

@@ -21,26 +21,25 @@ import {
   _count_counter,
   _count_button_text,
 } from './ModalMint.styled';
+
 const ModalMint = () => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
-  const [modal] = useRemix(MODAL_ACTIVE);
+  const { closeModal } = useActions();
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const button_ref = useRef();
   const [count, setCount] = useState(1);
   const [cost, name] = useMemo(() => {
     return [count * 1000, count > 1 ? 'Wizards' : 'Wizard'];
   }, [count]);
-  useClickOutside(button_ref, () => modalClear({}));
-
-  const active = modal?.active;
+  const { buyCaster } = useActions();
+  useClickOutside(button_ref, () => closeModal({}));
 
   const accept = () => {
-    if (active && modal?.accept) modal?.accept(count);
-    modalClear();
+    buyCaster();
+    closeModal();
   };
   const deny = () => {
-    if (active && modal?.deny) modal?.deny();
+    closeModal();
   };
   const handleSetCount = (value) => {
     if (!value || isNaN(value)) return;

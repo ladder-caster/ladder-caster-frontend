@@ -28,7 +28,7 @@ import NFT from '../../../nft/NFT';
 import { _level, _overlay } from '../../../item/Item.styled';
 const ModalChest = () => {
   const { t } = useTranslation();
-  const { modalClear, confirmChest } = useActions();
+  const { closeModal, openChest } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
   const grid_ref = useRef();
   const [inventory] = useRemix(GAME_INVENTORY);
@@ -57,7 +57,7 @@ const ModalChest = () => {
   if (chests?.length > 0 && chestEmptyLimit !== 0)
     chestEmptyLimit =
       columnCount - chestEmptyLimit >= 0 ? columnCount - chestEmptyLimit : 0;
-  useClickOutside([grid_ref], () => modalClear());
+  useClickOutside([grid_ref], () => closeModal());
   const emptyGrid = chestEmptyLimit > 0 ? Array(chestEmptyLimit).keys() : [];
   const gridMap = [...chests, ...emptyGrid];
 
@@ -72,7 +72,7 @@ const ModalChest = () => {
             return (
               <_grid_item_selectable
                 key={'chest_full_' + index}
-                onClick={() => confirmChest(chest?.mint || chest)}
+                onClick={() => openChest(chest?.mint || chest)}
               >
                 <_overlay>
                   <_level>

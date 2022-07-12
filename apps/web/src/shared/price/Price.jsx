@@ -5,7 +5,7 @@ import { orderbookFill } from 'core/utils/numbers';
 import { useActions } from '../../../actions';
 
 const Price = () => {
-  const { openDrawerTrade } = useActions();
+  const { drawerTrade } = useActions();
   const orderbook = useOrderbook('LADA', 'USDC');
   const asks = orderbook?.['LADA/USDC']?.asks;
   const filled = orderbookFill(1, asks);
@@ -14,7 +14,7 @@ const Price = () => {
   const fill = filled?.amount ? `${min_percent}%` : '5%';
 
   return (
-    <_price onClick={() => openDrawerTrade()}>
+    <_price onClick={() => drawerTrade()}>
       <_rate>1 USDC = {filled?.amount} LADA</_rate>
       <_progress>
         <_container>

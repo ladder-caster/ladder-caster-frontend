@@ -7,14 +7,14 @@ import { useActions } from '../../../../../../actions';
 
 const RedeemConfirm = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
-  const { confirmRedeem } = useActions();
+  const { redeemNFT } = useActions();
 
   return (
     <_confirm>
       <_display>
         <NFT nft={context?.nft} />
       </_display>
-      <_button onClick={() => confirmRedeem()}>Confirm</_button>
+      <_button onClick={() => redeemNFT()}>Confirm</_button>
     </_confirm>
   );
 };

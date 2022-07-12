@@ -30,7 +30,7 @@ import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
 const Category = ({ type }) => {
   const { t } = useTranslation();
-  const { openDrawerInventory } = useActions();
+  const { drawerInventory } = useActions();
   const [, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [inventory] = useRemix(GAME_INVENTORY);
   const items_ref = useRef();
@@ -90,11 +90,7 @@ const Category = ({ type }) => {
         <_item key={`${i}-category`}>
           <_cutout>
             {item && (
-              <Item
-                small
-                item={item}
-                callback={() => openDrawerInventory(item)}
-              />
+              <Item small item={item} callback={() => drawerInventory(item)} />
             )}
           </_cutout>
         </_item>,

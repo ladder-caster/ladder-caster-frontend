@@ -19,8 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 const Nav = () => {
   const { t } = useTranslation();
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const { pathname } = useLocation();
+  const [, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [view, setView] = useRemix(VIEW_NAVIGATION);
 
   return (

@@ -9,7 +9,7 @@ const isProd = process.env.REACT_APP_ENV === 'mainnet';
 
 const Connect = () => {
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const { openDrawerWallet } = useActions();
+  const { drawerWallet } = useActions();
   const publicKey = client?.wallet?.publicKey?.toBase58();
   const short_public = publicKey ? start_and_end(publicKey) : null;
   const active =
@@ -18,7 +18,7 @@ const Connect = () => {
   return (
     <_connect>
       {active && short_public && (
-        <_wallet $long={isProd} onClick={() => openDrawerWallet()}>
+        <_wallet $long={isProd} onClick={() => drawerWallet()}>
           <span>{short_public}</span>
           <IconWallet />
         </_wallet>

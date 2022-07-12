@@ -23,7 +23,7 @@ import { IconTreasure } from 'design/icons/treasure.icon';
 import { useActions } from '../../../../../actions';
 
 const Chest = ({ tier }) => {
-  const { modalChest, confirmChest } = useActions();
+  const { modalChest, openChest } = useActions();
   const [chests] = useRemix(
     GAME_INVENTORY,
     (inventory) =>
@@ -57,7 +57,7 @@ const Chest = ({ tier }) => {
 
   const handleChestClick = async () => {
     if (num_chests === 1) {
-      await confirmChest(chests[0]?.mint || chests[0]);
+      await openChest(chests[0]?.mint || chests[0]);
       return;
     }
     modalChest(tier);

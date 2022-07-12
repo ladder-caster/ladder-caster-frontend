@@ -24,7 +24,7 @@ const MintTab = () => {
   const [view_height] = useRemix(VIEW_SIZE);
   const items = inventory?.items.concat(inventory?.chests);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const { chooseMint, chooseMintCaster } = useActions();
+  const { chooseMintItem, chooseMintCaster } = useActions();
 
   const list_items = useMemo(() => {
     if (items?.length || spellcasters?.length) {
@@ -39,7 +39,7 @@ const MintTab = () => {
                   <Item
                     key={`${keyRow}-${key}-mint`}
                     callback={() => {
-                      chooseMint(item);
+                      chooseMintItem(item);
                     }}
                     item={item}
                     grid

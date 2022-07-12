@@ -331,10 +331,7 @@ const Remix = () => {
     const gamePoll = () => {
       const poll = async () => {
         const prevGame = game;
-        const gameContext = new GameContext(
-          client,
-          localStorage.getItem('gamePK') as string,
-        );
+        const gameContext = new GameContext();
         const nextGame = await gameContext.getGameAccount();
         setGame(nextGame);
 

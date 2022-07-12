@@ -17,7 +17,7 @@ import { useActions } from '../../../../../../actions';
 
 const Actions = ({ caster }) => {
   const { t } = useTranslation();
-  const { modalMove, modalSpell, modalCraft } = useActions();
+  const { modalMove, modalSpell, drawerCraft } = useActions();
 
   return (
     <_actions>
@@ -51,7 +51,7 @@ const Actions = ({ caster }) => {
           </AnimateButton>
         </_action>
       </_item>
-      <_item onClick={() => modalCraft(caster)}>
+      <_item onClick={() => drawerCraft(caster)}>
         <_wrapper>
           <_name>Craft Item</_name>
           <_description>

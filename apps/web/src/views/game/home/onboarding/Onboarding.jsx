@@ -26,7 +26,12 @@ import {
 import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
+import {
+  GAME_INIT,
+  GAME_RESOURCES,
+  USER_PHASE,
+  VIEW_NAVIGATION,
+} from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
@@ -47,16 +52,15 @@ export const Onboarding = ({ home }) => {
   const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
-  const [phase, setPhase] = useRemix(USER_PHASE);
-  const { createLocalWallet } = useLocalWallet();
-  const { openDrawerRedeem } = useActions();
+  const [, setView] = useRemix(VIEW_NAVIGATION);
+  const [phase] = useRemix(USER_PHASE);
+  const { drawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
     initPlayer,
-    visitCasters,
     modalBuyLADA,
     web3AuthConnect,
-    openDrawerTrade,
+    drawerTrade,
   } = useActions();
   const getFunds = async () => {
     setNoFunds((await client.getSOLBalance()) === 0);
@@ -75,6 +79,7 @@ export const Onboarding = ({ home }) => {
   const { active, account, initialized, hasPlayer } = useMemo(() => {
     if (client !== undefined) {
       const account = player;
+
       return {
         active: client,
         account,
@@ -89,7 +94,11 @@ export const Onboarding = ({ home }) => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if ((initLoading && active) || (!phase && casters?.length))
+  if (
+    initLoading &&
+    active
+    //BROKE this condition by removing phases || (!phase && casters?.length)
+  )
     return <Skeleton />;
 
   return (
@@ -179,14 +188,14 @@ export const Onboarding = ({ home }) => {
                   disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   $disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   style={{ marginRight: 8 }}
-                  onClick={() => openDrawerRedeem()}
+                  onClick={() => drawerRedeem()}
                   $noIcon
                 >
                   <span>{t('visit.redeem')}</span>
                 </_button>
                 <span>or</span>
                 <_link
-                  onClick={() => openDrawerTrade()}
+                  onClick={() => drawerTrade()}
                   disabled={resources?.lada !== 0 || casters?.length !== 0}
                   $disabled={resources?.lada !== 0 || casters?.length !== 0}
                   style={{ marginLeft: 8 }}
@@ -246,7 +255,7 @@ export const Onboarding = ({ home }) => {
                   disabled={casters?.length === 0}
                   $disabled={casters?.length === 0}
                   onClick={() => {
-                    if (!(casters?.length === 0)) visitCasters();
+                    if (!(casters?.length === 0)) setView(VIEW_MAP);
                   }}
                   $noIcon
                 >
