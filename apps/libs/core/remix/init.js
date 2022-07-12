@@ -1,5 +1,5 @@
 import { TYPE_RES3, TYPE_RES1, TYPE_RES2, SIDE_BUY } from './state';
-import { TAB_MINT, TAB_WALLET } from './tabs';
+import { TAB_MINT, TAB_WALLET, TAB_STAKING_HOME } from './tabs';
 import {
   COIN_EMBA,
   COIN_FRO,

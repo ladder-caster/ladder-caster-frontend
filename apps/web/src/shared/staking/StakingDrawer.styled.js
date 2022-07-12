@@ -71,49 +71,62 @@ export const _breakpoint = styled.div`
 
 export const _card_container = styled.div`
   display: flex;
-  height: 100%;
   width: 100%;
   flex-direction: row;
-  gap: 4px;
+  align-items: ${({ $align }) => $align ?? 'center'};
+  justify-content: ${({ $justify }) => $justify ?? 'space-around'};
+  gap: 16px;
+  margin: ${({ $margin }) => $margin ?? '0'};
 `;
 export const _card = styled(m.div).attrs(({ theme }) => {
   //animations for card
   return {
     whileHover: {
       scale: 1.05,
-      background: theme.background['high'],
+      background: theme.background['highest'],
       borderColor: theme.border['higher'],
     },
     whileTap: {
       scale: 0.95,
+      filter: 'brightness(0.9)',
+    },
+    initial: {
+      scale: 1,
+      background: theme.background['high'],
+      borderColor: theme.border['base'],
     },
   };
 })`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   text-align: center;
-  width: 32px;
   aspect-ratio: 1;
   border-radius: 16px;
-  background: ${({ theme }) => theme.background['base']};
+  width: 96px;
+  height: 96px;
+  background: ${({ theme }) => theme.background['high']};
   box-shadow: ${({ theme }) => theme.shadow['glass']};
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.border['base']};
+  padding: 4px;
 `;
 export const _card_text = styled.div.attrs(({ theme }) => {
   return {
     whileHover: {
-      color: theme.text['higher'],
+      color: theme.text['active'],
+    },
+    initial: {
+      color: theme.text['base'],
     },
   };
 })`
   width: 100%;
   text-align: center;
-  font-size: 8px;
+  font-size: ${({ $fontSize }) => $fontSize ?? '12px'};
   font-weight: 700;
-  color: ${({ theme }) => theme.text['high']};
+  color: ${({ theme }) => theme.text['base']};
   text-shadow: ${({ theme }) => theme.shadow['text']};
 `;
 export const _card_group = styled.div`
@@ -121,9 +134,26 @@ export const _card_group = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
 `;
 export const _card_icon = styled(m.div)`
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
+  color: ${({ theme }) => theme.text['placeholder']};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 2px;
+`;
+export const _description = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text['base']};
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  margin-bottom: 16px;
+  margin-top: 32px;
 `;

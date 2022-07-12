@@ -387,11 +387,13 @@
     "hide.prestige": "Hide Old Spellcasters",
     "drawer.staking.title": "Staking",
     "menu.earn": "Staking",
-    "drawer.staking.earn": "{{percentage}} APY",
+    "drawer.staking.earn": "{{percentage}}%  APY",
     "drawer.staking.earn.type":"{{type}}",
     "drawer.staking.earn.duration": "{{duration}} days",
+    "drawer.staking.earn.duration.flexible":"Flexible",
     "drawer.staking.earn.rate.description": "Rates will change on {{date}}",
-    "drawer.staking.pfp.title": "PFP"
+    "drawer.staking.pfp.title": "PFP",
+    "drawer.staking.pfp.getTwinPack": "Buy Twin Pack"
 
   }
 }

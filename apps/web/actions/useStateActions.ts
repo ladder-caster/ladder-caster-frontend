@@ -7,7 +7,7 @@ import {
 } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/remix/init';
+import { INIT_STATE_REDEEM, INIT_STATE_TRADE,INIT_STATE_STAKING } from 'core/remix/init';
 import {
   CRAFT_MATERIALS,
   DRAWER_ACTIVE,
@@ -20,6 +20,7 @@ import {
   DRAWER_TOKENS,
   DRAWER_TRADE,
   DRAWER_WALLET,
+  DRAWER_STAKING,
   EQUIP_ITEM,
   GAME_CONFIRM,
   GAME_INVENTORY,
@@ -194,6 +195,10 @@ export const useStateActions = () => {
       setDrawer({
         type: DRAWER_CRANK,
       });
+    },
+    async openDrawerStaking() {
+      setDrawer({ type: DRAWER_STAKING });
+      setContext(INIT_STATE_STAKING);
     },
     confirmMove(action) {
       setConfirm(action);
