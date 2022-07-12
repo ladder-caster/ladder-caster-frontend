@@ -17,7 +17,7 @@ import { AnimateButton } from '../button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { _header } from '../settings/SettingsDrawer.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { VIEW_SIZE } from 'core/remix/state';
+import { STAKING, VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 import { IconLock } from 'design/icons/lock.icon.js';
@@ -42,8 +42,13 @@ const StakingCard = ({ apy, type, duration, onClick, hideLock }) => {
 const StakingDrawer = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
+  const [stakingContext] = useRemix(STAKING);
+
   const { closeDrawer } = useActions();
-  const stakeClick = () => {};
+  const stakeClick = (amount, tier) => {
+    if (!stakingContext) return;
+    stakingContext.stakeLADANoLock(amount, tier);
+  };
   //TODO: get staking% from solana-stake-monitor
   const buyTwinPack = () => {
     window.open('https://magiceden.io/marketplace/ladder_caster_season_1');
@@ -60,7 +65,7 @@ const StakingDrawer = () => {
           duration={t('drawer.staking.earn.duration', {
             duration: Math.floor(Math.random() * 365),
           })}
-          onClick={stakeClick}
+          onClick={() => stakeClick(0, 1)}
         />
       );
     });

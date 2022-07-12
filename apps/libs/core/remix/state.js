@@ -141,6 +141,7 @@ export const WEB3AUTH_PLUGIN_STORE = 'WEB3AUTH_PLUGIN_STORE';
 export const PRESTIGE_HIDE = 'PRESTIGE_HIDE';
 export const GAME_CONSTANTS = 'GAME_CONSTANTS';
 export const ARWEAVE_UTILS = 'ARWEAVE_UTILS';
+export const STAKING = 'STAKING';
 export const OLD_SEASON = 2;
 export const CURRENT_SEASON = 3;
 export const ROUND_TIMELIMIT = 20;

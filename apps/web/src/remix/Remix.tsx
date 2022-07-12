@@ -30,6 +30,7 @@ import {
   PRESTIGE_TOGGLE,
   ARWEAVE_UTILS,
   TRADE_ORDERBOOK,
+  STAKING
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -68,7 +69,7 @@ import {
 import { map, sortBy, reverse } from 'lodash';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
-
+import {StakingContext} from '../../../libs/sdk/src/program/StakingContext';
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
@@ -95,7 +96,7 @@ const Remix = () => {
     sol: 0,
     usdc: 0,
   });
-
+  const [stakingContext,] =useRemixOrigin(STAKING,new StakingContext());
   useRemixOrigin(TRADE_ORDERBOOK);
   useRemixOrigin(INIT_CHAIN_LOAD, true);
   useRemixOrigin(GAME_INIT);
