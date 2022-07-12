@@ -93,6 +93,7 @@ export const _card = styled(m.div).attrs(({ theme }) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   width: 32px;
   aspect-ratio: 1;
   border-radius: 16px;

@@ -20,6 +20,21 @@ import { VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 import { IconLock } from 'design/icons/lock.icon.js';
+// eslint-disable-next-line react/prop-types
+const StakingCard = ({ apy, type, duration, onClick }) => {
+  return (
+    <_card onClick={onClick}>
+      <_card_text>{apy}</_card_text>
+      <_card_text>{type}</_card_text>
+      <_card_group>
+        <_card_icon>
+          <IconLock />
+        </_card_icon>
+        <_card_text>{duration}</_card_text>
+      </_card_group>
+    </_card>
+  );
+};
 const StakingDrawer = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
@@ -29,26 +44,17 @@ const StakingDrawer = () => {
   const stakingCards = useMemo(() => {
     return [...Array(3).keys()].map((card) => {
       return (
-        <_card key={card} onClick={stakeClick}>
-          <_card_text>
-            {t('drawer.staking.earn', {
-              percentage: Math.floor(Math.random() * 100),
-            })}
-          </_card_text>
-          <_card_text>
-            {t('drawer.staking.earn.type', { type: 'LADA' })}
-          </_card_text>
-          <_card_group>
-            <_card_icon>
-              <IconLock />
-            </_card_icon>
-            <_card_text>
-              {t('drawer.staking.earn.duration', {
-                duration: Math.floor(Math.random() * 365),
-              })}
-            </_card_text>
-          </_card_group>
-        </_card>
+        <StakingCard
+          key={card}
+          apy={t('drawer.staking.earn', {
+            percentage: Math.floor(Math.random() * 100),
+          })}
+          type={t('drawer.staking.earn.type', { type: 'LADA' })}
+          duration={t('drawer.staking.earn.duration', {
+            duration: Math.floor(Math.random() * 365),
+          })}
+          onClick={stakeClick}
+        />
       );
     });
   }, []);
