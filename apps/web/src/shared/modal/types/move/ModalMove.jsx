@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   _move,
   _board,
@@ -38,7 +38,6 @@ import {
   TYPE_RES1,
   TYPE_LEGENDARY,
   TYPE_RES2,
-  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
@@ -48,22 +47,21 @@ import { IconHat } from 'design/icons/hat.icon';
 import { IconStaff } from 'design/icons/staff.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { getTierNumber } from 'core/utils/switch';
-import {
-  IconMoney,
-  IconMoneyIMG,
-} from '../../../../../../libs/design/icons/money.icon';
-import { IconSwirl } from 'design/icons/swirl.icon';
+import { IconMoneyIMG } from '../../../../../../libs/design/icons/money.icon';
 import IconAttribute from '../../../../shared/types/icons/IconAttribute';
+import { CHAIN_CASTERS } from 'chain/hooks/state';
+import { find } from 'lodash';
+
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
   const button_ref = useRef();
   const confirm_ref = useRef();
   const { t } = useTranslation();
-  const { modalClear, confirmMove, modalChest } = useActions();
+  const { closeModal, moveToTile } = useActions();
+  const [casters] = useRemix(CHAIN_CASTERS);
   const [confirm] = useRemix(GAME_CONFIRM);
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
-  useClickOutside([confirm_ref, button_ref], () => modalClear());
+  useClickOutside([confirm_ref, button_ref], () => closeModal());
 
   const caster = options?.caster;
   const level = caster?.casterActionPosition
@@ -93,16 +91,19 @@ const ModalMove = ({ height, options }) => {
     staff: IconStaff,
   };
   const casterEquipment = useMemo(() => {
-    if (caster && upgradeAvailable) {
-      const casterWrapper = upgradeAvailable?.casters?.get(caster?.publicKey);
-      //console.log("CASTER WRAPPER",casterWrapper)
+    if (caster) {
+      const casterWrapper = find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      );
+
       if (!casterWrapper) return [];
       const keys = Object.keys(casterWrapper);
       const array = [];
-      //console.log("KEYS",keys)
+
       for (let i = 0; i < keys.length; i++) {
         const currentItem = casterWrapper[keys[i]]?.currentItem;
-        //console.log("CurrentItem",currentItem)
+
         if (!currentItem) {
           const BaseIcon = EquipmentBaseIcon[keys[i]];
 
@@ -123,11 +124,10 @@ const ModalMove = ({ height, options }) => {
           </_caster_gear_icon>,
         );
       }
-      //console.log("ARRAY",array)
       return array;
     }
-  }, [upgradeAvailable?.casters, caster]);
-  console.log('CASTER MAP', casterEquipment);
+  }, [casters, caster]);
+
   return (
     <_move $height={height}>
       <_actions ref={action_ref}>
@@ -197,7 +197,7 @@ const ModalMove = ({ height, options }) => {
                   disabled={!confirm}
                   key={'button-modal-mover'}
                   ref={button_ref}
-                  onClick={() => confirmMove(caster)}
+                  onClick={() => moveToTile(caster)}
                 >
                   {t('modal.move.action')} {confirm?.position?.toUpperCase()}
                 </_button>

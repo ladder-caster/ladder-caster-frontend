@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
-import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import NodeWallet from 'sdk/src/utils/NodeWallet';
 import laddercasterIDL from '../laddercast.json';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {

@@ -6,12 +6,12 @@ import { useActions } from '../../../../../actions';
 
 const SuccessRedeem = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const caster = options?.caster;
   const success_ref = useRef();
 
   return (
-    <_redeem ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_redeem ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_success>
         <span>{t('success.title')}</span>
       </_success>

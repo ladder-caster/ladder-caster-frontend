@@ -17,14 +17,8 @@ import {
 import {
   CONFIRM_MOVE,
   DRAWER_ACTIVE,
-  ENCHANT_MAGIC,
-  ENCHANT_MINING,
-  ENCHANT_MOVE,
-  ENCHANT_SPELL,
-  ENCHANT_TREASURE,
   GAME_CONFIRM,
   GAME_MAP,
-  GAME_MOVES,
   GAME_SPELLCASTERS,
   MODAL_ACTIVE,
   MODAL_MOVE,
@@ -41,26 +35,21 @@ import {
   TYPE_RES2,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { IconBeaker } from 'design/icons/beaker.icon';
 import { withTheme } from 'styled-components';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
 import { AnimateBackground } from './animations/AnimateBackground';
 import { AnimateEnchant } from './animations/AniamteEnchant';
-import { IconTreasure } from 'design/icons/treasure.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
-import { IconMove } from 'design/icons/move.icon';
 import { IconMap } from 'design/icons/map.icon';
-import { IconGather } from 'design/icons/gather.icon';
-import { IconSpell } from 'design/icons/spell.icon';
 import { IconWizard } from 'design/icons/wizard.icon';
 import { useActions } from '../../../../../actions';
 
 const COST_MULTIPLIER = 10;
 
 const Tile = withTheme(({ theme, level, col, isModal, status }) => {
-  const { actionMove, cancelMove } = useActions();
+  const { confirmMove, cancelMove } = useActions();
   const [confirm] = useRemix(GAME_CONFIRM);
   const [modal] = useRemix(MODAL_ACTIVE);
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
@@ -80,10 +69,6 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
     sumPosition(spellcasters),
   );
   const [land] = useRemix(GAME_MAP, (lands) => lands?.[row]?.[col]);
-  const [location] = useRemix(
-    GAME_MOVES,
-    (portals) => portals?.[position]?.location,
-  );
   const remaining = land?.remaining;
   const isActive = land !== undefined && !land?.empty;
   const type = land?.type;
@@ -124,7 +109,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const clickTile = () => {
     if (isModal) {
       if (status === TILE_GLOWING)
-        actionMove({
+        confirmMove({
           type: CONFIRM_MOVE,
           position,
           cost: getCost(),

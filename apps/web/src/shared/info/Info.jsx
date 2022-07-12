@@ -33,7 +33,7 @@ const Info = ({ item, caster }) => {
   const { t } = useTranslation();
   const {
     unequipConfirm,
-    equipChoose,
+    chooseEquip,
     castSpell,
     confirmMint,
     modalBurn,
@@ -78,7 +78,7 @@ const Info = ({ item, caster }) => {
                   ? castSpell(item, caster)
                   : unequip
                   ? unequipConfirm(item, caster)
-                  : equipChoose(item);
+                  : chooseEquip(item);
               }}
             >
               {isSpellbook

@@ -9,7 +9,10 @@ export const _title = styled.h3`
 `;
 
 export const _divider = styled.div`
-  ${({ theme }) => theme.styles?.view?.['_divider']};
+  width: 100%;
+  height: 2px;
+  background: ${({ theme }) => theme.border['base']};
+  margin-top: 0;
 `;
 
 export const _container = styled.div`

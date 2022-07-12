@@ -12,7 +12,11 @@
     "*.yml": [
       "@parcel/transformer-yaml"
     ],
-    "*.{jpg,png,svg}": ["@parcel/transformer-raw"],
-    "*.{png,PNG}": ["@parcel/transformer-image"]
+    "*.{jpg,png,svg}": [
+      "@parcel/transformer-raw"
+    ],
+    "*.{png,PNG}": [
+      "@parcel/transformer-image"
+    ]
   }
 }

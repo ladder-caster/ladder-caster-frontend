@@ -7,14 +7,14 @@ import { useClickOutside } from 'core/hooks/useClickOutside';
 
 const SuccessChest = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const caster = options?.caster;
   const success_ref = useRef();
 
-  useClickOutside(success_ref, () => modalClear({}));
+  useClickOutside(success_ref, () => closeModal({}));
 
   return (
-    <_chest ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_chest ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_success>
         <span>{t('success.title')}</span>
       </_success>

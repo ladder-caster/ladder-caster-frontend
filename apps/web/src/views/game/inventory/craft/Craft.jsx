@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 
 const Craft = () => {
   const { t } = useTranslation();
-  const { openDrawerCraft } = useActions();
+  const { drawerCraft } = useActions();
 
   return (
-    <_craft onClick={() => openDrawerCraft()}>
+    <_craft onClick={() => drawerCraft()}>
       <AnimateButton high>
         <_button>
           <IconAnvil />

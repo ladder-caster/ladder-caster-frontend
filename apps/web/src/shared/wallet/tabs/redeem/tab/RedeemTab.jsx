@@ -9,7 +9,7 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import RedeemConfirm from '../confirm/RedeemConfirm';
 import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
-import nftUtil from 'sdk/src/laddercaster/utils/NFTUtil';
+import nftUtil from 'sdk/src/utils/NFTUtil';
 
 const RedeemTab = () => {
   const { t } = useTranslation();

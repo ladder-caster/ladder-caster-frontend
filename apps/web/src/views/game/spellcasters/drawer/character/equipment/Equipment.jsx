@@ -18,13 +18,12 @@ import { IconStaff } from 'design/icons/staff.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { useActions } from '../../../../../../../actions';
 import Item from '../../../../../../shared/item/Item';
-import { CASTER_UPGRADE_AVAILABLE } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+
 const Equipment = ({ caster }) => {
   const equip_ref = useRef();
   const { chooseUnequip } = useActions();
+  const [casters] = useRemix(CHAIN_CASTERS);
   const { width } = useSize(equip_ref);
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const hat = caster?.hat;
   const robe = caster?.robe;
   const staff = caster?.staff;
@@ -38,7 +37,11 @@ const Equipment = ({ caster }) => {
    *  currentGear: Item
    * }
    */
-  const casterGear = upgradeAvailable?.casters?.get(caster?.publicKey) ?? {};
+  const casterGear =
+    find(
+      casters,
+      (match) => match?.publicKey?.toString() === caster?.publicKey,
+    ) || {};
   const hatUpgrade = casterGear?.head?.items?.length > 0;
   const robeUpgrade = casterGear?.robe?.items?.length > 0;
   const staffUpgrade = casterGear?.staff?.items?.length > 0;

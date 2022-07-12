@@ -108,7 +108,6 @@ export const _download = styled.div`
 
     > b {
       position: relative;
-      z-index: ${({ theme }) => theme.zindex['mobile_demo']};
       height: 0;
       display: flex;
       flex-direction: column;

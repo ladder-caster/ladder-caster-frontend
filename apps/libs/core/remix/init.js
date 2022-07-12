@@ -1,6 +1,15 @@
 import { TYPE_RES3, TYPE_RES1, TYPE_RES2, SIDE_BUY } from './state';
-import { TAB_MINT, TAB_WALLET, TAB_STAKING_HOME } from './tabs';
-import { COIN_EMBA, COIN_FRO, COIN_LADA, COIN_ROOT, COIN_USDC } from './coins';
+import { TAB_MINT, TAB_WALLET } from './tabs';
+import {
+  COIN_EMBA,
+  COIN_FRO,
+  COIN_LADA,
+  COIN_LAVA,
+  COIN_POSO,
+  COIN_ROOT,
+  COIN_TORM,
+  COIN_USDC,
+} from './coins';
 
 export const INIT_STATE_BOOST = {
   [TYPE_RES2]: 0,
@@ -29,17 +38,17 @@ export const INIT_STATE_TRADE = {
       symbol: COIN_LADA,
       name: 'LadderCaster',
     },
-    [COIN_EMBA]: {
-      symbol: COIN_EMBA,
-      name: 'Ember',
+    [COIN_POSO]: {
+      symbol: COIN_POSO,
+      name: 'Poison',
     },
-    [COIN_FRO]: {
-      symbol: COIN_FRO,
-      name: 'Frost',
+    [COIN_LAVA]: {
+      symbol: COIN_LAVA,
+      name: 'Lava',
     },
-    [COIN_ROOT]: {
-      symbol: COIN_ROOT,
-      name: 'Root',
+    [COIN_TORM]: {
+      symbol: COIN_TORM,
+      name: 'Storm',
     },
   },
   fiat: {

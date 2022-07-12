@@ -21,7 +21,7 @@ import {
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useW3A } from 'chain/hooks/useW3A';
-import { Client, Environment } from 'sdk/src';
+import { Client, Environment } from 'sdk/src/program';
 
 export const solanaChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,
@@ -54,12 +54,13 @@ const Web3AuthInjecter = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        const [url] = await Client.getRPC(
+          (process.env.REACT_APP_ENV as Environment) || 'localnet',
+        );
         const web3AuthInstance = new Web3AuthCore({
           chainConfig: {
             chainNamespace: ADAPTER_NAMESPACES.SOLANA,
-            rpcTarget: Client.getRPC(
-              (process.env.REACT_APP_ENV as Environment) || 'localnet',
-            ),
+            rpcTarget: url,
           },
         });
 

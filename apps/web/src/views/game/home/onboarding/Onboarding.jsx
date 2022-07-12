@@ -27,13 +27,12 @@ import { IconUser } from 'design/icons/user.icon';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
-  DEMO_MODE,
   GAME_INIT,
   GAME_RESOURCES,
   USER_PHASE,
+  VIEW_NAVIGATION,
 } from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
 import { IconWallet } from 'design/icons/wallet.icon';
@@ -47,23 +46,21 @@ import { IconGoogle } from '../../../../../../libs/design/icons/google.icon';
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
   const [noFunds, setNoFunds] = useState(false);
-  const [demo] = useRemix(DEMO_MODE);
   const [player] = useRemix(CHAIN_PLAYER);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [resources] = useRemix(GAME_RESOURCES);
   const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
-  const [phase, setPhase] = useRemix(USER_PHASE);
-  const { createLocalWallet } = useLocalWallet();
-  const { openDrawerRedeem } = useActions();
+  const [, setView] = useRemix(VIEW_NAVIGATION);
+  const [phase] = useRemix(USER_PHASE);
+  const { drawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
-    startDemo,
     initPlayer,
-    visitCasters,
     modalBuyLADA,
     web3AuthConnect,
+    drawerTrade,
   } = useActions();
   const getFunds = async () => {
     setNoFunds((await client.getSOLBalance()) === 0);
@@ -73,20 +70,16 @@ export const Onboarding = ({ home }) => {
     setVisible(true);
   };
 
-  const generateTestWallet = async () => {
-    createLocalWallet();
-    if (demo) startDemo();
-  };
-
   useEffect(() => {
     if (client) {
       getFunds();
     }
   }, [client]);
 
-  const { active, account, hasPlayer, initialized } = useMemo(() => {
+  const { active, account, initialized, hasPlayer } = useMemo(() => {
     if (client !== undefined) {
       const account = player;
+
       return {
         active: client,
         account,
@@ -94,20 +87,18 @@ export const Onboarding = ({ home }) => {
         hasPlayer: player,
       };
     }
-    const account = demo?.player && demo?.ladaAccount;
-    return {
-      active: demo?.active,
-      account,
-      initialized: account && demo?.active,
-      hasPlayer: demo?.player,
-    };
-  }, [client, demo, player]);
+    return {};
+  }, [client, player]);
 
   useEffect(() => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if ((initLoading && active) || (!phase && casters?.length))
+  if (
+    initLoading &&
+    active
+    //BROKE this condition by removing phases || (!phase && casters?.length)
+  )
     return <Skeleton />;
 
   return (
@@ -138,14 +129,6 @@ export const Onboarding = ({ home }) => {
               </_google>
               <_warning>{t('onboarding.google.warning')}</_warning>
             </_beta>
-            {demo ? (
-              <AnimateButton low>
-                <_button $long onClick={() => generateTestWallet()}>
-                  <IconWallet />
-                  <span>{t('connect.local_wallet')}</span>
-                </_button>
-              </AnimateButton>
-            ) : null}
           </_actions>
         </_section>
       )}
@@ -205,23 +188,14 @@ export const Onboarding = ({ home }) => {
                   disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   $disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   style={{ marginRight: 8 }}
-                  onClick={() => openDrawerRedeem()}
+                  onClick={() => drawerRedeem()}
                   $noIcon
                 >
                   <span>{t('visit.redeem')}</span>
                 </_button>
                 <span>or</span>
                 <_link
-                  href={
-                    resources.lada !== 0 || casters?.length !== 0
-                      ? '#'
-                      : 'https://jup.ag/swap/USDC-LADA'
-                  }
-                  target={
-                    resources.lada !== 0 || casters?.length !== 0
-                      ? '_self'
-                      : '_blank'
-                  }
+                  onClick={() => drawerTrade()}
                   disabled={resources?.lada !== 0 || casters?.length !== 0}
                   $disabled={resources?.lada !== 0 || casters?.length !== 0}
                   style={{ marginLeft: 8 }}
@@ -281,7 +255,7 @@ export const Onboarding = ({ home }) => {
                   disabled={casters?.length === 0}
                   $disabled={casters?.length === 0}
                   onClick={() => {
-                    if (!(casters?.length === 0)) visitCasters();
+                    if (!(casters?.length === 0)) setView(VIEW_MAP);
                   }}
                   $noIcon
                 >

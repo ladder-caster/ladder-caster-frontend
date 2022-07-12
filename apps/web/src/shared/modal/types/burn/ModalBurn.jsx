@@ -35,7 +35,7 @@ import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
 const ModalBurn = () => {
   const { t } = useTranslation();
-  const { modalClear, confirmBurn } = useActions();
+  const { closeModal, burnItemAccount } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
   const image_ref = useRef();
   const { width } = useSize(image_ref);
@@ -55,11 +55,11 @@ const ModalBurn = () => {
   };
   var resourceGain = item ? item.level * rarityMap[item.rarity] : 0;
   const burn = () => {
-    confirmBurn(item);
-    modalClear();
+    burnItemAccount(item);
+    closeModal();
   };
   const cancel = () => {
-    modalClear();
+    closeModal();
     localStorage.setItem('hide_burn_modal', 'false');
   };
   return (

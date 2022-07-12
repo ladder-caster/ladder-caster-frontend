@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import {
   _caster,
   _level,
@@ -11,19 +11,12 @@ import {
 } from './Caster.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useActions } from '../../../actions';
-import {
-  CASTER_UPGRADE_AVAILABLE,
-  EDITION_LIMITED,
-  GAME_INVENTORY,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { EDITION_LIMITED } from 'core/remix/state';
 
 const Caster = ({ caster, grid, small, callback, isOld }) => {
   const caster_ref = useRef();
   const { width } = useSize(caster_ref);
   const { craftChooseCharacter } = useActions();
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
-  const canUpgrade = upgradeAvailable?.canUpgrade?.(caster?.publicKey) ?? false;
 
   const src = isOld
     ? require('../../../../libs/design/assets/old_wizard.png')
@@ -42,7 +35,6 @@ const Caster = ({ caster, grid, small, callback, isOld }) => {
       ref={caster_ref}
       onClick={onClick}
     >
-      {canUpgrade && <_upgrade $hue={caster?.hue ?? '360'} />}
       <_img $isOld={isOld} src={src} alt={'Wizard NFT'} $height={width} />
       <_overlay>
         <_overview $small={small} $hue={caster?.hue}>

@@ -14,10 +14,10 @@ import { useTranslation } from 'react-i18next';
 
 const ModalRedeem = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear, actionRedeem } = useActions();
+  const { closeModal, redeemReward } = useActions();
   const button_ref = useRef();
 
-  useClickOutside(button_ref, () => modalClear());
+  useClickOutside(button_ref, () => closeModal());
 
   return (
     <_loot $height={height}>
@@ -27,7 +27,7 @@ const ModalRedeem = ({ height, options }) => {
           <_button
             key={'button-modal-looter'}
             ref={button_ref}
-            onClick={() => actionRedeem(options?.caster)}
+            onClick={() => redeemReward(options?.caster)}
           >
             {t('modal.redeem.action')}
           </_button>

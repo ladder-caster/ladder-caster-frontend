@@ -8,24 +8,16 @@ import {
   _button,
   _description,
 } from './Actions.styled';
-import { IconMap } from 'design/icons/map.icon';
 import { useTranslation } from 'react-i18next';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
 import { IconMove } from 'design/icons/move.icon';
 import { IconBook } from 'design/icons/book.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  ACTION_CRAFT,
-  ACTION_MOVE,
-  ACTION_SPELL,
-  ACTION_VIEW,
-} from 'core/remix/state';
 import { useActions } from '../../../../../../actions';
 
 const Actions = ({ caster }) => {
   const { t } = useTranslation();
-  const { modalMove, modalSpell, modalCraft } = useActions();
+  const { modalMove, modalSpell, drawerCraft } = useActions();
 
   return (
     <_actions>
@@ -59,7 +51,7 @@ const Actions = ({ caster }) => {
           </AnimateButton>
         </_action>
       </_item>
-      <_item onClick={() => modalCraft(caster)}>
+      <_item onClick={() => drawerCraft(caster)}>
         <_wrapper>
           <_name>Craft Item</_name>
           <_description>
