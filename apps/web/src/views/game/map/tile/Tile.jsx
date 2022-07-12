@@ -49,7 +49,7 @@ import { useActions } from '../../../../../actions';
 const COST_MULTIPLIER = 10;
 
 const Tile = withTheme(({ theme, level, col, isModal, status }) => {
-  const { actionMove, cancelMove } = useActions();
+  const { confirmMove, cancelMove } = useActions();
   const [confirm] = useRemix(GAME_CONFIRM);
   const [modal] = useRemix(MODAL_ACTIVE);
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
@@ -109,7 +109,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const clickTile = () => {
     if (isModal) {
       if (status === TILE_GLOWING)
-        actionMove({
+        confirmMove({
           type: CONFIRM_MOVE,
           position,
           cost: getCost(),

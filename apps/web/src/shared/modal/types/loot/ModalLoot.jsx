@@ -15,10 +15,10 @@ import { AnimateLimit } from '../../animations/AnimateLimit';
 
 const ModalLoot = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear, actionLoot } = useActions();
+  const { closeModal, lootResources } = useActions();
   const button_ref = useRef();
 
-  useClickOutside(button_ref, () => modalClear({}));
+  useClickOutside(button_ref, () => closeModal({}));
 
   return (
     <_loot $height={height}>
@@ -28,7 +28,7 @@ const ModalLoot = ({ height, options }) => {
           <_button
             key={'button-modal-looter'}
             ref={button_ref}
-            onClick={() => actionLoot(options?.caster)}
+            onClick={() => lootResources(options?.caster)}
           >
             {t('modal.loot.action')}
           </_button>

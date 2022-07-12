@@ -25,11 +25,11 @@ import Settle from './settle/Settle';
 
 const OrderTab = () => {
   const { t } = useTranslation();
-  const { openDrawerTrade } = useActions();
+  const { drawerTrade } = useActions();
 
   useEffect(() => {
     // Get Price on mount and on symbol change create usePrice hooks
-    openDrawerTrade();
+    drawerTrade();
   }, []);
 
   return (

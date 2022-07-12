@@ -27,7 +27,7 @@ import { css } from 'styled-components';
 
 const SuccessLoot = ({ height }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const [rewards] = useRemix(MODAL_ACTIVE, (modal) => modal?.rewards);
   const success_ref = useRef();
 
@@ -65,10 +65,10 @@ const SuccessLoot = ({ height }) => {
     return chests_list;
   }, [rewards]);
 
-  useClickOutside(success_ref, () => modalClear());
+  useClickOutside(success_ref, () => closeModal());
 
   return (
-    <_loot ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_loot ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_container>{num_chests && <_chests>{chest_reward}</_chests>}</_container>
       <_close>
         <span>{t('success.move.close')}</span>

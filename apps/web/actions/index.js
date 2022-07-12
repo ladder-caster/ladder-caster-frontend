@@ -1,7 +1,13 @@
-import { useChainActions } from './useChainActions';
+import { useConnections } from './useConnections';
+import { useInstructions } from './useInstructions';
+import { useStateActions } from './useStateActions';
+import { useTesters } from './useTesters';
 
 export const useActions = () => {
-  const chainActions = useChainActions();
+  const connections = useConnections();
+  const testers = useTesters();
+  const stateActions = useStateActions();
+  const instructions = useInstructions();
 
-  return { ...chainActions };
+  return { ...connections, ...testers, ...stateActions, ...instructions };
 };

@@ -12,12 +12,12 @@ import { IconWallet } from 'design/icons/wallet.icon';
 
 const ModalImport = () => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const [modal] = useRemix(MODAL_ACTIVE);
   const button_ref = useRef();
   const [inputValue, setInputValue] = useState('');
 
-  useClickOutside(button_ref, () => modalClear({}));
+  useClickOutside(button_ref, () => closeModal({}));
 
   const active = modal?.active;
 

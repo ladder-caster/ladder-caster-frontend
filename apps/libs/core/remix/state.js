@@ -63,7 +63,6 @@ export const MODAL_LOOT = 'MODAL_LOOT';
 export const MODAL_SPELL = 'MODAL_SPELL';
 export const MODAL_MOVE = 'MODAL_MOVE';
 export const MODAL_REDEEM = 'MODAL_REDEEM';
-export const MODAL_CRAFT = 'MODAL_CRAFT';
 export const MODAL_CHEST = 'MODAL_CHEST';
 export const MODAL_IMPORT = 'MODAL_IMPORT';
 export const MODAL_BURN = 'MODAL_BURN';

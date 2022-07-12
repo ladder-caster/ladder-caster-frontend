@@ -28,13 +28,13 @@ import { EQUIP_MAP } from 'core/utils/switch';
 const ModalSpell = ({ height, options }) => {
   const { t } = useTranslation();
   const [spell] = useRemix(GAME_SPELL);
-  const { modalClear, castSpell } = useActions();
+  const { closeModal, castSpell } = useActions();
   const [inventory, setInventory] = useRemix(GAME_INVENTORY);
   const board_ref = useRef();
   const button_ref = useRef();
   const caster = options?.caster;
 
-  useClickOutside([board_ref, button_ref], () => modalClear({}));
+  useClickOutside([board_ref, button_ref], () => closeModal({}));
 
   const spells = useMemo(
     () =>

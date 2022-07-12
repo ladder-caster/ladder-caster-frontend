@@ -29,10 +29,10 @@ import Settle from '../order/settle/Settle';
 
 const SwapTab = () => {
   const { t } = useTranslation();
-  const { switchTradeSymbols, openDrawerTrade } = useActions();
+  const { switchTradeSymbols, drawerTrade } = useActions();
 
   useEffect(() => {
-    openDrawerTrade();
+    drawerTrade();
   }, []);
 
   return (

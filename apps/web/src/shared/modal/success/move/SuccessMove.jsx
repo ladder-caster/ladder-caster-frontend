@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 const SuccessMove = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const caster = options?.caster;
   const success_ref = useRef();
 
-  useClickOutside(success_ref, () => modalClear({}));
+  useClickOutside(success_ref, () => closeModal({}));
 
   return (
-    <_move ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_move ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_success>
         <span>{t('success.title')}</span>
       </_success>

@@ -43,9 +43,9 @@ const Queue = ({ spell_id }) => {
   const {
     modalMove,
     modalSpell,
-    actionLoot,
-    modalCraft,
-    actionRedeem,
+    lootResources,
+    drawerCraft,
+    redeemReward,
   } = useActions();
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [game] = useRemix(CHAIN_GAME);
@@ -129,13 +129,13 @@ const Queue = ({ spell_id }) => {
    * Functions to reduce rerenders
    */
   const redeem = () => {
-    actionRedeem(caster);
+    redeemReward(caster);
   };
   const craft = () => {
-    !unlocked_craft ? setClicked('craft') : modalCraft(caster);
+    !unlocked_craft ? setClicked('craft') : drawerCraft(caster);
   };
   const loot = () => {
-    !unlocked_loot ? setClicked('loot') : actionLoot(caster);
+    !unlocked_loot ? setClicked('loot') : lootResources(caster);
   };
   const move = () => {
     !unlocked_move ? setClicked('move') : modalMove(caster);

@@ -8,14 +8,14 @@ import { _loot } from '../loot/SuccessLoot.styled';
 
 const SuccessSpell = ({ options, height }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const caster = options?.caster;
   const success_ref = useRef();
 
-  useClickOutside(success_ref, () => modalClear({}));
+  useClickOutside(success_ref, () => closeModal({}));
 
   return (
-    <_spell ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_spell ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_success>
         <span>{t('success.title')}</span>
       </_success>

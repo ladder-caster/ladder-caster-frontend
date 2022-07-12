@@ -5,11 +5,11 @@ import { useActions } from '../../../actions';
 
 const Trade = () => {
   const { t } = useTranslation();
-  const { openDrawerTrade } = useActions();
+  const { drawerTrade } = useActions();
 
   return (
     <_redeem>
-      <_button onClick={() => openDrawerTrade()}>
+      <_button onClick={() => drawerTrade()}>
         {t('heading.trade.title')}
       </_button>
     </_redeem>
