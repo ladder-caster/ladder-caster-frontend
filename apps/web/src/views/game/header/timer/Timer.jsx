@@ -124,7 +124,7 @@ const Timer = () => {
     );
   }, [time?.ended]);
 
-  if (!(game && casters?.length !== 0)) return null;
+  if (!(game && casters?.size !== 0)) return null;
 
   return (
     <AnimateButton>

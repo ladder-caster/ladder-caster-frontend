@@ -175,9 +175,7 @@ export const useInstructions = () => {
       setPhase(PHASE_REWARDS);
     },
     async prestigeCaster(casterPK) {
-      const casterContext = new CasterContext(
-        find(oldCasters, (match) => match?.publicKey?.toString() === casterPK),
-      );
+      const casterContext = new CasterContext(oldCasters.get(casterPK));
       await stateHandler(
         async () => {
           return await casterContext.prestigeCaster();
@@ -191,10 +189,7 @@ export const useInstructions = () => {
       await stateHandler(
         async () => {
           return await new PlayerContext().openChest(
-            find(
-              items,
-              (match) => match?.publicKey?.toString() === chest?.publicKey,
-            ),
+            items.get(chest?.publicKey),
           );
         },
         fetchPlayer,
@@ -202,12 +197,11 @@ export const useInstructions = () => {
       );
     },
     async redeemReward(caster) {
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      console.log([...casters]);
+      console.log(caster?.publicKey);
+      console.log(casters.get(caster?.publicKey));
+
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       await stateHandler(
         async () => {
@@ -223,9 +217,7 @@ export const useInstructions = () => {
       const redeemableCasters = filter(spellcasters, (caster) => {
         return caster?.turnCommit < game?.turnInfo?.turn;
       }).map((caster) => {
-        return find(casters, (c) => {
-          return c.publicKey.toString() === caster.publicKey;
-        });
+        return casters.get(caster?.publicKey);
       });
       await stateHandler(
         async () => {
@@ -243,10 +235,7 @@ export const useInstructions = () => {
 
         if (caster?.last_loot < game?.turnInfo?.turn) {
           const casterContext = new CasterContext(
-            find(
-              casters,
-              (match) => match?.publicKey?.toString() === caster?.publicKey,
-            ),
+            casters.get(caster?.publicKey),
           );
 
           await stateHandler(
@@ -262,12 +251,7 @@ export const useInstructions = () => {
       }
     },
     async moveToTile(caster) {
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       closeDrawer();
 
@@ -276,10 +260,7 @@ export const useInstructions = () => {
       await stateHandler(
         async () => {
           return await new CasterContext(
-            find(
-              casters,
-              (match) => match?.publicKey?.toString() === caster?.publicKey,
-            ),
+            casters.get(caster?.publicKey),
           ).casterCommitMove(
             row - 1,
             ['a', 'b', 'c'].findIndex((colLetter) => colLetter === col),
@@ -292,12 +273,7 @@ export const useInstructions = () => {
       );
     },
     async equipItem(item = context?.item, caster = context?.caster) {
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       closeDrawer();
       setEquip('');
@@ -316,12 +292,7 @@ export const useInstructions = () => {
     async unequipItem() {
       const item = context?.item;
       const caster = context?.caster;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       setModal('');
       setContext({
@@ -334,10 +305,7 @@ export const useInstructions = () => {
       await stateHandler(
         async () => {
           return await casterContext.unequipItem(
-            find(
-              casters,
-              (match) => match?.publicKey?.toString() === caster?.publicKey,
-            )?.modifiers?.[item.type],
+            casters.get(caster?.publicKey)?.modifiers?.[item.type],
           );
         },
         fetchPlayer,
@@ -347,12 +315,7 @@ export const useInstructions = () => {
       );
     },
     async castSpell(spell, caster) {
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       setModal('');
       setEquip('');
@@ -372,33 +335,16 @@ export const useInstructions = () => {
     async craftItem() {
       const materials = context?.materials || [];
       const caster = context?.caster;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       closeDrawer();
 
       await stateHandler(
         async () => {
           return await casterContext.casterCommitCraft(
-            find(
-              items,
-              (match) =>
-                match?.publicKey?.toString() === materials?.[0]?.publicKey,
-            ),
-            find(
-              items,
-              (match) =>
-                match?.publicKey?.toString() === materials?.[1]?.publicKey,
-            ),
-            find(
-              items,
-              (match) =>
-                match?.publicKey?.toString() === materials?.[2]?.publicKey,
-            ),
+            items.get(materials?.[0]?.publicKey),
+            items.get(materials?.[1]?.publicKey),
+            items.get(materials?.[2]?.publicKey),
           );
         },
         fetchPlayer,
@@ -407,12 +353,7 @@ export const useInstructions = () => {
     },
     async burnResourcesForXP() {
       const caster = find(spellcasters, (caster) => caster.id === drawer?.id);
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
+      const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       const resources = [
         {
@@ -492,10 +433,7 @@ export const useInstructions = () => {
     },
     async unequipAllItems(caster: Caster) {
       if (!caster) return;
-      const foundCaster = find(
-        casters,
-        (match) => match?.publicKey?.toString() === caster?.publicKey,
-      );
+      const foundCaster = casters.get(caster?.publicKey);
       const casterContext = new CasterContext(foundCaster);
       const casterItems: any[] = [];
       const keys = Object.keys(caster || {});
@@ -542,6 +480,7 @@ export const useInstructions = () => {
       if (caster || context?.caster) {
         await stateHandler(
           async () => {
+            //TODO: check if correct fetching method, might be broken
             return await playerContext.mintNFTCaster(
               casters[context?.caster?.index],
             );
@@ -554,11 +493,7 @@ export const useInstructions = () => {
         await stateHandler(
           async () => {
             return await playerContext.mintNFTItem(
-              find(
-                items,
-                (match) =>
-                  match?.publicKey?.toString() === match_item?.publicKey,
-              ),
+              items.get(match_item?.publicKey),
             );
           },
           fetchPlayer,

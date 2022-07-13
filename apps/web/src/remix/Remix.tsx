@@ -73,9 +73,12 @@ const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
   const [player] = useRemixOrigin(CHAIN_PLAYER);
-  const [items] = useRemixOrigin(CHAIN_ITEMS, []);
-  const [casters] = useRemixOrigin(CHAIN_CASTERS, []);
-  const [oldCasters] = useRemixOrigin(CHAIN_OLD_CASTERS, []);
+  const [items] = useRemixOrigin(CHAIN_ITEMS, new Map<string, Item>());
+  const [casters] = useRemixOrigin(CHAIN_CASTERS, new Map<string, Caster>());
+  const [oldCasters] = useRemixOrigin(
+    CHAIN_OLD_CASTERS,
+    new Map<string, Caster>(),
+  );
   const [, setSpellcasters] = useRemixOrigin(GAME_SPELLCASTERS, []);
   const [, setOldSpellcasters] = useRemixOrigin(GAME_OLD_SPELLCASTERS, []);
   const [client] = useRemixOrigin(CHAIN_LOCAL_CLIENT);
@@ -165,16 +168,13 @@ const Remix = () => {
     return lands;
   };
 
-  const generateSpellCaster = (casterArr: Caster[]) => {
+  const generateSpellCaster = (casterArr: Map<string, Caster>) => {
     let spellcastersArr: any[] = [];
 
-    for (let i = 0; i < casterArr.length; i++) {
-      const caster = casterArr[i];
+    for (const [i, caster] of casterArr) {
       const position = `${COLUMNS_ALPHA[caster.modifiers.tileColumn]}${
         caster.modifiers.tileLevel + 1
       }`;
-
-      const doneActions = {};
 
       let isLootActionBefore = false;
       let moveAction = caster.turnCommit?.actions?.mv;
@@ -184,9 +184,7 @@ const Remix = () => {
       const generateModifier = (itemPK: anchor.web3.PublicKey | undefined) => {
         if (!itemPK) return null;
 
-        let item: Item = items.find(
-          (i: Item) => i.publicKey?.toString() === itemPK.toString(),
-        );
+        let item: Item = items.get(itemPK.toString());
 
         if (!item) return null;
 
@@ -219,8 +217,8 @@ const Remix = () => {
       const staff = generateModifier(caster.modifiers.staff);
       spellcastersArr.push({
         index: i,
-        publicKey: caster?.publicKey?.toString(),
-        hue: Math.floor(convertStrToRandom(caster?.publicKey?.toString(), 360)),
+        publicKey: i,
+        hue: Math.floor(convertStrToRandom(i, 360)),
         casterActionPosition: moveAction
           ? `${COLUMNS_ALPHA[moveAction[1]]}${moveAction[0] + 1}`
           : null,
@@ -252,20 +250,18 @@ const Remix = () => {
     return spellcastersArr;
   };
 
-  const generateInventory = (inventory: Item[]) => {
+  const generateInventory = (inventory: Map<string, Item>) => {
     let items: any[] = [];
     let chests: any[] = [];
-    // https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/
-    // forEach does 33% less ops-per sec than a regular for loop/forOf
-    for (let key = 0; key < inventory.length; key++) {
-      const item = inventory[key];
+
+    for (const [key, item] of inventory) {
       if (Object.keys(item.itemType)[0] === 'chest') {
         chests.push({
           type: 'chest',
           index: key,
           tier: getTier(item.level),
           level: item.level,
-          publicKey: item?.publicKey?.toString(),
+          publicKey: key,
         });
       } else {
         if (item.itemType.equipment) {
@@ -280,7 +276,7 @@ const Remix = () => {
             attribute: Object.keys(item.itemType.equipment.feature)[0],
             rarity: Object.keys(item.itemType.equipment.rarity)[0],
             value: item.itemType.equipment.value,
-            publicKey: item?.publicKey?.toString(),
+            publicKey: key,
             equippedOwner: item.equippedOwner,
           };
 
@@ -296,7 +292,7 @@ const Remix = () => {
             cost: item.itemType.spellBook.cost,
             costFeature: Object.keys(item.itemType.spellBook.costFeature)[0],
             value: item.itemType.spellBook.value,
-            publicKey: item?.publicKey?.toString(),
+            publicKey: key,
             equippedOwner: item.equippedOwner,
           });
         }

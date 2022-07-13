@@ -22,7 +22,6 @@ const Prestige = ({ spell_id }) => {
     find(spellcasters, (caster) => caster.id === spell_id),
   );
 
-  const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
   return (
     <_prestige>
       <_title>{t('prestige.caster')}</_title>

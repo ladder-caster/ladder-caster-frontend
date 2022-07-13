@@ -97,7 +97,7 @@ export const Onboarding = ({ home }) => {
   if (
     initLoading &&
     active
-    //BROKE this condition by removing phases || (!phase && casters?.length)
+    //BROKE this condition by removing phases || (!phase && casters?.size)
   )
     return <Skeleton />;
 
@@ -165,13 +165,13 @@ export const Onboarding = ({ home }) => {
           </_step>
         </>
       )}
-      {(initialized && casters?.length === 0) || (initialized && home) ? (
+      {(initialized && casters?.size === 0) || (initialized && home) ? (
         <>
           <_step>
-            <_card $active={!(resources?.lada !== 0 || casters?.length !== 0)}>
+            <_card $active={!(resources?.lada !== 0 || casters?.size !== 0)}>
               <Spotlight>
                 <_icon
-                  $active={!(resources?.lada !== 0 || casters?.length !== 0)}
+                  $active={!(resources?.lada !== 0 || casters?.size !== 0)}
                   $step={1}
                 >
                   <IconMoney />
@@ -179,14 +179,14 @@ export const Onboarding = ({ home }) => {
               </Spotlight>
             </_card>
             <_item>
-              <_task $disabled={resources?.lada !== 0 || casters?.length !== 0}>
+              <_task $disabled={resources?.lada !== 0 || casters?.size !== 0}>
                 1. {t('home.task.redeem')}
                 <div>{t('home.task.lada')}</div>
               </_task>
               <_actions>
                 <_button
-                  disabled={resources?.lada >= 1000 || casters?.length !== 0}
-                  $disabled={resources?.lada >= 1000 || casters?.length !== 0}
+                  disabled={resources?.lada >= 1000 || casters?.size !== 0}
+                  $disabled={resources?.lada >= 1000 || casters?.size !== 0}
                   style={{ marginRight: 8 }}
                   onClick={() => drawerRedeem()}
                   $noIcon
@@ -196,8 +196,8 @@ export const Onboarding = ({ home }) => {
                 <span>or</span>
                 <_link
                   onClick={() => drawerTrade()}
-                  disabled={resources?.lada !== 0 || casters?.length !== 0}
-                  $disabled={resources?.lada !== 0 || casters?.length !== 0}
+                  disabled={resources?.lada !== 0 || casters?.size !== 0}
+                  $disabled={resources?.lada !== 0 || casters?.size !== 0}
                   style={{ marginLeft: 8 }}
                   $noIcon
                 >
@@ -207,10 +207,10 @@ export const Onboarding = ({ home }) => {
             </_item>
           </_step>
           <_step>
-            <_card $active={!(resources.lada === 0 || casters?.length !== 0)}>
+            <_card $active={!(resources.lada === 0 || casters?.size !== 0)}>
               <Spotlight>
                 <_icon
-                  $active={!(resources.lada === 0 || casters?.length !== 0)}
+                  $active={!(resources.lada === 0 || casters?.size !== 0)}
                   $step={2}
                 >
                   <IconHat />
@@ -218,16 +218,16 @@ export const Onboarding = ({ home }) => {
               </Spotlight>
             </_card>
             <_item>
-              <_task $disabled={resources.lada === 0 || casters?.length !== 0}>
+              <_task $disabled={resources.lada === 0 || casters?.size !== 0}>
                 2. {t('home.task.spellcasters')}
               </_task>
               <_actions>
                 <_button
                   style={{ marginRight: 8 }}
-                  disabled={resources.lada === 0 || casters?.length !== 0}
-                  $disabled={resources.lada === 0 || casters?.length !== 0}
+                  disabled={resources.lada === 0 || casters?.size !== 0}
+                  $disabled={resources.lada === 0 || casters?.size !== 0}
                   onClick={() => {
-                    if (!(resources.lada === 0 || casters?.length !== 0))
+                    if (!(resources.lada === 0 || casters?.size !== 0))
                       modalBuyLADA();
                   }}
                   $noIcon
@@ -238,24 +238,24 @@ export const Onboarding = ({ home }) => {
             </_item>
           </_step>
           <_step>
-            <_card $active={!(casters?.length === 0)}>
+            <_card $active={!(casters?.size === 0)}>
               <Spotlight>
-                <_icon $active={!(casters?.length === 0)} $step={3}>
+                <_icon $active={!(casters?.size === 0)} $step={3}>
                   <IconLightning />
                 </_icon>
               </Spotlight>
             </_card>
             <_item>
-              <_task $disabled={casters?.length === 0}>
+              <_task $disabled={casters?.size === 0}>
                 3. {t('home.task.start')}
               </_task>
               <_actions>
                 <_button
                   style={{ marginRight: 16 }}
-                  disabled={casters?.length === 0}
-                  $disabled={casters?.length === 0}
+                  disabled={casters?.size === 0}
+                  $disabled={casters?.size === 0}
                   onClick={() => {
-                    if (!(casters?.length === 0)) setView(VIEW_MAP);
+                    if (!(casters?.size === 0)) setView(VIEW_MAP);
                   }}
                   $noIcon
                 >

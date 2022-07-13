@@ -54,7 +54,7 @@ const Spellcasters = () => {
   const render = useMemo(() => {
     if (
       gameConstants?.gameState &&
-      (phase || casters?.length > 0 || oldSpellcasters?.length > 0)
+      (phase || casters?.size > 0 || oldSpellcasters?.length > 0)
     ) {
       return (
         <>
