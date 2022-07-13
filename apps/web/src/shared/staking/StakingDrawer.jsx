@@ -21,7 +21,14 @@ import { STAKING, VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 import { IconLock } from 'design/icons/lock.icon.js';
-
+import {
+  _form,
+  _row,
+  _section,
+  _input,
+  _float as _stake_float,
+  _dropdown,
+} from '../trade/tabs/swap/SwapTab.styled.js';
 // eslint-disable-next-line react/prop-types
 const StakingCard = ({
   apy,
@@ -51,6 +58,7 @@ const StakingDrawer = () => {
   const [view_height] = useRemix(VIEW_SIZE);
   const [stakingContext] = useRemix(STAKING);
   const [currentTier, setCurrentTier] = useState(0);
+  const [stakeType, setStakeType] = useState('lada');
   const { closeDrawer } = useActions();
   const stakeClick = (tier) => {
     if (currentTier === tier) {
@@ -61,6 +69,12 @@ const StakingDrawer = () => {
     //stakingContext.stakeLADANoLock(amount, tier);
     setCurrentTier(tier);
   };
+  /**
+   * Stakes tokens for a certain period of time
+   * @param {number} amount amount of the token to stake
+   * @param {number} tier number signifying tier 1-x
+   * @param {string} type string type - not currently in use
+   */
   const stake = (amount, tier, type) => {
     //TYPE added incase future addition of staking cross app tokens :)
     if (!stakingContext) return;
@@ -101,6 +115,55 @@ const StakingDrawer = () => {
     );
     return cards;
   }, [currentTier]);
+  const renderSegment = useMemo(() => {
+    return (
+      <>
+        <_card_container>{stakingCards}</_card_container>
+        <_description>
+          {t('drawer.staking.earn.rate.description', {
+            date: 'October 31st, 2022',
+          })}
+        </_description>
+        <_breakpoint />
+        {currentTier == 0 ? (
+          <>
+            <_title>{t('drawer.staking.pfp.title')}</_title>
+            <_card_container
+              $justify={'start'}
+              $align={'start'}
+              $margin={'12px 0 0 0'}
+            >
+              <StakingCard type={t('coming.soon')} hideLock />
+              <StakingCard
+                type={t('drawer.staking.pfp.getTwinPack')}
+                hideLock
+                onClick={buyTwinPack}
+              />
+            </_card_container>
+          </>
+        ) : (
+          <_staking>
+            <_title>
+              {t('drawer.staking.earn.title', {
+                type: stakeType.toUpperCase(),
+              })}
+            </_title>
+            <_form>
+              <_row>
+                <_section>
+                  <_input>
+                    <_stake_float>
+                      <_dropdown></_dropdown>
+                    </_stake_float>
+                  </_input>
+                </_section>
+              </_row>
+            </_form>
+          </_staking>
+        )}
+      </>
+    );
+  }, [currentTier]);
   return (
     <_staking $height={view_height}>
       <_header>
@@ -116,26 +179,7 @@ const StakingDrawer = () => {
         </_float>
       </_header>
       <_breakpoint />
-      <_card_container>{stakingCards}</_card_container>
-      <_description>
-        {t('drawer.staking.earn.rate.description', {
-          date: 'October 31st, 2022',
-        })}
-      </_description>
-      <_breakpoint />
-      <_title>{t('drawer.staking.pfp.title')}</_title>
-      <_card_container
-        $justify={'start'}
-        $align={'start'}
-        $margin={'12px 0 0 0'}
-      >
-        <StakingCard type={t('coming.soon')} hideLock />
-        <StakingCard
-          type={t('drawer.staking.pfp.getTwinPack')}
-          hideLock
-          onClick={buyTwinPack}
-        />
-      </_card_container>
+      {renderSegment}
     </_staking>
   );
 };

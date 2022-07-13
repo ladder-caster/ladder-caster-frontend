@@ -389,6 +389,7 @@
     "trade.swap.empty.bids": "No Bids",
     "trade.swap.empty.asks": "No Asks",
     "drawer.staking.title": "Staking",
+    "drawer.staking.earn.title": "Stake {{type}}",
     "menu.earn": "Staking",
     "drawer.staking.earn": "{{percentage}}%  APY",
     "drawer.staking.earn.type":"{{type}}",
