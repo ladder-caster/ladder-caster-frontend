@@ -1,12 +1,9 @@
 import * as anchor from '@project-serum/anchor';
-import { Connection, ConnectionConfig, Keypair } from '@solana/web3.js';
-import laddercasterIDLMain from '../config/laddercast-mainnet.json';
-import laddercasterIDLMainPriv from '../config/laddercast-mainnet-priv.json';
-import laddercasterIDLDev from '../config/laddercast-dev.json';
-import laddercasterIDLLocal from '../config/laddercast-local.json';
+import { Connection } from '@solana/web3.js';
 import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import jwt from 'jsonwebtoken';
+import config, { environment } from '../../../../../config';
 
 export type Environment =
   | 'mainnet'
@@ -49,58 +46,18 @@ export class Client {
   static async getConnection(
     env: Environment,
   ): Promise<anchor.web3.Connection> {
-    const [url, config] = await this.getRPC(env);
-    if (config) return new anchor.web3.Connection(url, config);
-    return new anchor.web3.Connection(url);
-  }
-
-  static getIDL(env: Environment) {
-    switch (env) {
-      case 'localprod':
-      case 'mainnet': {
-        return laddercasterIDLMain;
-      }
-      case 'mainnet-priv': {
-        return laddercasterIDLMainPriv;
-      }
-      case 'localnet': {
-        return laddercasterIDLLocal;
-      }
-      case 'devnet': {
-        return laddercasterIDLDev;
-      }
-    }
-  }
-
-  static async getRPC(env: Environment): Promise<[string, ConnectionConfig]> {
-    switch (env) {
-      case 'mainnet-priv':
-      case 'mainnet': {
-        return [
-          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
-          {},
-        ];
-      }
-      case 'localnet': {
-        return ['http://localhost:8899', {}];
-      }
-      case 'localprod': {
-        return [
-          'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/',
-          {
-            httpHeaders: {
-              Authorization: `Bearer ${await this.getBearerToken()}`,
-            },
-          },
-        ];
-      }
-      case 'devnet': {
-        return [
-          'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/',
-          {},
-        ];
-      }
-    }
+    if (config)
+      return new anchor.web3.Connection(
+        config.rpc,
+        environment === 'localprod'
+          ? {
+              httpHeaders: {
+                Authorization: `Bearer ${await this.getBearerToken()}`,
+              },
+            }
+          : {},
+      );
+    return new anchor.web3.Connection(config.rpc);
   }
 
   static async getBearerToken() {
@@ -130,7 +87,7 @@ export class Client {
     env: Environment,
   ) {
     const _provider = new anchor.Provider(conn, wallet, {});
-    const idl = Client.getIDL(env);
+    const idl = config.idl;
     return new anchor.Program(
       idl as anchor.Idl,
       idl.metadata.address,

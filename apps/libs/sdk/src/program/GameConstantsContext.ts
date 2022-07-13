@@ -20,7 +20,7 @@ import {
   ROUND_TIMELIMIT,
 } from 'core/remix/state';
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
-import { Environment } from './Client';
+import config from '../../../../../config';
 
 /**
  * GameConstantsContext
@@ -84,7 +84,7 @@ class GameConstantsContext {
     this.transaction.recentBlockhash = blockhash;
   }
   async sendTransaction(txn?: Transaction) {
-    let toSend = txn ? txn : this.transaction;
+    let toSend = (txn ? txn : this.transaction) as Transaction;
     try {
       await this.client.program.provider.send(toSend);
       if (this.transaction) this.transaction = null;
@@ -149,9 +149,11 @@ class GameConstantsContext {
     if (this.accounts?.gameAccount) {
       return;
     }
-    const gameAccount = new web3.PublicKey(localStorage.getItem('gamePK'));
+    const gameAccount = new web3.PublicKey(
+      localStorage.getItem('gamePK') as string,
+    );
     const previousGameAccount = new web3.PublicKey(
-      this.getGamePK(process.env.REACT_APP_ENV as Environment, OLD_SEASON),
+      resources.seasons[OLD_SEASON][config.pkString],
     );
     const game = (await this.client.program.account.game.fetch(
       gameAccount,
@@ -198,14 +200,14 @@ class GameConstantsContext {
       PublicKey.findProgramAddress(
         [
           gameAccount.toBuffer(),
-          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
+          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer() as Buffer,
         ],
         this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
         [
           previousGameAccount.toBuffer(),
-          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
+          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer() as Buffer,
         ],
         this.client.program.programId,
       ),
@@ -342,20 +344,6 @@ class GameConstantsContext {
       this.updateGameInterval = setInterval(() => {
         this.handleGameUpdateInterval(60000);
       }, 60000);
-    }
-  }
-  private getGamePK(env: Environment, season: number): PublicKey {
-    switch (env) {
-      case 'localprod':
-      case 'mainnet': {
-        return resources.seasons[season].gameAccountProd;
-      }
-      case 'mainnet-priv': {
-        return resources.seasons[season].gameAccountProdPriv;
-      }
-      case 'devnet': {
-        return resources.seasons[season].gameAccount;
-      }
     }
   }
   // #region helpers

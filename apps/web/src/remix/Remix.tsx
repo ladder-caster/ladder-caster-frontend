@@ -48,8 +48,6 @@ import {
 } from '../../../libs/chain/hooks/state';
 import {
   Caster,
-  Client,
-  Environment,
   Game,
   GameContext,
   Item,
@@ -68,6 +66,7 @@ import {
 import { map, sortBy, reverse } from 'lodash';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
+import config from '../../../../config';
 
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -309,7 +308,6 @@ const Remix = () => {
   };
 
   useEffect(() => {
-    let listener;
     if (game) {
       setMap(generateMap(game));
     }
@@ -337,20 +335,12 @@ const Remix = () => {
       };
 
       poll();
-      interval = setInterval(
-        () => {
-          poll();
-        },
-        process.env.REACT_APP_ENV === 'mainnet' ||
-          process.env.REACT_APP_ENV === 'mainnet-priv' ||
-          process.env.REACT_APP_ENV === 'localprod'
-          ? 10000
-          : 1000000,
-      );
+      interval = setInterval(() => {
+        poll();
+      }, config.pollInterval);
     };
 
     if (game) {
-      console.log(game);
       const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
       const timeDiff =
         new Date().getTime() -
@@ -392,34 +382,21 @@ const Remix = () => {
   }, [items]);
 
   useEffect(() => {
+    if (player) {
+      console.log('player', player);
+    }
+  }, [player]);
+
+  useEffect(() => {
     requestCachePubKey();
 
     // DO NOT REMOVE, the game breaks if removed
-    switch (process.env.REACT_APP_ENV as Environment) {
-      case 'devnet': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccount,
-        );
-        break;
-      }
-      case 'mainnet-priv': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccountProdPriv,
-        );
-        break;
-      }
-      case 'localprod':
-      case 'mainnet': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccountProd,
-        );
-        break;
-      }
-    }
-    const IDL = Client.getIDL(process.env.REACT_APP_ENV as Environment);
+    localStorage.setItem(
+      'gamePK',
+      resources.seasons[CURRENT_SEASON][config.pkString],
+    );
+
+    const IDL = config.idl;
     const errors = IDL?.errors;
     const next_codes = {};
     if (errors?.length) {
@@ -428,12 +405,6 @@ const Remix = () => {
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (player) {
-      console.log('player', player);
-    }
-  }, [player]);
 
   useEffect(() => {
     if (loading) {
@@ -446,6 +417,7 @@ const Remix = () => {
       });
     }
   }, [loading]);
+
   return null;
 };
 
