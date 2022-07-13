@@ -61,7 +61,7 @@ const Header = withTheme(({ theme }) => {
         </_speed>
       </_controls>
     ) : null;
-  }, [gameConstants?.gameState?.turnInfo?.turn, casters?.length, initialized]);
+  }, [gameConstants?.gameState?.turnInfo?.turn, casters?.size, initialized]);
 
   return (
     <_header>

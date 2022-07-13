@@ -60,11 +60,15 @@ export class PlayerContext {
           },
         },
       ])
-    ).map((item) => {
-      return { ...(item.account as Item), publicKey: item.publicKey };
-    });
+    ).map(
+      (item) =>
+        [
+          item.publicKey.toString(),
+          { publicKey: item.publicKey, ...item.account } as Item,
+        ] as [string, Item],
+    );
 
-    return itemArray;
+    return new Map<string, Item>(itemArray);
   }
 
   async getCasters() {
@@ -77,11 +81,18 @@ export class PlayerContext {
           },
         },
       ])
-    ).map((caster) => {
-      return { ...caster.account, publicKey: caster.publicKey };
-    });
+    ).map(
+      (caster) =>
+        [
+          caster.publicKey.toString(),
+          {
+            publicKey: caster.publicKey,
+            ...caster.account,
+          } as Caster,
+        ] as [string, Caster],
+    );
 
-    return casterArray;
+    return new Map<string, Caster>(casterArray);
   }
 
   async getPreSeasonCasters() {
@@ -94,11 +105,18 @@ export class PlayerContext {
           },
         },
       ])
-    ).map((caster) => {
-      return { ...caster.account, publicKey: caster.publicKey };
-    });
+    ).map(
+      (caster) =>
+        [
+          caster.publicKey.toString(),
+          {
+            publicKey: caster.publicKey,
+            ...caster.account,
+          } as Caster,
+        ] as [string, Caster],
+    );
 
-    return casterArray;
+    return new Map<string, Caster>(casterArray);
   }
 
   async getItem(itemPK: anchor.web3.PublicKey) {

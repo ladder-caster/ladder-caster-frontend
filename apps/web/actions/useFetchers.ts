@@ -16,6 +16,7 @@ import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Caster,
   CasterContext,
   GameContext,
   PlayerContext,
@@ -53,14 +54,18 @@ export const useFetchers = () => {
 
           if (nextCaster && publicKey) {
             // Replace
-            const updatedCasters = nextCasters.map((caster) => {
+            let updatedCasters = new Map<string, Caster>();
+            for (const caster of nextCasters) {
               if (caster.publicKey?.toString() === publicKey?.toString()) {
-                return { ...nextCaster, publicKey: publicKey };
+                updatedCasters.set(caster.publicKey?.toString(), {
+                  ...nextCaster,
+                });
               } else {
-                return { ...caster };
+                updatedCasters.set(caster.publicKey?.toString(), {
+                  ...caster,
+                });
               }
-            });
-
+            }
             setCasters(updatedCasters);
           }
 

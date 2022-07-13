@@ -37,11 +37,7 @@ const Equipment = ({ caster }) => {
    *  currentGear: Item
    * }
    */
-  const casterGear =
-    find(
-      casters,
-      (match) => match?.publicKey?.toString() === caster?.publicKey,
-    ) || {};
+  const casterGear = casters.get(caster?.publicKey) || {};
   const hatUpgrade = casterGear?.head?.items?.length > 0;
   const robeUpgrade = casterGear?.robe?.items?.length > 0;
   const staffUpgrade = casterGear?.staff?.items?.length > 0;

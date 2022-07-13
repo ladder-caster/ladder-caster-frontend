@@ -76,12 +76,12 @@ const Map = () => {
   return (
     <_ladder>
       <Heading flat title={t('title.map')} />
-      {!initialized || casters?.length === 0 ? (
+      {!initialized || casters?.size === 0 ? (
         <_feed>
           <Onboarding />
         </_feed>
       ) : null}
-      {initialized && casters?.length !== 0 ? (
+      {initialized && casters?.size !== 0 ? (
         <>
           <_filters></_filters>
           <_map ref={map_ref}>

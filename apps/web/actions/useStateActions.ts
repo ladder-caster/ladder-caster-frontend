@@ -53,6 +53,7 @@ import {
 } from 'core/remix/tabs';
 import { findMarket } from 'core/utils/markets';
 import { find } from 'lodash';
+import { Caster } from 'sdk/src/program';
 
 export const useStateActions = () => {
   const { t } = useTranslation();
@@ -96,7 +97,7 @@ export const useStateActions = () => {
       setClient(null);
       setPlayer(null);
       setSpellcasters(null);
-      setCasters([]);
+      setCasters(new Map<string, Caster>());
       setItems([]);
       setInventory({
         items: [],

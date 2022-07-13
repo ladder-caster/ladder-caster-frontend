@@ -171,9 +171,9 @@ export class CasterContext {
   }
 
   async refreshCaster() {
-    return await gameConstantsContext.Client.program.account.caster.fetch(
-      this.caster?.publicKey,
-    );
+    return (await gameConstantsContext.Client.program.account.caster.fetch(
+      this.caster.publicKey,
+    )) as Caster;
   }
 
   async casterCommitLoot() {

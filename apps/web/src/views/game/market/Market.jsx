@@ -40,12 +40,12 @@ const Market = () => {
   return (
     <_market $init={initialized && casters?.length !== 0}>
       <Heading title={t('title.market')} marketplace />
-      {!initialized || casters?.length === 0 ? (
+      {!initialized || casters?.size === 0 ? (
         <_feed>
           <Onboarding />
         </_feed>
       ) : null}
-      {initialized && casters?.length !== 0 ? (
+      {initialized && casters?.size !== 0 ? (
         <_body>
           <_section>
             <_title>{t('market.available')}:</_title>

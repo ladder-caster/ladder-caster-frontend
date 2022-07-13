@@ -58,7 +58,7 @@ const Inventory = () => {
   const render = useMemo(() => {
     if (
       gameConstants?.gameState &&
-      (casters?.length !== 0 || items.length !== 0)
+      (casters?.size !== 0 || items.length !== 0)
     ) {
       return (
         <>
@@ -110,7 +110,7 @@ const Inventory = () => {
         </_feed>
       );
     }
-  }, [casters, gameConstants?.gameState, items]);
+  }, [casters?.size, gameConstants?.gameState, items]);
 
   return (
     <_inventory>

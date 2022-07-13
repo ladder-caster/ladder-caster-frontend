@@ -92,10 +92,7 @@ const ModalMove = ({ height, options }) => {
   };
   const casterEquipment = useMemo(() => {
     if (caster) {
-      const casterWrapper = find(
-        casters,
-        (match) => match?.publicKey?.toString() === caster?.publicKey,
-      );
+      const casterWrapper = casters.get(caster?.publicKey);
 
       if (!casterWrapper) return [];
       const keys = Object.keys(casterWrapper);
