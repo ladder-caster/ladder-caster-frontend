@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   _staking,
   _close,
@@ -23,9 +23,16 @@ import { useActions } from '../../../actions';
 import { IconLock } from 'design/icons/lock.icon.js';
 
 // eslint-disable-next-line react/prop-types
-const StakingCard = ({ apy, type, duration, onClick, hideLock }) => {
+const StakingCard = ({
+  apy,
+  type,
+  duration,
+  onClick,
+  hideLock,
+  tierSelected,
+}) => {
   return (
-    <_card onClick={onClick}>
+    <_card onClick={onClick} $selected={tierSelected}>
       <_card_text>{apy}</_card_text>
       <_card_text $fontSize={'16px'}>{type}</_card_text>
       <_card_group>
@@ -43,13 +50,22 @@ const StakingDrawer = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
   const [stakingContext] = useRemix(STAKING);
-
+  const [currentTier, setCurrentTier] = useState(0);
   const { closeDrawer } = useActions();
-  const stakeClick = (amount, tier) => {
-    if (!stakingContext) return;
-    stakingContext.stakeLADANoLock(amount, tier);
+  const stakeClick = (tier) => {
+    if (currentTier === tier) {
+      setCurrentTier(0);
+      return;
+    }
+    //if (!stakingContext) return;
+    //stakingContext.stakeLADANoLock(amount, tier);
+    setCurrentTier(tier);
   };
-  //TODO: get staking% from solana-stake-monitor
+  const stake = (amount, tier, type) => {
+    //TYPE added incase future addition of staking cross app tokens :)
+    if (!stakingContext) return;
+    stakingContext.stakeLADANoLock(amount, tier, type);
+  };
   const buyTwinPack = () => {
     window.open('https://magiceden.io/marketplace/ladder_caster_season_1');
   };
@@ -65,7 +81,8 @@ const StakingDrawer = () => {
           duration={t('drawer.staking.earn.duration', {
             duration: Math.floor(Math.random() * 365),
           })}
-          onClick={() => stakeClick(0, 1)}
+          onClick={() => stakeClick(card + 2)}
+          tierSelected={currentTier == card + 2}
         />
       );
     });
@@ -77,12 +94,13 @@ const StakingDrawer = () => {
         })}
         type={t('drawer.staking.earn.type', { type: 'LADA' })}
         duration={t('drawer.staking.earn.duration.flexible')}
-        onClick={stakeClick}
+        onClick={() => stakeClick(1)}
         hideLock
+        tierSelected={currentTier == 1}
       />,
     );
     return cards;
-  }, []);
+  }, [currentTier]);
   return (
     <_staking $height={view_height}>
       <_header>

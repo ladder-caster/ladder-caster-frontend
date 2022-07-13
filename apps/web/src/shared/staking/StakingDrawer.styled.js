@@ -78,25 +78,46 @@ export const _card_container = styled.div`
   gap: 16px;
   margin: ${({ $margin }) => $margin ?? '0'};
 `;
-export const _card = styled(m.div).attrs(({ theme }) => {
+export const _card = styled(m.div).attrs(({ theme, $selected }) => {
   //animations for card
-  return {
-    whileHover: {
-      scale: 1.05,
-      background: theme.background['highest'],
-      borderColor: theme.border['higher'],
-    },
-    whileTap: {
-      scale: 0.95,
-      filter: 'brightness(0.9)',
-    },
-    initial: {
-      scale: 1,
-      background: theme.background['high'],
-      borderColor: theme.border['base'],
-    },
+  const initial = {
+    scale: 1,
+    background: theme.background['high'],
+    borderColor: theme.border['base'],
   };
+  return $selected
+    ? {
+        initial,
+        animate: {
+          scale: 1.01,
+          background: theme.background['higher'],
+          transition: {
+            delay: 0.5,
+            ease: [0.38, -0.72, 0.56, 1.6],
+            duration: 2,
+            repeat: Infinity,
+            repeatType: 'mirror',
+          },
+        },
+        whileHover: {
+          background: theme.background['highest'],
+        },
+      }
+    : {
+        initial,
+        whileHover: {
+          scale: 1.05,
+          background: theme.background['highest'],
+          borderColor: theme.border['higher'],
+        },
+        whileTap: {
+          scale: 0.95,
+          filter: 'brightness(0.9)',
+        },
+      };
 })`
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,7 +133,7 @@ export const _card = styled(m.div).attrs(({ theme }) => {
   border: 1px solid ${({ theme }) => theme.border['base']};
   padding: 4px;
 `;
-export const _card_text = styled.div.attrs(({ theme }) => {
+export const _card_text = styled(m.div).attrs(({ theme }) => {
   return {
     whileHover: {
       color: theme.text['active'],
@@ -129,7 +150,7 @@ export const _card_text = styled.div.attrs(({ theme }) => {
   color: ${({ theme }) => theme.text['base']};
   text-shadow: ${({ theme }) => theme.shadow['text']};
 `;
-export const _card_group = styled.div`
+export const _card_group = styled(m.div)`
   display: flex;
   flex-direction: row;
   align-items: center;
