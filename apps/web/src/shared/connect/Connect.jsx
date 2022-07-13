@@ -4,8 +4,7 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { IconWallet } from '../../../../libs/design/icons/wallet.icon';
 import { useActions } from '../../../actions';
-
-const isProd = process.env.REACT_APP_ENV === 'mainnet';
+import { isProd } from '../../../../../config';
 
 const Connect = () => {
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
