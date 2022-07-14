@@ -41,7 +41,7 @@ import {
   _float,
   _close,
   _icon_close,
-} from '../trade/TradeDrawer.styled';
+} from '../drawers/trade/TradeDrawer.styled';
 
 const Inventory = () => {
   const { t } = useTranslation();

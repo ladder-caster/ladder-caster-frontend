@@ -9,7 +9,7 @@ import {
   ATTRIBUTE_RES2,
   ATTRIBUTE_XP,
 } from 'core/remix/state';
-import { _value } from '../../../views/game/inventory/drawer/attributes/Attributes.styled';
+import { _value } from '../../../views/game/inventory/attributes/Attributes.styled';
 import { useTranslation } from 'react-i18next';
 
 const DescriptionSkill = ({ level, attribute, value, spell }) => {

@@ -4,7 +4,7 @@ import {
   _actions as __actions,
   _window as __window,
 } from '../../Modal.styled';
-import { _breakpoint as __breakpoint } from '../../../../views/game/spellcasters/drawer/Player.styled';
+import { _breakpoint as __breakpoint } from '../../../../views/game/drawers/spellcaster/SpellcasterDrawer.styled';
 
 export const _breakpoint = styled(__breakpoint)`
   width: 50%;
