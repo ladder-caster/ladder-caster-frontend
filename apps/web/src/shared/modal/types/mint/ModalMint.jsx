@@ -7,7 +7,7 @@ import {
   _title,
   _window,
 } from '../../Modal.styled';
-import { _breakpoint } from '../../../../views/game/spellcasters/drawer/Player.styled';
+import { _breakpoint } from '../../../../views/game/drawers/spellcaster/SpellcasterDrawer.styled';
 import { AnimateButton } from '../../../button/animations/AnimateButton';
 import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';

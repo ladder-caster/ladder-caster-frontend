@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next';
 import Mutations from '../../shared/mutations/Mutations';
 import Connect from '../../shared/connect/Connect';
 import { useKeys } from 'core/hooks/useKeys';
-import { View } from './View/View';
+import { View } from './view/View';
 
 const Game = () => {
   const { t } = useTranslation();

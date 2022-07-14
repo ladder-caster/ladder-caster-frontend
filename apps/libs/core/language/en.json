@@ -347,6 +347,8 @@
     "hide.prestige": "Hide Old Spellcasters",
     "onboarding.beta": "BETA",
     "wallet.solana": "Solana",
-    "wallet.lada": "Lada Token"
+    "wallet.lada": "Lada Token",
+    "trade.swap.empty.bids": "No Bids",
+    "trade.swap.empty.asks": "No Asks"
   }
 }
