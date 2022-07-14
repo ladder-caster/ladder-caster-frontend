@@ -15,7 +15,6 @@ import {
   DRAWER_ACTIVE,
   GAME_INVENTORY,
   ITEM_BOOK,
-  ITEM_GEM,
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
@@ -32,7 +31,6 @@ import { IconChevronRight } from 'design/icons/chevron-right.icon';
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { drawerInventory } = useActions();
-  const [, setDrawer] = useRemix(DRAWER_ACTIVE);
   const [inventory] = useRemix(GAME_INVENTORY);
   const items_ref = useRef();
   var scrollInterval = null;
@@ -40,7 +38,6 @@ const Category = ({ type }) => {
     [ITEM_HAT]: t('inventory.title.hat'),
     [ITEM_ROBE]: t('inventory.title.robe'),
     [ITEM_STAFF]: t('inventory.title.staff'),
-    [ITEM_GEM]: t('inventory.title.gem'),
     [ITEM_BOOK]: t('inventory.title.book'),
   }[type];
 

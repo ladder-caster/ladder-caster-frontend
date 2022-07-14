@@ -104,17 +104,6 @@ export const _hat = styled.div`
   cursor: pointer;
 `;
 
-export const _gem = styled.div`
-  width: calc(50% - 8px);
-  height: 100%;
-  margin-left: 8px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
-
 export const _robe = styled.div`
   width: calc(50% - 8px);
   height: 100%;

@@ -11,7 +11,6 @@
     "inventory.title.hat": "Hats",
     "inventory.title.robe": "Robes",
     "inventory.title.staff": "Staffs",
-    "inventory.title.gem": "Gems",
     "inventory.title.book": "Spellbooks",
     "player.character": "Character",
     "player.actions": "Actions",
@@ -152,7 +151,6 @@
     "item.name.hat": "Hat",
     "item.name.robe": "Robe",
     "item.name.staff": "Staff",
-    "item.name.gem": "Gem",
     "item.name.book": "Spellbook",
     "rarity.name.common": "Common",
     "rarity.name.rare": "Rare",
@@ -311,7 +309,6 @@
     "wallet.mint": "Mint",
     "copy.clipboard": "Copy to clipboard",
     "copied.clipboard": "Copied!",
-
     "confirm.title": "Confirm",
     "confirm.equip.action": "Equip {{type}}",
     "confirm.unequip.action": "Unequip {{type}}",
