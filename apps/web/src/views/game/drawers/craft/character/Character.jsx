@@ -17,7 +17,7 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { GAME_MAP, GAME_SPELLCASTERS, VIEW_SIZE } from 'core/remix/state';
 import { map, sortBy } from 'lodash';
 import Caster from '../../../../../shared/caster/Caster';
-import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../../animations/AnimateButton';
 import { gridList } from 'core/utils/lists';
 import { useActions } from '../../../../../../actions';
 

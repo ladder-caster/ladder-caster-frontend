@@ -21,7 +21,7 @@ import {
   _header,
   _title,
 } from '../../../spellcaster/character/Character.styled';
-import { AnimateButton } from '../../../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../../../animations/AnimateButton';
 import { useTranslation } from 'react-i18next';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 

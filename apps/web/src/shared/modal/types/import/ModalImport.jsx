@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { _deny, _description, _title, _input } from '../../Modal.styled';
 import { _button, _window, _actions, _breakpoint } from './ModalImport.styled';
-import { AnimateButton } from '../../../button/animations/AnimateButton';
-import { AnimateModal } from '../../animations/AnimateModal';
+import { AnimateButton } from '../../../../views/game/animations/AnimateButton';
+import { AnimateModal } from '../../../../views/game/animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';

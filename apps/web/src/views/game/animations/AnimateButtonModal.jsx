@@ -2,7 +2,7 @@ import React from 'react';
 import { LazyAnimations } from 'design/animations';
 import { withTheme } from 'styled-components';
 
-export const AnimateButton = withTheme(
+export const AnimateButtonModal = withTheme(
   ({ theme, children, $hidden, active, ...props }) => {
     const variants = {
       initial: {

@@ -23,7 +23,7 @@ import {
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
-import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../../animations/AnimateButton';
 import { IconBook } from 'design/icons/book.icon';
 import { IconMove } from 'design/icons/move.icon';
 import { IconAnvil } from 'design/icons/anvil.icon';
@@ -33,7 +33,7 @@ import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
 import { IconLock } from 'design/icons/lock.icon';
 import { AnimatePresence } from 'framer-motion';
-import { AnimateLock } from '../animations/AnimateLock';
+import { AnimateLock } from '../../../animations/AnimateLock';
 import { CHAIN_GAME } from 'chain/hooks/state';
 import { AnimateRewards } from '../../../animations/AnimateRewards';
 import Attributes from '../../../../../shared/attributes/Attributes';

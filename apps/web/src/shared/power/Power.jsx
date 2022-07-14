@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { _power, _progress, _strength, _padding, _fill } from './Power.styled';
-import { AnimateFill } from './animations/AnimateFill';
+import { AnimateFill } from '../../views/game/animations/AnimateFill';
 import { itemPowerLevel } from 'core/utils/numbers';
 import usePrevious from 'core/hooks/usePrevious';
 

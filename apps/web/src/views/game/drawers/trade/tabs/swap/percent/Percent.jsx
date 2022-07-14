@@ -1,6 +1,6 @@
 import React from 'react';
 import { _percent } from './Percent.styled';
-import { AnimatePercent } from '../../../animations/AnimatePercent';
+import { AnimatePercent } from '../../../../../animations/AnimatePercent';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { DRAWER_CONTEXT, GAME_RESOURCES, SIDE_BUY } from 'core/remix/state';

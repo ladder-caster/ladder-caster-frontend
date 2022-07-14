@@ -25,10 +25,10 @@ import { useActions } from '../../../../../actions';
 import Tiles from './tiles/Tiles';
 import Level from './level/Level';
 import Letters from './letters/Letters';
-import { AnimateBoard } from '../../animations/AnimateBoard';
-import { AnimateLimit } from '../../animations/AnimateLimit';
+import { AnimateButtonModal } from '../../../../views/game/animations/AnimateBoard';
+import { AnimateLimit } from '../../../../views/game/animations/AnimateLimit';
 import { _button } from '../loot/ModalLoot.styled';
-import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
+import { AnimateButton } from '../../../../views/game/animations/AnimateButtonModal';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   CONFIRM_MOVE,
@@ -50,7 +50,6 @@ import { getTierNumber } from 'core/utils/switch';
 import { IconMoneyIMG } from '../../../../../../libs/design/icons/money.icon';
 import IconAttribute from '../../../../shared/types/icons/IconAttribute';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
-import { find } from 'lodash';
 
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
@@ -189,7 +188,7 @@ const ModalMove = ({ height, options }) => {
         <_confirm>
           {isConfirm && (
             <>
-              <AnimateButton $hidden={!confirm} key={'button-modal-move'}>
+              <AnimateButtonModal $hidden={!confirm} key={'button-modal-move'}>
                 <_button
                   disabled={!confirm}
                   key={'button-modal-mover'}
@@ -198,7 +197,7 @@ const ModalMove = ({ height, options }) => {
                 >
                   {t('modal.move.action')} {confirm?.position?.toUpperCase()}
                 </_button>
-              </AnimateButton>
+              </AnimateButtonModal>
               <AnimateLimit $hidden={!confirm}>
                 <_limit>
                   <span>{t('modal.limit')}</span>

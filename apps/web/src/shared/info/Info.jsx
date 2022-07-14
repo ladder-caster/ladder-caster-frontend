@@ -12,7 +12,7 @@ import {
   _burn,
 } from './Info.styled';
 import Item from '../item/Item';
-import { AnimateButton } from '../button/animations/AnimateButton';
+import { AnimateButton } from '../../views/game/animations/AnimateButton';
 import Attributes from '../../views/game/inventory/attributes/Attributes';
 import { useTranslation } from 'react-i18next';
 import { useSize } from 'core/hooks/useSize';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { _craft, _button } from './Craft.styled';
 import { IconAnvil } from 'design/icons/anvil.icon';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
 

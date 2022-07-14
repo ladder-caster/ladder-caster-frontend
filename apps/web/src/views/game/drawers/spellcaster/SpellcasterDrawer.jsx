@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {
-  _player,
+  _spellcaster,
   _background,
   _breakpoint,
   _details,
@@ -85,11 +85,11 @@ const SpellcasterDrawer = () => {
   }, [isBoost, confirm, caster]);
   return (
     <_background>
-      <_player>
+      <_spellcaster>
         {renderMain}
         <_breakpoint />
         {renderSecondary}
-      </_player>
+      </_spellcaster>
     </_background>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { _option } from './Option.styled';
 import LogoCoins from '../../../../../../../shared/types/icons/LogoCoins';
-import { AnimateOption } from '../../../animations/AnimateOption';
+import { AnimateOption } from '../../../../../animations/AnimateOption';
 
 const Option = ({ symbol, click }) => {
   return (

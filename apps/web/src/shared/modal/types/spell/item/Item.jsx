@@ -1,9 +1,8 @@
 import React, { useRef, useMemo } from 'react';
 import { _item, _float, _background } from './Item.styled';
 import { useTranslation } from 'react-i18next';
-import { AnimateSlide } from '../../../animations/AnimateSlide';
+import { AnimateSlide } from '../../../../../views/game/animations/AnimateSlide';
 import NFT from '../../../../nft/NFT';
-import { INVERSE_EQUIP_MAP } from 'core/utils/switch';
 import {
   RARITY_COMMON,
   RARITY_EPIC,

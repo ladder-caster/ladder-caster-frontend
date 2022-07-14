@@ -1,6 +1,6 @@
 import React from 'react';
 import { _percent } from './Percent.styled';
-import { AnimatePercent } from '../../../animations/AnimatePercent';
+import { AnimatePercent } from '../../../../../animations/AnimatePercent';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { DRAWER_CONTEXT, GAME_RESOURCES } from 'core/remix/state';
 import { useActions } from '../../../../../../../../actions';
