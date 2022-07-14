@@ -16,12 +16,12 @@ import {
   _content,
   _after,
 } from '../Header.styled';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { GAME_CONSTANTS } from 'core/remix/state';
 import dayjs from 'dayjs';
 import { IconSkip } from 'design/icons/skip.icon';
-import { AnimateCrank } from '../animations/AnimateCrank';
+import { AnimateCrank } from '../../animations/AnimateCrank';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import usePrevious from 'core/hooks/usePrevious';

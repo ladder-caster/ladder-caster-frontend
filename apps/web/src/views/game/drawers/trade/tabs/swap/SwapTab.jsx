@@ -22,7 +22,7 @@ import { IconSwap } from 'design/icons/swap.icon';
 import Balance from '../../balance/Balance';
 import Rate from '../../rate/Rate';
 import { useActions } from '../../../../../../../actions';
-import { AnimateSwitch } from '../../animations/AnimateSwitch';
+import { AnimateSwitch } from '../../../../animations/AnimateSwitch';
 import Submit from './submit/Submit';
 import Percent from './percent/Percent';
 import Settle from '../order/settle/Settle';

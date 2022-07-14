@@ -9,7 +9,7 @@ import {
 } from './ModalRedeem.styled';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
+import { AnimateButtonModal } from '../../../../views/game/animations/AnimateButtonModal';
 import { useTranslation } from 'react-i18next';
 
 const ModalRedeem = ({ height, options }) => {
@@ -23,7 +23,7 @@ const ModalRedeem = ({ height, options }) => {
     <_loot $height={height}>
       <_visuals></_visuals>
       <_actions>
-        <AnimateButton key={'button-modal-loot'}>
+        <AnimateButtonModal key={'button-modal-loot'}>
           <_button
             key={'button-modal-looter'}
             ref={button_ref}
@@ -31,7 +31,7 @@ const ModalRedeem = ({ height, options }) => {
           >
             {t('modal.redeem.action')}
           </_button>
-        </AnimateButton>
+        </AnimateButtonModal>
         {/* <AnimateLimit>
           <_limit>{t('modal.limit')}</_limit>
         </AnimateLimit> */}

@@ -14,15 +14,15 @@ import {
   _bar,
   _fill,
 } from './CrankDrawer.styled';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
 import { CHAIN_GAME } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import dayjs from 'dayjs';
-import { AnimateFill } from './animations/AnimateFill';
-import { AnimateBar } from './animations/AnimateBar';
+import { AnimateFill } from '../../animations/AnimateFill';
+import { AnimateTime } from '../../animations/AnimateTime';
 import {
   GAME_MAP,
   GAME_SPELLCASTERS,
@@ -117,7 +117,7 @@ const CrankDrawer = () => {
 
   const timer = useMemo(() => {
     return time?.remaining ? (
-      <AnimateBar>
+      <AnimateTime>
         <_bar>
           <AnimateFill
             start={time?.start}
@@ -128,7 +128,7 @@ const CrankDrawer = () => {
             <_fill />
           </AnimateFill>
         </_bar>
-      </AnimateBar>
+      </AnimateTime>
     ) : null;
   }, [+time?.start, !!time?.remaining]);
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { _progress, _bar, _fill } from './Progress.styled';
-import { AnimateProgress } from '../animations/AnimateProgress';
+import { AnimateProgress } from '../../../../animations/AnimateProgress';
 import { LEVEL_BOUNDS } from 'core/utils/numbers';
-import usePrevious from 'core/hooks/usePrevious';
 
 const Progress = ({ caster }) => {
   const [rank, setRank] = useState({});

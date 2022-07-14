@@ -2,7 +2,7 @@ import React from 'react';
 import { LazyAnimations } from 'design/animations';
 import { withTheme } from 'styled-components';
 
-export const AnimateBar = withTheme(
+export const AnimateTime = withTheme(
   ({ theme, children, position, width, $vh, ...props }) => {
     const variants = {
       initial: {

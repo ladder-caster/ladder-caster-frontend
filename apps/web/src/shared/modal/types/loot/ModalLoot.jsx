@@ -9,9 +9,9 @@ import {
 } from './ModalLoot.styled';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
+import { AnimateButtonModal } from '../../../../views/game/animations/AnimateButtonModal';
 import { useTranslation } from 'react-i18next';
-import { AnimateLimit } from '../../animations/AnimateLimit';
+import { AnimateLimit } from '../../../../views/game/animations/AnimateLimit';
 
 const ModalLoot = ({ height, options }) => {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ const ModalLoot = ({ height, options }) => {
     <_loot $height={height}>
       <_visuals></_visuals>
       <_actions>
-        <AnimateButton key={'button-modal-loot'}>
+        <AnimateButtonModal key={'button-modal-loot'}>
           <_button
             key={'button-modal-looter'}
             ref={button_ref}
@@ -32,7 +32,7 @@ const ModalLoot = ({ height, options }) => {
           >
             {t('modal.loot.action')}
           </_button>
-        </AnimateButton>
+        </AnimateButtonModal>
         <AnimateLimit>
           <_limit>{t('modal.limit')}</_limit>
         </AnimateLimit>

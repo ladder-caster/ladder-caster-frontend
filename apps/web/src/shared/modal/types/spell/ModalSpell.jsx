@@ -14,15 +14,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { AnimateBoard } from '../../animations/AnimateBoard';
+import { AnimateBoard } from '../../../../views/game/animations/AnimateBoard';
 import Item from './item/Item';
 import Slide from '../../../slide/Slide';
 import Details from './details/Details';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { GAME_INVENTORY, GAME_SPELL, ITEM_BOOK } from 'core/remix/state';
 import { filter, map } from 'lodash';
-import { AnimateLimit } from '../../animations/AnimateLimit';
-import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
+import { AnimateLimit } from '../../../../views/game/animations/AnimateLimit';
+import { AnimateButtonModal } from '../../../../views/game/animations/AnimateButtonModal';
 import { EQUIP_MAP } from 'core/utils/switch';
 
 const ModalSpell = ({ height, options }) => {
@@ -76,7 +76,7 @@ const ModalSpell = ({ height, options }) => {
           </_board>
         </AnimateBoard>
         <_confirm>
-          <AnimateButton key={'button-modal-spell'}>
+          <AnimateButtonModal key={'button-modal-spell'}>
             <_button
               $hidden={!hasSpell}
               key={'button-modal-speller'}
@@ -85,7 +85,7 @@ const ModalSpell = ({ height, options }) => {
             >
               {t('modal.spell.action')}
             </_button>
-          </AnimateButton>
+          </AnimateButtonModal>
           <AnimateLimit $hidden={!confirm}>
             <_limit>
               <span>{t('modal.limit')}</span>

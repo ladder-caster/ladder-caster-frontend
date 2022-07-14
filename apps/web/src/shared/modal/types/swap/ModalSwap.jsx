@@ -1,7 +1,6 @@
 import React from 'react';
-import { _swap } from './ModalSwap.styled';
-import { _board } from '../order/ModalOrder.styled';
-import { AnimateBoard } from '../../animations/AnimateBoard';
+import { _swap, _board } from './ModalSwap.styled';
+import { AnimateBoard } from '../../../../views/game/animations/AnimateBoard';
 
 const ModalSwap = ({ height, options }) => {
   return (

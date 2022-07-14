@@ -8,8 +8,8 @@ import {
   _window,
 } from '../../Modal.styled';
 import { _breakpoint } from '../../../../views/game/drawers/spellcaster/SpellcasterDrawer.styled';
-import { AnimateButton } from '../../../button/animations/AnimateButton';
-import { AnimateModal } from '../../animations/AnimateModal';
+import { AnimateButton } from '../../../../views/game/animations/AnimateButton';
+import { AnimateModal } from '../../../../views/game/animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';

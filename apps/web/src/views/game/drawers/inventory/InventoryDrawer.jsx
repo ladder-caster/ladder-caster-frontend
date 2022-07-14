@@ -21,7 +21,7 @@ import {
   ITEM_STAFF,
   VIEW_SIZE,
 } from 'core/remix/state';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { _close, _icon } from '../spellcaster/rank/Rank.styled';
 import { IconClose } from 'design/icons/close.icon';
 import IconItem from '../../../../shared/types/items/IconItem';

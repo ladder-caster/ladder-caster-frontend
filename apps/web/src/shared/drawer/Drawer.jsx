@@ -6,7 +6,7 @@ import {
   _gradient,
   _shadow,
 } from './Drawer.styled';
-import { AnimateDrawer } from './animations/AnimateDrawer';
+import { AnimateDrawer } from '../../views/game/animations/AnimateDrawer';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import {
   DRAWER_ACTIVE,

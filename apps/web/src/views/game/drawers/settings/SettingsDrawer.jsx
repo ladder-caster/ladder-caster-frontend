@@ -13,7 +13,7 @@ import {
   _actions,
   _button,
 } from '../spellcaster/character/Character.styled';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { VIEW_SIZE } from 'core/remix/state';

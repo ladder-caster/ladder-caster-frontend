@@ -7,7 +7,7 @@ import {
   _icon,
   _title,
 } from './TokensDrawer.styled';
-import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';

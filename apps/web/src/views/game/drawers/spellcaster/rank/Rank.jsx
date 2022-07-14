@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { DRAWER_ACTIVE } from 'core/remix/state';
 import Progress from './progress/Progress';
-import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
+import { AnimateButton } from '../../../animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useActions } from '../../../../../../actions';
 import { LEVEL_BOUNDS } from 'core/utils/numbers';
