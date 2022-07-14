@@ -3,14 +3,12 @@ import { Web3AuthCore } from '@web3auth/core';
 import {
   ADAPTER_EVENTS,
   ADAPTER_NAMESPACES,
-  ADAPTER_STATUS,
   CHAIN_NAMESPACES,
   SafeEventEmitterProvider,
-  WALLET_ADAPTERS,
 } from '@web3auth/base';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { SolanaWalletConnectorPlugin } from '@web3auth/solana-wallet-connector-plugin';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import {
   WALLET_TYPE,
@@ -20,7 +18,6 @@ import {
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useW3A } from 'chain/hooks/useW3A';
-import { Client, Environment } from 'sdk/src/program';
 import config from '../../../../config';
 
 export const solanaChainConfig = {
@@ -34,12 +31,9 @@ export const solanaChainConfig = {
 };
 
 const Web3AuthInjecter = () => {
-  const [web3AuthInstance, setWeb3AuthInstance] = useRemixOrigin(
-    WEB3AUTH_CLIENT,
-    null,
-  );
-  const [provider, setProvider] = useRemixOrigin(WEB3AUTH_PROVIDER, null);
-  const [pluginStore, setPluginStore] = useRemixOrigin(WEB3AUTH_PLUGIN_STORE, {
+  const [, setWeb3AuthInstance] = useRemixOrigin(WEB3AUTH_CLIENT, null);
+  const [, setProvider] = useRemixOrigin(WEB3AUTH_PROVIDER, null);
+  const [pluginStore] = useRemixOrigin(WEB3AUTH_PLUGIN_STORE, {
     plugins: {},
     addPlugin(name: string, instance: unknown): void {
       this.plugins[name] = instance;
@@ -95,7 +89,7 @@ const Web3AuthInjecter = () => {
         console.log('Yeah!, you are successfully logged in', data);
         setProvider(web3AuthInstance.provider);
 
-        createWallet(web3AuthInstance.provider);
+        createWallet(web3AuthInstance.provider as SafeEventEmitterProvider);
         setWalletType();
       });
 

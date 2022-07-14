@@ -26,7 +26,6 @@ import CraftDrawer from '../inventory/drawer/craft/CraftDrawer';
 import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
 import Player from '../spellcasters/drawer/Player';
 import TradeDrawer from '../../../shared/trade/TradeDrawer';
-import Price from '../../../shared/price/Price';
 
 export const View = () => {
   const view_ref = useRef();
@@ -67,7 +66,6 @@ export const View = () => {
         </LazyMotion>
       </_container>
       <Drawer height={dh}>{Drawers ? <Drawers /> : null}</Drawer>
-      {/* <Price /> */}
     </_view>
   );
 };

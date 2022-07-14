@@ -12,7 +12,6 @@ import {
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
-import { IconCrsytal } from 'design/icons/crystal.icon';
 import { IconTreasure } from 'design/icons/treasure.icon';
 import { IconGather } from 'design/icons/gather.icon';
 import { IconTag } from 'design/icons/tag.icon';

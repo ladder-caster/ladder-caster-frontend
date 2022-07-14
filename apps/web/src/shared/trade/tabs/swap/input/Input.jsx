@@ -1,14 +1,8 @@
 import React, { useEffect } from 'react';
 import { _input } from './Input.styled';
-import { useInput } from 'core/hooks/useInput';
-import {
-  DRAWER_CONTEXT,
-  GAME_RESOURCES,
-  TRADE_ORDERBOOK,
-} from 'core/remix/state';
+import { DRAWER_CONTEXT, GAME_RESOURCES } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useActions } from '../../../../../../actions';
-import usePrevious from 'core/hooks/usePrevious';
 
 const Input = ({ isBase }) => {
   const [resources] = useRemix(GAME_RESOURCES);

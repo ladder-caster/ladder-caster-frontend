@@ -30,6 +30,7 @@ import Boost from './boost/Boost';
 import Leaderboard from '../../../../shared/leaderboard/Leaderboard';
 import Confirm from '../../../../shared/confirm/Confirm';
 import TabAction from '../../../../shared/tabs/TabActions/TabActions';
+
 const Player = () => {
   const { t } = useTranslation();
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);

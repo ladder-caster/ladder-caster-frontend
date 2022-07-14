@@ -21,14 +21,6 @@ const CraftDrawer = () => {
   }[context?.type];
 
   return craft_types || null;
-
-  // const show_materials = context?.item || context?.materials?.length;
-  // const materials = useMemo(() => <Materials />, [show_materials]);
-  //
-  // const show_items = context?.caster;
-  // const items = useMemo(() => <Item />, [show_items]);
-  //
-  // return show_materials ? materials : show_items ? items : <Character />;
 };
 
 export default CraftDrawer;

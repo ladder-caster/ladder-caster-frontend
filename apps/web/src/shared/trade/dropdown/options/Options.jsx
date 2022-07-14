@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { _options } from './Options.styled';
-import LogoCoins from '../../../types/icons/LogoCoins';
 import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import Option from './option/Option';

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React from 'react';
 import {
   _items,
   _header,
@@ -14,7 +14,6 @@ import {
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   CONFIRM_EQUIP,
-  DRAWER_ACTIVE,
   DRAWER_CONTEXT,
   ITEM_BOOK,
   ITEM_HAT,
@@ -27,7 +26,6 @@ import { _close, _icon } from '../../spellcasters/drawer/rank/Rank.styled';
 import { IconClose } from 'design/icons/close.icon';
 import IconItem from '../../../../shared/types/items/IconItem';
 import TitleItem from '../../../../shared/types/items/TitleItem';
-import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
 import RarityTitle from '../../../../shared/types/rarity/RarityTitle';
 import AttributeItem from '../../../../shared/types/items/AttributeItem';
@@ -41,8 +39,6 @@ const InventoryDrawer = () => {
   const { t } = useTranslation();
   const { closeDrawer } = useActions();
   const [view_height] = useRemix(VIEW_SIZE);
-  const image_ref = useRef();
-  const { width } = useSize(image_ref);
   const [context] = useRemix(DRAWER_CONTEXT);
   const item = context?.item;
   const type = item?.type;

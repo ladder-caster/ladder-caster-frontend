@@ -28,6 +28,7 @@ import Item from '../../../../shared/item/Item';
 import { useActions } from '../../../../../actions';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
+
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { drawerInventory } = useActions();

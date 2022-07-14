@@ -25,14 +25,12 @@ import Caster from '../../../../../../shared/caster/Caster';
 import { AnimateButton } from '../../../../../../shared/button/animations/AnimateButton';
 import { gridList } from 'core/utils/lists';
 import { useActions } from '../../../../../../../actions';
-import { COLUMNS_ALPHA } from 'core/utils/switch';
 
 const Character = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [board] = useRemix(GAME_MAP);
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const { closeDrawer } = useActions();
 
   const list_spellcasters = useMemo(() => {

@@ -30,7 +30,6 @@ import {
   TYPE_RES2,
   GAME_CONSTANTS,
 } from 'core/remix/state';
-import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
 import usePrevious from 'core/hooks/usePrevious';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
@@ -39,7 +38,6 @@ import Timer from './timer/Timer';
 
 const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
-  const { drawerTokens } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
   const [resources] = useRemix(GAME_RESOURCES);
   const [gameConstants] = useRemix(GAME_CONSTANTS);

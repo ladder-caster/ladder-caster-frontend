@@ -1,7 +1,7 @@
 import React from 'react';
 import { _thumbar, _container } from './Thumbar.styled';
 
-const Thumbar = ({ children, scroll_ref }) => {
+const Thumbar = ({ children }) => {
   return (
     <_thumbar>
       <_container>{children}</_container>

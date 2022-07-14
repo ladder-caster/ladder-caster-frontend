@@ -29,7 +29,6 @@ import { useSize } from 'core/hooks/useSize';
 import { IconHat } from 'design/icons/hat.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { IconStaff } from 'design/icons/staff.icon';
-import { IconGem } from 'design/icons/gem.icon';
 import { useActions } from '../../../../../../../actions';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
 import { filter } from 'lodash';

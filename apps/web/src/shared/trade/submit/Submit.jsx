@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { _submit } from './Submit.styled';
 import { findMarket } from 'core/utils/markets';
 import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';

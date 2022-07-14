@@ -10,11 +10,7 @@ import Equipment from './equipment/Equipment';
 import Stats from './stats/Stats';
 import { _breakpoint } from '../Player.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  CONFIRM_UNEQUIP,
-  DRAWER_CONTEXT,
-  RARITY_LEGENDARY,
-} from 'core/remix/state';
+import { DRAWER_CONTEXT } from 'core/remix/state';
 import Power from '../../../../../shared/power/Power';
 import Info from '../../../../../shared/info/Info';
 import { useSize } from 'core/hooks/useSize';
@@ -24,7 +20,7 @@ const Character = ({ caster }) => {
   const equipment_ref = useRef();
   const { width } = useSize(equipment_ref);
   const unequip = !!context?.unequip;
-  //console.log('CASTER TAB', caster);
+
   return (
     <_character>
       {unequip && <Info item={context?.item} caster={caster} />}

@@ -20,7 +20,7 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { VIEW_SIZE } from 'core/remix/state';
 import { useActions } from '../../../../actions';
 import { useTranslation } from 'react-i18next';
-import { IconMoneyIMG } from 'design/icons/money.icon';
+
 function TradeDrawer() {
   const { t } = useTranslation();
   const { closeDrawer } = useActions();

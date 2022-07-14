@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { _input } from './Input.styled';
-import { useInput } from 'core/hooks/useInput';
 import {
   DRAWER_CONTEXT,
   GAME_RESOURCES,
