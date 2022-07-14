@@ -1,12 +1,10 @@
 import { IconBook } from 'design/icons/book.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
-import { IconGem } from 'design/icons/gem.icon';
 import { IconHat } from 'design/icons/hat.icon';
 import { IconStaff } from 'design/icons/staff.icon';
 import {
   ITEM_BOOK,
   ITEM_CHEST,
-  ITEM_GEM,
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
@@ -39,7 +37,6 @@ export const ICON_EQUIP_MAP = {
   [ITEM_HAT]: IconHat,
   [ITEM_ROBE]: IconCloak,
   [ITEM_STAFF]: IconStaff,
-  [ITEM_GEM]: IconGem,
   [ITEM_BOOK]: IconBook,
 };
 
