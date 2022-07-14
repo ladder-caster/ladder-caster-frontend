@@ -8,6 +8,7 @@ export const _trade = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 16px;
 `;
 
 export const _header = styled.div`
@@ -15,7 +16,7 @@ export const _header = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 16px;
+  padding: 16px 0;
 `;
 
 export const _title = styled.div`

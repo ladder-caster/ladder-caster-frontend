@@ -7,6 +7,7 @@ import {
   _icon,
   _title,
   _body,
+  _breakpoint,
 } from './TradeDrawer.styled';
 import { IconClose } from 'design/icons/close.icon';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,6 @@ import SwapTab from './tabs/swap/SwapTab';
 import OrderTab from './tabs/order/OrderTab';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { VIEW_SIZE } from 'core/remix/state';
-import Breakpoint from '../../../../shared/breakpoint/Breakpoint';
 
 const TradeDrawer = () => {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ const TradeDrawer = () => {
         </_float>
       </_header>
       <_body>
-        <Breakpoint />
+        <_breakpoint />
         <Tabs padding tab_id={TABS_SWAP_ORDER} views={tabs_swap_order} />
       </_body>
     </_trade>

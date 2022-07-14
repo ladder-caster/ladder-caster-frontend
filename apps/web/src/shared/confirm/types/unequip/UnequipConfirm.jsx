@@ -29,10 +29,10 @@ const UnequipConfirm = () => {
   const back = context?.back;
 
   const type = {
-    [ITEM_HAT]: 'Hat',
-    [ITEM_ROBE]: 'Robe',
-    [ITEM_STAFF]: 'Staff',
-    [ITEM_BOOK]: 'Spellbook',
+    [ITEM_HAT]: t('item.name.hat'),
+    [ITEM_ROBE]: t('item.name.robe'),
+    [ITEM_STAFF]: t('item.name.staff'),
+    [ITEM_BOOK]: t('item.name.book'),
   }[item_type];
 
   return (

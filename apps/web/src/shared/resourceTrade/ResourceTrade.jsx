@@ -7,6 +7,7 @@ const Trade = () => {
   const { t } = useTranslation();
   const { drawerTrade } = useActions();
 
+  //TODO: move to button folder and change name for file and component
   return (
     <_redeem>
       <_button onClick={() => drawerTrade()}>

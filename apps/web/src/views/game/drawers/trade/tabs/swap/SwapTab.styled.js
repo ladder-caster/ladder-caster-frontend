@@ -6,7 +6,7 @@ export const _swap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 8px 16px;
+  padding: 8px 0;
   overflow: scroll;
 `;
 

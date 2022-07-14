@@ -10,7 +10,6 @@ import {
 } from './Buy.styled';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
-import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
 
 const Buy = () => {
   const { t } = useTranslation();

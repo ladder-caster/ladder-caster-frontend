@@ -14,12 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { IconClose } from 'design/icons/close.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  DRAWER_ACTIVE,
-  GAME_MAP,
-  GAME_SPELLCASTERS,
-  VIEW_SIZE,
-} from 'core/remix/state';
+import { GAME_MAP, GAME_SPELLCASTERS, VIEW_SIZE } from 'core/remix/state';
 import { map, sortBy } from 'lodash';
 import Caster from '../../../../../shared/caster/Caster';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
