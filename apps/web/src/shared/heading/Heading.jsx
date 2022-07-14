@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { _heading, _divider, _title, _container } from './Heading.styled';
 import Redeem from '../redeem/Redeem';
-import Phases from '../phases/Phases';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
@@ -13,7 +12,6 @@ import {
   TYPE_RES2,
 } from 'core/remix/state';
 import { map } from 'lodash';
-import Ticks from '../ticks/Ticks';
 import Trade from './trade/Trade';
 import ResourceTrade from '../resourceTrade/ResourceTrade';
 

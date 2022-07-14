@@ -20,7 +20,6 @@ import Craft from './craft/Craft';
 import Category from './category/Category';
 import {
   GAME_CONSTANTS,
-  GAME_INIT,
   ITEM_BOOK,
   ITEM_HAT,
   ITEM_ROBE,

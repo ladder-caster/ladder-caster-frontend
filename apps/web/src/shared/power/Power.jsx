@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { _power, _progress, _strength, _padding, _fill } from './Power.styled';
-import { AnimatePosition } from './animations/AnimatePosition';
 import { AnimateFill } from './animations/AnimateFill';
 import { itemPowerLevel } from 'core/utils/numbers';
 import usePrevious from 'core/hooks/usePrevious';
