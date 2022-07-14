@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { _settle, _button } from './Settle.styled';
 import { useTranslation } from 'react-i18next';
 import { useOpenOrders } from 'core/hooks/useOpenOrders';

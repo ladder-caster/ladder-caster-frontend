@@ -76,6 +76,7 @@ const Spellcasters = () => {
       </_feed>
     );
   }, [gameConstants?.gameState, spellcasters, oldSpellcasters, hidePrestige]);
+
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   RARITY_COMMON,
   RARITY_EPIC,

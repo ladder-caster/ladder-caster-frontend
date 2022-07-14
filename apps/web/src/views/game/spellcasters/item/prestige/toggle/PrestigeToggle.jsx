@@ -24,7 +24,7 @@ const PrestigeToggle = () => {
     <_buy>
       <_title>
         {t('hide.prestige')}
-        <Toggle onClick={handleToggle} checked={toggle} scale={1.1}></Toggle>
+        <Toggle onClick={handleToggle} checked={toggle} scale={1.1} />
       </_title>
     </_buy>
   );

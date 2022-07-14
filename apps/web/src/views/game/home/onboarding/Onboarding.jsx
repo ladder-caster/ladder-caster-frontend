@@ -24,7 +24,6 @@ import {
   _warning,
 } from '../Dashboard.styled';
 import { IconUser } from 'design/icons/user.icon';
-import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   GAME_INIT,
@@ -113,7 +112,7 @@ export const Onboarding = ({ home }) => {
             </_button>
             <_beta>
               <_text>
-                <span>BETA</span>
+                <span>{t('onboarding.beta')}</span>
               </_text>
               <_google
                 $big

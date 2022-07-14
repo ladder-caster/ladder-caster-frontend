@@ -76,7 +76,6 @@ const Materials = () => {
   const caster = context?.caster;
   const col = caster?.position?.slice(0, 1);
   const row = +caster?.position?.slice(1, caster?.position?.length);
-  const tile_level = board?.[row]?.[col]?.level;
 
   const isBoost = drawer?.boost;
 

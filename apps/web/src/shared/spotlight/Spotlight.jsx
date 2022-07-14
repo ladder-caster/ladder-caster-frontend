@@ -10,7 +10,6 @@ import {
   _rotate,
 } from './Spotlight.styled';
 import { useSize } from 'core/hooks/useSize';
-import { AnimateSpotlight } from '../../views/game/spellcasters/item/animations/AnimateSpotlight';
 
 const Spotlight = ({ children, hue }) => {
   const spot_ref = useRef();

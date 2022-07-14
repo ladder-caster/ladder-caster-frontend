@@ -9,7 +9,6 @@ import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import Remix from './src/remix/Remix';
-import { nanoid } from 'nanoid';
 import {
   ConnectionProvider,
   WalletProvider,

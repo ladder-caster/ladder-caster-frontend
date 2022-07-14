@@ -30,7 +30,6 @@ const KeysTab = () => {
   const { handleDisconnect } = useAutoSignIn();
   const adapterWallet = useWallet();
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
-  const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
   const {
     closeDrawer,
     clearStates,

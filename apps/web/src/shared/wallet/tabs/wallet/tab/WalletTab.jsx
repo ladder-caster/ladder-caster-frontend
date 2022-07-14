@@ -46,7 +46,7 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Solana</_label>
+            <_label>{t('wallet.solana')}</_label>
             <_amount>
               {truncateDecimals(resources?.sol, TRUNCATE_DECIMAL)} SOL
             </_amount>
@@ -59,7 +59,7 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Lada Token</_label>
+            <_label>{t('wallet.lada')}</_label>
             <_amount>
               <span>
                 {truncateDecimals(resources?.lada, TRUNCATE_DECIMAL)} LADA

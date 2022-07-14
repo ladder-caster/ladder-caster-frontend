@@ -99,23 +99,9 @@ const Orderbook = () => {
     }
   }, [orders]);
 
-  // const bars_orders = useMemo(() => {
-  //   let largest_total = largest(
-  //     total_orders?.total_bids,
-  //     total_orders?.total_asks,
-  //   );
-  //   for (let i = 0; i < 10; i++) {
-  //     const bid = total_orders?.bids[i];
-  //     const ask = total_orders?.asks[i];
-  //     const weight_bid = bid?.total / largest_total;
-  //     const weight_ask = ask?.total / largest_total;
-  //   }
-  // }, [total_orders]);
-
   const bids = useMemo(() => {
     if (total_orders?.bids) {
       const list = [];
-      let total = 0;
       for (let i = 0; i < 3; i++) {
         const bid = total_orders?.bids?.[i];
         const key = `${bid?.key}${i}`;
@@ -161,7 +147,6 @@ const Orderbook = () => {
   const asks = useMemo(() => {
     if (total_orders?.asks) {
       const list = [];
-      let total = 0;
       for (let i = 0; i < 3; i++) {
         const ask = total_orders?.asks?.[i];
         const key = `${ask?.key}${i}`;
@@ -201,6 +186,7 @@ const Orderbook = () => {
     }
   }, [total_orders, width]);
 
+  //TODO: change hardcoded
   return (
     <_orderbook ref={book_ref}>
       <_header>

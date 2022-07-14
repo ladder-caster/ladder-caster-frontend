@@ -42,12 +42,9 @@ import {
   _close,
   _icon_close,
 } from '../trade/TradeDrawer.styled';
-import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
-import { IconClose } from 'design/icons/close.icon';
 
 const Inventory = () => {
   const { t } = useTranslation();
-  const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [inventoryPanel, setInventoryPanel] = useState(false);
   const [items] = useRemix(CHAIN_ITEMS);

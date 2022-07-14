@@ -7,6 +7,7 @@ import { _button } from '../../redeem/confirm/RedeemConfirm.styled';
 import Item from '../../../../../shared/item/Item';
 import Caster from '../../../../../shared/caster/Caster';
 import { useTranslation } from 'react-i18next';
+
 const MintConfirm = () => {
   const { t } = useTranslation();
   const [context] = useRemix(DRAWER_CONTEXT);

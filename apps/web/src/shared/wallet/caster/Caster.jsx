@@ -10,12 +10,10 @@ import {
 import { _NFT } from '../nft/NFT.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useActions } from '../../../../actions';
-import NFT from 'web/src/shared/nft/NFT';
-import { INVERSE_EQUIP_MAP } from 'core/utils/switch';
 
 const Caster = ({ caster }) => {
   const item_ref = useRef();
-  const { width, height } = useSize(item_ref);
+  const { width } = useSize(item_ref);
   const { chooseMintCaster } = useActions();
   const src = require('../../../../../libs/design/assets/wizard.png');
 

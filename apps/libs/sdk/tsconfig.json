@@ -3,7 +3,7 @@
     "lib": ["es2015", "DOM"],
     "module": "commonjs",
     "target": "es2020",
-    "outDir": "lib",
+    "outDir": "libs",
     "rootDir": "src",
     "resolveJsonModule": true,
 

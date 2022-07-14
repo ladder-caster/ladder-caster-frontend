@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   _home,
   _header,
@@ -33,6 +33,7 @@ const Dashboard = () => {
 
   let new_map = map ? [...map] : [];
 
+  //TODO: why here?
   useEffect(() => {
     if (next_map) {
       const show_map = _map(next_map?.map, (tile) => {

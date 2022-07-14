@@ -17,8 +17,8 @@ import {
   _after,
 } from '../Header.styled';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
-import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
-import { GAME_CONSTANTS, GAME_INIT } from 'core/remix/state';
+import { CHAIN_CASTERS } from 'chain/hooks/state';
+import { GAME_CONSTANTS } from 'core/remix/state';
 import dayjs from 'dayjs';
 import { IconSkip } from 'design/icons/skip.icon';
 import { AnimateCrank } from '../animations/AnimateCrank';
@@ -37,7 +37,6 @@ let position = 0;
 let interval;
 const Timer = () => {
   const { drawerCrank } = useActions();
-  //const [initialized] = useRemix(GAME_INIT);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const prev_game = usePrevious(gameConstants?.gameState);

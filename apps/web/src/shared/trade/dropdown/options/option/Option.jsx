@@ -3,7 +3,7 @@ import { _option } from './Option.styled';
 import LogoCoins from '../../../../types/icons/LogoCoins';
 import { AnimateOption } from '../../../animations/AnimateOption';
 
-const Option = ({ isBase, symbol, click }) => {
+const Option = ({ symbol, click }) => {
   return (
     <AnimateOption>
       <_option onClick={() => click && click()}>
