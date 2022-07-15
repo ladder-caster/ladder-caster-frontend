@@ -21,7 +21,7 @@ export const _staking = styled.div`
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;
-  padding-top: 8px;
+  padding: ${({ $padding }) => $padding ?? '0'};
   position: relative;
 `;
 export const _close = styled.div`
@@ -417,4 +417,11 @@ export const _stake_lada_button = styled(m.div).attrs(
   justify-content: center;
   align-items: center;
   text-align: center;
+`;
+export const _current_stake_text = styled.div`
+  color: ${({ theme }) => theme.text['base']};
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  margin-left: 42px;
 `;

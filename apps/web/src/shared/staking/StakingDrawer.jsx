@@ -26,6 +26,7 @@ import {
   _percentage_cube,
   _stake_lada_button,
   _stake_section_input_icon,
+  _current_stake_text,
 } from './StakingDrawer.styled.js';
 import { AnimateButton } from '../button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
@@ -90,7 +91,7 @@ const StakingDrawer = () => {
         <_error>
           {t('drawer.staking.earn.error.balance', {
             amount: value,
-            balance: gameConstants?.ladaBalance ?? 0,
+            balance: gameConstants?.ladaBalance.toFixed(2) ?? 0,
           })}
         </_error>
       );
@@ -106,7 +107,8 @@ const StakingDrawer = () => {
     //stakingContext.stakeLADANoLock(amount, tier);
     setCurrentTier(tier);
     const item = stakeData?.staked?.find((item) => item.tier === tier);
-    setCurrentStakedAmount(parseInt(item?.amount) ?? -1);
+    const amount = parseInt(item?.amount);
+    setCurrentStakedAmount(isNaN(amount) ? -1 : amount);
   };
   /**
    * Stakes tokens for a certain period of time
@@ -144,7 +146,6 @@ const StakingDrawer = () => {
   };
   const stakingCards = useMemo(() => {
     return stakeData?.stakes?.map((card) => {
-      console.log(card);
       const extra =
         card?.duration == '0'
           ? {
@@ -175,7 +176,7 @@ const StakingDrawer = () => {
   };
   const renderSegment = useMemo(() => {
     return (
-      <_staking>
+      <_staking $padding="8px 0 0 0">
         <_card_container>{stakingCards}</_card_container>
         <_description>
           {t('drawer.staking.earn.rate.description', {
@@ -227,16 +228,16 @@ const StakingDrawer = () => {
                 onChange={handleStakeValueChange}
               />
             </_input_container>
-            {currentStakedAmount > 0 && (
-              <_float>
-                <_row>
-                  {t('drawer.staking.earn.staked', {
-                    amount: currentStakedAmount,
-                  })}
-                </_row>
-              </_float>
-            )}
-            <_row $margin={'16px 0 0 0'} $gap={'12px'}>
+            <_row $margin={'8px 0 8px 0'} $justifyContent={'flex-start'}>
+              <_current_stake_text>
+                {t('drawer.staking.earn.staked', {
+                  amount:
+                    currentStakedAmount > 0 ? currentStakedAmount : 'Nothing',
+                })}
+              </_current_stake_text>
+            </_row>
+
+            <_row $gap={'12px'}>
               <_percentage_cube
                 onClick={() =>
                   setStakeAmount(gameConstants?.ladaBalance * 0.25 ?? 0)
