@@ -284,8 +284,8 @@
     "loading.action.spell": "Casting a spell...",
     "loading.action.loot": "Looting...",
     "loading.action.redeem": "Redeeming...",
-    "loading.action.equip": "Equiping Item...",
-    "loading.action.unequip": "Unequiping Item...",
+    "loading.action.equip": "equipping Item...",
+    "loading.action.unequip": "Unequipping Item...",
     "loading.action.crank": "Pulling the Crank...",
     "loading.action.mint": "Minting NFT...",
     "loading.action.claim.all": "Claiming all rewards...",
@@ -388,7 +388,8 @@
     "hide.prestige": "Hide Old Spellcasters",
     "trade.swap.empty.bids": "No Bids",
     "trade.swap.empty.asks": "No Asks",
-    "drawer.staking.title": "Staking",
+    "drawer.staking.title": "LADA Staking",
+    "drawer.staking.description":"Choose an option above to stake LADA and start earning rewards today!",
     "drawer.staking.earn.title": "Stake {{type}}",
     "menu.earn": "Staking",
     "drawer.staking.earn": "{{percentage}}%  APY",
@@ -396,8 +397,14 @@
     "drawer.staking.earn.duration": "{{duration}} days",
     "drawer.staking.earn.duration.flexible":"Flexible",
     "drawer.staking.earn.rate.description": "Rates will change on {{date}}",
-    "drawer.staking.pfp.title": "PFP",
-    "drawer.staking.pfp.getTwinPack": "Buy Twin Pack"
+    "drawer.staking.pfp.title": "PFP Staking (Post-Beta)",
+    "drawer.staking.pfp.getTwinPack": "Buy Twin Pack",
+    "drawer.staking.pfp.description": "Stake your PFP's to earn 1000 LADA per season. Redeem a PFP with twin caster, or buy a pack or two today",
+    "drawer.staking.earn.error.balance": "Stake amount {{amount}} is greater than your current balance ( {{balance}} )",
+    "drawer.staking.earn.error.small": "Stake amount needs to be greater than 0 to earn any staking rewards",
+    "drawer.staking.button.stake": "Stake",
+    "drawer.staking.button.unstake": "Unstake",
+    "drawer.staking.earn.staked":"Currently Staking: {{amount}}"
 
   }
 }

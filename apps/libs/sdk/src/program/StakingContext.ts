@@ -10,6 +10,30 @@ const STAKING_CONTRACT = '';
 const STAKING_CONTRACT_3M = '';
 const STAKING_CONTRACT_1Y = '';
 export class StakingContext {
+  //template to hydrate when and if needed - fully changable 
+  stakeData = {
+    stakeEndDate: "dateTimeString",
+    stakes: [
+      {apy: "16",
+      duration: "0",
+      tier: '1'
+    },
+    {
+      apy: "36",
+      duration: "90",
+      tier: '2'
+    },
+    {
+      apy: "60",
+      duration: "365",
+      tier: '3'
+
+    }
+    ],
+    staked: [
+      {amount: '1234', tier: '1',endDate: 'dateTimeString',startDate: 'dateTimeString'}
+    ]
+  }
   constructor() {}
 
   async stakeLADANoLock(amount: number, tier: number) {
@@ -64,7 +88,9 @@ export class StakingContext {
       },
     );
   }
-
+   getStakeData(){
+    return this.stakeData
+  }
   private getTier(tier: number) {
     switch (tier) {
       case 1: {
