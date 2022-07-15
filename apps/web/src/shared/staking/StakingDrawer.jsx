@@ -196,7 +196,7 @@ const StakingDrawer = () => {
             <_card_container
               $justify={'start'}
               $align={'start'}
-              $margin={'12px 0 0 0'}
+              $margin={'12px 0 0 16px'}
             >
               <StakingCard
                 type={t('drawer.staking.pfp.getTwinPack')}
