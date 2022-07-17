@@ -5,7 +5,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { PublicKey, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
-
+import {cloneDeep} from 'lodash'
 const STAKING_CONTRACT = '';
 const STAKING_CONTRACT_3M = '';
 const STAKING_CONTRACT_1Y = '';
@@ -34,8 +34,20 @@ export class StakingContext {
       {amount: '1234', tier: '1',endDate: 'dateTimeString',startDate: 'dateTimeString'}
     ]
   }
-  constructor() {}
+  constructor() {
+    this.hydrate();
 
+  }
+  getStakeData(){
+    return cloneDeep(this.stakeData)
+  }
+  private getStakingData(){
+    //TODO: get stake data from serum
+  }
+  async hydrate(){
+    await this.getStakingData();
+  }
+  
   async stakeLADANoLock(amount: number, tier: number) {
     const stakeInfo = anchor.web3.Keypair.generate();
     const tierPK = this.getTier(tier);
@@ -88,9 +100,7 @@ export class StakingContext {
       },
     );
   }
-   getStakeData(){
-    return this.stakeData
-  }
+  
   private getTier(tier: number) {
     switch (tier) {
       case 1: {

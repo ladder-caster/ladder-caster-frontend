@@ -391,6 +391,7 @@
     "drawer.staking.title": "LADA Staking",
     "drawer.staking.description":"Choose an option above to stake LADA and start earning rewards today!",
     "drawer.staking.earn.title": "Stake {{type}}",
+    "drawer.staking.warning.title":"{{stakeOrUnstake}} {{type}}",
     "menu.earn": "Staking",
     "drawer.staking.earn": "{{percentage}}%  APY",
     "drawer.staking.earn.type":"{{type}}",
@@ -402,9 +403,17 @@
     "drawer.staking.pfp.description": "Stake your PFP's to earn 1000 LADA per season. Redeem a PFP with twin caster, or buy a pack or two today",
     "drawer.staking.earn.error.balance": "Stake amount {{amount}} is greater than your current balance ( {{balance}} )",
     "drawer.staking.earn.error.small": "Stake amount needs to be greater than 0 to earn any staking rewards",
-    "drawer.staking.button.stake": "Stake",
-    "drawer.staking.button.unstake": "Unstake",
-    "drawer.staking.earn.staked":"Currently Staking: {{amount}}"
+    "drawer.staking.stake": "Stake",
+    "drawer.staking.unstake": "Unstake",
+    "drawer.staking.earn.staked":"Currently Staking: {{amount}}",
+    "drawer.staking.earn.quickactions.25%": "25%",
+    "drawer.staking.earn.quickactions.50%": "50%",
+    "drawer.staking.earn.quickactions.75%": "75%",
+    "drawer.staking.earn.quickactions.max": "MAX",
+    "drawer.staking.earn.warning.stake": "You are about to stake {{amount}} LADA.\nIf you unstake your LADA, before {{date}} you will lose all staking rewards.",
+    "drawer.staking.earn.warning.unstake":"You are about to unstake {{amount}} LADA.\nIf you unstake before the next reward period, you will lose all staking rewards.",
+    "drawer.staking.earn.warning.confirmation": "Are you sure you want to {{type}} {{amount}} LADA?"
+
 
   }
 }

@@ -336,6 +336,7 @@ export const _error = styled(_sub_title)`
   font-size: 14px;
   color: ${({ theme }) => theme.text['error']};
   text-transform: capitalize;
+  text-shadow: ${({ theme }) => theme.shadow['text']};
 `;
 export const _row = styled.div`
   width: 100%;
@@ -384,11 +385,11 @@ export const _stake_lada_button = styled(m.div).attrs(
         whileHover: {
           filter: `brightness(1.4)`,
           transition: {
-            duration: 1.5,
+            duration: 1,
             ease: 'easeInOut',
             repeat: Infinity,
             repeatType: 'mirror',
-            delay: 0.5,
+            delay: 0.1,
           },
         },
       }
@@ -424,4 +425,16 @@ export const _current_stake_text = styled.div`
   font-weight: 700;
   font-style: italic;
   margin-left: 42px;
+`;
+
+export const _warning_text = styled.div`
+  color: ${({ theme }) => theme.text['alert']};
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+  text-shadow: ${({ theme }) => theme.shadow['text']};
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: pre-line;
+  text-transform: ${({ $isUpper }) => ($isUpper ? 'uppercase' : 'none')};
 `;
