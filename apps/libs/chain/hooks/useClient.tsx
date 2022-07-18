@@ -3,9 +3,10 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from './state';
 import { Client, Environment } from 'sdk/src/program';
 import NodeWallet from 'sdk/src/utils/NodeWallet';
+import { environment } from '../../../../config';
 
-export const useAdapterWallet = () => {
-  const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
+export const useClient = () => {
+  const [, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
   const [error, setError] = useState();
   const [waiting, setWaiting] = useState(false);
 
@@ -13,10 +14,7 @@ export const useAdapterWallet = () => {
     try {
       setWaiting(true);
 
-      const client = await Client.connect(
-        wallet,
-        (process.env.REACT_APP_ENV as Environment) || 'localnet',
-      );
+      const client = await Client.connect(wallet);
       setWaiting(false);
       setError(null);
       setClient(client);
@@ -37,7 +35,6 @@ export const useAdapterWallet = () => {
   );
 
   return {
-    client,
     waiting,
     error,
     createClient,

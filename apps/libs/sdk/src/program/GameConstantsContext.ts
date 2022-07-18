@@ -479,11 +479,6 @@ class GameConstantsContext {
    */
   public async hydrateAccountBalances() {
     await this.checkInstance();
-    console.log(
-      'HYDRATION IS IMPORTANT',
-      this,
-      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
-    );
     const asyncDispatch = [
       this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
       this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),

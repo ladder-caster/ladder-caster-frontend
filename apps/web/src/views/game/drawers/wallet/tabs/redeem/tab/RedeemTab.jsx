@@ -23,7 +23,7 @@ const RedeemTab = () => {
       try {
         return await nftUtil.getNFTS();
       } catch (e) {
-        console.log('failed getting NFTs');
+        console.log('failed getting NFTs', e);
         // catch error
       }
     };

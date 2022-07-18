@@ -134,7 +134,7 @@ export class CasterContext {
         throw new Error(e);
       }
     }
-    //console.log("TXN",newTxSignature,txSignature)
+
     return newTxSignature;
   }
 

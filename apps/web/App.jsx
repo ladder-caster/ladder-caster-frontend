@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, _app, _view } from 'design/styles/global';
 import { styles, theme, zindex } from 'design';
 import { Route, Switch } from 'react-router-dom';
-import { VIEW_SIZE, USER_THEME, USER_AUTO_CONNECT } from 'core/remix/state';
+import { VIEW_SIZE, USER_THEME } from 'core/remix/state';
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
@@ -25,7 +25,6 @@ import { clusterApiUrl } from '@solana/web3.js';
 import { useOffline } from 'core/hooks/useOffline';
 import { Helmet } from 'react-helmet-async';
 import { Redirect } from 'react-router';
-import Web3AuthInjecter from './src/web3auth/Web3Auth';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -37,15 +36,14 @@ const withThemes = ({ palette = 'dark' }) => ({
 });
 
 const App = () => {
-  const [, setAutoConnect] = useState(false);
-
   useOffline();
+
   const { vh } = useMobileHeight();
   useRemixOrigin(VIEW_SIZE, {});
   const [theme] = useRemixOrigin(USER_THEME, 'gold');
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Devnet;
+  const network = WalletAdapterNetwork.Mainnet;
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
@@ -63,12 +61,6 @@ const App = () => {
     [network],
   );
 
-  // Auto connect from local storage settings
-  useEffect(() => {
-    const local_connect = localStorage.getItem(USER_AUTO_CONNECT);
-    if (local_connect) setAutoConnect(true);
-  }, []);
-
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect={true}>
@@ -82,7 +74,6 @@ const App = () => {
             </Helmet>
             <_app>
               <Remix />
-              <Web3AuthInjecter />
               <GlobalStyles />
               <_view $vh={vh}>
                 <Switch>

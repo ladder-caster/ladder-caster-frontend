@@ -333,7 +333,7 @@ export class PlayerContext {
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,
       nftMintKeys,
     );
-    console.log('SIGNERS', signers, mintOptions);
+
     return await gameConstantsContext.Client.program.rpc.mintItem(
       itemType === 'spellbook' ? 'spellBook' : itemType,
       itemType === 'combined' || itemType === 'spellbook' ? 0 : item.level,

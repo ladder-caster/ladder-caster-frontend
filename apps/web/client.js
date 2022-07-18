@@ -1,7 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
@@ -18,4 +18,5 @@ const app = (
   </Router>
 );
 
-ReactDOM.render(app, document.getElementById('app'));
+const root = createRoot(document.getElementById('app'));
+root.render(app);

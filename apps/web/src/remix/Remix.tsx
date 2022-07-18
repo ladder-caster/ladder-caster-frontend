@@ -1,5 +1,4 @@
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
-import { useAutoSignIn } from 'core/hooks/useAutoSignIn';
 import {
   EQUIP_ITEM,
   GAME_CONFIRM,
@@ -30,6 +29,9 @@ import {
   PRESTIGE_TOGGLE,
   ARWEAVE_UTILS,
   TRADE_ORDERBOOK,
+  WEB3AUTH_PROVIDER,
+  WEB3AUTH_CLIENT,
+  WEB3AUTH_PLUGIN_STORE,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -67,6 +69,8 @@ import { map, sortBy, reverse } from 'lodash';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
 import config from '../../../../config';
+import { useW3A } from 'chain/hooks/connections/useW3A';
+import { useWalletAdapter } from 'chain/hooks/connections/useWalletAdapter';
 
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
@@ -123,8 +127,20 @@ const Remix = () => {
     PRESTIGE_TOGGLE,
     localStorage.getItem('hide_prestige') === 'true',
   );
+  useRemixOrigin(WEB3AUTH_PROVIDER, null);
+  useRemixOrigin(WEB3AUTH_CLIENT, null);
+  useRemixOrigin(WEB3AUTH_PLUGIN_STORE, {
+    plugins: {},
+    addPlugin(name: string, instance: unknown): void {
+      this.plugins[name] = instance;
+    },
+    getPlugin(name: string) {
+      return this.plugins[name];
+    },
+  });
 
-  const { request: requestCachePubKey } = useAutoSignIn();
+  const { handleConnectInitial: handleConnectInitialW3A } = useW3A();
+  useWalletAdapter(true);
 
   const init_land = (tile: Tile, row: number, col: number) => ({
     col,
@@ -388,8 +404,6 @@ const Remix = () => {
   }, [player]);
 
   useEffect(() => {
-    requestCachePubKey();
-
     // DO NOT REMOVE, the game breaks if removed
     localStorage.setItem(
       'gamePK',
@@ -407,16 +421,10 @@ const Remix = () => {
   }, []);
 
   useEffect(() => {
-    if (loading) {
-      Object.keys(loading).forEach((key) => {
-        if (loading[key].rpc || loading[key].validator) {
-          console.log(
-            `${key} is loading ${loading[key].rpc ? 'rpc' : 'validator'}`,
-          );
-        }
-      });
+    if (localStorage.getItem('w3a-connected')) {
+      handleConnectInitialW3A();
     }
-  }, [loading]);
+  }, []);
 
   return null;
 };

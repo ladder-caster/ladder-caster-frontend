@@ -35,7 +35,6 @@ class NFTUtil implements NFTUtilInterface {
         new PublicKey(splAccount.account?.data?.parsed?.info?.mint),
       )
         .then((metaDataAddress) => {
-          //console.log('metaDataAddress',metaDataAddress)
           return gameConstantsContext.Client.connection
             .getAccountInfo(metaDataAddress[0])
             .then((rawMetaData) => {

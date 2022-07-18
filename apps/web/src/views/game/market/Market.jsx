@@ -50,10 +50,7 @@ const Market = () => {
             {walletType === W3A_TYPE ? (
               <_fractal
                 onClick={() => {
-                  console.log('its working');
-                  pluginStore.plugins[
-                    'torusWallet'
-                  ].torusWalletInstance.showWallet('discover', {
+                  pluginStore.torusWalletInstance.showWallet('discover', {
                     url:
                       'https://www.fractal.is/laddercaster?orderByDirection=ASCENDING&orderByField=PRICE',
                   });
