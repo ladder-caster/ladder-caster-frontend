@@ -126,33 +126,26 @@ const StakingDrawer = () => {
    * @param {number} tier number signifying tier 1-x
    * @param {string} type string type - not currently in use
    */
-  const performStakeUnstake = (callback, locked) => {
+  const performStakeUnstake = (callback) => {
     //TYPE added incase future addition of staking cross app tokens :)
 
     const amount = parseFloat(stakeAmount);
     const tier = parseInt(currentTier);
     if (!stakingContext || isNaN(amount) || amount <= 0 || isNaN(tier)) return;
 
-    callback(amount, tier, locked);
+    callback(amount, tier);
   };
-  const stake = (amount, tier, locked) => {
-    if (locked) {
-      //TODO: locked staking
-
-      return;
-    }
+  const stake = (amount, tier) => {
     stakingContext.stakeLADANoLock(amount, tier);
     setStakeAmount('');
     setCurrentTier(0);
     setRenderStateMachine({ state: ENUM.base, type: null });
   };
-  const unstake = (amount, tier, locked) => {
-    if (locked) {
-      //TODO: locekd staking unlock
-
-      return;
-    }
+  const unstake = (amount, tier) => {
     stakingContext.unstakeLADANoLock(amount, tier);
+    setStakeAmount('');
+    setCurrentTier(0);
+    setRenderStateMachine({ state: ENUM.base, type: null });
   };
   const buyTwinPack = () => {
     window.open('https://magiceden.io/marketplace/ladder_caster_season_1');
