@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { DRAWER_CONTEXT, TRADE_ORDERBOOK } from '../remix/state';
 import { useRemix } from './remix/useRemix';
 import { findMarket } from '../utils/markets';
@@ -18,17 +18,20 @@ export const useOrderbook = (base, quote) => {
   const market = `${pair?.base}/${pair?.quote}`;
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const nextOrders = useCallback(async () => {
+    try {
+      const next_orders = await getBidsAsks(pair);
+      setOrders({ ...orders, [market]: { ...next_orders, pair } });
+      // subscribe to orderbook updates
+    } catch (e) {
+      console.log('BIG ERROR', e);
+      setOrders({});
+    }
+  }, [pair, client]);
+
+  useEffect(() => {
     if (pair && client?.connection && pair !== prev_pair) {
-      console.log('try to get orders for', market);
-      try {
-        const next_orders = await getBidsAsks(pair);
-        setOrders({ ...orders, [market]: { ...next_orders, pair } });
-        // subscribe to orderbook updates
-      } catch (e) {
-        console.log('BIG ERROR', e);
-        setOrders({});
-      }
+      nextOrders();
     } else {
       console.log('no pair', pair, prev_pair);
     }

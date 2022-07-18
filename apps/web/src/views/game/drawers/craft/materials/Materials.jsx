@@ -188,7 +188,7 @@ const Materials = () => {
     rarity: craft_item?.max_rarity,
     tier: craft_item?.max_tier,
   };
-  console.log(item_type, context);
+
   const confirm = materials?.[0] && materials?.[1] && materials?.[2];
 
   const filter_items = filter(

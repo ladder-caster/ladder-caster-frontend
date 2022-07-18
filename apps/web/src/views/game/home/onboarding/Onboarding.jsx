@@ -25,12 +25,7 @@ import {
 } from '../Dashboard.styled';
 import { IconUser } from 'design/icons/user.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  GAME_INIT,
-  GAME_RESOURCES,
-  USER_PHASE,
-  VIEW_NAVIGATION,
-} from 'core/remix/state';
+import { GAME_INIT, GAME_RESOURCES, VIEW_NAVIGATION } from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +47,6 @@ export const Onboarding = ({ home }) => {
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
   const [, setView] = useRemix(VIEW_NAVIGATION);
-  const [phase] = useRemix(USER_PHASE);
   const { drawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
@@ -93,12 +87,7 @@ export const Onboarding = ({ home }) => {
     if (isSetInitReady) setInitalized(initialized);
   }, [initialized, isSetInitReady]);
 
-  if (
-    initLoading &&
-    active
-    //BROKE this condition by removing phases || (!phase && casters?.size)
-  )
-    return <Skeleton />;
+  if (initLoading) return <Skeleton />;
 
   return (
     <>

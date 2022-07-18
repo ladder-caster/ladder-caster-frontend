@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DRAWER_CONTEXT } from '../remix/state';
 import { useRemix } from './remix/useRemix';
 import { findMarket } from '../utils/markets';
@@ -17,20 +17,24 @@ export const useOpenOrders = (isPersonal = false) => {
   const pair = findMarket(base, quote);
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const setStates = useCallback(async () => {
+    try {
+      setLoading(true);
+      const orders = await getOpenOrders(pair, isPersonal);
+      setLoading(false);
+      setOrders(orders);
+      setUnsettledOrders(await getUnsettledFunds(pair, orders));
+    } catch (e) {
+      console.log('orders error', e);
+      setOrders([]);
+      setUnsettledOrders([]);
+      setLoading(false);
+    }
+  }, [pair]);
+
+  useEffect(() => {
     if (pair !== prev_pair) {
-      try {
-        setLoading(true);
-        const orders = await getOpenOrders(pair, isPersonal);
-        setLoading(false);
-        setOrders(orders);
-        setUnsettledOrders(await getUnsettledFunds(pair, orders));
-      } catch (e) {
-        console.log('orders error', e);
-        setOrders([]);
-        setUnsettledOrders([]);
-        setLoading(false);
-      }
+      setStates();
     }
   }, [pair]);
 

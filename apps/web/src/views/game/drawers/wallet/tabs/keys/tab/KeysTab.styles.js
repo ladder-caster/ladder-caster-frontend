@@ -39,7 +39,6 @@ export const _disconnect = styled(m.div)`
   align-items: center;
   font-size: 16px;
   font-weight: 500;
-  margin-top: auto;
   color: ${({ theme }) => theme.text['logout']};
   cursor: pointer;
 `;

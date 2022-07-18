@@ -11,7 +11,6 @@ export type Environment =
   | 'localnet'
   | 'devnet'
   | 'localprod';
-const LOCAL_SECRET = 'LOCAL_SECRET';
 
 export class Client {
   constructor(
@@ -20,32 +19,15 @@ export class Client {
     public wallet: NodeWallet,
   ) {}
 
-  static async connect(wallet: NodeWallet, env: Environment): Promise<Client> {
-    const conn = await Client.getConnection(env);
+  static async connect(wallet: NodeWallet): Promise<Client> {
+    const conn = await Client.getConnection();
 
-    const program = Client.getProgram(conn, wallet, env);
+    const program = Client.getProgram(conn, wallet);
 
     return new Client(program, conn, wallet);
   }
 
-  static generateKeypair(): anchor.web3.Keypair {
-    const wallet = anchor.web3.Keypair.generate();
-    localStorage.setItem(LOCAL_SECRET, bs58.encode(wallet?.secretKey));
-
-    return wallet;
-  }
-
-  static getLocalKeypair(): anchor.web3.Keypair {
-    return localStorage.getItem(LOCAL_SECRET)
-      ? anchor.web3.Keypair.fromSecretKey(
-          bs58.decode(localStorage.getItem(LOCAL_SECRET)),
-        )
-      : null;
-  }
-
-  static async getConnection(
-    env: Environment,
-  ): Promise<anchor.web3.Connection> {
+  static async getConnection(): Promise<anchor.web3.Connection> {
     if (config)
       return new anchor.web3.Connection(
         config.rpc,
@@ -81,11 +63,7 @@ export class Client {
     }
   }
 
-  private static getProgram(
-    conn: anchor.web3.Connection,
-    wallet: NodeWallet,
-    env: Environment,
-  ) {
+  private static getProgram(conn: anchor.web3.Connection, wallet: NodeWallet) {
     const _provider = new anchor.Provider(conn, wallet, {});
     const idl = config.idl;
     return new anchor.Program(

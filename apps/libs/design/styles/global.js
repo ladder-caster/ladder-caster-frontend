@@ -82,6 +82,10 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  button {
+    user-select: auto;
+  }
+
   input::-ms-clear {
     display: none;
   }

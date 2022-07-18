@@ -197,10 +197,6 @@ export const useInstructions = () => {
       );
     },
     async redeemReward(caster) {
-      console.log([...casters]);
-      console.log(caster?.publicKey);
-      console.log(casters.get(caster?.publicKey));
-
       const casterContext = new CasterContext(casters.get(caster?.publicKey));
 
       await stateHandler(
@@ -601,7 +597,7 @@ export const useInstructions = () => {
 
       if (side === SIDE_BUY) {
         const ask_price = orders?.asks?.[0]?.[0];
-        console.log('ask price', ask_price);
+
         if (ask_price) price = floorPrice(ask_price * 3, decimals);
       } else {
         price = decimalsToFloat(decimals);

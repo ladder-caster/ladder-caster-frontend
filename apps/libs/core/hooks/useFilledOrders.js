@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { DRAWER_CONTEXT, TRADE_FILLED_ORDERS } from '../remix/state';
 import { useRemix } from './remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
@@ -18,15 +18,18 @@ export const useFilledOrders = () => {
   const market = `${pair?.base}/${pair?.quote}`;
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const setFilledOrders = useCallback(async () => {
+    try {
+      const next_orders = await getFilledOrders(pair);
+      setOrders({ ...orders, [market]: { ...next_orders, pair } });
+    } catch (e) {
+      setOrders({});
+    }
+  }, [pair]);
+
+  useEffect(() => {
     if (pair !== prev_pair) {
-      try {
-        const next_orders = await getFilledOrders(pair);
-        console.log('next orders', next_orders);
-        // setOrders({ ...orders, [market]: { ...next_orders, pair } });
-      } catch (e) {
-        setOrders({});
-      }
+      setFilledOrders();
     }
   }, [pair]);
 
