@@ -412,7 +412,7 @@
     "drawer.staking.earn.quickactions.max": "MAX",
     "drawer.staking.earn.warning.stake": "You are about to stake {{amount}} LADA.\nIf you unstake your LADA, before {{date}} you will lose all staking rewards.",
     "drawer.staking.earn.warning.unstake":"You are about to unstake {{amount}} LADA.\nIf you unstake before the next reward period, you will lose all staking rewards.",
-    "drawer.staking.earn.warning.confirmation": "Are you sure you want to {{type}} {{amount}} LADA?"
+    "drawer.staking.earn.warning.confirmation": "Are you sure you want to {{type}} LADA?"
 
 
   }
