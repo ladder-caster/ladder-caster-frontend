@@ -9,6 +9,7 @@ import { WALLET_TYPE, WEB3AUTH_PLUGIN_STORE } from 'core/remix/state';
 import { useActions } from '../../../../../../../../actions';
 import { AnimateDots } from '../../../../../animations/AnimateSettings';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
+import gameConstantsContext from 'sdk/src/program/GameConstantsContext';
 
 const MENU_EXPORT_PUBLIC_KEY = 'MENU_EXPORT_PUBLIC_KEY';
 const network = process.env.REACT_APP_ENV === 'devnet' ? '?cluster=devnet' : '';
@@ -27,6 +28,7 @@ const KeysTab = () => {
     closeDrawer();
     clearStates();
     disconnect();
+    gameConstantsContext.disconnect();
   }, [adapterWallet, client, walletType]);
 
   const { publicKey } = useMemo(() => {

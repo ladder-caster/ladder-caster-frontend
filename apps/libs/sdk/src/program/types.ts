@@ -202,6 +202,7 @@ export interface SpellType {
 export interface TokenAccounts {
   [key: string]: PublicKey;
   lada: PublicKey;
+  usdc: PublicKey;
 }
 export interface Accounts {
   tokenAccounts: TokenAccounts;
