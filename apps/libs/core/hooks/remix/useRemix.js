@@ -10,7 +10,8 @@ export const useRemix = (bubble_id, selector) => {
 
   const [subject, setSubject] = useState();
   const prev_subject = usePrevious(subject);
-
+  const [remixSubscription, setRemixSubscription] = useState();
+  const [subjectSubscription, setSubjectSubscription] = useState();
   const updateBubble = useCallback(
     (next_value) => {
       if (bubble?.setValue) bubble.setValue(next_value);
@@ -25,29 +26,41 @@ export const useRemix = (bubble_id, selector) => {
     if (!subject) {
       const current_subject = remix_bubbles?.getValue()?.get(bubble_id);
       if (remix_bubbles && !current_subject) {
-        remix_bubbles?.subscribe((next_bubbles) => {
-          const next_subject = next_bubbles?.get(bubble_id);
-          if (!subject && next_subject) {
-            setSubject(next_subject);
-          }
-        });
+        setRemixSubscription(
+          remix_bubbles?.subscribe((next_bubbles) => {
+            const next_subject = next_bubbles?.get(bubble_id);
+            if (!subject && next_subject) {
+              setSubject(next_subject);
+            }
+          }),
+        );
       } else {
         setSubject(current_subject);
       }
     }
+    return () => {
+      remixSubscription?.unsubscribe();
+      setRemixSubscription(null);
+    };
   }, [subject]);
 
   // subscribe to ref
   useEffect(() => {
     if (!prev_subject && subject) {
-      subject.subscribe((next_state) => {
-        setBubble({
-          ...next_state,
-          value: next_state.value,
-          setValue: next_state.setValue,
-        });
-      });
+      setSubjectSubscription(
+        subject.subscribe((next_state) => {
+          setBubble({
+            ...next_state,
+            value: next_state.value,
+            setValue: next_state.setValue,
+          });
+        }),
+      );
     }
+    return () => {
+      subjectSubscription?.unsubscribe();
+      setSubjectSubscription(null);
+    };
   }, [subject]);
 
   const reduce_value = useMemo(() => {
