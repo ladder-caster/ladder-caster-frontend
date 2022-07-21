@@ -5,12 +5,14 @@ import AccountsContext from "./GameConstants/Accounts.context";
 import BalancesContext from "./GameConstants/Balances.context";
 import {TYPE_RES1,TYPE_RES2,TYPE_RES3} from "core/remix/state";
 import {PublicKey} from '@solana/web3.js';
+import LiveRPCContext from "./GameConstants/Websockets.context";
 
 class GameConstantsContext {
   accounts: AccountsContext;
   game: GameConstantsGameContext;
   client:Client;
   balances: BalancesContext;
+  RPCListener: LiveRPCContext;
   constructor(){
   }
   async init(){
@@ -18,11 +20,19 @@ class GameConstantsContext {
     this.accounts = new AccountsContext();
     this.game = new GameConstantsGameContext();
     this.balances = new BalancesContext();
+    this.RPCListener = new LiveRPCContext();
     await this.game.init(this.client);
     await this.accounts.init(this.client,this.game.gameState);
     await this.balances.init(this.client,this.accounts)
-    console.log("DATA",this)
-  }
+    //listen for balance changes and update the balance accordingly
+    this.RPCListener.listenToAccount(this.accounts.lada,()=>this.balances.updateBalance(this.accounts.lada,this.client,3))
+    this.RPCListener.listenToAccount(this.accounts.playerAccount,()=>this.balances.updateBalance(this.accounts.playerAccount,this.client,5))
+    this.RPCListener.listenToAccount(this.accounts.usdc,()=>this.balances.updateBalance(this.accounts.usdc,this.client,4))
+    this.RPCListener.listenToAccount(this.accounts.resource1,()=>this.balances.updateBalance(this.accounts.resource1,this.client,0))
+    this.RPCListener.listenToAccount(this.accounts.resource2,()=>this.balances.updateBalance(this.accounts.resource2,this.client,1))
+    this.RPCListener.listenToAccount(this.accounts.resource3,()=>this.balances.updateBalance(this.accounts.resource3,this.client,2))
+
+  } 
   async initClient(client:Client){
     
     if(client && !this.client){
@@ -34,6 +44,7 @@ class GameConstantsContext {
     this.accounts= new AccountsContext();
     this.game= new GameConstantsGameContext();
     this.balances=new BalancesContext()
+    this.RPCListener=new LiveRPCContext();
   }
   public clientInitialized():boolean{
     return this.client!=null;

@@ -1,5 +1,5 @@
 import * as anchor from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
+import { AccountInfo, Context, PublicKey } from '@solana/web3.js';
 import { Client } from './Client';
 //Accounts
 export interface Game {
@@ -274,3 +274,4 @@ export interface ArweaveUtilInterface {
 export interface NFTUtilInterface {
   getNFTS: () => Promise<string[]>;
 }
+export type RPCAccountFunction = (accountInfo: AccountInfo<Buffer>, context: Context)=> void;

@@ -15,6 +15,7 @@ import {
 import resources from '../../config/resources.json';
 import {OLD_SEASON} from 'core/remix/state'
 import config from '../../../../../../config';
+import LiveRPCContext from './Websockets.context'
 export default class AccountsContext implements Accounts{
   tokenAccounts: TokenAccounts;
   gameAccount: PublicKey;
@@ -22,7 +23,6 @@ export default class AccountsContext implements Accounts{
   playerBump: number;
   previousGameAccount: PublicKey;
   previousPlayerAccount: PublicKey;
-
   
   constructor(){
     
@@ -99,6 +99,7 @@ export default class AccountsContext implements Accounts{
         lada,
         usdc
     }
+  
   }
 
   public get lada (): PublicKey {

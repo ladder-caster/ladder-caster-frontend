@@ -1,14 +1,43 @@
 import {Balances, GameBalances, Client} from '../'
 import {TYPE_RES1,TYPE_RES2,TYPE_RES3} from 'core/remix/state';
 import AccountsContext from './Accounts.context';
+import { PublicKey } from '@solana/web3.js';
 export default class BalancesContext implements Balances {
   game: GameBalances;
   sol:number;
   usdc:number;
   constructor(){
-    //TODO: listen for websocket to update resources
+  
   }
- 
+  public async updateBalance(publicKey:PublicKey,client:Client,type:number){
+    if(!publicKey || !client) return;
+    var value;
+    if(type==5){
+      value = await client.connection.getBalance(client.wallet.publicKey)
+    }else{
+      value = await client.connection.getTokenAccountBalance(publicKey)
+    }
+    switch(type){
+      case 0:
+        this.game[TYPE_RES1] = value.value.amount??'0';
+        break;
+      case 1:
+        this.game[TYPE_RES2] = value.value.amount??'0';
+        break;
+      case 2:
+        this.game[TYPE_RES3] = value.value.amount??'0';
+        break;
+      case 3:
+        this.game.lada = value.value.amount??'0'
+        break;
+      case 4:
+        this.usdc = value.value.amount/1e6??'0';
+        break;
+      case 5:
+        this.sol = value/1e9??0
+        break;
+    }
+  }
   public async init(client:Client,account:AccountsContext){
     if(!account.tokenAccounts)return
     const asyncDispatch = [
