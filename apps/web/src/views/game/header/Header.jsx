@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   _header,
   _container,
@@ -39,9 +39,12 @@ import Timer from './timer/Timer';
 const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const [casters] = useRemix(CHAIN_CASTERS);
-  const [resources] = useRemix(GAME_RESOURCES);
+  const [resources, setResources] = useState();
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [initialized] = useRemix(GAME_INIT);
+  useEffect(() => {
+    setResources(gameConstants?.balances?.game);
+  }, [gameConstants?.balances?.game]);
 
   const prevGold = usePrevious(+resources?.lada || 0);
   const prevFire = usePrevious(+resources?.[TYPE_RES1] || 0);

@@ -10,6 +10,6 @@ export default class LiveRPCContext {
    
   }
   public listenToAccount(publicKey:PublicKey,callback:RPCAccountFunction){
-    this.connection.onAccountChange(publicKey,callback);
+    this.connection.onAccountChange(publicKey,callback,'finalized');
   }
 }

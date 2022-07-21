@@ -24,13 +24,15 @@ class GameConstantsContext {
     await this.game.init(this.client);
     await this.accounts.init(this.client,this.game.gameState);
     await this.balances.init(this.client,this.accounts)
+    //failed to init accounts should not listen
+    if(!this.accounts.gameAccount)return;
     //listen for balance changes and update the balance accordingly
     this.RPCListener.listenToAccount(this.accounts.lada,()=>this.balances.updateBalance(this.accounts.lada,this.client,3))
     this.RPCListener.listenToAccount(this.accounts.playerAccount,()=>this.balances.updateBalance(this.accounts.playerAccount,this.client,5))
     this.RPCListener.listenToAccount(this.accounts.usdc,()=>this.balances.updateBalance(this.accounts.usdc,this.client,4))
     this.RPCListener.listenToAccount(this.accounts.resource1,()=>this.balances.updateBalance(this.accounts.resource1,this.client,0))
     this.RPCListener.listenToAccount(this.accounts.resource2,()=>this.balances.updateBalance(this.accounts.resource2,this.client,1))
-    this.RPCListener.listenToAccount(this.accounts.resource3,()=>this.balances.updateBalance(this.accounts.resource3,this.client,2))
+    this.RPCListener.listenToAccount(this.accounts.resource3,(accountInfo,context)=>this.balances.updateBalance(this.accounts.resource3,this.client,2))
 
   } 
   async initClient(client:Client){

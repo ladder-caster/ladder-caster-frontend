@@ -17,6 +17,7 @@ export default class BalancesContext implements Balances {
     }else{
       value = await client.connection.getTokenAccountBalance(publicKey)
     }
+   
     switch(type){
       case 0:
         this.game[TYPE_RES1] = value.value.amount??'0';
@@ -37,6 +38,7 @@ export default class BalancesContext implements Balances {
         this.sol = value/1e9??0
         break;
     }
+    
   }
   public async init(client:Client,account:AccountsContext){
     if(!account.tokenAccounts)return
