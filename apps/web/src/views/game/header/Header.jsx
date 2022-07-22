@@ -39,7 +39,7 @@ import Timer from './timer/Timer';
 const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const [casters] = useRemix(CHAIN_CASTERS);
-  const [resources, setResources] = useState();
+  const [resources, setResources] = useState(null);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [initialized] = useRemix(GAME_INIT);
   useEffect(() => {
