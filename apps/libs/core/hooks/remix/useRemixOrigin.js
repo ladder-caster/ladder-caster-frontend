@@ -26,20 +26,25 @@ export const useRemixOrigin = (bubble_id, initial_value) => {
     },
     [state?.setValue],
   );
-
+  const [subscription, setSubscription] = useState();
   // subscribe to ref
   useEffect(() => {
     if (!prev_subject && subject) {
-      subject.subscribe((next_state) => {
-        if (typeof next_state?.value !== 'undefined') {
-          setState({
-            ...next_state,
-            value: next_state.value,
-            setValue: next_state.setValue,
-          });
-        }
-      });
+      setSubscription(
+        subject.get(bubble_id).subscribe((next_state) => {
+          if (typeof next_state?.value !== 'undefined') {
+            setState({
+              ...next_state,
+              value: next_state.value,
+              setValue: next_state.setValue,
+            });
+          }
+        }),
+      );
     }
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
   }, [subject]);
 
   useEffect(() => {
