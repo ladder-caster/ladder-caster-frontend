@@ -78,8 +78,7 @@ const Map = () => {
         <_feed>
           <Onboarding />
         </_feed>
-      ) : null}
-      {initialized && casters?.size !== 0 ? (
+      ) : (
         <>
           <_filters></_filters>
           <_map ref={map_ref}>
@@ -89,7 +88,7 @@ const Map = () => {
             <_list ref={list_ref}>{render_map}</_list>
           </_map>
         </>
-      ) : null}
+      )}
     </_ladder>
   );
 };
