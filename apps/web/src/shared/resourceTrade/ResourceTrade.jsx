@@ -10,9 +10,7 @@ const Trade = () => {
   //TODO: move to button folder and change name for file and component
   return (
     <_redeem>
-      <_button onClick={() => drawerTrade()}>
-        {t('heading.trade.title')}
-      </_button>
+      <_button onClick={drawerTrade}>{t('heading.trade.title')}</_button>
     </_redeem>
   );
 };

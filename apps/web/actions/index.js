@@ -1,5 +1,13 @@
-import { loadedActions } from 'core/actions';
+import { useConnections } from './useConnections';
+import { useInstructions } from './useInstructions';
+import { useStateActions } from './useStateActions';
+import { useTesters } from './useTesters';
 
 export const useActions = () => {
-  return loadedActions;
+  return {
+    ...useConnections(),
+    ...useInstructions(),
+    ...useStateActions(),
+    ...useTesters(),
+  };
 };

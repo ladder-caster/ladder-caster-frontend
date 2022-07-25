@@ -55,19 +55,18 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const row = level - 1;
   const position = `${col}${level}`;
-  const sumPosition = (spellcasters) => {
+
+  const [casters] = useRemix(GAME_SPELLCASTERS, (spellcasters) => {
     let count = 0;
-    for (const caster of spellcasters) {
+    for (let i = 0; i < spellcasters.length; i++) {
+      const caster = spellcasters[i];
       const casterPosition = caster.casterActionPosition
         ? caster.casterActionPosition
         : caster.position;
       if (casterPosition === position) count++;
     }
     return count;
-  };
-  const [casters] = useRemix(GAME_SPELLCASTERS, (spellcasters) =>
-    sumPosition(spellcasters),
-  );
+  });
   const [land] = useRemix(GAME_MAP, (lands) => lands?.[row]?.[col]);
   const remaining = land?.remaining;
   const isActive = land !== undefined && !land?.empty;
@@ -166,7 +165,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
               $casters={casters}
             >
               <_background
-                onClick={() => clickTile()}
+                onClick={clickTile}
                 $color={color}
                 $element={type}
                 $tier={tier_multiply}
