@@ -6,7 +6,6 @@ import laddercasterIDLDev from '../config/laddercast-dev.json';
 import laddercasterIDLLocal from '../config/laddercast-local.json';
 import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
-import jwt from 'jsonwebtoken';
 
 export type Environment =
   | 'mainnet'
@@ -86,12 +85,8 @@ export class Client {
       }
       case 'localprod': {
         return [
-          'https://wandering-divine-dream.solana-mainnet.quiknode.pro/51a28202db85ffa02345f9ba72ad73394732af13/',
-          {
-            httpHeaders: {
-              Authorization: `Bearer ${await this.getBearerToken()}`,
-            },
-          },
+          'https://wandering-divine-dream.solana-mainnet.quiknode.pro/e4ff6afb31ec8f31d05d2f2c4231ea6c3b4f3af4/',
+          {},
         ];
       }
       case 'devnet': {
@@ -101,19 +96,6 @@ export class Client {
         ];
       }
     }
-  }
-
-  static async getBearerToken() {
-    // read private key
-    const privateKey = require('../../../../../../jwt/private_key.json');
-
-    //Create payload and JWT
-    var token = jwt.sign({}, privateKey, {
-      algorithm: 'RS256', //algo used to create JWT
-      expiresIn: '2d', // set a 2 day expiration
-    });
-
-    return token;
   }
 
   async getSOLBalance() {

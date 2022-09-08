@@ -51,3 +51,4 @@ build/*
 
 apps/server/config
 apps/server/config/*
+.vercel
