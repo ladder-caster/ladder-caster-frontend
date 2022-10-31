@@ -16,6 +16,7 @@ import {
   _order,
   _task,
   _link,
+  _linkActual,
   _icon,
   _card,
   _circle,
@@ -165,19 +166,15 @@ export const Onboarding = ({ home }) => {
             <_item>
               <_task $disabled={hasPlayer}>{t('home.task.init.player')}</_task>
               <_actions>
-                <_button
+                <_linkActual
                   $big
                   disabled={hasPlayer}
                   $disabled={hasPlayer}
-                  onClick={() => initPlayer()}
+                  href="https://laddercaster.com/r/laddercaster"
+                  target="_blank"
                 >
-                  <IconUser />
-                  <span>
-                    {!hasPlayer
-                      ? t('player.initialize')
-                      : t('player.initialized')}
-                  </span>
-                </_button>
+                  {t('home.refer')}
+                </_linkActual>
               </_actions>
             </_item>
           </_step>

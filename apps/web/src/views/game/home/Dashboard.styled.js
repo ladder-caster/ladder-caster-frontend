@@ -70,6 +70,46 @@ export const _description = styled.p`
   margin-bottom: 16px;
 `;
 
+export const _linkActual = styled(m.a)`
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: ${({ theme, $disabled }) =>
+    $disabled ? 'none' : theme.shadow['glass']};
+  background: ${({ theme, $disabled }) =>
+    $disabled ? theme.background['button'] : theme.background['button']};
+  border: none;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  margin-bottom: 16px;
+  width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
+  color: ${({ theme, $disabled }) => theme.text['base']};
+
+  &:hover {
+    background: ${({ theme, $disabled }) =>
+      $disabled ? theme.background['button'] : theme.background['button_high']};
+  }
+
+  > svg {
+    min-height: 14px;
+    height: 14px;
+    min-width: 14px;
+    width: 14px;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+  }
+  > span {
+    font-size: ${({ $big }) => ($big ? '14px' : '12px')};
+    font-weight: 700;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+    padding-left: ${({ $noIcon }) => ($noIcon ? '0' : '6px')};
+    white-space: nowrap;
+  }
+`;
+
 export const _link = styled(m.div)`
   padding: 12px 18px;
   display: flex;
@@ -85,6 +125,7 @@ export const _link = styled(m.div)`
   cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
   margin-bottom: 16px;
   width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
+  color: ${({ theme, $disabled }) => theme.text['base']};
 
   &:hover {
     background: ${({ theme, $disabled }) =>
@@ -124,6 +165,8 @@ export const _button = styled(m.div)`
   cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
   margin-bottom: 16px;
   width: ${({ $long }) => ($long ? 'calc(100% - 32px)' : 'initial')};
+  color: ${({ theme }) => theme.text['base']};
+  font-weight: 700;
 
   &:hover {
     background: ${({ theme, $disabled }) =>
