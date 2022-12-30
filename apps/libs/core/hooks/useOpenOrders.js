@@ -19,17 +19,23 @@ export const useOpenOrders = (isPersonal = false) => {
 
   useEffect(async () => {
     if (pair !== prev_pair) {
+      let newOrders = [];
       try {
         setLoading(true);
-        const orders = await getOpenOrders(pair, isPersonal);
+        newOrders = await getOpenOrders(pair, isPersonal);
+        setOrders(newOrders);
         setLoading(false);
-        setOrders(orders);
-        setUnsettledOrders(await getUnsettledFunds(pair, orders));
       } catch (e) {
-        console.log('orders error', e);
+        console.log('orders error 1', e);
         setOrders([]);
-        setUnsettledOrders([]);
         setLoading(false);
+      }
+
+      try {
+        setUnsettledOrders(await getUnsettledFunds(pair, newOrders));
+      } catch (e) {
+        setUnsettledOrders([]);
+        console.log('orders error 2', e);
       }
     }
   }, [pair]);

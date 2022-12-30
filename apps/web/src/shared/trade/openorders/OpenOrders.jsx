@@ -22,14 +22,14 @@ import { useTranslation } from 'react-i18next';
 
 const OpenOrders = () => {
   const { t } = useTranslation();
-  const { orders, pair, loading } = useOpenOrders();
+  const { openOrders, pair, loading } = useOpenOrders();
   const { cancelOrder } = useActions();
 
   const symbol = pair?.quote;
 
   const open = useMemo(() => {
-    if (orders?.length >= 1) {
-      return map(orders, (order) => {
+    if (openOrders?.length >= 1) {
+      return map(openOrders, (order) => {
         return (
           <_order key={nanoid()}>
             <_position>
@@ -52,7 +52,7 @@ const OpenOrders = () => {
     } else {
       return <_empty>{t('drawer.trade.no_orders')}</_empty>;
     }
-  }, [JSON.stringify(orders)]);
+  }, [openOrders]);
 
   const fetching = useMemo(() => {
     if (loading) {
