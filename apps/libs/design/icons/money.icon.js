@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ladaImg = require('../assets/lada.png');
+const ladaImg = require('../assets/LADA.png');
 
 export const IconMoneyIMG = () => {
   return <img src={ladaImg} />;
