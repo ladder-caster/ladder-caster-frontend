@@ -13,6 +13,7 @@
     "unlink-all": "lerna exec --parallel --bail=false yarn unlink",
     "build-web": "lerna run build --scope=web",
     "deploy-web": "rimraf .parcel-cache && yarn build-web && sls deploy",
+    "vercel-build": "cross-env lerna run vercel-build --scope=web --stream",
     "prettier": "prettier --write src",
     "clear-cache": "rimraf apps/libs/storybook/node_modules && rimraf apps/native/node_modules && rimraf apps/native/yarn.lock && rimraf apps/web/node_modules && rimraf apps/web/yarn.lock && rimraf yarn.lock && rimraf node_modules"
   },
