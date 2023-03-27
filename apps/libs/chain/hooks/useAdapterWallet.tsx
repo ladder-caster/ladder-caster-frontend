@@ -18,9 +18,11 @@ export const useAdapterWallet = () => {
         (process.env.REACT_APP_ENV as Environment) || 'localnet',
       );
       setWaiting(false);
+      //@ts-ignore
       setError(null);
       setClient(client);
     } catch (e) {
+      console.log('e', e);
       setWaiting(false);
       setError(error);
       setClient(null);

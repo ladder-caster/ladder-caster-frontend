@@ -39,7 +39,7 @@ export class SerumContext {
         ? this.market.quoteMintAddress
         : this.market.baseMintAddress;
     const payer = await findAssociatedTokenAddress(
-      gameConstantsContext.Client.program.provider.wallet.publicKey,
+      gameConstantsContext.Client.wallet.publicKey,
       mint,
     );
 
@@ -48,7 +48,7 @@ export class SerumContext {
         ? this.market.baseMintAddress
         : this.market.quoteMintAddress;
     const receiverATA = await findAssociatedTokenAddress(
-      gameConstantsContext.Client.program.provider.wallet.publicKey,
+      gameConstantsContext.Client.wallet.publicKey,
       receiverMint,
     );
 
@@ -62,7 +62,7 @@ export class SerumContext {
         createAssociatedTokenAccountIx(
           receiverMint,
           receiverATA,
-          gameConstantsContext.Client.program.provider.wallet.publicKey,
+          gameConstantsContext.Client.wallet.publicKey,
         ),
       );
     }
@@ -75,7 +75,7 @@ export class SerumContext {
     } = await this.market.makePlaceOrderTransaction(
       gameConstantsContext.Client.connection,
       {
-        owner: gameConstantsContext.Client.program.provider.wallet.publicKey,
+        owner: gameConstantsContext.Client.wallet.publicKey,
         payer,
         side,
         price,
@@ -100,12 +100,12 @@ export class SerumContext {
       if (isPersonal) {
         return await this.market.findOpenOrdersAccountsForOwner(
           gameConstantsContext.Client.connection,
-          gameConstantsContext.Client.program.provider.wallet.publicKey,
+          gameConstantsContext.Client.wallet.publicKey,
         );
       } else {
         return await this.market.loadOrdersForOwner(
           gameConstantsContext.Client.connection,
-          gameConstantsContext.Client.program.provider.wallet.publicKey,
+          gameConstantsContext.Client.wallet.publicKey,
         );
       }
     } catch (e) {
@@ -120,7 +120,7 @@ export class SerumContext {
     tx.add(
       await this.market.makeCancelOrderTransaction(
         gameConstantsContext.Client.connection,
-        gameConstantsContext.Client.program.provider.wallet.publicKey,
+        gameConstantsContext.Client.wallet.publicKey,
         order,
       ),
     );
@@ -172,14 +172,14 @@ export class SerumContext {
       let openOrdersWallet = account?.pubkey;
       if (!openOrdersWallet) {
         openOrdersWallet = await findAssociatedTokenAddress(
-          gameConstantsContext.Client.program.provider.wallet.publicKey,
+          gameConstantsContext.Client.wallet.publicKey,
           mintAddress,
         );
         tx.add(
           createAssociatedTokenAccountIx(
             mintAddress,
             openOrdersWallet,
-            gameConstantsContext.Client.program.provider.wallet.publicKey,
+            gameConstantsContext.Client.wallet.publicKey,
           ),
         );
       }

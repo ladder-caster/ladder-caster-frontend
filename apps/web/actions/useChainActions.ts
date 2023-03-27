@@ -45,11 +45,9 @@ import {
   GAME_MAP,
   WEB3AUTH_CLIENT,
   WEB3AUTH_PROVIDER,
-  WEB3AUTH_PLUGIN_STORE,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
-  GAME_CONSTANTS,
   DRAWER_TRADE,
   RARITY_COMMON,
   MODAL_BURN,
@@ -111,8 +109,6 @@ import {
   INST_OPEN_CHEST,
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
-  RPC_ERROR,
-  RPC_LOADING,
   INST_BURN_NFT,
   INST_CLAIM_ALL,
   INST_PRESTIGE_CASTER,
@@ -125,7 +121,7 @@ import {
   INIT_STATE_TRADE,
 } from 'core/remix/init';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
-import { map, find, indexOf, filter, isArray } from 'lodash';
+import { map, find, filter } from 'lodash';
 import { handleCustomErrors } from 'core/utils/parsers';
 import remix from 'core/remix';
 import { WALLET_ADAPTERS } from '@web3auth/base';
@@ -220,7 +216,7 @@ export const useChainActions = () => {
 
       return confirmationResult;
     } catch (e) {
-      console.log(e);
+      console.log('mutation failed', e);
       if (String(e).includes('Blockhash')) {
         retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
         if (retry_count[id] < 2) await stateHandler(rpcCallback, type, id);
@@ -305,11 +301,8 @@ export const useChainActions = () => {
 
   const fetchGame = async (preInstructionsCallback) => {
     const result = await preInstructionsCallback();
-    if (!result.value.err) {
-      const gameContext = new GameContext(
-        client,
-        localStorage.getItem('gamePK') || '',
-      );
+    if (result && !result.value.err) {
+      const gameContext = new GameContext(localStorage.getItem('gamePK')!);
       const next_game = await gameContext.getGameAccount();
 
       setGame(next_game);
@@ -498,8 +491,7 @@ export const useChainActions = () => {
         return await stateHandler(
           async () => {
             return await new GameContext(
-              client,
-              localStorage.getItem('gamePK') || '',
+              localStorage.getItem('gamePK')!,
             ).crank();
           },
           INST_CRANK,
@@ -1248,10 +1240,7 @@ export const useChainActions = () => {
       setResources(await playerContext.getResources());
     },
     async refreshGame() {
-      const gameContext = new GameContext(
-        client,
-        localStorage.getItem('gamePK') || '',
-      );
+      const gameContext = new GameContext(localStorage.getItem('gamePK')!);
       setGame(await gameContext.getGameAccount());
     },
     async openCrankDrawer() {

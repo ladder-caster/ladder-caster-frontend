@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "web": "cross-env parcel serve public/index.html ",
+    "web": "cross-env REACT_APP_ENV=localprod parcel serve public/index.html",
     "build-prod-priv": "cross-env rimraf build && cross-env REACT_APP_ENV=mainnet-priv parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "build-prod": "cross-env rimraf build && cross-env REACT_APP_ENV=mainnet parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "build-dev": "cross-env rimraf build && cross-env REACT_APP_ENV=devnet parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
@@ -20,10 +20,10 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.13.10",
     "@solana/spl-token-registry": "0.2.46",
-    "@solana/wallet-adapter-base": "^0.9.9",
-    "@solana/wallet-adapter-react": "^0.15.8",
-    "@solana/wallet-adapter-react-ui": "^0.9.10",
-    "@solana/wallet-adapter-wallets": "^0.16.8",
+    "@solana/wallet-adapter-base": "^0.9.22",
+    "@solana/wallet-adapter-react": "^0.15.30",
+    "@solana/wallet-adapter-react-ui": "^0.9.29",
+    "@solana/wallet-adapter-wallets": "^0.19.15",
     "@svgdotjs/svg.js": "3.0.16",
     "@web3auth/base": "0.9.0",
     "@web3auth/core": "0.9.0",

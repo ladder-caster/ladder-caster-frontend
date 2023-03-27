@@ -75,7 +75,7 @@ class GameConstantsContext {
   }
   async setTransactionBlockHash(txn?: Transaction) {
     if (!this.transaction) return;
-    const blockhash = (await this.client.connection.getLatestBlockhash())
+    const blockhash = (await this.client.connection.getRecentBlockhash())
       .blockhash;
     if (txn) {
       txn.recentBlockhash = blockhash;
@@ -153,6 +153,7 @@ class GameConstantsContext {
     const previousGameAccount = new web3.PublicKey(
       this.getGamePK(process.env.REACT_APP_ENV as Environment, OLD_SEASON),
     );
+    //@ts-ignore
     const game = (await this.client.program.account.game.fetch(
       gameAccount,
     )) as Game;
@@ -196,16 +197,13 @@ class GameConstantsContext {
         programId,
       ),
       PublicKey.findProgramAddress(
-        [
-          gameAccount.toBuffer(),
-          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
-        ],
+        [gameAccount.toBuffer(), this?.client?.wallet.publicKey.toBuffer()],
         this.client.program.programId,
       ),
       PublicKey.findProgramAddress(
         [
           previousGameAccount.toBuffer(),
-          this?.client?.program?.provider?.wallet?.publicKey?.toBuffer(),
+          this?.client?.wallet.publicKey.toBuffer(),
         ],
         this.client.program.programId,
       ),
@@ -438,6 +436,7 @@ class GameConstantsContext {
     if (timeSince <= -20 && !force) {
       return;
     }
+    //@ts-ignore
     const game = (await this.client.program.account.game.fetch(
       this.accounts?.gameAccount,
     )) as Game;
@@ -524,6 +523,7 @@ class GameConstantsContext {
     let usdc;
     try {
       usdc =
+        //@ts-ignore
         (await this.getTokenAccountBalance(this.accounts.tokenAccounts.usdc))
           .value.amount / 1e6;
     } catch (e) {

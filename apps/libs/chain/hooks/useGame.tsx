@@ -32,10 +32,7 @@ export const useGame = () => {
         setWaiting(true);
 
         if (client) {
-          const gameContext = new GameContext(
-            client,
-            localStorage.getItem('gamePK'),
-          );
+          const gameContext = new GameContext(localStorage.getItem('gamePK')!);
 
           const next_game = await gameContext.getGameAccount();
 

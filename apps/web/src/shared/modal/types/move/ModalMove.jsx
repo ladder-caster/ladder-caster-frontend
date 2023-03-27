@@ -95,14 +95,11 @@ const ModalMove = ({ height, options }) => {
   const casterEquipment = useMemo(() => {
     if (caster && upgradeAvailable) {
       const casterWrapper = upgradeAvailable?.casters?.get(caster?.publicKey);
-      //console.log("CASTER WRAPPER",casterWrapper)
       if (!casterWrapper) return [];
       const keys = Object.keys(casterWrapper);
       const array = [];
-      //console.log("KEYS",keys)
       for (let i = 0; i < keys.length; i++) {
         const currentItem = casterWrapper[keys[i]]?.currentItem;
-        //console.log("CurrentItem",currentItem)
         if (!currentItem) {
           const BaseIcon = EquipmentBaseIcon[keys[i]];
 
@@ -123,11 +120,10 @@ const ModalMove = ({ height, options }) => {
           </_caster_gear_icon>,
         );
       }
-      //console.log("ARRAY",array)
       return array;
     }
   }, [upgradeAvailable?.casters, caster]);
-  console.log('CASTER MAP', casterEquipment);
+
   return (
     <_move $height={height}>
       <_actions ref={action_ref}>

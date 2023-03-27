@@ -119,12 +119,16 @@ export const useAutoSignIn = () => {
   }, [adapterWallet]);
 
   useEffect(() => {
-    if (!visible && prevVisible) {
-      if (adapterWallet.wallet) {
-        handleWalletConnect(adapterWallet);
-      }
+    if (adapterWallet.connected && wallet) {
+      createClient({
+        publicKey: wallet.publicKey,
+        signTransaction: wallet.signTransaction,
+        signAllTransactions: wallet.signAllTransactions,
+      });
+      createClient(wallet);
+      setWalletType(STANDARD_TYPE);
     }
-  }, [visible]);
+  }, [adapterWallet.connected, wallet]);
 
   useEffect(() => {
     if (tryCall && Client.getLocalKeypair() && !client && isSetClientReady) {

@@ -111,7 +111,7 @@ export class Client {
     wallet: NodeWallet,
     env: Environment,
   ) {
-    const _provider = new anchor.Provider(conn, wallet, {});
+    const _provider = new anchor.AnchorProvider(conn, wallet, {});
     const idl = Client.getIDL(env);
     return new anchor.Program(
       idl as anchor.Idl,
