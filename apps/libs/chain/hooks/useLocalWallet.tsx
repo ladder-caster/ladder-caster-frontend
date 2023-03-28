@@ -23,11 +23,7 @@ export const useLocalWallet = () => {
         localWallet = Client.generateKeypair();
       }
       setWaiting(true);
-      const client = await Client.connect(
-        new NodeWallet(localWallet),
-
-        (process.env.REACT_APP_ENV as Environment) || 'localnet',
-      );
+      const client = await Client.connect(new NodeWallet(localWallet));
       //TODO: Fix this function, it never works
       // await client.connection?.requestAirdrop(client.wallet.publicKey, 2*1e9);
       setWaiting(false);

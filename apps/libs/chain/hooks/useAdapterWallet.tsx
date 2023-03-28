@@ -13,10 +13,7 @@ export const useAdapterWallet = () => {
     try {
       setWaiting(true);
 
-      const client = await Client.connect(
-        wallet,
-        (process.env.REACT_APP_ENV as Environment) || 'localnet',
-      );
+      const client = await Client.connect(wallet);
       setWaiting(false);
       //@ts-ignore
       setError(null);

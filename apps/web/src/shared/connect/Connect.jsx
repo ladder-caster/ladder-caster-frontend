@@ -5,9 +5,9 @@ import { DEMO_MODE } from 'core/remix/state';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { IconWallet } from '../../../../libs/design/icons/wallet.icon';
 import { useActions } from '../../../actions';
+import config from '../../../src/utils/config';
 
-const isProd = process.env.REACT_APP_ENV === 'mainnet';
-const keyLength = isProd ? 10 : 6;
+const isProd = config.environment;
 
 const Connect = () => {
   const [demo] = useRemix(DEMO_MODE);

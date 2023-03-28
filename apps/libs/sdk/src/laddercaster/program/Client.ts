@@ -1,11 +1,9 @@
 import * as anchor from '@project-serum/anchor';
-import { Connection, ConnectionConfig, Keypair } from '@solana/web3.js';
-import laddercasterIDLMain from '../config/laddercast-mainnet.json';
-import laddercasterIDLMainPriv from '../config/laddercast-mainnet-priv.json';
-import laddercasterIDLDev from '../config/laddercast-dev.json';
-import laddercasterIDLLocal from '../config/laddercast-local.json';
+import { Connection } from '@solana/web3.js';
+import laddercasterIDL from '../config/laddercast.json';
 import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import config from 'web/src/utils/config';
 
 export type Environment =
   | 'mainnet'
@@ -22,10 +20,10 @@ export class Client {
     public wallet: NodeWallet,
   ) {}
 
-  static async connect(wallet: NodeWallet, env: Environment): Promise<Client> {
-    const conn = await Client.getConnection(env);
+  static async connect(wallet: NodeWallet): Promise<Client> {
+    const conn = await Client.getConnection();
 
-    const program = Client.getProgram(conn, wallet, env);
+    const program = Client.getProgram(conn, wallet);
 
     return new Client(program, conn, wallet);
   }
@@ -45,57 +43,12 @@ export class Client {
       : null;
   }
 
-  static async getConnection(
-    env: Environment,
-  ): Promise<anchor.web3.Connection> {
-    const [url, config] = await this.getRPC(env);
-    if (config) return new anchor.web3.Connection(url, config);
-    return new anchor.web3.Connection(url);
+  static async getConnection(): Promise<anchor.web3.Connection> {
+    return new anchor.web3.Connection(config.rpc);
   }
 
-  static getIDL(env: Environment) {
-    switch (env) {
-      case 'localprod':
-      case 'mainnet': {
-        return laddercasterIDLMain;
-      }
-      case 'mainnet-priv': {
-        return laddercasterIDLMainPriv;
-      }
-      case 'localnet': {
-        return laddercasterIDLLocal;
-      }
-      case 'devnet': {
-        return laddercasterIDLDev;
-      }
-    }
-  }
-
-  static async getRPC(env: Environment): Promise<[string, ConnectionConfig]> {
-    switch (env) {
-      case 'mainnet-priv':
-      case 'mainnet': {
-        return [
-          'https://autumn-quiet-grass.solana-mainnet.quiknode.pro/e740cf15bc2f5d51519cdda04ccd585ddcab4f68/',
-          {},
-        ];
-      }
-      case 'localnet': {
-        return ['http://localhost:8899', {}];
-      }
-      case 'localprod': {
-        return [
-          'https://wandering-divine-dream.solana-mainnet.quiknode.pro/e4ff6afb31ec8f31d05d2f2c4231ea6c3b4f3af4/',
-          {},
-        ];
-      }
-      case 'devnet': {
-        return [
-          'https://lively-still-wildflower.solana-devnet.quiknode.pro/7fd1afc95f8690531aa30719251004144802df33/',
-          {},
-        ];
-      }
-    }
+  static getIDL() {
+    return laddercasterIDL;
   }
 
   async getSOLBalance() {
@@ -106,17 +59,9 @@ export class Client {
     }
   }
 
-  private static getProgram(
-    conn: anchor.web3.Connection,
-    wallet: NodeWallet,
-    env: Environment,
-  ) {
+  private static getProgram(conn: anchor.web3.Connection, wallet: NodeWallet) {
     const _provider = new anchor.AnchorProvider(conn, wallet, {});
-    const idl = Client.getIDL(env);
-    return new anchor.Program(
-      idl as anchor.Idl,
-      idl.metadata.address,
-      _provider,
-    );
+    const idl = Client.getIDL();
+    return new anchor.Program(idl as anchor.Idl, config.programId, _provider);
   }
 }

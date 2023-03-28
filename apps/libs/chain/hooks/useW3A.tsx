@@ -27,10 +27,7 @@ export const useW3A = () => {
         const keyPair = Keypair.fromSecretKey(Buffer.from(privateKey, 'hex'));
         console.log(keyPair.publicKey.toString());
 
-        const client = await Client.connect(
-          new NodeWallet(keyPair),
-          (process.env.REACT_APP_ENV as Environment) || 'devnet',
-        );
+        const client = await Client.connect(new NodeWallet(keyPair));
 
         setWalletType(W3A_TYPE);
         setWaiting(false);

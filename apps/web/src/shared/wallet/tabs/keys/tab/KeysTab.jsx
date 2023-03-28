@@ -17,10 +17,11 @@ import {
 import { useActions } from '../../../../../../actions';
 import { AnimateDots } from '../../../../../views/game/animations/AnimateSettings';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
+import config from '../../../../../../src/utils/config';
 
 const MENU_EXPORT_SECRET_KEY = 'MENU_EXPORT_SECRET_KEY';
 const MENU_EXPORT_PUBLIC_KEY = 'MENU_EXPORT_PUBLIC_KEY';
-const network = process.env.REACT_APP_ENV === 'devnet' ? '?cluster=devnet' : '';
+const network = config.environment === 'devnet' ? '?cluster=devnet' : '';
 
 const KeysTab = () => {
   const { t } = useTranslation();

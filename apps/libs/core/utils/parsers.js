@@ -4,7 +4,7 @@ import { Client, Environment } from 'sdk/src/laddercaster/program/Client';
 export const TRANSACTION_TOO_LARGE = 'Transaction too large';
 
 export const handleCustomErrors = (message = '') => {
-  const idl = Client.getIDL(process.env.REACT_APP_ENV);
+  const idl = Client.getIDL();
 
   if (idl.errors) {
     const error = idl.errors.find((err) => {

@@ -1,17 +1,13 @@
-import { Web3Auth } from '@web3auth/web3auth';
 import { Web3AuthCore } from '@web3auth/core';
 import {
   ADAPTER_EVENTS,
   ADAPTER_NAMESPACES,
-  ADAPTER_STATUS,
   CHAIN_NAMESPACES,
-  SafeEventEmitterProvider,
-  WALLET_ADAPTERS,
 } from '@web3auth/base';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { SolanaWalletConnectorPlugin } from '@web3auth/solana-wallet-connector-plugin';
-import { useEffect, useState } from 'react';
-import config from 'core/utils/config';
+import { useEffect } from 'react';
+import config from 'web/src/utils/config';
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import {
   WALLET_TYPE,
@@ -21,7 +17,6 @@ import {
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useW3A } from 'chain/hooks/useW3A';
-import { Client, Environment } from 'sdk/src';
 
 export const solanaChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,
@@ -54,9 +49,7 @@ const Web3AuthInjecter = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const [url] = await Client.getRPC(
-          (process.env.REACT_APP_ENV as Environment) || 'localnet',
-        );
+        const url = config.rpc;
         const web3AuthInstance = new Web3AuthCore({
           chainConfig: {
             chainNamespace: ADAPTER_NAMESPACES.SOLANA,
@@ -68,8 +61,8 @@ const Web3AuthInjecter = () => {
 
         const openloginAdapter = new OpenloginAdapter({
           adapterSettings: {
-            clientId: config.WEB3AUTH,
-            network: config.W3A_ENV,
+            clientId: config.w3aKey,
+            network: config.w3aEnv,
             uxMode: 'redirect',
           },
         });

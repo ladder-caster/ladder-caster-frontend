@@ -8,9 +8,7 @@ export const LOCAL_SECRET = 'LOCAL_SECRET';
 
 export const createLocalWallet = async () => {
   // connect anchor
-  const conn = Client.getConnection(
-    (process.env.REACT_APP_ENV as Environment) || 'localnet',
-  );
+  const conn = await Client.getConnection();
 
   // generate a local wallet
   let secret;
@@ -37,7 +35,7 @@ export const createLocalWallet = async () => {
 };
 
 export const getProgram = (conn, wallet) => {
-  const _provider = new anchor.Provider(conn, new NodeWallet(wallet), {});
+  const _provider = new anchor.AnchorProvider(conn, new NodeWallet(wallet), {});
   return new anchor.Program(
     laddercasterIDL as anchor.Idl,
     laddercasterIDL.metadata.address,

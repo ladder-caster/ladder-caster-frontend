@@ -1,8 +1,0 @@
-component: website
-name: ladder-caster-play
-stage: prod
-
-inputs:
-  src: ./build
-  domain: https://play.laddercaster.com
-  region: us-east-1

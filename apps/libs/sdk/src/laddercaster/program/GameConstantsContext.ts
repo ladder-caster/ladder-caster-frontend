@@ -4,7 +4,6 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import { web3, utils } from '@project-serum/anchor';
-
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   Token,
@@ -21,6 +20,7 @@ import {
 } from 'core/remix/state';
 import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 import { Environment } from './Client';
+import config from 'web/src/utils/config';
 
 /**
  * GameConstantsContext
@@ -151,7 +151,7 @@ class GameConstantsContext {
     }
     const gameAccount = new web3.PublicKey(localStorage.getItem('gamePK'));
     const previousGameAccount = new web3.PublicKey(
-      this.getGamePK(process.env.REACT_APP_ENV as Environment, OLD_SEASON),
+      this.getGamePK(config.environment as Environment, OLD_SEASON),
     );
     //@ts-ignore
     const game = (await this.client.program.account.game.fetch(

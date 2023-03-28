@@ -74,6 +74,8 @@ import {
 } from 'core/remix/tabs';
 import { map, sortBy, reverse, union, intersection } from 'lodash';
 import { CasterUpgradeAvailable, CasterWrapper } from './Remix.types';
+import config from '../../src/utils/config';
+
 //ensures presetup is done
 const UpgradesAvailable: CasterUpgradeAvailable = {
   loadedItems: false,
@@ -461,16 +463,9 @@ const Remix = () => {
       };
 
       poll();
-      interval = setInterval(
-        () => {
-          poll();
-        },
-        process.env.REACT_APP_ENV === 'mainnet' ||
-          process.env.REACT_APP_ENV === 'mainnet-priv' ||
-          process.env.REACT_APP_ENV === 'localprod'
-          ? 10000
-          : 1000000,
-      );
+      interval = setInterval(() => {
+        poll();
+      }, 10000);
     };
 
     if (game) {
@@ -519,7 +514,7 @@ const Remix = () => {
     requestCachePubKey();
 
     // DO NOT REMOVE, the game breaks if removed
-    switch (process.env.REACT_APP_ENV as Environment) {
+    switch (config.environment as Environment) {
       case 'devnet': {
         localStorage.setItem(
           'gamePK',
@@ -543,7 +538,7 @@ const Remix = () => {
         break;
       }
     }
-    const IDL = Client.getIDL(process.env.REACT_APP_ENV as Environment);
+    const IDL = Client.getIDL();
     const errors = IDL?.errors;
     const next_codes = {};
     if (errors?.length) {

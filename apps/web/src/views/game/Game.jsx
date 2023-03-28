@@ -30,6 +30,7 @@ import Mutations from '../../shared/mutations/Mutations';
 import Connect from '../../shared/connect/Connect';
 import { useKeys } from 'core/hooks/useKeys';
 import { View } from './View/View';
+import config from '../../../src/utils/config';
 
 const Game = () => {
   const { t } = useTranslation();
@@ -80,7 +81,7 @@ const Game = () => {
             </div>
             <_dots>
               <Connect />
-              {process.env.REACT_APP_ENV !== 'mainnet' && (
+              {config.environment !== 'mainnet' && (
                 <AnimateDots>
                   <_settings onClick={() => openDrawerSettings()}>
                     <IconMore />
