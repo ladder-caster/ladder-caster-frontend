@@ -8,7 +8,7 @@ import {
   VIEW_MARKET,
 } from 'core/routes/routes';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { DEMO_MODE, DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/remix/state';
+import { DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/remix/state';
 import { IconMarketplace } from 'design/icons/marketplace.icon';
 import { useLocation } from 'react-router-dom';
 import { IconBag } from 'design/icons/bag.icon';
@@ -16,7 +16,6 @@ import { IconHat } from 'design/icons/hat.icon';
 import { IconMap } from 'design/icons/map.icon';
 import { IconHome } from 'design/icons/home.icon';
 import { useTranslation } from 'react-i18next';
-import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
 
 const Nav = () => {
   const { t } = useTranslation();

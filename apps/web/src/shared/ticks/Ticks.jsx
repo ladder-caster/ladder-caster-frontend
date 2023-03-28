@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { _ticks, _bar, _fill, _loading } from './Ticks.styled';
 import { AnimateLoading } from './animations/AnimateLoading';
 import {
-  DEMO_MODE,
   GAME_MAP,
   GAME_OPTIONS,
   GAME_SPELLCASTERS,
@@ -22,7 +21,6 @@ import { map } from 'lodash';
 import { CHAIN_GAME } from 'chain/hooks/state';
 
 const Ticks = () => {
-  const [demo] = useRemix(DEMO_MODE);
   const [phase] = useRemix(USER_PHASE);
   const [game] = useRemix(CHAIN_GAME);
   const [options] = useRemix(GAME_OPTIONS);
@@ -32,10 +30,11 @@ const Ticks = () => {
   const [lootAll, setLootAll] = useState(false);
   const [view] = useRemix(VIEW_NAVIGATION);
   const loading_bars = options?.bars || 0;
-  const positions = demo?.positions;
-  const prev_ticks = usePrevious(demo?.num_ticks || 0);
-  const regen_keys =
-    prev_ticks % loading_bars === 2 && demo?.num_ticks % loading_bars === 0;
+
+  // TODO: figure out what variable is
+  const positions = null;
+  const prev_ticks = usePrevious(0);
+  const regen_keys = prev_ticks % loading_bars === 2;
   const currentTurn = game?.turnInfo?.turn;
 
   useEffect(() => {

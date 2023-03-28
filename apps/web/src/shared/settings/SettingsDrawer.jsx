@@ -16,13 +16,13 @@ import {
 import { AnimateButton } from '../button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { DEMO_MODE, VIEW_SIZE } from 'core/remix/state';
+import { VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
+import config from '../../utils/config';
 
 const SettingsDrawer = () => {
   const { t } = useTranslation();
-  const [demo] = useRemix(DEMO_MODE);
   const [view_height] = useRemix(VIEW_SIZE);
 
   const {
@@ -55,7 +55,7 @@ const SettingsDrawer = () => {
       <_breakpoint />
       <_body>
         <_actions>
-          {!demo && (
+          {config.environment !== 'mainnet' ? (
             <>
               <>
                 <_button onClick={() => testGiveLADA()}>Test Give LADA</_button>
@@ -79,7 +79,7 @@ const SettingsDrawer = () => {
                 <_button onClick={() => testRefresh()}>Refresh</_button>
               </>
             </>
-          )}
+          ) : null}
         </_actions>
       </_body>
     </_settings>

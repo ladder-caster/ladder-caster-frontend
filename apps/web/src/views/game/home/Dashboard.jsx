@@ -17,25 +17,14 @@ import {
   _link,
 } from './Dashboard.styled';
 import { useTranslation } from 'react-i18next';
-import {
-  DEMO_MODE,
-  GAME_INIT,
-  GAME_MAP,
-  GAME_RESOURCES,
-  TIER_I,
-} from 'core/remix/state';
+import { GAME_MAP, TIER_I } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { IconHat } from 'design/icons/hat.icon';
-import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
 import { map as _map } from 'lodash';
 import { nanoid } from 'nanoid';
 import { _controls, _speed } from '../header/Header.styled';
 import { _wallet } from '../inventory/Inventory.styled';
 import Heading from '../../../shared/heading/Heading';
-import { CHAIN_CASTERS } from 'chain/hooks/state';
-import { IconBag } from 'design/icons/bag.icon';
 import { Onboarding } from './onboarding/Onboarding';
-import { useActions } from '../../../../actions';
 
 const Dashboard = () => {
   const { t } = useTranslation();

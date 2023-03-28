@@ -23,10 +23,8 @@ import {
   EQUIP_ITEM,
   UNEQUIP_ITEM,
   MODAL_REDEEM,
-  MODAL_ORDER,
   GAME_RESOURCES,
   TOKENS_ACTIVE,
-  GAME_BOOST,
   TYPE_RES1,
   TYPE_RES2,
   TYPE_RES3,
@@ -68,7 +66,6 @@ import {
   CHAIN_ITEMS,
   CHAIN_LOCAL_CLIENT,
   CHAIN_PLAYER,
-  CHAIN_NFTS,
   CHAIN_OLD_CASTERS,
 } from 'chain/hooks/state';
 import { COINS } from 'core/utils/markets';
@@ -413,7 +410,6 @@ export const useChainActions = () => {
     }
   };
   return {
-    startDemo() {},
     confirmBurn,
     closeDrawer() {
       setDrawer('');

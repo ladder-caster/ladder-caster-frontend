@@ -48,7 +48,6 @@ export const CREATE_QUERY = 'CREATE_QUERY';
 
 export const SEEN_PHASE = 'SEEN_PHASE';
 export const ERROR_CODES = 'ERROR_CODES';
-export const DEMO_MODE = 'DEMO_MODE';
 export const DASHBOARD_STATE = 'DASHBOARD_STATE';
 export const GAME_RESOURCES = 'GAME_RESOURCES';
 export const GAME_INVENTORY = 'GAME_INVENTORY';

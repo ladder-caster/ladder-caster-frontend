@@ -23,7 +23,6 @@ import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
-  DEMO_MODE,
   GAME_INIT,
   GAME_RESOURCES,
   TYPE_RES3,
@@ -34,7 +33,7 @@ import {
 import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
 import usePrevious from 'core/hooks/usePrevious';
-import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
+import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
 import Timer from './timer/Timer';
 
@@ -42,7 +41,6 @@ const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const { openDrawerTokens } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
-  const [demo] = useRemix(DEMO_MODE);
   const [resources] = useRemix(GAME_RESOURCES);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const [initialized] = useRemix(GAME_INIT);
@@ -59,21 +57,16 @@ const Header = withTheme(({ theme }) => {
           {t('header.day')}{' '}
           {!isNaN(gameConstants?.gameState?.turnInfo?.turn)
             ? gameConstants?.gameState?.turnInfo?.turn
-            : demo?.num_ticks}
+            : ''}
         </_speed>
       </_controls>
     ) : null;
-  }, [
-    gameConstants?.gameState?.turnInfo?.turn,
-    demo?.num_ticks,
-    casters?.length,
-    initialized,
-  ]);
+  }, [gameConstants?.gameState?.turnInfo?.turn, casters?.length, initialized]);
 
   return (
     <_header>
       <_container>
-        <_left onClick={() => demo && openDrawerTokens()}>
+        <_left onClick={() => true && openDrawerTokens()}>
           <_coin>
             <_icon $background={theme.element['legendary']}>
               <IconMoneyIMG />

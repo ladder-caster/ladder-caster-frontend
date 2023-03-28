@@ -12,8 +12,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
 import {
-  DEMO_MODE,
-  DRAWER_ACTIVE,
   GAME_MAP,
   GAME_SPELLCASTERS,
   TYPE_CRAFT,
@@ -21,8 +19,6 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
-  PHASE_ACTIONS,
-  USER_PHASE,
   GAME_INVENTORY,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -60,7 +56,6 @@ const Queue = ({ spell_id }) => {
     [spellcasters, spellcasters?.length],
   );
   const currentTurn = game?.turnInfo?.turn;
-  const [num_ticks] = useRemix(DEMO_MODE, (demo) => demo.num_ticks);
   const position = caster?.position;
   const searchPosition =
     caster?.casterActionPosition && !caster?.isLootActionBefore
@@ -81,18 +76,18 @@ const Queue = ({ spell_id }) => {
     : +caster?.position?.slice(1, caster?.position?.length);
   const caster_tile = +caster?.level === next_level;
 
-  const unlocked_loot = caster?.last_loot < (num_ticks || currentTurn);
-  const unlocked_craft = caster?.last_craft < (num_ticks || currentTurn);
+  const unlocked_loot = caster?.last_loot < currentTurn;
+  const unlocked_craft = caster?.last_craft < currentTurn;
   const unlocked_spell =
     (caster?.last_spell ||
       inventory?.items?.find((item) => item.type === 'spellBook')) &&
-    caster?.last_spell < (num_ticks || currentTurn) &&
+    caster?.last_spell < currentTurn &&
     !(
-      caster?.last_move >= (num_ticks || currentTurn) ||
-      caster?.last_loot >= (num_ticks || currentTurn) ||
-      caster?.last_craft >= (num_ticks || currentTurn)
+      caster?.last_move >= currentTurn ||
+      caster?.last_loot >= currentTurn ||
+      caster?.last_craft >= currentTurn
     );
-  const unlocked_move = caster?.last_move < (num_ticks || currentTurn);
+  const unlocked_move = caster?.last_move < currentTurn;
 
   const element = tile?.type;
 
