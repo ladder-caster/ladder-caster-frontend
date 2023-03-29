@@ -1,14 +1,5 @@
-import {
-  PublicKey,
-  Transaction,
-  TransactionInstruction,
-} from '@solana/web3.js';
-import { web3, utils } from '@project-serum/anchor';
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
-  TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+import { PublicKey, RpcResponseAndContext, TokenAmount } from '@solana/web3.js';
+import { utils } from '@project-serum/anchor';
 import { Game, GameState, Client, Accounts, Balances } from '.';
 import resources from '../config/resources.json';
 import {
@@ -18,9 +9,11 @@ import {
   OLD_SEASON,
   ROUND_TIMELIMIT,
 } from 'core/remix/state';
-import { TRANSACTION_TOO_LARGE } from 'core/utils/parsers';
 import { Environment } from './Client';
 import config from 'web/src/utils/config';
+import PDA from './fetchers/PDA';
+
+const USDC = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
 
 /**
  * GameConstantsContext
@@ -36,96 +29,7 @@ class GameConstantsContext {
   private updateGameInterval: any;
   private lastCrankTime: number;
   private lastTurnNumber: number;
-  private transaction: Transaction | null;
   constructor() {}
-
-  async addInstruction(instruction: TransactionInstruction, txn?: Transaction) {
-    if (!this.transaction) {
-      this.transaction = new Transaction();
-    }
-    if (txn) {
-      txn.add(instruction);
-      return;
-    }
-    this.transaction.add(instruction);
-  }
-  async removeInstruction(
-    instruction: TransactionInstruction,
-    txn?: Transaction,
-  ) {
-    if (!this.transaction) {
-      return;
-    }
-    var index;
-    if (txn) {
-      index = txn.instructions.indexOf(instruction);
-      if (index > -1) txn.instructions.splice(index, 1);
-      return;
-    }
-    index = this.transaction.instructions.indexOf(instruction);
-    if (index > -1) this.transaction.instructions.splice(index, 1);
-  }
-  async setFeePayer(txn?: Transaction) {
-    if (!this.transaction) return;
-    if (txn) {
-      txn.feePayer = this.client.wallet.publicKey;
-      return;
-    }
-    this.transaction.feePayer = this.client.wallet.publicKey;
-  }
-  async setTransactionBlockHash(txn?: Transaction) {
-    if (!this.transaction) return;
-    const blockhash = (await this.client.connection.getRecentBlockhash())
-      .blockhash;
-    if (txn) {
-      txn.recentBlockhash = blockhash;
-      return;
-    }
-    this.transaction.recentBlockhash = blockhash;
-  }
-  async sendTransaction(txn?: Transaction) {
-    let toSend = txn ? txn : this.transaction;
-    try {
-      await this.client.program.provider.send(toSend);
-      if (this.transaction) this.transaction = null;
-    } catch (e) {
-      if (e.message.includes(TRANSACTION_TOO_LARGE)) {
-        console.log(e);
-        await this.txnTooLarge(toSend);
-      } else {
-        throw new Error(e);
-      }
-    }
-  }
-  private async txnTooLarge(transaction: Transaction) {
-    const half = Math.floor(transaction.instructions.length / 2);
-    if (half <= 0) return;
-    const firstHalf = transaction.instructions.slice(0, half);
-    const secondHalf = transaction.instructions.slice(half);
-    const firstHalfTxn = new Transaction();
-    firstHalfTxn.instructions = firstHalf;
-
-    const secondHalfTxn = new Transaction();
-    secondHalfTxn.instructions = secondHalf;
-
-    this.setFeePayer(firstHalfTxn);
-    this.setFeePayer(secondHalfTxn);
-    await Promise.all([
-      this.setTransactionBlockHash(firstHalfTxn),
-      this.setTransactionBlockHash(secondHalfTxn),
-    ]);
-    await Promise.all([
-      this.sendTransaction(firstHalfTxn),
-      this.sendTransaction(secondHalfTxn),
-    ]);
-    //TODO: signatures
-  }
-  private async getTransactionMemoryUsage() {
-    if (!this.transaction) {
-      return 0;
-    }
-    //TODO: need to calculate, potentially using endian uint to do calculation for an approximation on compute units
-  }
   /**
    *
    * @param account the account to get the balance of
@@ -149,67 +53,44 @@ class GameConstantsContext {
     if (this.accounts?.gameAccount) {
       return;
     }
-    const gameAccount = new web3.PublicKey(localStorage.getItem('gamePK'));
-    const previousGameAccount = new web3.PublicKey(
+    const gameAccount = new PublicKey(localStorage.getItem('gamePK'));
+    const previousGameAccount = new PublicKey(
       this.getGamePK(config.environment as Environment, OLD_SEASON),
     );
     //@ts-ignore
     const game = (await this.client.program.account.game.fetch(
       gameAccount,
     )) as Game;
-    const publicKey = this.client.wallet.publicKey;
+    const wallet = this.client.wallet.publicKey;
     const programId = this.client.program.programId;
+    const PDAFetcher = new PDA(this.client);
+
     //MAHOOSIVE get and wait for longest execution
     const asyncDispatch = [
-      Token.getAssociatedTokenAddress(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        game.resource1MintAccount,
-        publicKey,
-      ),
-      Token.getAssociatedTokenAddress(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        game.resource2MintAccount,
-        publicKey,
-      ),
-      Token.getAssociatedTokenAddress(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        game.resource3MintAccount,
-        publicKey,
-      ),
-      Token.getAssociatedTokenAddress(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        game.ladaMintAccount,
-        publicKey,
-      ),
-      Token.getAssociatedTokenAddress(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-        publicKey,
-      ),
+      PDAFetcher.getTokenUserAccount(game.resource1MintAccount, wallet),
+      PDAFetcher.getTokenUserAccount(game.resource2MintAccount, wallet),
+      PDAFetcher.getTokenUserAccount(game.resource3MintAccount, wallet),
+      PDAFetcher.getTokenUserAccount(game.ladaMintAccount, wallet),
+      PDAFetcher.getTokenUserAccount(USDC, wallet),
       PublicKey.findProgramAddress([Buffer.from('game_signer')], programId),
       PublicKey.findProgramAddress(
-        [Buffer.from('season'), new PublicKey(gameAccount).toBuffer()],
+        [Buffer.from('season'), gameAccount.toBuffer()],
         programId,
       ),
       PublicKey.findProgramAddress(
         [gameAccount.toBuffer(), this?.client?.wallet.publicKey.toBuffer()],
-        this.client.program.programId,
+        programId,
       ),
       PublicKey.findProgramAddress(
         [
           previousGameAccount.toBuffer(),
           this?.client?.wallet.publicKey.toBuffer(),
         ],
-        this.client.program.programId,
+        programId,
       ),
       PublicKey.findProgramAddress(
-        [Buffer.from('season'), new PublicKey(previousGameAccount).toBuffer()],
-        this.client.program.programId,
+        [Buffer.from('season'), previousGameAccount.toBuffer()],
+        programId,
       ),
       PublicKey.findProgramAddress(
         [
@@ -217,7 +98,7 @@ class GameConstantsContext {
           gameAccount.toBuffer(),
           Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
         ],
-        this.client.program.programId,
+        programId,
       ),
       PublicKey.findProgramAddress(
         [
@@ -225,7 +106,7 @@ class GameConstantsContext {
           gameAccount.toBuffer(),
           Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn + 1))),
         ],
-        this.client.program.programId,
+        programId,
       ),
     ];
     const [
@@ -342,9 +223,9 @@ class GameConstantsContext {
       }, 60000);
     }
   }
+
   private getGamePK(env: Environment, season: number): PublicKey {
     switch (env) {
-      case 'localprod':
       case 'mainnet': {
         return resources.seasons[season].gameAccountProd;
       }
@@ -356,7 +237,116 @@ class GameConstantsContext {
       }
     }
   }
-  // #region helpers
+  private async checkInstance() {
+    //initializes game incase of desync
+    if (!this.accounts?.gameAccount) {
+      await this.init();
+    }
+  }
+  public async hydrateGame(force?: boolean) {
+    await this.checkInstance();
+    const timeSince = this.lastCrankTime - new Date().getMinutes();
+    // unless force, only hydrate if it's been more than 20 min since last crank or 1 min intervals if net is dying
+    if (timeSince <= -20 && !force) {
+      return;
+    }
+    //@ts-ignore
+    const game = (await this.client.program.account.game.fetch(
+      this.accounts?.gameAccount,
+    )) as Game;
+    if (game.turnInfo.turn > this.game.game.turnInfo.turn) {
+      this.game.game = game;
+      await Promise.all([
+        PublicKey.findProgramAddress(
+          [
+            Buffer.from('turn_data'),
+            this.accounts.gameAccount.toBuffer(),
+            Buffer.from(
+              utils.bytes.utf8.encode(String(game.turnInfo.turn - 1)),
+            ),
+          ],
+          this.client.program.programId,
+        ),
+        PublicKey.findProgramAddress(
+          [
+            Buffer.from('turn_data'),
+            this.accounts.gameAccount.toBuffer(),
+            Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
+          ],
+          this.client.program.programId,
+        ),
+      ])
+        .then((res) => {
+          this.game.turnData = res[0][0];
+          this.game.futureTurnData = res[1][0];
+        })
+        .catch((err) => console.error('FAILED TO GET TURN DATA:', err));
+    }
+  }
+  /**
+   * Refreshes account token balances
+   */
+  public async hydrateAccountBalances() {
+    await this.checkInstance();
+    const asyncDispatch = [
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES3]),
+      this.getTokenAccountBalance(this.accounts.tokenAccounts.lada),
+      this.getSOLBalance(),
+    ];
+
+    const [resource1, resource2, resource3, lada, solana] = await Promise.all(
+      asyncDispatch,
+    )
+      .then((res) => {
+        const res1 = res[0]
+          ? (res[0] as RpcResponseAndContext<TokenAmount>).value.amount
+          : '0';
+        const res2 = res[1]
+          ? (res[1] as RpcResponseAndContext<TokenAmount>).value.amount
+          : '0';
+        const res3 = res[2]
+          ? (res[2] as RpcResponseAndContext<TokenAmount>).value.amount
+          : '0';
+        const ladaValue = res[3]
+          ? (res[3] as RpcResponseAndContext<TokenAmount>).value.amount
+          : '0';
+        return [
+          res1,
+          res2,
+          res3,
+          ((ladaValue as unknown) as number) / 1e9,
+          (res[4] as number) / 1e9,
+        ];
+      })
+      .catch((err) => {
+        console.error('Failed To Retrieve Account Balances:', err);
+        return Array(5).fill(0);
+      });
+
+    this.balances = {
+      ...this.balances,
+      sol: solana,
+      game: {
+        [TYPE_RES1]: resource1,
+        [TYPE_RES2]: resource2,
+        [TYPE_RES3]: resource3,
+        lada,
+      },
+    };
+  }
+
+  public async initClient(client: Client) {
+    if (client && !this.client) {
+      this.client = client;
+      await this.init();
+    }
+  }
+
+  public get futureTurnData(): PublicKey {
+    return this.game.futureTurnData;
+  }
   public get turnData(): PublicKey {
     return this.game.turnData;
   }
@@ -423,55 +413,6 @@ class GameConstantsContext {
   public get Client(): Client {
     return this.client;
   }
-  private async checkInstance() {
-    //initializes game incase of desync
-    if (!this.accounts?.gameAccount) {
-      await this.init();
-    }
-  }
-  public async hydrateGame(force?: boolean) {
-    await this.checkInstance();
-    const timeSince = this.lastCrankTime - new Date().getMinutes();
-    // unless force, only hydrate if it's been more than 20 min since last crank or 1 min intervals if net is dying
-    if (timeSince <= -20 && !force) {
-      return;
-    }
-    //@ts-ignore
-    const game = (await this.client.program.account.game.fetch(
-      this.accounts?.gameAccount,
-    )) as Game;
-    if (game.turnInfo.turn > this.game.game.turnInfo.turn) {
-      this.game.game = game;
-      await Promise.all([
-        PublicKey.findProgramAddress(
-          [
-            Buffer.from('turn_data'),
-            this.accounts.gameAccount.toBuffer(),
-            Buffer.from(
-              utils.bytes.utf8.encode(String(game.turnInfo.turn - 1)),
-            ),
-          ],
-          this.client.program.programId,
-        ),
-        PublicKey.findProgramAddress(
-          [
-            Buffer.from('turn_data'),
-            this.accounts.gameAccount.toBuffer(),
-            Buffer.from(utils.bytes.utf8.encode(String(game.turnInfo.turn))),
-          ],
-          this.client.program.programId,
-        ),
-      ])
-        .then((res) => {
-          this.game.turnData = res[0][0];
-          this.game.futureTurnData = res[1][0];
-        })
-        .catch((err) => console.error('FAILED TO GET TURN DATA:', err));
-    }
-  }
-  public get futureTurnData(): PublicKey {
-    return this.game.futureTurnData;
-  }
   /**
    *
    * @returns [resource1, resource2, resource3, lada, sol]
@@ -485,69 +426,6 @@ class GameConstantsContext {
       this.balances.sol,
     ];
   }
-  /**
-   * Refreshes account token balances
-   */
-  public async hydrateAccountBalances() {
-    await this.checkInstance();
-    console.log(
-      'HYDRATION IS IMPORTANT',
-      this,
-      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
-    );
-    const asyncDispatch = [
-      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES1]),
-      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES2]),
-      this.getTokenAccountBalance(this.accounts.tokenAccounts[TYPE_RES3]),
-      this.getTokenAccountBalance(this.accounts.tokenAccounts.lada),
-      this.getSOLBalance(),
-    ];
-
-    const [resource1, resource2, resource3, lada, solana] = await Promise.all(
-      asyncDispatch,
-    )
-      .then((res) => {
-        // value exists in return: {context:{},value:{}}
-        const res1 = res[0] ? res[0].value.amount : '0';
-        const res2 = res[1] ? res[1].value.amount : '0';
-        const res3 = res[2] ? res[2].value.amount : '0';
-        const usdc = res[5] ? res[5].value.amount / 1e6 : '0';
-        const ladaValue = res[3] ? res[3].value.amount : 0;
-        return [res1, res2, res3, ladaValue / 1e9, res[4] / 1e9, usdc];
-      })
-      .catch((err) => {
-        console.error('Failed To Retrieve Account Balances:', err);
-        return Array(5).fill(0);
-      });
-
-    let usdc;
-    try {
-      usdc =
-        //@ts-ignore
-        (await this.getTokenAccountBalance(this.accounts.tokenAccounts.usdc))
-          .value.amount / 1e6;
-    } catch (e) {
-      usdc = 0;
-    }
-
-    this.balances = {
-      sol: solana,
-      usdc,
-      game: {
-        [TYPE_RES1]: resource1,
-        [TYPE_RES2]: resource2,
-        [TYPE_RES3]: resource3,
-        lada,
-      },
-    };
-  }
-  public async initClient(client: Client) {
-    if (client && !this.client) {
-      this.client = client;
-      await this.init();
-    }
-  }
-  // #endregion helpers
 }
 
 const gameConstantsContext = new GameConstantsContext();

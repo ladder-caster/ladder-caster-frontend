@@ -18,11 +18,8 @@ import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import { AnimateMobile } from './animations/AnimateMobile';
 import { IconMore } from 'design/icons/more.icon';
 import Modal from '../../shared/modal/Modal';
-import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { useGame } from 'chain/hooks/useGame';
 import { VIEW_NAVIGATION } from 'core/remix/state';
-import usePrevious from 'core/hooks/usePrevious';
 import { AnimateDots } from './animations/AnimateSettings';
 import { useActions } from '../../../actions';
 import { useTranslation } from 'react-i18next';
@@ -34,9 +31,6 @@ import config from '../../../src/utils/config';
 
 const Game = () => {
   const { t } = useTranslation();
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const { getGame } = useGame(client);
-  const prevClient = usePrevious(client);
   const screen_ref = useRef();
   const { height } = useSize(screen_ref);
   const { vh } = useMobileHeight();
@@ -57,12 +51,6 @@ const Game = () => {
       setView(cachedTab);
     }
   }, [isSetViewReady]);
-
-  useEffect(() => {
-    if (!prevClient && client) {
-      getGame(client);
-    }
-  }, [client]);
 
   return (
     <_game $vh={vh} {...k0}>

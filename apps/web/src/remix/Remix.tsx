@@ -39,7 +39,7 @@ import {
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
 import { nanoid } from 'nanoid';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -75,6 +75,7 @@ import {
 import { map, sortBy, reverse, union, intersection } from 'lodash';
 import { CasterUpgradeAvailable, CasterWrapper } from './Remix.types';
 import config from '../../src/utils/config';
+import { useGame } from 'chain/hooks/useGame';
 
 //ensures presetup is done
 const UpgradesAvailable: CasterUpgradeAvailable = {
@@ -160,6 +161,7 @@ const Remix = () => {
     UpgradesAvailable,
   );
 
+  const { getGame } = useGame();
   const [gameConstants] = useRemixOrigin(GAME_CONSTANTS, gameConstantsContext);
   const [arweave, setArweave] = useRemixOrigin(ARWEAVE_UTILS, arweaveUtil);
   useRemixOrigin(GAME_RESOURCES, {
@@ -434,13 +436,17 @@ const Remix = () => {
     };
   };
 
+  const initClient = useCallback(async () => {
+    await gameConstants.initClient(client);
+    await getGame(client);
+  }, [client]);
+
   useEffect(() => {
-    let listener;
     if (game) {
       setMap(generateMap(game));
     }
-    if (client && !gameConstants.clientInitialized()) {
-      gameConstants.initClient(client);
+    if (client && !gameConstants.Client) {
+      initClient();
     }
     if (client && !arweave.isMerkleInit()) {
       arweave.initMerkle();

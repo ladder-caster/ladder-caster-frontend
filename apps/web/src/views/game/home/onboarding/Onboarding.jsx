@@ -171,7 +171,7 @@ export const Onboarding = ({ home }) => {
             <_item>
               <_task $disabled={resources?.lada !== 0 || casters?.length !== 0}>
                 1. {t('home.task.redeem')}
-                <div>{t('home.task.lada')}</div>
+                <span>{t('home.task.lada')}</span>
               </_task>
               <_actions>
                 <_button
