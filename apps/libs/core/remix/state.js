@@ -93,7 +93,6 @@ export const ITEM_HAT = 'head';
 export const ITEM_ROBE = 'robe';
 export const ITEM_STAFF = 'staff';
 export const ITEM_BOOK = 'spellBook';
-export const ITEM_GEM = 'gem';
 export const ITEM_CHEST = 'chest';
 
 export const EDITION_NORMAL = 'normal';

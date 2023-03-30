@@ -15,7 +15,6 @@ import {
   DRAWER_ACTIVE,
   GAME_INVENTORY,
   ITEM_BOOK,
-  ITEM_GEM,
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
@@ -39,7 +38,6 @@ const Category = ({ type }) => {
     [ITEM_HAT]: t('inventory.title.hat'),
     [ITEM_ROBE]: t('inventory.title.robe'),
     [ITEM_STAFF]: t('inventory.title.staff'),
-    [ITEM_GEM]: t('inventory.title.gem'),
     [ITEM_BOOK]: t('inventory.title.book'),
   }[type];
 

@@ -47,14 +47,6 @@ export const _staff = styled.div`
   cursor: pointer;
 `;
 
-export const _gem = styled.div`
-  display: flex;
-  width: 100%;
-  height: 50%;
-  padding: 0 0 4px 0;
-  cursor: pointer;
-`;
-
 export const _shaft = styled.div`
   display: flex;
   width: 100%;
@@ -121,7 +113,7 @@ export const _inner = styled.div`
         : 'scale(1)'};
   }
   > :nth-child(2) {
-    margin:0;
+    margin: 0;
   }
 `;
 // elastic out bezier curve
