@@ -2,7 +2,6 @@ import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { useAutoSignIn } from 'core/hooks/useAutoSignIn';
 import {
   EQUIP_ITEM,
-  GAME_BOOST,
   GAME_CONFIRM,
   GAME_INVENTORY,
   GAME_MAP,
@@ -24,7 +23,6 @@ import {
   USER_PHASE,
   WALLET_TYPE,
   GAME_INIT,
-  ERROR_CODES,
   SEEN_PHASE,
   GAME_OLD_SPELLCASTERS,
   EDITION_NORMAL,
@@ -51,12 +49,9 @@ import {
   INIT_CHAIN_LOAD,
 } from '../../../libs/chain/hooks/state';
 import {
-  ArweaveUtilInterface,
   Caster,
-  Client,
   Environment,
   Game,
-  GameConstantsContextInterface,
   GameContext,
   Item,
   Tile,
@@ -71,7 +66,7 @@ import {
   TABS_MINT_REDEEM,
   TABS_SWAP_ORDER,
 } from 'core/remix/tabs';
-import { map, sortBy, reverse } from 'lodash';
+import { sortBy, reverse } from 'lodash';
 import config from '../../src/utils/config';
 import { useGame } from 'chain/hooks/useGame';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
@@ -81,9 +76,7 @@ import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);
   const [game, setGame] = useRemixOrigin(CHAIN_GAME);
-  const [codes, setCodes] = useRemixOrigin(ERROR_CODES);
   const [player] = useRemixOrigin(CHAIN_PLAYER);
-  const [seen] = useRemixOrigin(SEEN_PHASE);
   const [items] = useRemixOrigin(CHAIN_ITEMS, []);
   const [casters] = useRemixOrigin(CHAIN_CASTERS, []);
   const [oldCasters] = useRemixOrigin(CHAIN_OLD_CASTERS, []);
@@ -107,7 +100,7 @@ const Remix = () => {
     sol: 0,
     usdc: 0,
   });
-
+  useRemixOrigin(SEEN_PHASE);
   useRemixOrigin(TRADE_ORDERBOOK);
   useRemixOrigin(INIT_CHAIN_LOAD, true);
   useRemixOrigin(GAME_INIT);
@@ -129,17 +122,12 @@ const Remix = () => {
   useRemixOrigin(TABS_SWAP_ORDER, TAB_SWAP);
   useRemixOrigin(GAME_SPELL, {});
   useRemixOrigin(TOKENS_ACTIVE, '');
-  useRemixOrigin(GAME_BOOST, {
-    [TYPE_RES2]: 0,
-    [TYPE_RES1]: 0,
-    [TYPE_RES3]: 0,
-  });
   useRemixOrigin(
     PRESTIGE_TOGGLE,
     localStorage.getItem('hide_prestige') === 'true',
   );
 
-  // TODO: Remove! Only added for esthetics
+  // TODO: Find purpose
   useRemixOrigin(GAME_OPTIONS, {
     base: 1200,
     speed: 120,
@@ -443,15 +431,6 @@ const Remix = () => {
         );
         break;
       }
-    }
-    const IDL = Client.getIDL();
-    const errors = IDL?.errors;
-    const next_codes = {};
-    if (errors?.length) {
-      map(errors, ({ code, name, msg }) => {
-        next_codes[code] = { name, msg };
-      });
-      setCodes(next_codes);
     }
   }, []);
 

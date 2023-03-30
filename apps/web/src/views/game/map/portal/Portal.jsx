@@ -18,7 +18,6 @@ import { nanoid } from 'nanoid';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   DRAWER_ACTIVE,
-  GAME_MOVES,
   GAME_MAP,
   TYPE_RES3,
   TYPE_RES2,
@@ -28,13 +27,11 @@ import Enchant from './enchant/Enchant';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 
 const Portal = withTheme(({ theme, level, col }) => {
-  const [active, setActive] = useRemix(DRAWER_ACTIVE);
-  const [map] = useRemix(GAME_MAP);
+  const [, setActive] = useRemix(DRAWER_ACTIVE);
   const row = level - 1;
   const position = col + level;
   const [land] = useRemix(GAME_MAP, (lands) => lands?.[row]?.[col]);
-  const [moves] = useRemix(GAME_MOVES, (portals) => portals?.[position]);
-  const location = moves?.location;
+  const location = null;
 
   const rate = land?.rate;
   const random_elements = useMemo(

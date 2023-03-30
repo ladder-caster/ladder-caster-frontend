@@ -12,10 +12,8 @@ import {
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
-import Header from './src/shared/header/Header';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import Remix from './src/remix/Remix';
-import { nanoid } from 'nanoid';
 import {
   ConnectionProvider,
   WalletProvider,
@@ -42,8 +40,6 @@ const withThemes = ({ palette = 'dark' }) => ({
   styles,
   zindex,
 });
-
-const ticks_key = nanoid();
 
 const App = () => {
   const [, setAutoConnect] = useState(false);
@@ -94,7 +90,6 @@ const App = () => {
               <Remix />
               <Web3AuthInjecter />
               <GlobalStyles />
-              <Header />
               <_view $vh={vh}>
                 <Switch>
                   <Route exact path={`${PUBLIC_GAME}`}>
