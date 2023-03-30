@@ -6,7 +6,7 @@ import { IconWallet } from '../../../../libs/design/icons/wallet.icon';
 import { useActions } from '../../../actions';
 import config from '../../../src/utils/config';
 
-const isProd = config.environment;
+const isProd = config.environment === 'mainnet';
 
 const Connect = () => {
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);

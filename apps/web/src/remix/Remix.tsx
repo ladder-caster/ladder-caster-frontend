@@ -363,7 +363,7 @@ const Remix = () => {
     };
 
     if (game) {
-      console.log(game);
+      console.log('game', game);
       const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
       const timeDiff =
         new Date().getTime() -
@@ -405,40 +405,20 @@ const Remix = () => {
   }, [items]);
 
   useEffect(() => {
-    requestCachePubKey();
-
-    // DO NOT REMOVE, the game breaks if removed
-    switch (config.environment as Environment) {
-      case 'devnet': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccount,
-        );
-        break;
-      }
-      case 'mainnet-priv': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccountProdPriv,
-        );
-        break;
-      }
-      case 'localprod':
-      case 'mainnet': {
-        localStorage.setItem(
-          'gamePK',
-          resources.seasons[CURRENT_SEASON].gameAccountProd,
-        );
-        break;
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     if (player) {
       console.log('player', player);
     }
   }, [player]);
+
+  useEffect(() => {
+    requestCachePubKey();
+
+    // DO NOT REMOVE, the game breaks if removed
+    localStorage.setItem(
+      'gamePK',
+      resources.seasons[CURRENT_SEASON][config.gameAccountString],
+    );
+  }, []);
 
   useEffect(() => {
     if (loading) {
@@ -451,6 +431,7 @@ const Remix = () => {
       });
     }
   }, [loading]);
+
   return null;
 };
 

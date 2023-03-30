@@ -9,7 +9,6 @@ import {
   OLD_SEASON,
   ROUND_TIMELIMIT,
 } from 'core/remix/state';
-import { Environment } from './Client';
 import config from 'web/src/utils/config';
 import PDA from './fetchers/PDA';
 
@@ -55,7 +54,7 @@ class GameConstantsContext {
     }
     const gameAccount = new PublicKey(localStorage.getItem('gamePK'));
     const previousGameAccount = new PublicKey(
-      this.getGamePK(config.environment as Environment, OLD_SEASON),
+      resources.seasons[OLD_SEASON][config.gameAccountString],
     );
     //@ts-ignore
     const game = (await this.client.program.account.game.fetch(
@@ -221,20 +220,6 @@ class GameConstantsContext {
       this.updateGameInterval = setInterval(() => {
         this.handleGameUpdateInterval(60000);
       }, 60000);
-    }
-  }
-
-  private getGamePK(env: Environment, season: number): PublicKey {
-    switch (env) {
-      case 'mainnet': {
-        return resources.seasons[season].gameAccountProd;
-      }
-      case 'mainnet-priv': {
-        return resources.seasons[season].gameAccountProdPriv;
-      }
-      case 'devnet': {
-        return resources.seasons[season].gameAccount;
-      }
     }
   }
   private async checkInstance() {

@@ -8,6 +8,7 @@ const config = {
   w3aEnv: process.env.REACT_APP_WEB3AUTH as Openlogin,
   rpc: process.env.REACT_APP_RPC_NODE as string,
   programId: process.env.REACT_APP_PROGRAM_ID as string,
+  gameAccountString: process.env.REACT_APP_GAME_ACCOUNT_STRING as string,
   environment: process.env.REACT_APP_ENV as string,
 };
 

@@ -49,11 +49,10 @@ const Web3AuthInjecter = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const url = config.rpc;
         const web3AuthInstance = new Web3AuthCore({
           chainConfig: {
             chainNamespace: ADAPTER_NAMESPACES.SOLANA,
-            rpcTarget: url,
+            rpcTarget: config.rpc,
           },
         });
 
