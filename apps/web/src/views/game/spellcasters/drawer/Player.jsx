@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   _player,
   _background,
@@ -11,40 +11,31 @@ import {
 } from './Player.styled';
 import { useTranslation } from 'react-i18next';
 import Character from './character/Character';
-import Actions from './actions/Actions';
 import Tabs from '../../../../shared/tabs/Tabs';
 import {
   CONFIRM_UNEQUIP,
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
-  GAME_BOOST,
   GAME_SPELLCASTERS,
   PLAYER_ACTIONS,
   PLAYER_CHARACTER,
   PLAYER_LEADERBOARD,
   SPELLCASTER_BUY,
   TABS_CHARACTER_ACTIONS,
-  TYPE_RES3,
-  TYPE_RES1,
-  TYPE_RES2,
-  PLAYER_TAB_ACTIONS,
-  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { find } from 'lodash';
 import Rank from './rank/Rank';
 import Boost from './boost/Boost';
-import { useActions } from '../../../../../actions';
 import Leaderboard from '../../../../shared/leaderboard/Leaderboard';
 import Confirm from '../../../../shared/confirm/Confirm';
 import TabAction from '../../../../shared/tabs/TabActions/TabActions';
+
 const Player = () => {
   const { t } = useTranslation();
-  const { burnResourcesForXP } = useActions();
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
+  const [drawer] = useRemix(DRAWER_ACTIVE);
   const [context] = useRemix(DRAWER_CONTEXT);
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isBoost = drawer?.boost;
   const confirm = context?.confirm && context?.unequip;
   const id = drawer?.id;
@@ -53,7 +44,6 @@ const Player = () => {
     () => find(spellcasters, (caster) => caster.id === id),
     [drawer, spellcasters],
   );
-  const canUpgrade = upgradeAvailable?.canUpgrade(caster?.publicKey) ?? false;
   // data struct added to allow easier future parse of data,
   // pulse used to make tab name pulse
   const tabs_character_actions = {
@@ -68,9 +58,6 @@ const Player = () => {
     [PLAYER_ACTIONS]: {
       name: t('player.actions'),
       View: TabAction,
-      data:{
-        pulse:canUpgrade
-      },
     },
   };
   const renderMain = useMemo(() => {

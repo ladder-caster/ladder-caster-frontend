@@ -55,31 +55,17 @@ const SettingsDrawer = () => {
       <_breakpoint />
       <_body>
         <_actions>
-          {config.environment !== 'mainnet' ? (
-            <>
-              <>
-                <_button onClick={() => testGiveLADA()}>Test Give LADA</_button>
-                <_button onClick={() => testInitCaster()}>
-                  Create Caster
-                </_button>
-                <_button onClick={() => testGiveChest()}>
-                  Test Give Chest
-                </_button>
-                <_button onClick={() => testGiveResources()}>
-                  Test Give Resources
-                </_button>
-                <_button onClick={() => testGiveHat()}>Test Give Hat</_button>
-                <_button onClick={() => testGiveRobe()}>Test Give Robe</_button>
-                <_button onClick={() => testGiveStaff()}>
-                  Test Give Staff
-                </_button>
-                <_button onClick={() => testGiveSpell()}>
-                  Test Give Spell
-                </_button>
-                <_button onClick={() => testRefresh()}>Refresh</_button>
-              </>
-            </>
-          ) : null}
+          <_button onClick={() => testGiveLADA()}>Test Give LADA</_button>
+          <_button onClick={() => testInitCaster()}>Create Caster</_button>
+          <_button onClick={() => testGiveChest()}>Test Give Chest</_button>
+          <_button onClick={() => testGiveResources()}>
+            Test Give Resources
+          </_button>
+          <_button onClick={() => testGiveHat()}>Test Give Hat</_button>
+          <_button onClick={() => testGiveRobe()}>Test Give Robe</_button>
+          <_button onClick={() => testGiveStaff()}>Test Give Staff</_button>
+          <_button onClick={() => testGiveSpell()}>Test Give Spell</_button>
+          <_button onClick={() => testRefresh()}>Refresh</_button>
         </_actions>
       </_body>
     </_settings>

@@ -49,7 +49,6 @@ import {
   DRAWER_TRADE,
   RARITY_COMMON,
   MODAL_BURN,
-  CASTER_UPGRADE_AVAILABLE,
   SIDE_BUY,
   TRADE_ORDERBOOK,
   SIDE_SELL,
@@ -151,7 +150,6 @@ export const useChainActions = () => {
   const [, setView] = useRemix(VIEW_NAVIGATION);
   const [web3Auth] = useRemix(WEB3AUTH_CLIENT);
   const [, setProvider] = useRemix(WEB3AUTH_PROVIDER);
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const { handleState } = useMutation();
 
   const fetchPlayer = async (
@@ -313,7 +311,7 @@ export const useChainActions = () => {
       setModal({
         active: true,
         type: MODAL_MINT,
-        description: t('modal.demo.description'),
+        description: t('modal.buy.description'),
         accept: async (count) => {
           const casterContext = new CasterContext();
 
@@ -1390,6 +1388,7 @@ export const useChainActions = () => {
         });
       }
     },
+    //TODO: to test
     async unequipAllItems(caster: Caster) {
       if (!caster) return;
       const casterContext = new CasterContext(
@@ -1398,43 +1397,18 @@ export const useChainActions = () => {
           (match) => match?.publicKey?.toString() === caster?.publicKey,
         ),
       );
+      const casterItems: any[] = [];
+      const keys = Object.keys(caster || {});
+      for (let i = 0; i < keys.length; i++) {
+        const item = caster[keys[i]]?.currentItem;
+        if (item) {
+          casterItems.push(item);
+        }
+      }
 
-      const casterItems = await upgradeAvailable?.getEquippedItems(
-        caster.publicKey,
-      );
       if (casterItems.length == 0) return;
       await handleState(async () => {
         return await casterContext.unequipAllItems(casterItems);
-      }, INST_UNEQUIP);
-    },
-    async upgradeAllItems(caster: Caster) {
-      if (!caster) return;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
-      );
-
-      const casterWrapper = await upgradeAvailable?.casters?.get(
-        caster?.publicKey,
-      );
-
-      if (!casterWrapper) return;
-      const keys = Object.keys(casterWrapper);
-      const casterItems: any[] = [];
-      for (let i = 0; i < keys.length; i++) {
-        const items = casterWrapper[keys[i]]?.items;
-        const item = upgradeAvailable.items.get(items?.[0]);
-        if (!items || items?.length <= 0 || !item) continue;
-        casterItems.push(item);
-      }
-      upgradeAvailable.removeUpgrade(casterItems);
-
-      //if(casterItems.length == 0)return;
-
-      await handleState(async () => {
-        return await casterContext.equipBestGear(casterItems);
       }, INST_UNEQUIP);
     },
     emptyInputs() {

@@ -1,6 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { m } from 'framer-motion';
-import { Link } from 'react-router-dom';
 
 export const _header = styled.div`
   position: relative;
@@ -34,7 +33,6 @@ export const _left = styled.div`
   justify-content: flex-start;
   padding-left: 16px;
   height: 100%;
-  cursor: pointer;
   overflow-x: scroll;
 `;
 

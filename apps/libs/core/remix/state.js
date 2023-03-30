@@ -62,7 +62,6 @@ export const GAME_CONFIRM = 'GAME_CONFIRM';
 export const GAME_SPELL = 'GAME_CONFIRM';
 export const GAME_BOOST = 'GAME_BOOST';
 export const GAME_INIT = 'GAME_INIT';
-export const CASTER_UPGRADE_AVAILABLE = 'CASTER_UPGRADE_AVAILABLE';
 export const UNEQUIP_ALL = 'UNEQUIP_ALL';
 
 export const SPELLCASTER_BUY = 'SPELLCASTER_BUY';

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   _move,
   _board,
@@ -38,7 +38,6 @@ import {
   TYPE_RES1,
   TYPE_LEGENDARY,
   TYPE_RES2,
-  CASTER_UPGRADE_AVAILABLE,
 } from 'core/remix/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
@@ -48,20 +47,18 @@ import { IconHat } from 'design/icons/hat.icon';
 import { IconStaff } from 'design/icons/staff.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { getTierNumber } from 'core/utils/switch';
-import {
-  IconMoney,
-  IconMoneyIMG,
-} from '../../../../../../libs/design/icons/money.icon';
-import { IconSwirl } from 'design/icons/swirl.icon';
+import { IconMoneyIMG } from '../../../../../../libs/design/icons/money.icon';
 import IconAttribute from '../../../../shared/types/icons/IconAttribute';
+import { CHAIN_CASTERS } from 'chain/hooks/state';
+
 const ModalMove = ({ height, options }) => {
   const action_ref = useRef();
   const button_ref = useRef();
   const confirm_ref = useRef();
   const { t } = useTranslation();
-  const { modalClear, confirmMove, modalChest } = useActions();
+  const { modalClear, confirmMove } = useActions();
+  const [casters] = useRemix(CHAIN_CASTERS);
   const [confirm] = useRemix(GAME_CONFIRM);
-  const [upgradeAvailable] = useRemix(CASTER_UPGRADE_AVAILABLE);
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
   useClickOutside([confirm_ref, button_ref], () => modalClear());
 
@@ -93,8 +90,11 @@ const ModalMove = ({ height, options }) => {
     staff: IconStaff,
   };
   const casterEquipment = useMemo(() => {
-    if (caster && upgradeAvailable) {
-      const casterWrapper = upgradeAvailable?.casters?.get(caster?.publicKey);
+    if (caster) {
+      const casterWrapper = find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      );
       if (!casterWrapper) return [];
       const keys = Object.keys(casterWrapper);
       const array = [];
@@ -122,7 +122,7 @@ const ModalMove = ({ height, options }) => {
       }
       return array;
     }
-  }, [upgradeAvailable?.casters, caster]);
+  }, [casters, caster]);
 
   return (
     <_move $height={height}>
