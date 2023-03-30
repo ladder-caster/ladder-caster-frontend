@@ -20,7 +20,6 @@ import {
   GAME_INIT,
   W3A_TYPE,
   WALLET_TYPE,
-  WEB3AUTH_CLIENT,
   WEB3AUTH_PLUGIN_STORE,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
@@ -35,7 +34,6 @@ const Market = () => {
   const [initialized] = useRemix(GAME_INIT);
   const [walletType] = useRemix(WALLET_TYPE);
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
-  const [web3AuthInstance, setWeb3AuthInstance] = useRemix(WEB3AUTH_CLIENT);
 
   return (
     <_market $init={initialized && casters?.length !== 0}>

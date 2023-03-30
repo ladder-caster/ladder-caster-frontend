@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   _settings,
   _body,
@@ -19,7 +19,6 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import { VIEW_SIZE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
-import config from '../../utils/config';
 
 const SettingsDrawer = () => {
   const { t } = useTranslation();

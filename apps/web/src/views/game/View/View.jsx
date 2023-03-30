@@ -67,7 +67,6 @@ export const View = () => {
         </LazyMotion>
       </_container>
       <Drawer height={dh}>{Drawers ? <Drawers /> : null}</Drawer>
-      {/* <Price /> */}
     </_view>
   );
 };

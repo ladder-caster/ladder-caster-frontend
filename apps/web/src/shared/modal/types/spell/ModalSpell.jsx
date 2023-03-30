@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   _spell,
   _actions,
@@ -29,7 +29,7 @@ const ModalSpell = ({ height, options }) => {
   const { t } = useTranslation();
   const [spell] = useRemix(GAME_SPELL);
   const { modalClear, castSpell } = useActions();
-  const [inventory, setInventory] = useRemix(GAME_INVENTORY);
+  const [inventory] = useRemix(GAME_INVENTORY);
   const board_ref = useRef();
   const button_ref = useRef();
   const caster = options?.caster;

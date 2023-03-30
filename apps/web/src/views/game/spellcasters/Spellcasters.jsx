@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   _spellcasters,
   _list,
@@ -8,7 +8,6 @@ import {
 import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
 import {
-  GAME_INIT,
   GAME_OLD_SPELLCASTERS,
   GAME_SPELLCASTERS,
   SPELLCASTER_BUY,
@@ -19,7 +18,6 @@ import {
 } from 'core/remix/state';
 import { _feed } from '../home/Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { nanoid } from 'nanoid';
 import Heading from '../../../shared/heading/Heading';
 import { sortBy } from 'lodash';
 import { Onboarding } from '../home/onboarding/Onboarding';

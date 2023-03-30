@@ -15,7 +15,6 @@ import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
 import { GAME_RESOURCES } from 'core/remix/state';
-import { IconHyperlink } from 'design/icons/hyperlink.icon';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
@@ -46,7 +45,7 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Solana</_label>
+            <_label>{t('wallet.solana')}</_label>
             <_amount>
               {truncateDecimals(resources?.sol, TRUNCATE_DECIMAL)} SOL
             </_amount>
@@ -59,7 +58,7 @@ const WalletTab = () => {
         </_icon>
         <_right>
           <_text>
-            <_label>Lada Token</_label>
+            <_label>{t('wallet.lada')}</_label>
             <_amount>
               <span>
                 {truncateDecimals(resources?.lada, TRUNCATE_DECIMAL)} LADA

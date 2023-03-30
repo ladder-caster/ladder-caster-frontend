@@ -4,11 +4,8 @@
     "user.offline": "You're Offline! Magic won't save you...",
     "preview.demo": "Preview Game",
     "coming.soon": "Coming Soon",
-    "ladder.title": "Ladder",
     "laddercaster.title": "LadderCaster",
     "laddercaster.alpha": "alpha",
-    "spellcasters.title": "Spellcasters",
-    "spellcasters.marketplace": "Marketplace",
     "heading.phase.rewards": "Rewards Phase",
     "heading.phase.equip": "Equip Phase",
     "heading.phase.actions": "Actions Phase",
@@ -406,6 +403,9 @@
     "heading.buy.lada": "Buy LADA",
     "hide.prestige": "Hide Old Spellcasters",
     "trade.swap.empty.bids": "No Bids",
-    "trade.swap.empty.asks": "No Asks"
+    "trade.swap.empty.asks": "No Asks",
+    "onboarding.beta": "BETA",
+    "wallet.solana": "Solana",
+    "wallet.lada": "Lada Token"
   }
 }

@@ -14,25 +14,18 @@ import {
 import { useTranslation } from 'react-i18next';
 import { IconClose } from 'design/icons/close.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  DRAWER_ACTIVE,
-  GAME_MAP,
-  GAME_SPELLCASTERS,
-  VIEW_SIZE,
-} from 'core/remix/state';
+import { GAME_MAP, GAME_SPELLCASTERS, VIEW_SIZE } from 'core/remix/state';
 import { map, sortBy } from 'lodash';
 import Caster from '../../../../../../shared/caster/Caster';
 import { AnimateButton } from '../../../../../../shared/button/animations/AnimateButton';
 import { gridList } from 'core/utils/lists';
 import { useActions } from '../../../../../../../actions';
-import { COLUMNS_ALPHA } from 'core/utils/switch';
 
 const Character = () => {
   const { t } = useTranslation();
   const [view_height] = useRemix(VIEW_SIZE);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [board] = useRemix(GAME_MAP);
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
   const { closeDrawer } = useActions();
 
   const list_spellcasters = useMemo(() => {

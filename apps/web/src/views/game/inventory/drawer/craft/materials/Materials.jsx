@@ -39,29 +39,19 @@ import {
   TIER_IV,
   TYPE_LEGENDARY,
   VIEW_SIZE,
-  TYPE_RES3,
-  TYPE_RES1,
-  TYPE_RES2,
   USER_PHASE,
   PHASE_REWARDS,
   PHASE_EQUIP,
 } from 'core/remix/state';
-import { gridList } from 'core/utils/lists';
-import { map } from 'lodash';
 import { _row } from '../character/Character.styled';
-import { filter, find, indexOf } from 'lodash';
+import { filter } from 'lodash';
 import Item from '../../../../../../shared/item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../../actions';
-import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
-import { IconResource2IMG } from 'design/icons/resource2.icon';
-import { IconResource3IMG } from 'design/icons/resource3.icon';
 import Boost from '../../../../spellcasters/drawer/boost/Boost';
 import { findIndex, clamp } from 'lodash';
 import { IconMoneyIMG } from 'design/icons/money.icon';
-
-const COST_MULTIPLIER = 5;
 
 const Materials = () => {
   const { t } = useTranslation();
@@ -74,9 +64,6 @@ const Materials = () => {
   const material_ref = useRef();
   const material_size = useSize(material_ref);
   const caster = context?.caster;
-  const col = caster?.position?.slice(0, 1);
-  const row = +caster?.position?.slice(1, caster?.position?.length);
-  const tile_level = board?.[row]?.[col]?.level;
 
   const isBoost = drawer?.boost;
 

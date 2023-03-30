@@ -42,8 +42,6 @@ import {
   _close,
   _icon_close,
 } from '../trade/TradeDrawer.styled';
-import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
-import { IconClose } from 'design/icons/close.icon';
 
 const Inventory = () => {
   const { t } = useTranslation();

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { _grid, _row, _tab, _empty } from './MintTab.styled';
-import { useKeys } from 'core/hooks/useKeys';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   DRAWER_CONTEXT,
@@ -18,7 +17,6 @@ import { useActions } from '../../../../../../actions';
 
 const MintTab = () => {
   const { t } = useTranslation();
-  const [k0, k1, k2, k3] = useKeys(4);
   const [context] = useRemix(DRAWER_CONTEXT);
   const [inventory] = useRemix(GAME_INVENTORY);
   const [view_height] = useRemix(VIEW_SIZE);

@@ -12,7 +12,6 @@ import {
 import { useSize } from 'core/hooks/useSize';
 import { useActions } from '../../../actions';
 import { EDITION_LIMITED } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
 
 const Caster = ({ caster, grid, small, callback, isOld }) => {
   const caster_ref = useRef();

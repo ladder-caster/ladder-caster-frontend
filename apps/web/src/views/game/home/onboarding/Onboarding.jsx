@@ -107,7 +107,7 @@ export const Onboarding = ({ home }) => {
             </_button>
             <_beta>
               <_text>
-                <span>BETA</span>
+                <span>{t('onboarding.beta')}</span>
               </_text>
               <_google
                 $big

@@ -16,9 +16,8 @@ import { useActions } from '../../../../../actions';
 import { AnimateButton } from '../../animations/AnimateButton';
 import { DRAWER_CONTEXT, SIDE_BUY } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { findMarket } from 'core/utils/markets';
 
-const ModalOrder = ({ height, options }) => {
+const ModalOrder = ({ options }) => {
   const { t } = useTranslation();
   const [context] = useRemix(DRAWER_CONTEXT);
   const { modalClear, confirmOrder } = useActions();

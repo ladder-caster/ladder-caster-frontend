@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { _tab, _button, _disconnect, _link } from './KeysTab.styles';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { CHAIN_LOCAL_CLIENT, INIT_CHAIN_LOAD } from 'chain/hooks/state';
+import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
 import ManageKey from '../ManageKey';
@@ -31,7 +31,6 @@ const KeysTab = () => {
   const { handleDisconnect } = useAutoSignIn();
   const adapterWallet = useWallet();
   const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
-  const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
   const {
     closeDrawer,
     clearStates,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   _profit,
   _bid,
@@ -18,8 +18,6 @@ const Profit = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
   const { chooseOrderSide } = useActions();
   const buy = context?.side === SIDE_BUY;
-
-  console.log('context', context);
 
   return (
     <_profit>
