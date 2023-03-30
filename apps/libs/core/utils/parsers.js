@@ -1,4 +1,4 @@
-import { Client, Environment } from 'sdk/src/laddercaster/program/Client';
+import { Client } from 'sdk/src/program/Client';
 // Error parsers
 
 export const TRANSACTION_TOO_LARGE = 'Transaction too large';

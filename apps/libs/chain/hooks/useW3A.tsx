@@ -7,8 +7,8 @@ import { SafeEventEmitterProvider } from '@web3auth/base';
 import { Keypair } from '@solana/web3.js';
 
 //TODO: Replace with package once app is ready to ship
-import { Client, Environment } from 'sdk/src/laddercaster/program/Client';
-import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import { Client } from 'sdk/src/program/Client';
+import NodeWallet from 'sdk/src/utils/NodeWallet';
 
 export const useW3A = () => {
   const [client, setClient, isSetClientReady] = useRemix(CHAIN_LOCAL_CLIENT);

@@ -83,7 +83,7 @@ import {
   PlayerContext,
   Caster,
   SerumContext,
-} from 'sdk/src/laddercaster/program';
+} from 'sdk/src/program';
 import { Market } from '@project-serum/serum';
 import * as anchor from '@project-serum/anchor';
 import {

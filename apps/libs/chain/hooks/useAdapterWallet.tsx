@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from './state';
-import { Client, Environment } from 'sdk/src/laddercaster/program';
-import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import { Client, Environment } from 'sdk/src/program';
+import NodeWallet from 'sdk/src/utils/NodeWallet';
 
 export const useAdapterWallet = () => {
   const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);

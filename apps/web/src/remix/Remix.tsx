@@ -61,9 +61,9 @@ import {
   GameContext,
   Item,
   Tile,
-} from '../../../libs/sdk/src/laddercaster/program';
+} from '../../../libs/sdk/src/program';
 import * as anchor from '@project-serum/anchor';
-import resources from 'sdk/src/laddercaster/config/resources.json';
+import resources from 'sdk/src/config/resources.json';
 import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
 import {
   TAB_CHARACTER,
@@ -135,9 +135,9 @@ const UpgradesAvailable: CasterUpgradeAvailable = {
     }
   },
 };
-const gameConstantsContext: GameConstantsContextInterface = require('../../../libs/sdk/src/laddercaster/program/GameConstantsContext')
+const gameConstantsContext: GameConstantsContextInterface = require('../../../libs/sdk/src/program/GameConstantsContext')
   .default;
-const arweaveUtil: ArweaveUtilInterface = require('../../../libs/sdk/src/laddercaster/utils/ArweaveUtil')
+const arweaveUtil: ArweaveUtilInterface = require('../../../libs/sdk/src/utils/ArweaveUtil')
   .default;
 const Remix = () => {
   const [, setMap] = useRemixOrigin(GAME_MAP);

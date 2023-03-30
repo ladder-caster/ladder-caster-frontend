@@ -5,8 +5,8 @@ import { CREATE_MUTATION, WALLET_DISCONNECT } from 'core/remix/state';
 import { nanoid } from 'nanoid';
 
 //TODO: Replace with package once app is ready to ship
-import { Client, Environment } from '../../sdk/src/laddercaster/program/Client';
-import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import { Client, Environment } from '../../sdk/src/program/Client';
+import NodeWallet from 'sdk/src/utils/NodeWallet';
 import { TxStates } from 'web/actions/useMutations';
 
 export const useLocalWallet = () => {

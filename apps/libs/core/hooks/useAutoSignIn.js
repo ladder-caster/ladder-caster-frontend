@@ -1,7 +1,7 @@
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { useState, useEffect, useMemo } from 'react';
-import { Client } from '../../sdk/src/laddercaster/program';
+import { Client } from '../../sdk/src/program';
 import { useRemix } from './remix/useRemix';
 import usePrevious from './usePrevious';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';

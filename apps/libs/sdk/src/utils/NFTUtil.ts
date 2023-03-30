@@ -6,7 +6,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import axios from 'axios';
 import { deserializeUnchecked } from 'borsh';
-import { NFTUtilInterface } from '../program';
+import { NFTUtilInterface } from '../program/types';
 import gameConstantsContext from '../program/GameConstantsContext';
 
 //TODO: Revisit to make it more efficient
