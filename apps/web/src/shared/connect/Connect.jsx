@@ -32,7 +32,6 @@ function start_and_end(str) {
   return (
     <>
       <span>{str.substr(0, 6)}</span>...
-      {/* {`...${str.substr(str.length - 4, str.length)}`} */}
     </>
   );
 }

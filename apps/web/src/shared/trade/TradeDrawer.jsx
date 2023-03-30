@@ -11,12 +11,7 @@ import {
 import { IconClose } from 'design/icons/close.icon';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
-import {
-  TAB_PLACE_ORDER,
-  TAB_SWAP,
-  TABS_SWAP_ORDER,
-  TAB_OPEN_ORDER,
-} from 'core/remix/tabs';
+import { TAB_PLACE_ORDER, TAB_SWAP, TABS_SWAP_ORDER } from 'core/remix/tabs';
 import Tabs from '../tabs/Tabs';
 import SwapTab from './tabs/swap/SwapTab';
 import OrderTab from './tabs/order/OrderTab';
