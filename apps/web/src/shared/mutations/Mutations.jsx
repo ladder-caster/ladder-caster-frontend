@@ -13,13 +13,7 @@ import {
   _spinner,
 } from './Mutations.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import {
-  CREATE_MUTATION,
-  USER_OFFLINE,
-  ERROR_CODES,
-  GAME_CONSTANTS,
-} from 'core/remix/state';
-import usePrevious from 'core/hooks/usePrevious';
+import { CREATE_MUTATION, USER_OFFLINE } from 'core/remix/state';
 import { AnimatePresence } from 'framer-motion';
 import { AnimateMutations } from './animations/AnimateMutations';
 import { useTranslation } from 'react-i18next';
@@ -35,29 +29,16 @@ import { AnimateSpinner } from './animations/AnimateSpinner';
 import { IconBlind } from 'design/icons/blind.icon';
 import { IconOffline } from 'design/icons/offline.icon';
 import { withTheme } from 'styled-components';
+import { TxStates } from '../../../actions/useMutations';
 
 const Mutations = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const mutations_ref = useRef();
   const { width, height } = useSize(mutations_ref);
   const [mutation, setMutation] = useRemix(CREATE_MUTATION);
-  const [codes] = useRemix(ERROR_CODES);
-  const [offline, setOffline] = useRemix(USER_OFFLINE);
+  const [offline] = useRemix(USER_OFFLINE);
   const [queue, setQueue] = useState([]);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
-  const previousTurn = usePrevious(
-    gameConstants?.gameState?.turnInfo?.turn ?? -1,
-  );
 
-  useEffect(() => {
-    if (
-      queue.length > 0 &&
-      gameConstants?.gameState &&
-      gameConstants?.gameState?.turnInfo?.turn > previousTurn
-    ) {
-      setQueue([]);
-    }
-  }, [gameConstants?.gameState]);
   // Handle Mutation
   useEffect(() => {
     if (mutation?.id) {
@@ -81,15 +62,15 @@ const Mutations = withTheme(({ theme }) => {
       const text = fetching[item.type];
       const error_text = item?.text?.error;
 
-      if (item.error)
+      if (item.state === TxStates.ERROR)
         return error_text
           ? error_text
           : t(text ? `error.${text}` : 'mutation.error');
-      else if (item.success)
+      else if (item.state === TxStates.SUCCESS || item.state === TxStates.DONE)
         return t(text ? `success.${text}` : 'mutation.success');
-      else if (item.validator)
+      else if (item.state === TxStates.EXECUTING)
         return t(text ? `loading.${text}` : 'mutation.validator');
-      else if (item.rpc)
+      else if (item.state === TxStates.CONFIRMING)
         return t(text ? `loading.${text}` : 'mutation.loading');
       else return t('mutation.loading');
     }
@@ -107,16 +88,18 @@ const Mutations = withTheme(({ theme }) => {
   useEffect(() => {
     const item = queue?.[0];
     const pending_item = queue?.[1];
-    if (item?.done || item?.success || item?.error) {
+    if (
+      [TxStates.DONE, TxStates.SUCCESS, TxStates.ERROR].includes(item?.state)
+    ) {
       setTimeout(
         () => removeFromQueue(item),
         pending_item
           ? 1000
-          : item?.error
+          : item?.state === TxStates.ERROR
           ? 3000
-          : item?.done
+          : item?.state === TxStates.DONE
           ? 2000
-          : item?.success
+          : item?.state === TxStates.SUCCESS
           ? 3000
           : 1000,
       );
@@ -126,18 +109,28 @@ const Mutations = withTheme(({ theme }) => {
   // Icon based on stage
   const icon_type = (item) => {
     if (offline) return <IconOffline />;
-    else if (item?.error) return <IconBlind />;
-    else if (item?.success) return <IconEye />;
-    else if (item?.retry_id) return <IconLoading />;
-    else if (item?.validator) return <IconLightning />;
-    else if (item?.rpc) return <IconLoading />;
-    else return <IconLoading />;
+
+    switch (item?.state) {
+      case TxStates.ERROR: {
+        return <IconBlind />;
+      }
+      case TxStates.SUCCESS: {
+        return <IconEye />;
+      }
+      case TxStates.CONFIRMING: {
+        return <IconLightning />;
+      }
+      case TxStates.RETRYING:
+      case TxStates.EXECUTING:
+      default: {
+        return <IconLoading />;
+      }
+    }
   };
 
   const item = queue?.[0];
-  const success = !item?.done && item?.success;
-  const error = !item?.done && item?.error;
-  const retry = item?.retry_id;
+  const success = item?.state === TxStates.SUCCESS;
+  const error = item?.state === TxStates.ERROR;
   const color = theme.text[success ? 'success' : error ? 'error' : 'base'];
   const active = offline || current_text;
 
@@ -166,10 +159,7 @@ const Mutations = withTheme(({ theme }) => {
                 <_body>
                   <_icon $color={color}>{icon_type(queue[0])}</_icon>
                   <_text $color={color}>
-                    <span>
-                      {current_text}
-                      {retry && `...`}
-                    </span>
+                    <span>{current_text}</span>
                   </_text>
                 </_body>
                 <_queue $success={success} $error={error}>

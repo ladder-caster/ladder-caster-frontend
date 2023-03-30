@@ -329,7 +329,7 @@
     "success.test.resources": "Success! TEST Resources...",
     "success.test.item": "Success! TEST Item...",
     "success.test.tile": "Success! Changing TEST Tile...",
-    "success.auto.connect": "Connecting Wallet!",
+    "success.auto.connect": "Connected Wallet!",
     "success.auto.disconnect": "Disconnecting Wallet!",
     "error.init.player": "Error initializing player :(",
     "error.init.lada_account": "Error Initializing LADA account :(",

@@ -19,6 +19,7 @@ import {
   WALLET_TYPE,
 } from '../remix/state';
 import { VIEW_HOME } from '../routes/routes';
+import { TxStates } from 'web/actions/useMutations';
 
 export const useAutoSignIn = () => {
   const [client, setClient, isSetClientReady] = useRemix(CHAIN_LOCAL_CLIENT);
@@ -71,21 +72,14 @@ export const useAutoSignIn = () => {
     ) {
       setMutation({
         id,
-        rpc: true,
-        validator: false,
-        success: false,
-        error: false,
+        state: TxStates.EXECUTING,
         type: WALLET_AUTO_CONNECT,
       });
 
       handleWalletConnect(adapterWallet, () => {
         setMutation({
           id,
-          rpc: true,
-          validator: false,
-          done: true,
-          success: false,
-          error: true,
+          state: TxStates.ERROR,
           type: WALLET_AUTO_CONNECT,
         });
         setView(VIEW_HOME);
@@ -94,11 +88,7 @@ export const useAutoSignIn = () => {
       if (adapterWallet.disconnecting) {
         setMutation({
           id,
-          rpc: true,
-          validator: false,
-          done: true,
-          success: true,
-          error: false,
+          state: TxStates.DONE,
           type: WALLET_DISCONNECT,
         });
         setClient(null);
@@ -107,11 +97,7 @@ export const useAutoSignIn = () => {
         setWalletType(STANDARD_TYPE);
         setMutation({
           id,
-          rpc: true,
-          validator: false,
-          done: true,
-          success: true,
-          error: false,
+          state: TxStates.DONE,
           type: WALLET_AUTO_CONNECT,
         });
       }

@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 //TODO: Replace with package once app is ready to ship
 import { Client, Environment } from '../../sdk/src/laddercaster/program/Client';
 import NodeWallet from 'sdk/src/laddercaster/utils/NodeWallet';
+import { TxStates } from 'web/actions/useMutations';
 
 export const useLocalWallet = () => {
   const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
@@ -47,11 +48,7 @@ export const useLocalWallet = () => {
     setClient(null);
     setMutation({
       id,
-      rpc: true,
-      validator: false,
-      done: true,
-      success: true,
-      error: false,
+      state: TxStates.SUCCESS,
       type: WALLET_DISCONNECT,
     });
   };
