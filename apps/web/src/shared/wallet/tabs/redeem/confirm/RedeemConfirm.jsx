@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const RedeemConfirm = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
-  const { confirmRedeem } = useActions();
+  const { redeemNFT } = useActions();
   const { t } = useTranslation();
 
   return (
@@ -16,7 +16,7 @@ const RedeemConfirm = () => {
       <_display>
         <NFT nft={context?.nft} />
       </_display>
-      <_button onClick={() => confirmRedeem()}>{t('modal.confirm')}</_button>
+      <_button onClick={() => redeemNFT()}>{t('modal.confirm')}</_button>
     </_confirm>
   );
 };

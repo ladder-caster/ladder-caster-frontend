@@ -10,7 +10,7 @@ export const useFilledOrders = () => {
   const [context] = useRemix(DRAWER_CONTEXT);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [orders, setOrders] = useRemix(TRADE_FILLED_ORDERS);
-  const { filledOrders } = useActions();
+  const { getFilledOrders } = useActions();
 
   const base = context?.base;
   const quote = context?.quote;
@@ -21,7 +21,7 @@ export const useFilledOrders = () => {
   useEffect(async () => {
     if (pair !== prev_pair) {
       try {
-        const next_orders = await filledOrders(pair);
+        const next_orders = await getFilledOrders(pair);
         console.log('next orders', next_orders);
         // setOrders({ ...orders, [market]: { ...next_orders, pair } });
       } catch (e) {

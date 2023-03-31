@@ -20,14 +20,14 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 const ModalOrder = ({ options }) => {
   const { t } = useTranslation();
   const [context] = useRemix(DRAWER_CONTEXT);
-  const { modalClear, confirmOrder } = useActions();
+  const { closeModal, confirmOrder } = useActions();
   const board_ref = useRef();
   const button_ref = useRef();
   const type =
     context?.side === SIDE_BUY ? t('drawer.trade.buy') : t('drawer.trade.sell');
   const coin = context?.quote;
 
-  useClickOutside([board_ref, button_ref], () => modalClear({}));
+  useClickOutside([board_ref, button_ref], () => closeModal({}));
 
   return (
     <_order>

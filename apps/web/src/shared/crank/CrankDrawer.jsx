@@ -44,12 +44,7 @@ let end = '';
 
 const CrankDrawer = () => {
   const { t } = useTranslation();
-  const {
-    closeDrawer,
-    nextTurn,
-    claimAllRewards,
-    lootAllResources,
-  } = useActions();
+  const { closeDrawer, nextTurn } = useActions();
   const [game] = useRemix(CHAIN_GAME);
   const [time, setTime] = useState({});
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
@@ -158,20 +153,6 @@ const CrankDrawer = () => {
       <_button disabled={!ended} $disabled={!ended} onClick={() => nextTurn()}>
         {t('drawer.turn.action')}
       </_button>
-      {/*<_button*/}
-      {/*  disabled={!claim}*/}
-      {/*  $disabled={!claim}*/}
-      {/*  onClick={() => claimAllRewards()}*/}
-      {/*>*/}
-      {/*  {t('drawer.crank.claim.all')}*/}
-      {/*</_button>*/}
-      {/*<_button*/}
-      {/*  disabled={!loot}*/}
-      {/*  $disabled={!loot}*/}
-      {/*  onClick={() => lootAllResources()}*/}
-      {/*>*/}
-      {/*  {t('drawer.crank.loot.all')}*/}
-      {/*</_button>*/}
     </_crank>
   );
 };

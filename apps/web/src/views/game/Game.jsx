@@ -35,7 +35,7 @@ const Game = () => {
   const { height } = useSize(screen_ref);
   const { vh } = useMobileHeight();
   const [view, setView, isSetViewReady] = useRemix(VIEW_NAVIGATION);
-  const { openDrawerSettings } = useActions();
+  const { drawerSettings } = useActions();
   const [k0, k1, k2] = useKeys(5);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Game = () => {
               <Connect />
               {config.environment !== 'mainnet' && (
                 <AnimateDots>
-                  <_settings onClick={() => openDrawerSettings()}>
+                  <_settings onClick={() => drawerSettings()}>
                     <IconMore />
                   </_settings>
                 </AnimateDots>

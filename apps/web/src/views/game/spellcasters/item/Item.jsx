@@ -14,7 +14,7 @@ import Prestige from './prestige/Prestige';
 import PrestigeToggle from './prestige/toggle/PrestigeToggle';
 
 const Item = ({ spell_id, isOld, isPrestigeHide }) => {
-  const { tabCharacter } = useActions();
+  const { drawerCaster } = useActions();
   const isBuy = spell_id === SPELLCASTER_BUY;
   const render = useMemo(() => {
     if (isOld) {
@@ -45,7 +45,7 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
   }, [isBuy, isOld, isPrestigeHide, spell_id]);
   // prevents rerenders - anon funcs rerender :/
   const onClick = () => {
-    tabCharacter(spell_id);
+    drawerCaster(spell_id);
   };
   return (
     <_item>

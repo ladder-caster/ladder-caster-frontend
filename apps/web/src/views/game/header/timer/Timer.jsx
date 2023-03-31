@@ -36,7 +36,7 @@ let remaining = 0;
 let position = 0;
 let interval;
 const Timer = () => {
-  const { openCrankDrawer } = useActions();
+  const { drawerCrank } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
   const prev_game = usePrevious(gameConstants?.gameState);
@@ -127,7 +127,7 @@ const Timer = () => {
 
   return (
     <AnimateButton>
-      <_button onClick={() => openCrankDrawer()}>{Button}</_button>
+      <_button onClick={() => drawerCrank()}>{Button}</_button>
     </AnimateButton>
   );
 };

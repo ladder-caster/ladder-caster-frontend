@@ -56,11 +56,11 @@ const ModalMove = ({ height, options }) => {
   const button_ref = useRef();
   const confirm_ref = useRef();
   const { t } = useTranslation();
-  const { modalClear, confirmMove } = useActions();
+  const { closeModal, moveToTile } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
   const [confirm] = useRemix(GAME_CONFIRM);
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
-  useClickOutside([confirm_ref, button_ref], () => modalClear());
+  useClickOutside([confirm_ref, button_ref], () => closeModal());
 
   const caster = options?.caster;
   const level = caster?.casterActionPosition
@@ -193,7 +193,7 @@ const ModalMove = ({ height, options }) => {
                   disabled={!confirm}
                   key={'button-modal-mover'}
                   ref={button_ref}
-                  onClick={() => confirmMove(caster)}
+                  onClick={() => moveToTile(caster)}
                 >
                   {t('modal.move.action')} {confirm?.position?.toUpperCase()}
                 </_button>

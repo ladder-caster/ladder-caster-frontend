@@ -20,12 +20,12 @@ import { SEEN_PHASE } from 'core/remix/state';
 
 const ModalPhase = ({ height, options }) => {
   const { t } = useTranslation();
-  const { modalClear, continueEquipActions } = useActions();
+  const { closeModal, continueEquipActions } = useActions();
   const board_ref = useRef();
-  useClickOutside(board_ref, () => modalClear());
+  useClickOutside(board_ref, () => closeModal());
 
   const deny = () => {
-    modalClear();
+    closeModal();
   };
 
   const accept = () => {

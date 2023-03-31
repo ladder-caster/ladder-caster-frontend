@@ -5,13 +5,11 @@ import { useActions } from '../../../actions';
 
 const Redeem = () => {
   const { t } = useTranslation();
-  const { openDrawerMint } = useActions();
+  const { drawerMint } = useActions();
 
   return (
     <_redeem>
-      <_button onClick={() => openDrawerMint()}>
-        {t('heading.mint.nft')}
-      </_button>
+      <_button onClick={() => drawerMint()}>{t('heading.mint.nft')}</_button>
     </_redeem>
   );
 };

@@ -7,14 +7,14 @@ import { useClickOutside } from 'core/hooks/useClickOutside';
 
 const SuccessCraft = ({ options, height }) => {
   const { t } = useTranslation();
-  const { modalClear } = useActions();
+  const { closeModal } = useActions();
   const caster = options?.caster;
   const success_ref = useRef();
 
-  useClickOutside(success_ref, () => modalClear({}));
+  useClickOutside(success_ref, () => closeModal({}));
 
   return (
-    <_craft ref={success_ref} $height={height} onClick={() => modalClear()}>
+    <_craft ref={success_ref} $height={height} onClick={() => closeModal()}>
       <_success>
         <span>{t('success.title')}</span>
       </_success>

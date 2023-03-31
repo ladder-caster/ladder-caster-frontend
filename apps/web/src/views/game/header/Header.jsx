@@ -39,7 +39,7 @@ import Timer from './timer/Timer';
 
 const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
-  const { openDrawerTokens } = useActions();
+  const { drawerTokens } = useActions();
   const [casters] = useRemix(CHAIN_CASTERS);
   const [resources] = useRemix(GAME_RESOURCES);
   const [gameConstants] = useRemix(GAME_CONSTANTS);
@@ -66,7 +66,7 @@ const Header = withTheme(({ theme }) => {
   return (
     <_header>
       <_container>
-        <_left onClick={() => true && openDrawerTokens()}>
+        <_left onClick={() => false && drawerTokens()}>
           <_coin>
             <_icon $background={theme.element['legendary']}>
               <IconMoneyIMG />

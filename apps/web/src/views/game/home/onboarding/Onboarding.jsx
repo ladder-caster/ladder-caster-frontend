@@ -47,13 +47,13 @@ export const Onboarding = ({ home }) => {
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const [initLoading] = useRemix(INIT_CHAIN_LOAD);
   const [phase] = useRemix(USER_PHASE);
-  const { openDrawerRedeem } = useActions();
+  const { drawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
     visitCasters,
     modalBuyLADA,
     web3AuthConnect,
-    openDrawerTrade,
+    drawerTrade,
   } = useActions();
   const getFunds = async () => {
     setNoFunds((await client.getSOLBalance()) === 0);
@@ -178,14 +178,14 @@ export const Onboarding = ({ home }) => {
                   disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   $disabled={resources?.lada >= 1000 || casters?.length !== 0}
                   style={{ marginRight: 8 }}
-                  onClick={() => openDrawerRedeem()}
+                  onClick={() => drawerRedeem()}
                   $noIcon
                 >
                   <span>{t('visit.redeem')}</span>
                 </_button>
                 <span>or</span>
                 <_link
-                  onClick={() => openDrawerTrade()}
+                  onClick={() => drawerTrade()}
                   disabled={resources?.lada !== 0 || casters?.length !== 0}
                   $disabled={resources?.lada !== 0 || casters?.length !== 0}
                   style={{ marginLeft: 8 }}

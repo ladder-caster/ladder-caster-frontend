@@ -9,7 +9,7 @@ import {
 import gameConstantsContext from './GameConstantsContext';
 
 export class GameContext {
-  constructor(private gamePK: string) {}
+  constructor() {}
 
   async getGameAccount(): Promise<Game> {
     await gameConstantsContext.hydrateGame();
@@ -23,7 +23,7 @@ export class GameContext {
       await gameConstantsContext.Client.program.methods
         .crank()
         .accounts({
-          gameAccount: new anchor.web3.PublicKey(this.gamePK),
+          gameAccount: gameConstantsContext.gameAccount,
           slots: SYSVAR_SLOT_HASHES_PUBKEY,
           season: gameConstantsContext.season,
           authority: gameConstantsContext.Client.wallet.publicKey,

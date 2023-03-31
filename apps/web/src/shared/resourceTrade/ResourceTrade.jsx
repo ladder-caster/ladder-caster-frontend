@@ -6,11 +6,11 @@ import { useActions } from '../../../actions';
 //TODO: move to button folder and change name for file and component
 const Trade = () => {
   const { t } = useTranslation();
-  const { openDrawerTrade } = useActions();
+  const { drawerTrade } = useActions();
 
   return (
     <_redeem>
-      <_button onClick={() => openDrawerTrade()}>
+      <_button onClick={() => drawerTrade()}>
         {t('heading.trade.title')}
       </_button>
     </_redeem>

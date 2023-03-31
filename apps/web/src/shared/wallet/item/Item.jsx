@@ -21,7 +21,7 @@ const legendaryImg = require('../../../../../libs/design/assets/legendary.png');
 const Item = ({ item }) => {
   const item_ref = useRef();
   const { width, height } = useSize(item_ref);
-  const { chooseMint } = useActions();
+  const { chooseMintItem } = useActions();
 
   const bgImg = useMemo(() => {
     switch (item?.rarity) {
@@ -45,7 +45,7 @@ const Item = ({ item }) => {
       $grid
       $height={width}
       ref={item_ref}
-      onClick={() => chooseMint(item)}
+      onClick={() => chooseMintItem(item)}
     >
       <_float>
         <_background
