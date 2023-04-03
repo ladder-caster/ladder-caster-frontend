@@ -73,7 +73,6 @@ import {
   INST_CANCEL_ORDER,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
-import { useLocalWallet } from 'chain/hooks/useLocalWallet';
 import { map, find, filter } from 'lodash';
 import remix from 'core/remix';
 import { PublicKey } from '@solana/web3.js';
@@ -768,9 +767,7 @@ export const useChainActions = () => {
 
       await fetchPlayer(async () => {
         return await handleState(async () => {
-          console.log('start cancel');
           await serumContext.cancelOrder(order);
-          console.log('end cancel');
         }, INST_CANCEL_ORDER);
       });
     },
@@ -861,7 +858,6 @@ export const useChainActions = () => {
 
       if (side === SIDE_BUY) {
         const ask_price = orders?.asks?.[0]?.[0];
-        console.log('ask price', ask_price);
         if (ask_price) price = floorPrice(ask_price * 3, decimals);
       } else {
         price = decimalsToFloat(decimals);

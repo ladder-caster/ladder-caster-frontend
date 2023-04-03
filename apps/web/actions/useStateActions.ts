@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/remix/init';
 import {
+  CRAFT_CHARACTER,
   CRAFT_MATERIALS,
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
@@ -173,7 +174,7 @@ export const useStateActions = () => {
     drawerCraft(caster = null) {
       setDrawer({ type: DRAWER_CRAFT });
       if (caster) setContext({ type: CRAFT_MATERIALS, caster });
-      else setContext({ type: CRAFT_MATERIALS });
+      else setContext({ type: CRAFT_CHARACTER });
     },
     drawerTrade() {
       setDrawer({ type: DRAWER_TRADE });

@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from './state';
-import { Client, Environment } from 'sdk/src/program';
+import { Client } from 'sdk/src/program';
 import NodeWallet from 'sdk/src/utils/NodeWallet';
 
-export const useAdapterWallet = () => {
-  const [client, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
+export const useClient = () => {
+  const [, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
   const [error, setError] = useState();
   const [waiting, setWaiting] = useState(false);
 
@@ -36,7 +36,6 @@ export const useAdapterWallet = () => {
   );
 
   return {
-    client,
     waiting,
     error,
     createClient,

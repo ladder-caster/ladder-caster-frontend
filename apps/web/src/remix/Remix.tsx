@@ -1,5 +1,4 @@
 import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
-import { useAutoSignIn } from 'core/hooks/useAutoSignIn';
 import {
   EQUIP_ITEM,
   GAME_CONFIRM,
@@ -32,6 +31,9 @@ import {
   PRESTIGE_TOGGLE,
   ARWEAVE_UTILS,
   TRADE_ORDERBOOK,
+  WEB3AUTH_PROVIDER,
+  WEB3AUTH_CLIENT,
+  WEB3AUTH_PLUGIN_STORE,
 } from 'core/remix/state';
 import { COLUMNS_ALPHA, getTier } from 'core/utils/switch';
 import { convertStrToRandom } from 'core/utils/numbers';
@@ -50,7 +52,6 @@ import {
 } from '../../../libs/chain/hooks/state';
 import {
   Caster,
-  Environment,
   Game,
   GameContext,
   Item,
@@ -58,7 +59,7 @@ import {
 } from '../../../libs/sdk/src/program';
 import * as anchor from '@project-serum/anchor';
 import resources from 'sdk/src/config/resources.json';
-import { RPC_ERROR, RPC_LOADING } from 'core/remix/rpc';
+import { RPC_ERROR } from 'core/remix/rpc';
 import {
   TAB_CHARACTER,
   TAB_WALLET,
@@ -71,6 +72,7 @@ import config from '../../src/utils/config';
 import { useGame } from 'chain/hooks/useGame';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
+import { useConnectionClient } from 'chain/hooks/connections/useConnectionClient';
 
 //ensures presetup is done
 const Remix = () => {
@@ -83,15 +85,15 @@ const Remix = () => {
   const [, setSpellcasters] = useRemixOrigin(GAME_SPELLCASTERS, []);
   const [, setOldSpellcasters] = useRemixOrigin(GAME_OLD_SPELLCASTERS, []);
   const [client] = useRemixOrigin(CHAIN_LOCAL_CLIENT);
-  const [loading] = useRemixOrigin(RPC_LOADING, {});
   const [inventory, setInventory] = useRemixOrigin(GAME_INVENTORY, {
     items: [],
     chests: [],
   });
-
   const { getGame } = useGame();
+  useConnectionClient(client);
   const [gameConstants] = useRemixOrigin(GAME_CONSTANTS, gameConstantsContext);
   const [arweave] = useRemixOrigin(ARWEAVE_UTILS, arweaveUtil);
+
   useRemixOrigin(GAME_RESOURCES, {
     [TYPE_RES1]: 0,
     [TYPE_RES2]: 0,
@@ -126,6 +128,17 @@ const Remix = () => {
     PRESTIGE_TOGGLE,
     localStorage.getItem('hide_prestige') === 'true',
   );
+  useRemixOrigin(WEB3AUTH_PROVIDER, null);
+  useRemixOrigin(WEB3AUTH_CLIENT, null);
+  useRemixOrigin(WEB3AUTH_PLUGIN_STORE, {
+    plugins: {},
+    addPlugin(name: string, instance: unknown): void {
+      this.plugins[name] = instance;
+    },
+    getPlugin(name: string) {
+      return this.plugins[name];
+    },
+  });
 
   // TODO: Find purpose
   useRemixOrigin(GAME_OPTIONS, {
@@ -135,8 +148,6 @@ const Remix = () => {
     bars: 3,
     land: 3,
   });
-
-  const { request: requestCachePubKey } = useAutoSignIn();
 
   const init_land = (tile: Tile, row: number, col: number) => ({
     col,
@@ -411,26 +422,12 @@ const Remix = () => {
   }, [player]);
 
   useEffect(() => {
-    requestCachePubKey();
-
     // DO NOT REMOVE, the game breaks if removed
     localStorage.setItem(
       'gamePK',
       resources.seasons[CURRENT_SEASON][config.gameAccountString],
     );
   }, []);
-
-  useEffect(() => {
-    if (loading) {
-      Object.keys(loading).forEach((key) => {
-        if (loading[key].rpc || loading[key].validator) {
-          console.log(
-            `${key} is loading ${loading[key].rpc ? 'rpc' : 'validator'}`,
-          );
-        }
-      });
-    }
-  }, [loading]);
 
   return null;
 };

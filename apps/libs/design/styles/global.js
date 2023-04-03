@@ -110,6 +110,7 @@ export const GlobalStyles = createGlobalStyle`
     background: ${({ theme }) => theme.background['lowest']};
   }
 
+
   #app {
     height: 100%;
     width: 100%;
