@@ -120,7 +120,7 @@ export const Onboarding = ({ home }) => {
                 </_circle>
                 <span>{t('connect.web3Auth')}</span>
               </_google>
-              <_warning>{t('onboarding.google.warning')}</_warning>
+              {/* <_warning>{t('onboarding.google.warning')}</_warning> */}
             </_beta>
           </_actions>
         </_section>

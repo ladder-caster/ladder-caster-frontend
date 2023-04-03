@@ -27,7 +27,6 @@ import {
   EDITION_NORMAL,
   EDITION_LIMITED,
   GAME_CONSTANTS,
-  CURRENT_SEASON,
   PRESTIGE_TOGGLE,
   ARWEAVE_UTILS,
   TRADE_ORDERBOOK,
@@ -58,7 +57,6 @@ import {
   Tile,
 } from '../../../libs/sdk/src/program';
 import * as anchor from '@project-serum/anchor';
-import resources from 'sdk/src/config/resources.json';
 import { RPC_ERROR } from 'core/remix/rpc';
 import {
   TAB_CHARACTER,
@@ -68,7 +66,6 @@ import {
   TABS_SWAP_ORDER,
 } from 'core/remix/tabs';
 import { sortBy, reverse } from 'lodash';
-import config from '../../src/utils/config';
 import { useGame } from 'chain/hooks/useGame';
 import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsContext';
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
@@ -420,14 +417,6 @@ const Remix = () => {
       console.log('player', player);
     }
   }, [player]);
-
-  useEffect(() => {
-    // DO NOT REMOVE, the game breaks if removed
-    localStorage.setItem(
-      'gamePK',
-      resources.seasons[CURRENT_SEASON][config.gameAccountString],
-    );
-  }, []);
 
   return null;
 };

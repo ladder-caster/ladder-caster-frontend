@@ -7,6 +7,7 @@ import {
   TYPE_RES2,
   TYPE_RES3,
   OLD_SEASON,
+  CURRENT_SEASON,
   ROUND_TIMELIMIT,
 } from 'core/remix/state';
 import config from 'web/src/utils/config';
@@ -52,7 +53,10 @@ class GameConstantsContext {
     if (this.accounts?.gameAccount) {
       return;
     }
-    const gameAccount = new PublicKey(localStorage.getItem('gamePK'));
+    // const gameAccount = new PublicKey(localStorage.getItem('gamePK'));
+    const gameAccount = new PublicKey(
+      resources.seasons[CURRENT_SEASON][config.gameAccountString],
+    );
     const previousGameAccount = new PublicKey(
       resources.seasons[OLD_SEASON][config.gameAccountString],
     );
