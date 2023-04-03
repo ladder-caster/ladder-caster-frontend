@@ -435,24 +435,17 @@ export const useChainActions = () => {
         },
       ];
 
+      console.log('resources', resources);
+      console.log('context', context);
       setContext(INIT_STATE_BOOST);
       setDrawer('');
       setModal('');
 
       await fetchPlayer(async () => {
-        let result;
-        for (let i = 0; i < resources.length; i++) {
-          if (resources[i].amount) {
-            result = await handleState(async () => {
-              return await casterContext.manualResourceBurn(
-                resources[i].itemFeature,
-                resources[i].amount,
-              );
-            }, INST_MANUAL_RES_BURN);
-          }
-        }
-        return result;
-      }, casterContext);
+        return await handleState(async () => {
+          return casterContext.bulkManualResourceBurn(resources);
+        }, INST_MANUAL_RES_BURN);
+      });
     },
     async redeemNFT() {
       const playerContext = new PlayerContext();

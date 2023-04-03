@@ -231,37 +231,6 @@ export class PlayerContext {
     );
   }
 
-  //TODO: To test
-  async manualResourceburn(
-    casterId: anchor.BN,
-    resourceType: ItemFeature,
-    amountToBurn: anchor.BN,
-  ) {
-    const tx = new Transaction().add(
-      await gameConstantsContext.Client.program.methods
-        .manualResourceburn(casterId, resourceType, amountToBurn)
-        .accounts({
-          game: gameConstantsContext.gameAccount,
-          playerAccount: gameConstantsContext.playerAccount,
-          authority: gameConstantsContext.Client.wallet.publicKey,
-        })
-        .instruction(),
-    );
-
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
-  }
-
   //TODO: to test
   async manualItemBurn(item: PublicKey) {
     const mintAccounts = await this.getMintAccounts(

@@ -1047,28 +1047,19 @@ export class CasterContext {
     );
   }
 
-  //TODO: to test
-  async manualResourceBurn(itemFeature: ItemFeature, amount: number) {
-    const mintAccounts = await this.getMintAccounts();
-    const gameTurnData = await this.getGameTurnData();
+  async bulkManualResourceBurn(resources) {
+    const tx = new Transaction();
 
-    const tx = new Transaction().add(
-      await gameConstantsContext.Client.program.methods
-        .manualResourceBurn(itemFeature, new anchor.BN(amount))
-        .accounts({
-          systemProgram: anchor.web3.SystemProgram.programId,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          rent: SYSVAR_RENT_PUBKEY,
-          authority: gameConstantsContext.Client.wallet.publicKey,
-          game: gameConstantsContext.gameAccount,
-          player: gameConstantsContext.playerAccount,
-          caster: this.caster?.publicKey,
-          gameTurnData: gameTurnData,
-          ...mintAccounts,
-        })
-        .instruction(),
-    );
+    for (let i = 0; i < resources.length; i++) {
+      if (resources[i].amount) {
+        tx.add(
+          await this.manualResourceBurn(
+            resources[i].itemFeature,
+            resources[i].amount,
+          ),
+        );
+      }
+    }
 
     tx.recentBlockhash = (
       await gameConstantsContext.Client.connection.getLatestBlockhash()
@@ -1082,25 +1073,27 @@ export class CasterContext {
     return await gameConstantsContext.Client.connection.sendRawTransaction(
       signedTx.serialize(),
     );
-    // return await gameConstantsContext.Client.program.rpc.manualResourceBurn(
-    //   itemFeature,
-    //   new anchor.BN(amount),
-    //   {
-    //     accounts: {
-    //       systemProgram: anchor.web3.SystemProgram.programId,
-    //       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    //       tokenProgram: TOKEN_PROGRAM_ID,
-    //       rent: SYSVAR_RENT_PUBKEY,
-    //       authority: gameConstantsContext.Client.wallet.publicKey,
-    //       game: gameConstantsContext.gameAccount,
-    //       player: gameConstantsContext.playerAccount,
-    //       caster: this.caster?.publicKey,
-    //       gameTurnData: gameTurnData,
-    //       ...mintAccounts,
-    //     },
-    //     signers: [gameConstantsContext.Client.wallet.payer],
-    //   },
-    // );
+  }
+
+  async manualResourceBurn(itemFeature: ItemFeature, amount: number) {
+    const mintAccounts = await this.getMintAccounts();
+    const gameTurnData = await this.getGameTurnData();
+
+    return await gameConstantsContext.Client.program.methods
+      .manualResourceBurn(itemFeature, new anchor.BN(amount))
+      .accounts({
+        systemProgram: anchor.web3.SystemProgram.programId,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+        authority: gameConstantsContext.Client.wallet.publicKey,
+        game: gameConstantsContext.gameAccount,
+        player: gameConstantsContext.playerAccount,
+        caster: this.caster?.publicKey,
+        gameTurnData: gameTurnData,
+        ...mintAccounts,
+      })
+      .instruction();
   }
 
   //TODO: to test
