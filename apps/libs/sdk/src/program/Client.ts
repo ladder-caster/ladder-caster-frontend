@@ -1,9 +1,9 @@
 import * as anchor from '@project-serum/anchor';
 import { Connection } from '@solana/web3.js';
 import laddercasterIDL from '../config/laddercast.json';
-import NodeWallet from '../utils/NodeWallet';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import config from 'web/src/utils/config';
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export type Environment =
   | 'mainnet'

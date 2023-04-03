@@ -4,7 +4,7 @@ import { useClient } from '../useClient';
 import { INIT_CHAIN_LOAD } from '../state';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import NodeWallet from 'sdk/src/utils/NodeWallet';
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const useConnectionClient = (client) => {
   const { handleConnectInitial: handleConnectInitialW3A } = useW3A();
@@ -25,7 +25,6 @@ export const useConnectionClient = (client) => {
 
   useEffect(() => {
     if (connected && !client) {
-      console.log('only once');
       localStorage.setItem('adapter-connected', 'true');
       createClient(anchorWallet as NodeWallet);
     }

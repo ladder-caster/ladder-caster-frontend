@@ -10,7 +10,6 @@ import {
 } from 'core/remix/state';
 import { Keypair } from '@solana/web3.js';
 import { Client } from 'sdk/src/program/Client';
-import NodeWallet from 'sdk/src/utils/NodeWallet';
 import { Web3AuthCore } from '@web3auth/core';
 import {
   WALLET_ADAPTERS,
@@ -21,6 +20,7 @@ import {
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { SolanaWalletConnectorPlugin } from '@web3auth/solana-wallet-connector-plugin';
 import config from 'web/src/utils/config';
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const solanaChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,

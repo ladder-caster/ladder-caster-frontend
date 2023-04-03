@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { CHAIN_LOCAL_CLIENT } from './state';
 import { Client } from 'sdk/src/program';
-import NodeWallet from 'sdk/src/utils/NodeWallet';
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const useClient = () => {
   const [, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
