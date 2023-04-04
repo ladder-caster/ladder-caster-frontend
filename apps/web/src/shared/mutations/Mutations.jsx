@@ -29,7 +29,7 @@ import { AnimateSpinner } from './animations/AnimateSpinner';
 import { IconBlind } from 'design/icons/blind.icon';
 import { IconOffline } from 'design/icons/offline.icon';
 import { withTheme } from 'styled-components';
-import { TxStates } from '../../../actions/useMutations';
+import { TxStates } from 'sdk/src/hooks/useMutations';
 
 const Mutations = withTheme(({ theme }) => {
   const { t } = useTranslation();

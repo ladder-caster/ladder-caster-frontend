@@ -46,29 +46,6 @@ export const findAssociatedTokenAddress = async (
   )[0];
 };
 
-export const signAndSendRawTransaction = async (
-  connection: Connection,
-  transaction: Transaction,
-  wallet: any,
-  ...signers: Array<Signer>
-) => {
-  try {
-    transaction.feePayer = wallet.publicKey;
-    transaction.recentBlockhash = (
-      await connection.getRecentBlockhash('max')
-    ).blockhash;
-
-    signers.forEach((signer) => transaction.partialSign(signer));
-
-    transaction = await wallet.signTransaction(transaction);
-    const tx = await connection.sendRawTransaction(transaction!.serialize()); //, { skipPreflight: true }
-    return tx;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-};
-
 export const simulateTransaction = async (
   connection: Connection,
   transaction: Transaction,

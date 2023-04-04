@@ -2,14 +2,11 @@ import { useRemix } from 'core/hooks/remix/useRemix';
 import {
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
-  GAME_INVENTORY,
   GAME_CONFIRM,
   MODAL_ACTIVE,
-  TABS_CHARACTER_ACTIONS,
   EQUIP_ITEM,
   UNEQUIP_ITEM,
   GAME_RESOURCES,
-  TOKENS_ACTIVE,
   TYPE_RES1,
   TYPE_RES2,
   TYPE_RES3,
@@ -17,11 +14,7 @@ import {
   CREATE_MUTATION,
   USER_PHASE,
   PHASE_REWARDS,
-  VIEW_NAVIGATION,
-  WALLET_TYPE,
   GAME_MAP,
-  WEB3AUTH_CLIENT,
-  WEB3AUTH_PROVIDER,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   ATTRIBUTE_RES3,
@@ -31,7 +24,6 @@ import {
   TRADE_ORDERBOOK,
   SIDE_SELL,
 } from 'core/remix/state';
-import { TABS_MINT_REDEEM } from 'core/remix/tabs';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -67,17 +59,17 @@ import {
   INST_REDEEM_ACTION,
   INST_UNEQUIP,
   INST_BURN_NFT,
-  INST_CLAIM_ALL,
   INST_PRESTIGE_CASTER,
   INST_PLACE_ORDER,
   INST_CANCEL_ORDER,
+  INST_INIT_CASTER,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { map, find, filter } from 'lodash';
 import remix from 'core/remix';
 import { PublicKey } from '@solana/web3.js';
 import { findMarket } from 'core/utils/markets';
-import { TxStates, useMutation } from './useMutations';
+import { TxStates, useMutation } from 'sdk/src/hooks/useMutations';
 
 export const useChainActions = () => {
   const { t } = useTranslation();
@@ -167,9 +159,10 @@ export const useChainActions = () => {
     );
 
     await fetchPlayer(async () => {
-      return await handleState(async () => {
-        return await casterContext.casterRedeemAction();
-      }, INST_REDEEM_ACTION);
+      return await handleState(
+        await casterContext.casterRedeemAction(),
+        INST_REDEEM_ACTION,
+      );
     }, casterContext);
   };
 
@@ -183,9 +176,10 @@ export const useChainActions = () => {
       );
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await casterContext.casterCommitLoot();
-        }, INST_COMMIT_LOOT);
+        return await handleState(
+          await casterContext.casterCommitLoot(),
+          INST_COMMIT_LOOT,
+        );
       }, casterContext);
     }
   };
@@ -212,11 +206,12 @@ export const useChainActions = () => {
     if (item || context?.item) {
       const match_item = item ?? context?.item;
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await playerContext.manualItemBurn(
+        return await handleState(
+          await playerContext.manualItemBurn(
             new PublicKey(match_item?.publicKey),
-          );
-        }, INST_BURN_NFT);
+          ),
+          INST_BURN_NFT,
+        );
       });
     }
   };
@@ -227,9 +222,7 @@ export const useChainActions = () => {
       setContext('');
 
       await fetchGame(async () => {
-        return await handleState(async () => {
-          return await new GameContext().crank();
-        }, INST_CRANK);
+        return await handleState(await new GameContext().crank(), INST_CRANK);
       });
       const playerContext = new PlayerContext();
 
@@ -242,14 +235,15 @@ export const useChainActions = () => {
       setConfirm({});
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await new PlayerContext().openChest(
+        return await handleState(
+          await new PlayerContext().openChest(
             find(
               items,
               (match) => match?.publicKey?.toString() === chest?.publicKey,
             ),
-          );
-        }, INST_OPEN_CHEST);
+          ),
+          INST_OPEN_CHEST,
+        );
       });
     },
     async modalBurn(item) {
@@ -284,8 +278,8 @@ export const useChainActions = () => {
         const col = confirm?.position.slice(0, 1);
         const row = +confirm?.position.slice(1, confirm?.position.length);
 
-        return await handleState(async () => {
-          return await new CasterContext(
+        return await handleState(
+          await new CasterContext(
             find(
               casters,
               (match) => match?.publicKey?.toString() === caster?.publicKey,
@@ -293,8 +287,9 @@ export const useChainActions = () => {
           ).casterCommitMove(
             row - 1,
             ['a', 'b', 'c'].findIndex((colLetter) => colLetter === col),
-          );
-        }, INST_COMMIT_MOVE);
+          ),
+          INST_COMMIT_MOVE,
+        );
       }, casterContext);
     },
     async redeemReward(caster) {
@@ -319,9 +314,10 @@ export const useChainActions = () => {
       setModal('');
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await casterContext.equipItem(items[item.id]);
-        }, INST_EQUIP);
+        return await handleState(
+          await casterContext.equipItem(items[item.id]),
+          INST_EQUIP,
+        );
       }, casterContext);
     },
     async unequipItem() {
@@ -344,14 +340,15 @@ export const useChainActions = () => {
         });
 
         await fetchPlayer(async () => {
-          return await handleState(async () => {
-            return await casterContext.unequipItem(
+          return await handleState(
+            await casterContext.unequipItem(
               find(
                 casters,
                 (match) => match?.publicKey?.toString() === caster?.publicKey,
               )?.modifiers?.[item.type],
-            );
-          }, INST_UNEQUIP);
+            ),
+            INST_UNEQUIP,
+          );
         }, casterContext);
       } catch (e) {
         console.log(e);
@@ -370,9 +367,10 @@ export const useChainActions = () => {
       setModal('');
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await casterContext.castSpell(items[spell.id]);
-        }, INST_COMMIT_SPELL);
+        return await handleState(
+          await casterContext.castSpell(items[spell.id]),
+          INST_COMMIT_SPELL,
+        );
       }, casterContext);
     },
     async craftItem() {
@@ -390,8 +388,8 @@ export const useChainActions = () => {
       setContext('');
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await casterContext.casterCommitCraft(
+        return await handleState(
+          await casterContext.casterCommitCraft(
             find(
               items,
               (match) =>
@@ -407,8 +405,9 @@ export const useChainActions = () => {
               (match) =>
                 match?.publicKey?.toString() === materials?.[2]?.publicKey,
             ),
-          );
-        }, INST_COMMIT_CRAFT);
+          ),
+          INST_COMMIT_CRAFT,
+        );
       });
     },
     async burnResourcesForXP() {
@@ -435,16 +434,26 @@ export const useChainActions = () => {
         },
       ];
 
-      console.log('resources', resources);
-      console.log('context', context);
       setContext(INIT_STATE_BOOST);
       setDrawer('');
       setModal('');
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return casterContext.bulkManualResourceBurn(resources);
-        }, INST_MANUAL_RES_BURN);
+        return await handleState(
+          await casterContext.bulkManualResourceBurn(resources),
+          INST_MANUAL_RES_BURN,
+        );
+      });
+    },
+
+    async buyCaster(count = 1) {
+      const casterContext = new CasterContext();
+
+      await fetchPlayer(async () => {
+        return await handleState(
+          await casterContext.initCaster(count),
+          INST_INIT_CASTER,
+        );
       });
     },
     async redeemNFT() {
@@ -453,25 +462,27 @@ export const useChainActions = () => {
       setContext(INIT_STATE_REDEEM);
       setModal('');
 
+      const transactionBuilder = async () => {
+        if (
+          context?.nft?.data?.image ===
+          'https://arweave.net/9KF_5408KszsFlJpd0ZLheGfxOGSiw4QuGhD9oGfdMQ'
+        ) {
+          return await playerContext.redeemNFTTwinPack(
+            new anchor.web3.PublicKey(context?.nft?.mint),
+          );
+        } else if (context?.nft?.data.name === 'Caster') {
+          return await playerContext.redeemNFTCaster(
+            new anchor.web3.PublicKey(context?.nft?.mint),
+          );
+        } else {
+          return await playerContext.redeemNFTItem(
+            new anchor.web3.PublicKey(context?.nft?.mint),
+          );
+        }
+      };
+
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          if (
-            context?.nft?.data?.image ===
-            'https://arweave.net/9KF_5408KszsFlJpd0ZLheGfxOGSiw4QuGhD9oGfdMQ'
-          ) {
-            return await playerContext.redeemNFTTwinPack(
-              new anchor.web3.PublicKey(context?.nft?.mint),
-            );
-          } else if (context?.nft?.data.name === 'Caster') {
-            return await playerContext.redeemNFTCaster(
-              new anchor.web3.PublicKey(context?.nft?.mint),
-            );
-          } else {
-            return await playerContext.redeemNFTItem(
-              new anchor.web3.PublicKey(context?.nft?.mint),
-            );
-          }
-        }, INST_MINT_NFT);
+        return await handleState(await transactionBuilder(), INST_MINT_NFT);
       }).then(async () => {
         if (context?.nft?.data.name === 'Caster')
           setCasters(await playerContext.getCasters());
@@ -501,24 +512,24 @@ export const useChainActions = () => {
 
       if (caster || context?.caster) {
         await fetchPlayer(async () => {
-          return await handleState(async () => {
-            return await playerContext.mintNFTCaster(
-              casters[context?.caster?.index],
-            );
-          }, INST_MINT_NFT);
+          return await handleState(
+            await playerContext.mintNFTCaster(casters[context?.caster?.index]),
+            INST_MINT_NFT,
+          );
         });
       } else if (item || context?.item) {
         const match_item = item || context?.item;
         await fetchPlayer(async () => {
-          return await handleState(async () => {
-            return await playerContext.mintNFTItem(
+          return await handleState(
+            await playerContext.mintNFTItem(
               find(
                 items,
                 (match) =>
                   match?.publicKey?.toString() === match_item?.publicKey,
               ),
-            );
-          }, INST_MINT_NFT);
+            ),
+            INST_MINT_NFT,
+          );
         }).then(async () => {
           if (caster || context?.caster)
             setCasters(await playerContext.getCasters());
@@ -527,14 +538,11 @@ export const useChainActions = () => {
     },
     async initPlayer() {
       const playerContext = new PlayerContext();
+      //Do not remove for testing
+      // console.log(client.program.provider.wallet.publicKey.toString());
 
-      await handleState(async () => {
-        //Do not remove for testing
-        // console.log(client.program.provider.wallet.publicKey.toString());
-        const result = await playerContext.initPlayer();
-        setPlayer(await playerContext.getPlayer());
-        return result;
-      }, INST_INIT_PLAYER);
+      await handleState(await playerContext.initPlayer(), INST_INIT_PLAYER);
+      setPlayer(await playerContext.getPlayer());
     },
     async fullRefresh() {
       const playerContext = new PlayerContext();
@@ -551,6 +559,7 @@ export const useChainActions = () => {
       const gameContext = new GameContext();
       setGame(await gameContext.getGameAccount());
     },
+    //TODO: disabled temporarily
     async claimAllRewards() {
       const redeemableCasters = filter(spellcasters, (caster) => {
         return caster?.turnCommit < game?.turnInfo?.turn;
@@ -560,13 +569,13 @@ export const useChainActions = () => {
         });
       });
 
-      await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await new CasterContext().casterRedeemAllActions(
-            redeemableCasters,
-          );
-        }, INST_CLAIM_ALL);
-      });
+      // await fetchPlayer(async () => {
+      //   return await handleState(async () => {
+      //     return await new CasterContext().casterRedeemAllActions(
+      //       redeemableCasters,
+      //     );
+      //   }, INST_CLAIM_ALL);
+      // });
     },
     async lootAllResources() {
       map(spellcasters, (caster) => {
@@ -594,19 +603,17 @@ export const useChainActions = () => {
         find(oldCasters, (match) => match?.publicKey?.toString() === casterPK),
       );
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          return await casterContext.prestigeCaster();
-        }, INST_PRESTIGE_CASTER);
+        return await handleState(
+          await casterContext.prestigeCaster(),
+          INST_PRESTIGE_CASTER,
+        );
       });
     },
     async fixAccount() {
       const playerContext = new PlayerContext();
 
-      await handleState(async () => {
-        const result = await playerContext.initPlayer();
-        setPlayer(await playerContext.getPlayer());
-        return result;
-      }, INST_INIT_PLAYER);
+      await handleState(await playerContext.initPlayer(), INST_INIT_PLAYER);
+      setPlayer(await playerContext.getPlayer());
     },
 
     async switchTradeSymbols() {
@@ -741,9 +748,10 @@ export const useChainActions = () => {
       });
 
       await fetchOrder(async () => {
-        return await handleState(async () => {
-          await serumContext.placeOrder({ side, price, size, orderType });
-        }, INST_PLACE_ORDER);
+        return await handleState(
+          await serumContext.placeOrder({ side, price, size, orderType }),
+          INST_PLACE_ORDER,
+        );
       });
     },
     async cancelOrder(pair, order) {
@@ -759,9 +767,10 @@ export const useChainActions = () => {
       const serumContext = new SerumContext(market);
 
       await fetchPlayer(async () => {
-        return await handleState(async () => {
-          await serumContext.cancelOrder(order);
-        }, INST_CANCEL_ORDER);
+        return await handleState(
+          await serumContext.cancelOrder(order),
+          INST_CANCEL_ORDER,
+        );
       });
     },
     async chooseOrderSide(side) {
@@ -812,9 +821,10 @@ export const useChainActions = () => {
       const serumContext = new SerumContext(market);
 
       await fetchOrder(async () => {
-        return await handleState(async () => {
-          return await serumContext.settleFunds(unsettledFund);
-        }, INST_PLACE_ORDER);
+        return await handleState(
+          await serumContext.settleFunds(unsettledFund),
+          INST_PLACE_ORDER,
+        );
       });
     },
     async swapOrder(pair, side, size) {
@@ -858,9 +868,10 @@ export const useChainActions = () => {
 
       if (price) {
         await fetchPlayer(async () => {
-          return await handleState(async () => {
-            await serumContext.placeOrder({ side, price, size, orderType });
-          }, INST_PLACE_ORDER);
+          return await handleState(
+            await serumContext.placeOrder({ side, price, size, orderType }),
+            INST_PLACE_ORDER,
+          );
         });
       }
     },
@@ -883,9 +894,10 @@ export const useChainActions = () => {
       }
 
       if (casterItems.length == 0) return;
-      await handleState(async () => {
-        return await casterContext.unequipAllItems(casterItems);
-      }, INST_UNEQUIP);
+      await handleState(
+        await casterContext.unequipAllItems(casterItems),
+        INST_UNEQUIP,
+      );
     },
     emptyInputs() {
       setContext({

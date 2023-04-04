@@ -7,6 +7,7 @@ import {
   SYSVAR_SLOT_HASHES_PUBKEY,
 } from '@solana/web3.js';
 import gameConstantsContext from './GameConstantsContext';
+import { TransactionBuilder } from '../hooks/useMutations';
 
 export class GameContext {
   constructor() {}
@@ -16,10 +17,11 @@ export class GameContext {
     return gameConstantsContext.gameState;
   }
 
-  async crank() {
+  //TODO: to test
+  async crank(): Promise<TransactionBuilder> {
     await gameConstantsContext.hydrateGame();
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .crank()
         .accounts({
@@ -36,18 +38,6 @@ export class GameContext {
         .instruction(),
     );
 
-    const {
-      blockhash,
-    } = await gameConstantsContext.Client.connection.getLatestBlockhash();
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction };
   }
 }

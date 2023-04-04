@@ -6,6 +6,7 @@ import {
   findAssociatedTokenAddress,
 } from '../utils/SerumUtils';
 import gameConstantsContext from './GameConstantsContext';
+import { TransactionBuilder } from '../hooks/useMutations';
 
 export class SerumContext {
   constructor(private market: Market) {}
@@ -31,7 +32,12 @@ export class SerumContext {
     }
   }
 
-  async placeOrder({ side, price, size, orderType }) {
+  async placeOrder({
+    side,
+    price,
+    size,
+    orderType,
+  }): Promise<TransactionBuilder> {
     const tx = new Transaction();
 
     const mint =
@@ -86,13 +92,7 @@ export class SerumContext {
     tx.add(transaction);
     tx.add(this.market.makeMatchOrdersTransaction(5));
 
-    const blockhash = (
-      await gameConstantsContext.Client.connection.getRecentBlockhash()
-    ).blockhash;
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-
-    return await gameConstantsContext.Client.program.provider.send(tx, signers);
+    return { transaction: tx, signers };
   }
 
   async openOrders(isPersonal: boolean) {
@@ -113,26 +113,20 @@ export class SerumContext {
     }
   }
 
-  async cancelOrder(order) {
-    const tx = new Transaction();
+  async cancelOrder(order): Promise<TransactionBuilder> {
+    const transaction = new Transaction();
 
-    tx.add(this.market.makeMatchOrdersTransaction(5));
-    tx.add(
+    transaction.add(this.market.makeMatchOrdersTransaction(5));
+    transaction.add(
       await this.market.makeCancelOrderTransaction(
         gameConstantsContext.Client.connection,
         gameConstantsContext.Client.wallet.publicKey,
         order,
       ),
     );
-    tx.add(this.market.makeMatchOrdersTransaction(5));
+    transaction.add(this.market.makeMatchOrdersTransaction(5));
 
-    const blockhash = (
-      await gameConstantsContext.Client.connection.getRecentBlockhash()
-    ).blockhash;
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-
-    return await gameConstantsContext.Client.program.provider.send(tx);
+    return { transaction };
   }
 
   async getFilledOrders() {
@@ -151,8 +145,8 @@ export class SerumContext {
     });
   }
 
-  async settleFunds(openOrders: OpenOrders[]) {
-    const tx = new Transaction();
+  async settleFunds(openOrders: OpenOrders[]): Promise<TransactionBuilder> {
+    const transaction = new Transaction();
 
     const [[baseAccount], [quoteAccount]] = await Promise.all([
       this.market.findBaseTokenAccountsForOwner(
@@ -175,7 +169,7 @@ export class SerumContext {
           gameConstantsContext.Client.wallet.publicKey,
           mintAddress,
         );
-        tx.add(
+        transaction.add(
           createAssociatedTokenAccountIx(
             mintAddress,
             openOrdersWallet,
@@ -204,12 +198,10 @@ export class SerumContext {
         quoteWallet,
       );
       const { signers, transaction } = settleFundsTx;
-      tx.add(transaction);
+      transaction.add(transaction);
       finalSigners.concat(signers);
     }
-    return await gameConstantsContext.Client.program.provider.send(
-      tx,
-      finalSigners,
-    );
+
+    return { transaction, signers: finalSigners };
   }
 }

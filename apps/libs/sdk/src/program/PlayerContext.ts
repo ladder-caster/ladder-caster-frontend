@@ -1,5 +1,5 @@
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { Caster, Game, Item, ItemFeature } from '.';
+import { Caster, Game, Item } from '.';
 import * as anchor from '@project-serum/anchor';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -22,6 +22,7 @@ const { SystemProgram } = anchor.web3;
 import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
 import gameConstantsContext from './GameConstantsContext';
 import arweaveUtil from '../utils/ArweaveUtil';
+import { TransactionBuilder } from '../hooks/useMutations';
 
 export class PlayerContext {
   constructor() {}
@@ -106,23 +107,33 @@ export class PlayerContext {
     return await gameConstantsContext.Client.program.account.item.fetch(itemPK);
   }
 
-  async initPlayer() {
-    const tx = new Transaction();
+  //TODO: to test
+  async initPlayer(): Promise<TransactionBuilder> {
+    const transaction = new Transaction();
 
     try {
       await this.getPlayer();
     } catch (e) {
-      tx.add(
-        gameConstantsContext.Client.program.instruction.initPlayer({
-          accounts: {
+      transaction.add(
+        await gameConstantsContext.Client.program.methods
+          .initPlayer()
+          .accounts({
             game: gameConstantsContext.gameAccount,
             season: gameConstantsContext.season,
             playerAccount: gameConstantsContext.playerAccount,
             authority: gameConstantsContext.Client.wallet.publicKey,
             systemProgram: SystemProgram.programId,
-          },
-          signers: [gameConstantsContext.Client.wallet.payer],
-        }),
+          })
+          .instruction(),
+        // gameConstantsContext.Client.program.instruction.initPlayer({
+        //   accounts: {
+        //     game: gameConstantsContext.gameAccount,
+        //     season: gameConstantsContext.season,
+        //     playerAccount: gameConstantsContext.playerAccount,
+        //     authority: gameConstantsContext.Client.wallet.publicKey,
+        //     systemProgram: SystemProgram.programId,
+        //   },
+        // }),
       );
     }
 
@@ -147,7 +158,7 @@ export class PlayerContext {
           item.tokenAccount,
         );
       } catch (e) {
-        tx.add(
+        transaction.add(
           Token.createAssociatedTokenAccountInstruction(
             ASSOCIATED_TOKEN_PROGRAM_ID,
             TOKEN_PROGRAM_ID,
@@ -165,7 +176,7 @@ export class PlayerContext {
         gameConstantsContext.ladaTokenAccount,
       );
     } catch (e) {
-      tx.add(
+      transaction.add(
         Token.createAssociatedTokenAccountInstruction(
           ASSOCIATED_TOKEN_PROGRAM_ID,
           TOKEN_PROGRAM_ID,
@@ -177,27 +188,16 @@ export class PlayerContext {
       );
     }
 
-    const blockhash = (
-      await gameConstantsContext.Client.connection.getRecentBlockhash()
-    ).blockhash;
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction };
   }
 
-  async openChest(chestItem: Item) {
+  //TODO: to test
+  async openChest(chestItem: Item): Promise<TransactionBuilder> {
     const item1 = Keypair.generate();
     const item2 = Keypair.generate();
     const item3 = Keypair.generate();
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .openChest()
         .accounts({
@@ -213,31 +213,19 @@ export class PlayerContext {
           item3: item3.publicKey,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
-        .signers([item1, item2, item3])
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction, signers: [item1, item2, item3] };
   }
 
   //TODO: to test
-  async manualItemBurn(item: PublicKey) {
+  async manualItemBurn(item: PublicKey): Promise<TransactionBuilder> {
     const mintAccounts = await this.getMintAccounts(
       gameConstantsContext.gameState,
     );
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .manualItemBurn()
         .accounts({
@@ -256,18 +244,7 @@ export class PlayerContext {
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction };
 
     // return gameConstantsContext.Client.program.rpc.manualItemBurn({
     //   accounts: {
@@ -288,7 +265,7 @@ export class PlayerContext {
   }
 
   //TODO: to test
-  async mintNFTCaster(caster: Caster) {
+  async mintNFTCaster(caster: Caster): Promise<TransactionBuilder> {
     const nftMintKeys = Keypair.generate();
     const uri: string = await arweaveUtil.getCasterUri(caster);
     const leaf = arweaveUtil.buildLeafCaster(caster, uri);
@@ -299,34 +276,20 @@ export class PlayerContext {
     const validProof: Buffer[] = proof.map((p) => p.data);
     const mintOptions = await this.buildMintOptions('combined', 0, nftMintKeys);
 
-    let signers = [nftMintKeys];
-    if (gameConstantsContext.Client.wallet.payer) {
-      signers = [gameConstantsContext.Client.wallet.payer, ...signers];
-    }
+    const signers = [nftMintKeys];
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .mintCaster(0, uri, validProof)
         .accounts({
           ...mintOptions,
           caster: caster.publicKey,
         })
-        .signers(signers)
+
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction, signers };
 
     // return await gameConstantsContext.Client.program.rpc.mintCaster(
     //   0,
@@ -343,7 +306,7 @@ export class PlayerContext {
   }
 
   //TODO: to test
-  async mintNFTItem(item: Item) {
+  async mintNFTItem(item: Item): Promise<TransactionBuilder> {
     const nftMintKeys = Keypair.generate();
 
     let itemType = 'combined';
@@ -365,10 +328,7 @@ export class PlayerContext {
     const proof = tree.getProof(leaf);
     const validProof: Buffer[] = proof.map((p) => p.data);
 
-    let signers = [nftMintKeys];
-    if (gameConstantsContext.Client.wallet.payer) {
-      signers = [gameConstantsContext.Client.wallet.payer, ...signers];
-    }
+    const signers = [nftMintKeys];
 
     const mintOptions = await this.buildMintOptions(
       itemType,
@@ -376,7 +336,7 @@ export class PlayerContext {
       nftMintKeys,
     );
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .mintItem(
           itemType === 'spellbook' ? 'spellBook' : itemType,
@@ -388,22 +348,11 @@ export class PlayerContext {
           ...mintOptions,
           item: item.publicKey,
         })
-        .signers(signers)
+
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction, signers };
 
     // return await gameConstantsContext.Client.program.rpc.mintItem(
     //   itemType === 'spellbook' ? 'spellBook' : itemType,
@@ -421,33 +370,22 @@ export class PlayerContext {
   }
 
   //TODO: to test
-  async redeemNFTCaster(nftMintKeys: PublicKey) {
+  async redeemNFTCaster(nftMintKeys: PublicKey): Promise<TransactionBuilder> {
     const caster = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, caster);
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .redeemCaster()
         .accounts({
           ...redeemOptions.accounts,
           caster: caster.publicKey,
         })
-        .signers(redeemOptions.signers)
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
+    return { transaction, signers: redeemOptions.signers };
 
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
     // return await gameConstantsContext.Client.program.rpc.redeemCaster({
     //   ...redeemOptions,
     //   accounts: {
@@ -458,17 +396,15 @@ export class PlayerContext {
   }
 
   //TODO: to test
-  async redeemNFTTwinPack(nftMintKeys: PublicKey) {
+  async redeemNFTTwinPack(nftMintKeys: PublicKey): Promise<TransactionBuilder> {
     const caster1 = Keypair.generate();
     const caster2 = Keypair.generate();
-
     const nftToken = await Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
       nftMintKeys,
       gameConstantsContext.Client.wallet.publicKey,
     );
-
     const [metaplexTokenMetadata] = findProgramAddressSync(
       [
         Buffer.from('metadata'),
@@ -478,7 +414,7 @@ export class PlayerContext {
       MetadataProgram.PUBKEY,
     );
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .redeemCasters()
         .accounts({
@@ -497,22 +433,10 @@ export class PlayerContext {
           caster1: caster1.publicKey,
           caster2: caster2.publicKey,
         })
-        .signers([caster1, caster2])
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction, signers: [caster1, caster2] };
 
     // return await gameConstantsContext.Client.program.rpc.redeemCasters({
     //   accounts: {
@@ -540,11 +464,11 @@ export class PlayerContext {
   }
 
   //TODO: to test
-  async redeemNFTItem(nftMintKeys: PublicKey) {
+  async redeemNFTItem(nftMintKeys: PublicKey): Promise<TransactionBuilder> {
     const newItem = Keypair.generate();
     const redeemOptions = await this.buildRedeemOptions(nftMintKeys, newItem);
 
-    const tx = new Transaction().add(
+    const transaction = new Transaction().add(
       await gameConstantsContext.Client.program.methods
         .redeemItem()
         .accounts({
@@ -555,18 +479,7 @@ export class PlayerContext {
         .instruction(),
     );
 
-    tx.recentBlockhash = (
-      await gameConstantsContext.Client.connection.getLatestBlockhash()
-    ).blockhash;
-    tx.feePayer = gameConstantsContext.Client.wallet.publicKey;
-
-    const signedTx = await gameConstantsContext.Client.wallet.signTransaction(
-      tx,
-    );
-
-    return await gameConstantsContext.Client.connection.sendRawTransaction(
-      signedTx.serialize(),
-    );
+    return { transaction, signers: redeemOptions.signers };
 
     // return await gameConstantsContext.Client.program.rpc.redeemItem({
     //   ...redeemOptions,
@@ -664,10 +577,7 @@ export class PlayerContext {
       ),
     ]);
 
-    let signers = [generatedPubKey];
-    if (gameConstantsContext.Client.wallet.payer) {
-      signers = [gameConstantsContext.Client.wallet.payer, ...signers];
-    }
+    const signers = [generatedPubKey];
     const [nftMetadata] = nftMetadataTuple;
     return {
       accounts: {

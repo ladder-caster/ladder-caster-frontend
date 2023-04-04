@@ -12,7 +12,7 @@ import {
 } from 'core/remix/state';
 import { CHAIN_ITEMS, CHAIN_PLAYER } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
-import { useMutation } from './useMutations';
+import { useMutation } from 'sdk/src/hooks/useMutations';
 
 export const useTesters = () => {
   const { handleState } = useMutation();
@@ -28,82 +28,83 @@ export const useTesters = () => {
     async testGiveLADA() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveLada();
-      }, GIVE_LADA);
+      await handleState(await casterContext.giveLada(), GIVE_LADA);
     },
     async testInitCaster() {
       const casterContext = createCasterContext();
 
-      return await handleState(async () => {
-        return await casterContext.initCaster();
-      }, INST_INIT_CASTER);
+      return await handleState(
+        await casterContext.initCaster(),
+        INST_INIT_CASTER,
+      );
     },
     async testGiveChest() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveItem({
+      await handleState(
+        await casterContext.giveItem({
           chest: {
             tier: 1,
           },
-        });
-      }, GIVE_ITEM);
+        }),
+        GIVE_ITEM,
+      );
     },
     async testGiveResources() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveResources();
-      }, GIVE_RESOURCES);
+      await handleState(await casterContext.giveResources(), GIVE_RESOURCES);
     },
     async testGiveHat() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveItem({
+      await handleState(
+        await casterContext.giveItem({
           equipment: {
             feature: { [ATTRIBUTE_RES2]: {} },
             rarity: { common: {} },
             equipmentType: { head: {} },
             value: 1, // 8
           },
-        });
-      }, GIVE_ITEM);
+        }),
+        GIVE_ITEM,
+      );
     },
     async testGiveRobe() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveItem({
+      await handleState(
+        await casterContext.giveItem({
           equipment: {
             feature: { [ATTRIBUTE_RES2]: {} },
             rarity: { common: {} },
             equipmentType: { robe: {} },
             value: 1, // 8
           },
-        });
-      }, GIVE_ITEM);
+        }),
+        GIVE_ITEM,
+      );
     },
     async testGiveStaff() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveItem({
+      await handleState(
+        await casterContext.giveItem({
           equipment: {
             feature: { [ATTRIBUTE_RES2]: {} },
             rarity: { common: {} },
             equipmentType: { staff: {} },
             value: 1, // 8
           },
-        });
-      }, GIVE_ITEM);
+        }),
+        GIVE_ITEM,
+      );
     },
     async testGiveSpell() {
       const casterContext = createCasterContext();
 
-      await handleState(async () => {
-        return await casterContext.giveItem({
+      await handleState(
+        await casterContext.giveItem({
           spellBook: {
             spell: { [ATTRIBUTE_RES1]: {} },
             costFeature: { [ATTRIBUTE_RES1]: {} },
@@ -113,8 +114,9 @@ export const useTesters = () => {
             /// 0-3.6k
             value: 19, // 16
           },
-        });
-      }, GIVE_ITEM);
+        }),
+        GIVE_ITEM,
+      );
     },
     async testRefresh() {
       const playerContext = new PlayerContext();
