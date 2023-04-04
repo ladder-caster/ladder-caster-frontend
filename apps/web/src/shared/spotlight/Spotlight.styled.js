@@ -1,5 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
-import chroma from 'chroma-js';
+import styled, { keyframes } from 'styled-components';
 import { m } from 'framer-motion';
 
 const rotate = keyframes`

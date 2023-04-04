@@ -32,5 +32,5 @@ export const confirmTransaction = async (
   validatorSignature: TransactionConfirmationStrategy,
 ) => {
   //TODO: Confirm which state we need ('confirmed' or 'finalized')
-  return await connection.confirmTransaction(validatorSignature, 'confirmed');
+  return await connection.confirmTransaction(validatorSignature, 'finalized');
 };
