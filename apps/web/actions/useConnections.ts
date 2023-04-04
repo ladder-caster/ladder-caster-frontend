@@ -12,8 +12,8 @@ export const useConnections = () => {
       handleConnect(loginProvider);
     },
     async disconnect() {
-      if (walletConnected) handleDisconnect();
-      else w3aDisconnect();
+      if (walletConnected) await handleDisconnect();
+      else await w3aDisconnect();
     },
   };
 };

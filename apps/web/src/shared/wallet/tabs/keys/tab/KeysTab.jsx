@@ -26,7 +26,7 @@ const KeysTab = () => {
     closeDrawer();
     clearStates();
     disconnect();
-  }, []);
+  }, [closeDrawer, setWalletType, clearStates, disconnect]);
 
   const { publicKey } = useMemo(() => {
     return {

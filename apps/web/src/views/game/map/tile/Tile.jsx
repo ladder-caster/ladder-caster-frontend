@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   _tile,
   _cutout,
@@ -54,7 +54,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const [modal] = useRemix(MODAL_ACTIVE);
   const row = level - 1;
   const position = `${col}${level}`;
-  const sumPosition = (spellcasters) => {
+  const sumPosition = useCallback((spellcasters) => {
     let count = 0;
     for (const caster of spellcasters) {
       const casterPosition = caster.casterActionPosition
@@ -63,7 +63,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
       if (casterPosition === position) count++;
     }
     return count;
-  };
+  }, []);
   const [casters] = useRemix(GAME_SPELLCASTERS, (spellcasters) =>
     sumPosition(spellcasters),
   );
@@ -78,13 +78,17 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
     modal?.type === MODAL_MOVE &&
     modal?.options?.caster?.position === position;
 
-  const Icon = {
-    [TYPE_RES1]: IconResourcee1,
-    [TYPE_RES2]: IconResource2,
-    [TYPE_RES3]: IconResource3,
-    [TYPE_CRAFT]: IconAnvil,
-    [TYPE_LEGENDARY]: IconMap,
-  }[type];
+  const Icon = useMemo(
+    () =>
+      ({
+        [TYPE_RES1]: IconResourcee1,
+        [TYPE_RES2]: IconResource2,
+        [TYPE_RES3]: IconResource3,
+        [TYPE_CRAFT]: IconAnvil,
+        [TYPE_LEGENDARY]: IconMap,
+      }[type]),
+    [type],
+  );
 
   const show_tier = {
     '1': '',

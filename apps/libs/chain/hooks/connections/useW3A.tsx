@@ -33,7 +33,7 @@ export const solanaChainConfig = {
 };
 
 export const useW3A = () => {
-  const [error, setError] = useState();
+  const [error, setError] = useState<any | null>();
   const [waiting, setWaiting] = useState(false);
   const [tryConnect, setTryConnect] = useState(false);
   const [, setInitLoading, isSetInitLoadingReady] = useRemix(INIT_CHAIN_LOAD);
@@ -151,6 +151,7 @@ export const useW3A = () => {
   ]);
 
   const handleConnectInitial = useCallback(() => {
+    console.log('try connect');
     setTryConnect(true);
   }, []);
 

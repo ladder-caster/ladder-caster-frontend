@@ -14,7 +14,13 @@ import {
   VIEW_SIZE,
 } from 'core/remix/state';
 import { domMax, LazyMotion } from 'framer-motion';
-import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
+import React, {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
 import CrankDrawer from '../../../shared/crank/CrankDrawer';
 import Drawer from '../../../shared/drawer/Drawer';
 import SettingsDrawer from '../../../shared/settings/SettingsDrawer';
@@ -26,7 +32,6 @@ import CraftDrawer from '../inventory/drawer/craft/CraftDrawer';
 import InventoryDrawer from '../inventory/drawer/InventoryDrawer';
 import Player from '../spellcasters/drawer/Player';
 import TradeDrawer from '../../../shared/trade/TradeDrawer';
-import Price from '../../../shared/price/Price';
 
 export const View = () => {
   const view_ref = useRef();
@@ -39,6 +44,7 @@ export const View = () => {
     if (view_size?.height) setViewHeight(view_size?.height);
   }, [view_size]);
 
+  // This is resource intensive
   const refreshHeight = () => {
     let next_height = view_ref?.current?.offsetHeight;
     if (next_height && next_height !== dh) setDrawerHeight(next_height);
@@ -48,16 +54,20 @@ export const View = () => {
   useEventListener('resize', () => refreshHeight());
   useEventListener('scroll', () => refreshHeight());
 
-  const Drawers = {
-    [DRAWER_SETTINGS]: SettingsDrawer,
-    [DRAWER_WALLET]: WalletDrawer,
-    [DRAWER_TOKENS]: TokensDrawer,
-    [DRAWER_INVENTORY]: InventoryDrawer,
-    [DRAWER_CRAFT]: CraftDrawer,
-    [DRAWER_SPELLCASTER]: Player,
-    [DRAWER_CRANK]: CrankDrawer,
-    [DRAWER_TRADE]: TradeDrawer,
-  }[drawer?.type];
+  const Drawers = useMemo(
+    () =>
+      ({
+        [DRAWER_SETTINGS]: SettingsDrawer,
+        [DRAWER_TOKENS]: TokensDrawer,
+        [DRAWER_WALLET]: WalletDrawer,
+        [DRAWER_INVENTORY]: InventoryDrawer,
+        [DRAWER_CRAFT]: CraftDrawer,
+        [DRAWER_SPELLCASTER]: Player,
+        [DRAWER_CRANK]: CrankDrawer,
+        [DRAWER_TRADE]: TradeDrawer,
+      }[drawer?.type]),
+    [drawer?.type],
+  );
 
   return (
     <_view ref={view_ref}>

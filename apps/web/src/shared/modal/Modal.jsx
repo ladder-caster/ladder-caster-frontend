@@ -21,7 +21,6 @@ import {
   MODAL_SWAP,
   MODAL_ORDER,
 } from 'core/remix/state';
-
 import { useRemix } from 'core/hooks/remix/useRemix';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';

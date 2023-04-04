@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 
 //TODO: move to button folder and change name for file and component
-const Trade = () => {
+const ResourceTrade = () => {
   const { t } = useTranslation();
   const { drawerTrade } = useActions();
 
@@ -17,4 +17,4 @@ const Trade = () => {
   );
 };
 
-export default Trade;
+export default ResourceTrade;
