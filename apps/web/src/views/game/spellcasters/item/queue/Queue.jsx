@@ -124,7 +124,7 @@ const Queue = ({ spell_id }) => {
     const turnCommitTurn = caster?.turnCommit;
 
     return turnCommitTurn < currentTurn;
-  }, [caster?.turnCommit?.turn, game?.turnInfo?.turn]);
+  }, [caster?.turnCommit, currentTurn]);
   /**
    * Functions to reduce rerenders
    */

@@ -221,9 +221,11 @@ export class CasterContext {
   //TODO: test spell
   //TODO: test craft
   //TODO: test loot
-  async casterRedeemAction(): Promise<TransactionBuilder> {
+  async casterRedeemAction(
+    casterAccount?: Caster,
+  ): Promise<TransactionBuilder> {
     const transaction = new Transaction();
-    const caster = this.caster;
+    const caster = casterAccount || this.caster;
 
     const order = caster?.turnCommit.actions.actionOrder
       .map((value, key) => {
@@ -345,17 +347,6 @@ export class CasterContext {
     );
 
     return { transaction };
-
-    // return await gameConstantsContext.Client.program.rpc.unequipItem({
-    //   accounts: {
-    //     game: gameConstantsContext.gameAccount,
-    //     authority: gameConstantsContext.Client.wallet.publicKey,
-    //     player: gameConstantsContext.playerAccount,
-    //     caster: this.caster?.publicKey,
-    //     item: itemPK,
-    //   },
-    //   signers: [gameConstantsContext.Client.wallet.payer],
-    // });
   }
 
   //TODO: to test
@@ -477,28 +468,6 @@ export class CasterContext {
     );
 
     return { transaction, signers: [newCaster] };
-
-    // return await gameConstantsContext.Client.program.rpc.transferCaster({
-    //   accounts: {
-    //     systemProgram: anchor.web3.SystemProgram.programId,
-    //     tokenProgram: TOKEN_PROGRAM_ID,
-    //     rent: SYSVAR_RENT_PUBKEY,
-    //     authority: gameConstantsContext.Client.wallet.publicKey,
-    //     oldGame: gameConstantsContext.previousGameAccount,
-    //     newGame: gameConstantsContext.gameAccount,
-    //     oldPlayer: gameConstantsContext.previousPlayerAccount,
-    //     newPlayer: gameConstantsContext.playerAccount,
-    //     oldSeason: gameConstantsContext.previousSeason,
-    //     newSeason: gameConstantsContext.season,
-    //     oldCaster: this.caster?.publicKey,
-    //     newCaster: newCaster.publicKey,
-    //     slots: SYSVAR_SLOT_HASHES_PUBKEY,
-    //     instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-    //     ladaMint: gameConstantsContext.gameState.ladaMintAccount,
-    //     ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
-    //   },
-    //   signers: [gameConstantsContext.Client.wallet.payer, newCaster],
-    // });
   }
 
   private async manualResourceBurn(itemFeature: ItemFeature, amount: number) {
@@ -533,17 +502,6 @@ export class CasterContext {
         instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
       })
       .instruction();
-
-    // return gameConstantsContext.Client.program.instruction.casterRedeemMove({
-    //   accounts: {
-    //     game: gameConstantsContext.gameAccount,
-    //     authority: gameConstantsContext.Client.wallet.publicKey,
-    //     player: gameConstantsContext.playerAccount,
-    //     caster: caster?.publicKey,
-    //     instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-    //   },
-    //   signers: [gameConstantsContext.Client.wallet.payer],
-    // });
   }
 
   private async redeemLoot(
@@ -585,7 +543,6 @@ export class CasterContext {
           : empty.publicKey,
         ...mintAccounts,
       })
-      // .signers([item])
       .instruction();
   }
 
@@ -660,35 +617,6 @@ export class CasterContext {
         },
       ])
       .instruction();
-
-    // return gameConstantsContext.Client.program.instruction.casterRedeemSpell({
-    //   accounts: {
-    //     tokenProgram: TOKEN_PROGRAM_ID,
-    //     systemProgram: anchor.web3.SystemProgram.programId,
-    //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    //     instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-    //     rent: SYSVAR_RENT_PUBKEY,
-    //     authority: gameConstantsContext.Client.wallet.publicKey,
-    //     game: gameConstantsContext.gameAccount,
-    //     season: gameConstantsContext.season,
-    //     player: gameConstantsContext.playerAccount,
-    //     caster: caster?.publicKey,
-    //     gameSigner: gameConstantsContext.gameSigner,
-    //     slots: SYSVAR_SLOT_HASHES_PUBKEY,
-    //     item: item.publicKey,
-    //     ...mintAccounts,
-    //   },
-    //   signers: [item, gameConstantsContext.Client.wallet.payer],
-    //   remainingAccounts: [
-    //     {
-    //       pubkey: caster?.modifiers?.spellBook
-    //         ? caster?.modifiers?.spellBook
-    //         : empty.publicKey,
-    //       isSigner: false,
-    //       isWritable: true,
-    //     },
-    //   ],
-    // });
   }
 
   //DEBUG - Devnet only
@@ -776,111 +704,83 @@ export class CasterContext {
     return { transaction };
   }
 
-  //HELPERS
-  private async getGameTurnData(turn = -1) {
-    const turnNumber =
-      turn !== -1 ? turn : gameConstantsContext.gameState?.turnInfo?.turn;
-    if (turn != -1 && turn != gameConstantsContext.gameState?.turnInfo?.turn) {
-      const [turnData] = await anchor.web3.PublicKey.findProgramAddress(
-        [
-          Buffer.from('turn_data'),
-          gameConstantsContext.gameAccount.toBuffer(),
-          Buffer.from(anchor.utils.bytes.utf8.encode(String(turnNumber))),
-        ],
-        gameConstantsContext.Client.program.programId,
-      );
-      return turnData;
+  async casterRedeemAllActions(
+    casters: Caster[],
+  ): Promise<TransactionBuilder[]> {
+    const transactions = [];
+
+    for (let caster of casters) {
+      transactions.push(await this.casterRedeemAction(caster));
     }
-    return gameConstantsContext.turnData;
+
+    return transactions;
   }
 
-  private async getMintAccounts() {
-    return {
-      resource1MintAccount: gameConstantsContext.gameState.resource1MintAccount,
-      resource2MintAccount: gameConstantsContext.gameState.resource2MintAccount,
-      resource3MintAccount: gameConstantsContext.gameState.resource3MintAccount,
-      resource1TokenAccount: gameConstantsContext.resource1TokenAccount,
-      resource2TokenAccount: gameConstantsContext.resource2TokenAccount,
-      resource3TokenAccount: gameConstantsContext.resource3TokenAccount,
-    };
+  async fallbackRedeem(casterAccount?: Caster): Promise<TransactionBuilder[]> {
+    const caster = casterAccount || this.caster;
+    const order = caster?.turnCommit.actions.actionOrder
+      .map((value, key) => {
+        return { type: key, value };
+      })
+      .filter((action) => action.value !== 0)
+      .sort((a, b) => {
+        return a.value - b.value;
+      });
+
+    const transactionBuilder: TransactionBuilder[] = [];
+
+    for (const action of order) {
+      switch (action.type) {
+        case 0: {
+          const itemLoot = Keypair.generate();
+          transactionBuilder.push({
+            transaction: new Transaction().add(
+              await this.redeemLoot(itemLoot, caster),
+            ),
+            signers: [itemLoot],
+            meta: 'loot' + itemLoot.publicKey.toString(),
+          });
+          break;
+        }
+        case 1: {
+          const itemSpell = Keypair.generate();
+          transactionBuilder.push({
+            transaction: new Transaction().add(
+              await this.redeemSpell(itemSpell, caster),
+            ),
+            signers: [itemSpell],
+            meta: 'spell' + itemSpell.publicKey.toString(),
+          });
+          break;
+        }
+        case 2: {
+          transactionBuilder.push({
+            transaction: new Transaction().add(await this.redeemMove(caster)),
+            meta: 'move',
+          });
+          break;
+        }
+        case 3: {
+          const itemCraft = Keypair.generate();
+          transactionBuilder.push({
+            transaction: new Transaction().add(
+              await this.redeemCraft(itemCraft, caster),
+            ),
+            signers: [itemCraft],
+            meta: 'craft' + itemCraft.publicKey.toString(),
+          });
+          break;
+        }
+      }
+    }
+
+    transactionBuilder.push({
+      transaction: new Transaction().add(await this.redeemActions(caster)),
+      meta: 'actions',
+    });
+
+    return transactionBuilder;
   }
-
-  // async fallbackRedeem(caster) {
-  //   const transactions = [];
-  //   const blockhash = (
-  //     await gameConstantsContext.Client.connection.getRecentBlockhash()
-  //   ).blockhash;
-  //   const order = this.caster?.turnCommit.actions.actionOrder
-  //     .map((value, key) => {
-  //       return { type: key, value };
-  //     })
-  //     .filter((action) => action.value !== 0)
-  //     .sort((a, b) => {
-  //       return a.value - b.value;
-  //     });
-
-  //   for (const action of order) {
-  //     switch (action.type) {
-  //       case 0: {
-  //         const tx = new Transaction();
-  //         const itemMove = Keypair.generate();
-  //         tx.add(await this.redeemLoot(itemMove, caster));
-  //         tx.recentBlockhash = blockhash;
-  //         tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-  //         tx.partialSign(itemMove);
-  //         transactions.push(tx);
-  //         break;
-  //       }
-  //       case 1: {
-  //         const tx = new Transaction();
-  //         const itemSpell = Keypair.generate();
-  //         tx.add(await this.redeemSpell(itemSpell, caster));
-  //         tx.recentBlockhash = blockhash;
-  //         tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-  //         tx.partialSign(itemSpell);
-  //         transactions.push(tx);
-  //         break;
-  //       }
-  //       case 2: {
-  //         const tx = new Transaction();
-  //         tx.add(await this.redeemMove(caster));
-  //         tx.recentBlockhash = blockhash;
-  //         tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-  //         transactions.push(tx);
-  //         break;
-  //       }
-  //       case 3: {
-  //         const tx = new Transaction();
-  //         const itemCraft = Keypair.generate();
-  //         tx.add(await this.redeemCraft(itemCraft, caster));
-  //         tx.recentBlockhash = blockhash;
-  //         tx.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-  //         tx.partialSign(itemCraft);
-  //         transactions.push(tx);
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   const txRewards = new Transaction();
-
-  //   txRewards.add(await this.redeemActions(caster));
-  //   txRewards.recentBlockhash = blockhash;
-  //   txRewards.feePayer = gameConstantsContext.Client.wallet.publicKey!;
-
-  //   transactions.push(txRewards);
-  //   const signedTxns = await gameConstantsContext.Client.wallet.signAllTransactions(
-  //     transactions,
-  //   );
-
-  //   let txid;
-  //   for (let i = 0; i < signedTxns.length; i++) {
-  //     txid = await gameConstantsContext.Client.connection.sendRawTransaction(
-  //       signedTxns[i].serialize(),
-  //     );
-  //   }
-
-  //   return txid;
-  // }
 
   private async redeemActions(caster: Caster) {
     const gameTurnData = await this.getGameTurnData(caster?.turnCommit?.turn);
@@ -918,27 +818,34 @@ export class CasterContext {
       })
       .remainingAccounts(remainingAccounts.remainingAccounts || [])
       .instruction();
+  }
 
-    // return gameConstantsContext.Client.program.instruction.casterRedeemReward({
-    //   accounts: {
-    //     tokenProgram: TOKEN_PROGRAM_ID,
-    //     systemProgram: anchor.web3.SystemProgram.programId,
-    //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    //     instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-    //     authority: gameConstantsContext.Client.wallet.publicKey,
-    //     game: gameConstantsContext.gameAccount,
-    //     season: gameConstantsContext.season,
-    //     player: gameConstantsContext.playerAccount,
-    //     caster: caster?.publicKey,
-    //     gameSigner: gameConstantsContext.gameSigner,
-    //     slots: SYSVAR_SLOT_HASHES_PUBKEY,
-    //     ladaMintAccount: gameConstantsContext.gameState.ladaMintAccount,
-    //     gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
-    //     ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
-    //     gameTurnData,
-    //   },
-    //   signers: [gameConstantsContext.Client.wallet.payer],
-    //   ...remainingAccounts,
-    // });
+  //HELPERS
+  private async getGameTurnData(turn = -1) {
+    const turnNumber =
+      turn !== -1 ? turn : gameConstantsContext.gameState?.turnInfo?.turn;
+    if (turn != -1 && turn != gameConstantsContext.gameState?.turnInfo?.turn) {
+      const [turnData] = await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from('turn_data'),
+          gameConstantsContext.gameAccount.toBuffer(),
+          Buffer.from(anchor.utils.bytes.utf8.encode(String(turnNumber))),
+        ],
+        gameConstantsContext.Client.program.programId,
+      );
+      return turnData;
+    }
+    return gameConstantsContext.turnData;
+  }
+
+  private async getMintAccounts() {
+    return {
+      resource1MintAccount: gameConstantsContext.gameState.resource1MintAccount,
+      resource2MintAccount: gameConstantsContext.gameState.resource2MintAccount,
+      resource3MintAccount: gameConstantsContext.gameState.resource3MintAccount,
+      resource1TokenAccount: gameConstantsContext.resource1TokenAccount,
+      resource2TokenAccount: gameConstantsContext.resource2TokenAccount,
+      resource3TokenAccount: gameConstantsContext.resource3TokenAccount,
+    };
   }
 }

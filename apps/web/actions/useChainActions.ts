@@ -63,6 +63,7 @@ import {
   INST_PLACE_ORDER,
   INST_CANCEL_ORDER,
   INST_INIT_CASTER,
+  INST_CLAIM_ALL,
 } from 'core/remix/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
 import { map, find, filter } from 'lodash';
@@ -103,22 +104,26 @@ export const useChainActions = () => {
 
       setResources(await playerContext.getResources());
       if (casterInstance) {
-        const nextCaster = await casterInstance.refreshCaster();
         const publicKey = casterInstance.getCasterId();
-        if (nextCaster) nextCaster.publicKey = publicKey;
-        const nextCasters = remix?.getValue(CHAIN_CASTERS);
+        if (!publicKey) {
+          setCasters(await playerContext.getCasters());
+        } else {
+          const nextCaster = await casterInstance.refreshCaster();
+          if (nextCaster) nextCaster.publicKey = publicKey;
+          const nextCasters = remix?.getValue(CHAIN_CASTERS);
 
-        if (nextCaster && publicKey) {
-          // Replace
-          const updatedCasters = nextCasters.map((caster) => {
-            if (caster.publicKey?.toString() === publicKey?.toString()) {
-              return { ...nextCaster, publicKey: publicKey };
-            } else {
-              return { ...caster };
-            }
-          });
+          if (nextCaster && publicKey) {
+            // Replace
+            const updatedCasters = nextCasters.map((caster) => {
+              if (caster.publicKey?.toString() === publicKey?.toString()) {
+                return { ...nextCaster, publicKey: publicKey };
+              } else {
+                return { ...caster };
+              }
+            });
 
-          setCasters(updatedCasters);
+            setCasters(updatedCasters);
+          }
         }
       } else {
         setPlayer(await playerContext.getPlayer());
@@ -162,6 +167,20 @@ export const useChainActions = () => {
       return await handleState(
         await casterContext.casterRedeemAction(),
         INST_REDEEM_ACTION,
+        undefined,
+        async () => {},
+        async () => {},
+        async () => {
+          return await handleState(
+            await casterContext.fallbackRedeem(),
+            INST_REDEEM_ACTION,
+            undefined,
+            async () => {},
+            async () => {},
+            async () => {},
+            true,
+          );
+        },
       );
     }, casterContext);
   };
@@ -559,23 +578,33 @@ export const useChainActions = () => {
       const gameContext = new GameContext();
       setGame(await gameContext.getGameAccount());
     },
-    //TODO: disabled temporarily
     async claimAllRewards() {
       const redeemableCasters = filter(spellcasters, (caster) => {
         return caster?.turnCommit < game?.turnInfo?.turn;
-      }).map((caster) => {
-        return find(casters, (c) => {
-          return c.publicKey.toString() === caster.publicKey;
+      })
+        .map((caster) => {
+          return find(casters, (c: Caster) => {
+            return c.publicKey?.toString() === caster.publicKey;
+          });
+        })
+        //Filter out caster with spells and more actions
+        //It causes crashing
+        .filter((caster) => {
+          return (
+            (caster.turnCommit?.actions.actionOrder.filter(
+              (action: number) => action !== 0,
+            ).length < 2 &&
+              caster.turnCommit?.actions.spell) ||
+            !caster.turnCommit?.actions.spell
+          );
         });
-      });
 
-      // await fetchPlayer(async () => {
-      //   return await handleState(async () => {
-      //     return await new CasterContext().casterRedeemAllActions(
-      //       redeemableCasters,
-      //     );
-      //   }, INST_CLAIM_ALL);
-      // });
+      await fetchPlayer(async () => {
+        return await handleState(
+          await new CasterContext().casterRedeemAllActions(redeemableCasters),
+          INST_CLAIM_ALL,
+        );
+      });
     },
     async lootAllResources() {
       map(spellcasters, (caster) => {

@@ -13,10 +13,9 @@ import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import {
   confirmTransaction,
   executeTransaction,
+  signAllTransaction,
   signTransaction,
 } from '../utils/TransactionUtil';
-
-let retry_count = {};
 
 export enum TxStates {
   ERROR = 'error',
@@ -40,14 +39,17 @@ interface Mutation {
 export interface TransactionBuilder {
   transaction: Transaction;
   signers?: Signer[];
+  meta?: string;
 }
 
 type Handler = (
-  builder: TransactionBuilder,
+  builder: TransactionBuilder | TransactionBuilder[],
   type: string,
   retryId?: string,
   onExecution?: () => Promise<void>,
   onConfirmation?: () => Promise<void>,
+  onError?: () => Promise<any>,
+  atomicTransactions?: boolean,
 ) => Promise<void>;
 
 export const useMutation = () => {
@@ -59,11 +61,13 @@ export const useMutation = () => {
     async (
       // rpcCallback,
       // transaction: Transaction | Transaction[],
-      builder: TransactionBuilder,
+      builder: TransactionBuilder | TransactionBuilder[],
       type: string,
       retryId: string = '',
       onExecution?: () => Promise<void>,
       onConfirmation?: () => Promise<void>,
+      onError?: () => Promise<any>,
+      atomicTransactions: boolean = false,
     ) => {
       const id = retryId || nanoid();
 
@@ -75,74 +79,84 @@ export const useMutation = () => {
 
       try {
         setMutation({ mutation });
-        console.log('signing...');
-
         const {
           blockhash,
           lastValidBlockHeight,
         } = (await client.connection.getLatestBlockhash()) as BlockhashWithExpiryBlockHeight;
+
         // Sign Transaction
-        const signedTx = await signTransaction(
-          builder,
-          blockhash,
-          client.wallet,
-        );
+        console.log('signing...');
+        let signedTxs: Transaction[];
+        if (Array.isArray(builder)) {
+          signedTxs = await signAllTransaction(
+            builder,
+            blockhash,
+            client.wallet,
+          );
+        } else {
+          signedTxs = [
+            await signTransaction(builder, blockhash, client.wallet),
+          ];
+        }
+        console.log('builders', builder);
 
         setMutation({
           ...mutation,
           state: TxStates.EXECUTING,
         });
 
-        console.log('executing...');
         // Execute Transaction
-        const validatorSignature = await executeTransaction(
+        console.log('executing...', signedTxs, atomicTransactions);
+        const validatorSignatures = await executeTransaction(
           client.connection,
-          signedTx,
+          signedTxs,
+          atomicTransactions,
         );
 
         if (onExecution) onExecution();
         setMutation({ ...mutation, state: TxStates.CONFIRMING });
-        // Confirming TX
 
-        console.log('confirming...');
-        let confirmationResult: any = {};
-        //TODO: bad validation
-        if (typeof validatorSignature === 'string') {
-          confirmationResult = await confirmTransaction(client.connection, {
-            blockhash: blockhash,
-            lastValidBlockHeight: lastValidBlockHeight,
-            signature: validatorSignature,
-          });
+        // Confirming TX
+        console.log('confirming...', validatorSignatures);
+        const confirmationPromise = [];
+        for (const signature of validatorSignatures) {
+          confirmationPromise.push(
+            confirmTransaction(client.connection, {
+              blockhash: blockhash,
+              lastValidBlockHeight: lastValidBlockHeight,
+              signature: signature,
+            }),
+          );
         }
-        const e = confirmationResult?.value?.err;
-        if (e) throw e;
+
+        const confirmationResult = await Promise.all(confirmationPromise);
+        for (const confirmation of confirmationResult) {
+          const e = confirmation?.value?.err;
+          if (e) throw e;
+        }
 
         if (onConfirmation) onConfirmation();
-
         setMutation({ ...mutation, state: TxStates.SUCCESS });
+
         console.log('confirmed!!!!');
         return confirmationResult;
       } catch (e) {
         console.log('mutation failed', e);
+        if (onError) return await onError();
 
         //TODO: review error handling
         //TODO: change retry logic to connection
-        if (String(e).includes('Blockhash')) {
-          retry_count[id] ? retry_count[id]++ : (retry_count[id] = 0);
-          if (retry_count[id] < 2) await handleState(builder, type, id);
-        } else {
-          let parsedMessage = handleCustomErrors(e.message);
-          if (e.message?.includes('Solana'))
-            parsedMessage = t('mutations.timeout');
+        let parsedMessage = handleCustomErrors(e.message);
+        if (e.message?.includes('Solana'))
+          parsedMessage = t('mutations.timeout');
 
-          setMutation({
-            ...mutation,
-            state: TxStates.ERROR,
-            text: {
-              error: parsedMessage,
-            },
-          });
-        }
+        setMutation({
+          ...mutation,
+          state: TxStates.ERROR,
+          text: {
+            error: parsedMessage,
+          },
+        });
       }
     },
     [client, t],
