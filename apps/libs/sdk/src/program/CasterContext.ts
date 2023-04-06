@@ -310,7 +310,7 @@ export class CasterContext {
   }
 
   //TODO: to test
-  async unequipAllItems(items: Item[]): Promise<TransactionBuilder> {
+  async unequipAllItems(items: PublicKey[]): Promise<TransactionBuilder> {
     const transaction = new Transaction();
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -322,7 +322,7 @@ export class CasterContext {
             authority: gameConstantsContext.Client.wallet.publicKey,
             player: gameConstantsContext.playerAccount,
             caster: this.caster?.publicKey,
-            item: new PublicKey(item.publicKey),
+            item: item,
           })
           .instruction(),
       );

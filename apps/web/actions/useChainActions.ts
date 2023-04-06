@@ -599,12 +599,13 @@ export const useChainActions = () => {
           );
         });
 
+      const casterInstance = new CasterContext();
       await fetchPlayer(async () => {
         return await handleState(
-          await new CasterContext().casterRedeemAllActions(redeemableCasters),
+          await casterInstance.casterRedeemAllActions(redeemableCasters),
           INST_CLAIM_ALL,
         );
-      });
+      }, casterInstance);
     },
     async lootAllResources() {
       map(spellcasters, (caster) => {
@@ -907,26 +908,30 @@ export const useChainActions = () => {
     //TODO: to test
     async unequipAllItems(caster: Caster) {
       if (!caster) return;
-      const casterContext = new CasterContext(
-        find(
-          casters,
-          (match) => match?.publicKey?.toString() === caster?.publicKey,
-        ),
+
+      const casterObject = find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
       );
+      const casterContext = new CasterContext(casterObject);
       const casterItems: any[] = [];
-      const keys = Object.keys(caster || {});
+      const keys = Object.keys(casterObject.modifiers || {}).filter(
+        (item) => !['tileColumn', 'tileLevel'].includes(item),
+      );
       for (let i = 0; i < keys.length; i++) {
-        const item = caster[keys[i]]?.currentItem;
+        const item = casterObject.modifiers[keys[i]];
         if (item) {
           casterItems.push(item);
         }
       }
 
       if (casterItems.length == 0) return;
-      await handleState(
-        await casterContext.unequipAllItems(casterItems),
-        INST_UNEQUIP,
-      );
+      await fetchPlayer(async () => {
+        await handleState(
+          await casterContext.unequipAllItems(casterItems),
+          INST_UNEQUIP,
+        );
+      });
     },
     emptyInputs() {
       setContext({
