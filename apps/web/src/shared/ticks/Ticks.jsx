@@ -15,6 +15,7 @@ import {
   VIEW_NAVIGATION,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { nanoid } from 'nanoid';
 import usePrevious from 'core/hooks/usePrevious';
 import { map } from 'lodash';
@@ -22,10 +23,10 @@ import { CHAIN_GAME } from 'chain/hooks/state';
 
 const Ticks = () => {
   const [phase] = useRemix(USER_PHASE);
-  const [game] = useRemix(CHAIN_GAME);
+  const [game] = useMesh(CHAIN_GAME);
   const [options] = useRemix(GAME_OPTIONS);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [board] = useRemix(GAME_MAP);
+  const [board] = useMesh(GAME_MAP);
   const [inc, setInc] = useState(0);
   const [lootAll, setLootAll] = useState(false);
   const [view] = useRemix(VIEW_NAVIGATION);

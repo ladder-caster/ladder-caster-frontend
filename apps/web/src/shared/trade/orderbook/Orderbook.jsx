@@ -24,6 +24,7 @@ import { useOrderbook } from 'core/hooks/useOrderbook';
 import { findMarket } from 'core/utils/markets';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../actions';
 
 const Orderbook = () => {

@@ -23,6 +23,7 @@ import {
   TIER_IV,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { filter, clamp } from 'lodash';
 import NFT from '../../../nft/NFT';
 import { _level, _overlay } from '../../../item/Item.styled';

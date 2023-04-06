@@ -20,6 +20,7 @@ import {
   ITEM_STAFF,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { filter, sortBy, reverse } from 'lodash';
 import { EQUIP_MAP, ICON_EQUIP_MAP } from 'core/utils/switch';

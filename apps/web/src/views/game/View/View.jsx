@@ -1,4 +1,5 @@
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useEventListener } from 'core/hooks/useEventListener';
 import { useSize } from 'core/hooks/useSize';
 import {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { _confirm, _display } from './MintConfirm.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useActions } from '../../../../../../actions';
 import { _button } from '../../redeem/confirm/RedeemConfirm.styled';

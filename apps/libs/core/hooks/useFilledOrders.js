@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { DRAWER_CONTEXT, TRADE_FILLED_ORDERS } from '../remix/state';
 import { useRemix } from './remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { findMarket } from '../utils/markets';
 import usePrevious from './usePrevious';
@@ -22,7 +23,6 @@ export const useFilledOrders = () => {
     if (pair !== prev_pair) {
       try {
         const next_orders = await getFilledOrders(pair);
-        console.log('next orders', next_orders);
         // setOrders({ ...orders, [market]: { ...next_orders, pair } });
       } catch (e) {
         setOrders({});

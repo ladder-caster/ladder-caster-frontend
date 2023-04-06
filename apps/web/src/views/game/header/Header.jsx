@@ -22,6 +22,7 @@ import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   GAME_INIT,
   GAME_RESOURCES,

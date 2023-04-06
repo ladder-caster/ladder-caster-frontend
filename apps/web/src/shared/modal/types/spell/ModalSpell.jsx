@@ -19,6 +19,7 @@ import Item from './item/Item';
 import Slide from '../../../slide/Slide';
 import Details from './details/Details';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_INVENTORY, GAME_SPELL, ITEM_BOOK } from 'core/remix/state';
 import { filter, map } from 'lodash';
 import { AnimateLimit } from '../../animations/AnimateLimit';

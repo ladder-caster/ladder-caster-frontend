@@ -9,6 +9,7 @@ import {
   _button,
 } from './UnequipConfirm.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   ITEM_BOOK,

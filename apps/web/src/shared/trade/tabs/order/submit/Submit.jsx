@@ -3,6 +3,7 @@ import { _submit } from './Submit.styled';
 import { findMarket } from 'core/utils/markets';
 import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
 

@@ -34,6 +34,7 @@ import {
   TYPE_RES2,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconBeaker } from 'design/icons/beaker.icon';
 import { withTheme } from 'styled-components';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
@@ -67,7 +68,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const [casters] = useRemix(GAME_SPELLCASTERS, (spellcasters) =>
     sumPosition(spellcasters),
   );
-  const [land] = useRemix(GAME_MAP, (lands) => lands?.[row]?.[col]);
+  const [land] = useMesh(GAME_MAP, (lands) => lands?.[row]?.[col]);
   const remaining = land?.remaining;
   const isActive = land !== undefined && !land?.empty;
   const type = land?.type;

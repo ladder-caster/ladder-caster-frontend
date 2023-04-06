@@ -24,7 +24,7 @@
     "@web3auth/solana-wallet-connector-plugin": "^1.1.1",
     "@web3auth/web3auth": "^1.1.1",
     "chroma-js": "2.1.1",
-    "framer-motion": "4.0.2",
+    "framer-motion": "10.10.0",
     "lodash": "4.17.20",
     "react-helmet-async": "1.0.7",
     "react-i18next": "11.8.5",

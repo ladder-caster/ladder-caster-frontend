@@ -9,14 +9,15 @@ import {
   INIT_CHAIN_LOAD,
 } from './state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { Client } from '../../sdk/src/program/Client';
 import { GameContext } from '../../sdk/src/program/GameContext';
 import { PlayerContext } from '../../sdk/src/program';
 import { GAME_RESOURCES } from 'core/remix/state';
 
 export const useGame = () => {
-  const [game, setGame] = useRemix(CHAIN_GAME);
-  const [player, setPlayer] = useRemix(CHAIN_PLAYER);
+  const [game, setGame] = useMesh(CHAIN_GAME);
+  const [player, setPlayer] = useMesh(CHAIN_PLAYER);
   const [, setNfts] = useRemix(CHAIN_NFTS);
   const [, setItems] = useRemix(CHAIN_ITEMS);
   const [, setCasters] = useRemix(CHAIN_CASTERS);

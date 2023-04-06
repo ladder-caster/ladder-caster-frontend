@@ -14,6 +14,7 @@ import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
 import { map, sortBy } from 'lodash';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_SPELL } from 'core/remix/state';
 import usePrevious from 'core/hooks/usePrevious';
 

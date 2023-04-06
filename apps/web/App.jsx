@@ -4,7 +4,6 @@ import { GlobalStyles, _app, _view } from 'design/styles/global';
 import { styles, theme, zindex } from 'design';
 import { Route, Switch } from 'react-router-dom';
 import { VIEW_SIZE, USER_LANGUAGE, USER_THEME } from 'core/remix/state';
-import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
 import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';
@@ -25,6 +24,7 @@ import { clusterApiUrl } from '@solana/web3.js';
 import { useOffline } from 'core/hooks/useOffline';
 import { Helmet } from 'react-helmet-async';
 import { Redirect } from 'react-router';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -38,9 +38,8 @@ const withThemes = ({ palette = 'dark' }) => ({
 const App = () => {
   useOffline();
   const { vh } = useMobileHeight();
-  useRemixOrigin(VIEW_SIZE, {});
-  useRemixOrigin(USER_LANGUAGE, 'en');
-  const [theme] = useRemixOrigin(USER_THEME, 'gold');
+
+  const [theme] = useMesh(USER_THEME);
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Devnet;

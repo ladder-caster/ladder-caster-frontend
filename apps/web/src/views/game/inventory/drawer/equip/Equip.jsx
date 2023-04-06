@@ -21,6 +21,7 @@ import {
   _tile_icon,
 } from './Equip.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   EQUIP_ITEM,
@@ -62,7 +63,7 @@ const Equip = () => {
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const item = context?.item;
   const back = context?.back;
-  const [lands] = useRemix(GAME_MAP);
+  const [lands] = useMesh(GAME_MAP);
   const sort_casters = useMemo(() => {
     return sortBy(spellcasters, (sort) => sort?.hue);
   }, [spellcasters]);
@@ -138,10 +139,10 @@ const Equip = () => {
 
         const col = caster?.position?.substring(0, 1);
         const row = caster?.position?.substring(1);
-        const intRow = row? parseInt(row) - 1:0
+        const intRow = row ? parseInt(row) - 1 : 0;
         const element = lands?.[intRow]?.[col]?.type;
         const Icon = TileIcons[element];
-        
+
         return (
           <_caster onClick={() => equipItem(item, caster)}>
             <_item>

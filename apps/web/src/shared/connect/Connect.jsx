@@ -1,6 +1,7 @@
 import React from 'react';
 import { _connect, _wallet } from './Connect.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { IconWallet } from '../../../../libs/design/icons/wallet.icon';
 import { useActions } from '../../../actions';

@@ -17,6 +17,7 @@ import { AnimateButton } from '../../../shared/button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
 
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { VIEW_SIZE } from 'core/remix/state';
 import { useActions } from '../../../../actions';
 import { useTranslation } from 'react-i18next';

@@ -8,6 +8,7 @@ import {
   TILE_GLOWING,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 
 const Tiles = ({ caster, level, position }) => {

@@ -19,6 +19,7 @@ import {
   TIER_IV,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconTreasure } from 'design/icons/treasure.icon';
 import { useActions } from '../../../../../actions';
 

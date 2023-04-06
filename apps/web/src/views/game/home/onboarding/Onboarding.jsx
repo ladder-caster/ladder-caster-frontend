@@ -25,6 +25,7 @@ import {
   _warning,
 } from '../Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useActions } from '../../../../../actions';
@@ -40,7 +41,7 @@ import { IconGoogle } from '../../../../../../libs/design/icons/google.icon';
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
   const [noFunds, setNoFunds] = useState(false);
-  const [player] = useRemix(CHAIN_PLAYER);
+  const [player] = useMesh(CHAIN_PLAYER);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [resources] = useRemix(GAME_RESOURCES);
   const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);

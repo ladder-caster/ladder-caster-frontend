@@ -37,7 +37,6 @@ const ManageKey = ({ close, keyValue, type, title, hasBlur, hasWarning }) => {
         .then(() => {
           setCopied(true);
           setTimeout(() => setCopied(false), 5000);
-          console.log('copied!');
         })
         .catch(() => {
           console.log('could not copy!');

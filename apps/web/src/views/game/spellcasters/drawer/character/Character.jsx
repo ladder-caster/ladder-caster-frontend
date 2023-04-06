@@ -10,6 +10,7 @@ import Equipment from './equipment/Equipment';
 import Stats from './stats/Stats';
 import { _breakpoint } from '../Player.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import Power from '../../../../../shared/power/Power';
 import Info from '../../../../../shared/info/Info';

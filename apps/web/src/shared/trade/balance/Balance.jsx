@@ -2,6 +2,7 @@ import React from 'react';
 import { _balance } from './Balance.styled';
 import { DRAWER_CONTEXT, GAME_RESOURCES } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Balance = ({ isBase, isQuote }) => {
   const [resources] = useRemix(GAME_RESOURCES);

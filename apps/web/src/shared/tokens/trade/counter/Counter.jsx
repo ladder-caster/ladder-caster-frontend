@@ -1,6 +1,7 @@
 import React from 'react';
 import { _counter, _decrement, _increment, _amount } from './Counter.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { TOKENS_ACTIVE } from 'core/remix/state';
 import { IconDice } from 'design/icons/dice.icon';
 import { useActions } from '../../../../../actions';

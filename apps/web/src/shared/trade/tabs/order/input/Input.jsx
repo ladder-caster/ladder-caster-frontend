@@ -7,6 +7,7 @@ import {
   TRADE_ORDERBOOK,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../../../actions';
 import usePrevious from 'core/hooks/usePrevious';
 import { findMarket } from 'core/utils/markets';

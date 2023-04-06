@@ -34,6 +34,7 @@ import { _controls, _speed } from '../header/Header.styled';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS, CHAIN_ITEMS } from 'chain/hooks/state';
 import {
   _header,

@@ -7,6 +7,7 @@ import {
 } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/remix/init';
 import {
   CRAFT_CHARACTER,
@@ -75,11 +76,11 @@ export const useStateActions = () => {
   const [, setConfirm] = useRemix(GAME_CONFIRM);
   const [, setPhase] = useRemix(USER_PHASE);
   const [, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
   const [, setItems] = useRemix(CHAIN_ITEMS);
   const [, setCasters] = useRemix(CHAIN_CASTERS);
   const [, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [, setGame] = useRemix(CHAIN_GAME);
+  const [, setGame] = useMesh(CHAIN_GAME);
   const [, setView] = useRemix(VIEW_NAVIGATION);
 
   return {

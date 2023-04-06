@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { _grid, _row, _tab, _empty } from './MintTab.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   GAME_INVENTORY,

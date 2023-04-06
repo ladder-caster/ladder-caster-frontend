@@ -12,6 +12,7 @@ import {
   _attribute,
 } from './InventoryDrawer.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   CONFIRM_EQUIP,
   DRAWER_CONTEXT,

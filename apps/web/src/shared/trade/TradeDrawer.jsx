@@ -16,6 +16,7 @@ import Tabs from '../tabs/Tabs';
 import SwapTab from './tabs/swap/SwapTab';
 import OrderTab from './tabs/order/OrderTab';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { VIEW_SIZE } from 'core/remix/state';
 import Breakpoint from '../breakpoint/Breakpoint';
 

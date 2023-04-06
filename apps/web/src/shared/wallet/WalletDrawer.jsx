@@ -10,6 +10,7 @@ import {
 } from './WalletDrawer.styled';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_ACTIVE, VIEW_SIZE } from 'core/remix/state';
 import { useActions } from '../../../actions';
 import {
@@ -33,7 +34,7 @@ const WalletDrawer = () => {
   const [view_height] = useRemix(VIEW_SIZE);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
   const { closeDrawer, refreshResources } = useActions();
-  
+
   const [nfts, setNfts] = useRemix(CHAIN_NFTS);
 
   const tabs_mint_redeem = {
@@ -54,7 +55,7 @@ const WalletDrawer = () => {
       View: MintTab,
     },
   };
-  
+
   useEffect(() => {
     if (refreshResources && client) refreshResources();
   }, [client]);

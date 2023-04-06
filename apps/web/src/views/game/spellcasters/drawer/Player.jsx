@@ -24,6 +24,7 @@ import {
   TABS_CHARACTER_ACTIONS,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import Rank from './rank/Rank';
 import Boost from './boost/Boost';

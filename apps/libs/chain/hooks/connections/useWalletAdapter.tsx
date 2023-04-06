@@ -1,5 +1,6 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CREATE_MUTATION, WALLET_DISCONNECT } from 'core/remix/state';
 import { useEffect, useMemo } from 'react';
 import { nanoid } from 'nanoid';

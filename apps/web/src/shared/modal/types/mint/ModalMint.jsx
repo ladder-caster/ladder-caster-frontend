@@ -13,6 +13,7 @@ import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_CONSTANTS, MODAL_ACTIVE, MINT_COST } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import {

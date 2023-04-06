@@ -16,6 +16,7 @@ import {
 } from './Rank.styled';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_ACTIVE } from 'core/remix/state';
 import Progress from './progress/Progress';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';

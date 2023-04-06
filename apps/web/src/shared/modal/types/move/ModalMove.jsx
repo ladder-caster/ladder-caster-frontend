@@ -30,6 +30,7 @@ import { AnimateLimit } from '../../animations/AnimateLimit';
 import { _button } from '../loot/ModalLoot.styled';
 import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   CONFIRM_MOVE,
   GAME_CONFIRM,

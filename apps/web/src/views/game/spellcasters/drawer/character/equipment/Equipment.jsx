@@ -19,6 +19,7 @@ import { IconCloak } from 'design/icons/cloak.icon';
 import { useActions } from '../../../../../../../actions';
 import Item from '../../../../../../shared/item/Item';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 
 const Equipment = ({ caster }) => {

@@ -8,6 +8,7 @@ import {
   VIEW_MARKET,
 } from 'core/routes/routes';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/remix/state';
 import { IconMarketplace } from 'design/icons/marketplace.icon';
 import { useLocation } from 'react-router-dom';

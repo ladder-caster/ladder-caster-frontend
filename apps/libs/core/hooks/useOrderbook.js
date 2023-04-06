@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { DRAWER_CONTEXT, TRADE_ORDERBOOK } from '../remix/state';
 import { useRemix } from './remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { findMarket } from '../utils/markets';
 import { useActions } from 'web/actions';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
@@ -20,17 +21,14 @@ export const useOrderbook = (base, quote) => {
 
   useEffect(async () => {
     if (pair && client?.connection && pair !== prev_pair) {
-      console.log('try to get orders for', market);
       try {
         const next_orders = await getBidsAsks(pair);
         setOrders({ ...orders, [market]: { ...next_orders, pair } });
         // subscribe to orderbook updates
       } catch (e) {
-        console.log('BIG ERROR', e);
         setOrders({});
       }
     } else {
-      console.log('no pair', pair, prev_pair);
     }
   }, [pair, client]);
 

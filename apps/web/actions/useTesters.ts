@@ -12,11 +12,12 @@ import {
 } from 'core/remix/state';
 import { CHAIN_ITEMS, CHAIN_PLAYER } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useMutation } from 'sdk/src/hooks/useMutations';
 
 export const useTesters = () => {
   const { handleState } = useMutation();
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
   const [, setItems] = useRemix(CHAIN_ITEMS);
   const [, setResources] = useRemix(GAME_RESOURCES);
 

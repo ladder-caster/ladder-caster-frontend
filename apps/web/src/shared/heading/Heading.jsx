@@ -4,6 +4,7 @@ import Redeem from '../redeem/Redeem';
 import Phases from '../phases/Phases';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   GAME_INIT,
   GAME_MAP,
@@ -19,10 +20,10 @@ import ResourceTrade from '../resourceTrade/ResourceTrade';
 
 const Heading = ({ title, flat, marketplace }) => {
   const [initialized] = useRemix(GAME_INIT);
-  const [game] = useRemix(CHAIN_GAME);
+  const [game] = useMesh(CHAIN_GAME);
   const [casters] = useRemix(CHAIN_CASTERS);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [board] = useRemix(GAME_MAP);
+  const [board] = useMesh(GAME_MAP);
   const [lootAll, setLootAll] = useState(false);
   const currentTurn = game?.turnInfo?.turn;
 

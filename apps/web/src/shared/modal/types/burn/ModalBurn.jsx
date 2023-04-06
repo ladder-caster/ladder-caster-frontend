@@ -28,6 +28,7 @@ import {
   RARITY_LEGENDARY,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Item from '../../../item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';

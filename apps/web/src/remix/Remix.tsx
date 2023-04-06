@@ -58,6 +58,7 @@ import {
 } from '../../../libs/sdk/src/program';
 import * as anchor from '@project-serum/anchor';
 import { RPC_ERROR } from 'core/remix/rpc';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   TAB_CHARACTER,
   TAB_WALLET,
@@ -71,11 +72,11 @@ import gameConstantsContext from '../../../libs/sdk/src/program/GameConstantsCon
 import arweaveUtil from '../../../libs/sdk/src/utils/ArweaveUtil';
 import { useConnectionClient } from 'chain/hooks/connections/useConnectionClient';
 
-//ensures presetup is done
+//ensures pre-setup is done
 const Remix = () => {
-  const [, setMap] = useRemixOrigin(GAME_MAP);
-  const [game, setGame] = useRemixOrigin(CHAIN_GAME);
-  const [player] = useRemixOrigin(CHAIN_PLAYER);
+  const [game, setGame] = useMesh(CHAIN_GAME);
+  const [, setMap] = useMesh(GAME_MAP);
+  const [player] = useMesh(CHAIN_PLAYER);
   const [items] = useRemixOrigin(CHAIN_ITEMS, []);
   const [casters] = useRemixOrigin(CHAIN_CASTERS, []);
   const [oldCasters] = useRemixOrigin(CHAIN_OLD_CASTERS, []);
@@ -339,7 +340,9 @@ const Remix = () => {
 
   useEffect(() => {
     if (game) {
-      setMap(generateMap(game));
+      const next_map = generateMap(game);
+
+      setMap(next_map);
     }
     if (client && !gameConstants.Client) {
       initClient();
@@ -371,7 +374,6 @@ const Remix = () => {
     };
 
     if (game) {
-      console.log('game', game);
       const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
       const timeDiff =
         new Date().getTime() -
@@ -394,29 +396,20 @@ const Remix = () => {
   useEffect(() => {
     if (casters) {
       setSpellcasters(generateSpellCaster(casters));
-      console.log('casters', casters);
     }
   }, [casters]);
 
   useEffect(() => {
     if (oldCasters) {
       setOldSpellcasters(generateSpellCaster(oldCasters));
-      console.log('old casters', oldCasters);
     }
   }, [oldCasters]);
 
   useEffect(() => {
     if (items) {
       setInventory(generateInventory(items));
-      console.log('inventory', inventory);
     }
   }, [items]);
-
-  useEffect(() => {
-    if (player) {
-      console.log('player', player);
-    }
-  }, [player]);
 
   return null;
 };

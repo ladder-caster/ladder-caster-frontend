@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import Toggle from '../../../../../../shared/button/toggle/Toggle';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { PRESTIGE_TOGGLE } from 'core/remix/state';
 
 const PrestigeToggle = () => {

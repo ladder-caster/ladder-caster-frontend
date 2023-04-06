@@ -2,6 +2,7 @@ import React from 'react';
 import { LazyAnimations } from 'design/animations';
 import { withTheme } from 'styled-components';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_OPTIONS } from 'core/remix/state';
 
 export const AnimateLoading = withTheme(

@@ -16,6 +16,7 @@ import {
   ITEM_STAFF,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';

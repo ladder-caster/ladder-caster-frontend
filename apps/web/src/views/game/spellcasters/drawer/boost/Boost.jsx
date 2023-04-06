@@ -11,6 +11,7 @@ import { _burn, _float } from '../Player.styled';
 import { useActions } from '../../../../../../actions';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Boost = () => {
   const { t } = useTranslation();

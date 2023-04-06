@@ -22,6 +22,7 @@ import {
   GAME_INVENTORY,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
 import { IconBook } from 'design/icons/book.icon';
@@ -48,7 +49,7 @@ const Queue = ({ spell_id }) => {
     redeemReward,
   } = useActions();
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [game] = useRemix(CHAIN_GAME);
+  const [game] = useMesh(CHAIN_GAME);
   const [inventory] = useRemix(GAME_INVENTORY);
   const { t } = useTranslation();
   const caster = useMemo(

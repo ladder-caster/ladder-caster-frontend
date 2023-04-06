@@ -16,6 +16,7 @@ import { useActions } from '../../../../../actions';
 import { AnimateButton } from '../../animations/AnimateButton';
 import { DRAWER_CONTEXT, SIDE_BUY } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const ModalOrder = ({ options }) => {
   const { t } = useTranslation();

@@ -12,6 +12,7 @@ import {
 } from './Dropdown.styled';
 import { IconChevronDown } from 'design/icons/chevron-down.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_CONTEXT, SIDE_BUY } from 'core/remix/state';
 import LogoCoins from '../../types/icons/LogoCoins';
 import Options from './options/Options';

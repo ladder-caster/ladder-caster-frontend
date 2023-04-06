@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { _phases, _phase } from './Phases.styled';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   GAME_SPELLCASTERS,
   PHASE_ACTIONS,
@@ -15,7 +16,7 @@ const Phases = () => {
   const { t } = useTranslation();
   const [phase, setPhase] = useRemix(USER_PHASE);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [game] = useRemix(CHAIN_GAME);
+  const [game] = useMesh(CHAIN_GAME);
   const turn = game?.turnInfo?.turn;
 
   useEffect(() => {

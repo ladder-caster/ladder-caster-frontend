@@ -23,6 +23,7 @@ import {
   WEB3AUTH_PLUGIN_STORE,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { magicEdenLogo } from 'design/icons/magic.eden.icon';

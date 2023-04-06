@@ -18,17 +18,17 @@ import { _feed } from '../home/Dashboard.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useTranslation } from 'react-i18next';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_INIT, GAME_MAP } from 'core/remix/state';
 import { reverse } from 'lodash';
 import Tile from './tile/Tile';
-import { _wallet } from '../inventory/Inventory.styled';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 
 const Map = () => {
   const { t } = useTranslation();
-  const [map] = useRemix(GAME_MAP);
+  const [map] = useMesh(GAME_MAP);
   const map_ref = useRef();
   const list_ref = useRef();
   const { height } = useSize(list_ref);

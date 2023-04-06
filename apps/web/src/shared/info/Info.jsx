@@ -17,6 +17,7 @@ import Attributes from '../../views/game/inventory/drawer/attributes/Attributes'
 import { useTranslation } from 'react-i18next';
 import { useSize } from 'core/hooks/useSize';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   ITEM_BOOK,

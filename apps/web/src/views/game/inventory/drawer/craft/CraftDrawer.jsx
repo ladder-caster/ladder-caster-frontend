@@ -6,6 +6,7 @@ import {
   DRAWER_CONTEXT,
 } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Materials from './materials/Materials';
 import Item from './item/Item';
 import Character from './character/Character';

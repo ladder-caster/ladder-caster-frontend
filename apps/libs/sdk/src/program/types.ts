@@ -16,7 +16,6 @@ export interface Game {
   /// Authority is game signer
   resource3MintAccount: PublicKey;
 
-  ///
   /// Authority is auth
   ladaMintAccount: PublicKey;
   /// Authority is game

@@ -6,6 +6,7 @@ import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { MODAL_ACTIVE } from 'core/remix/state';
 import { useTranslation } from 'react-i18next';
 import { IconWallet } from 'design/icons/wallet.icon';

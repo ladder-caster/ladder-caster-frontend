@@ -4,6 +4,7 @@ import { useClient } from '../useClient';
 import { INIT_CHAIN_LOAD } from '../state';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const useConnectionClient = (client) => {

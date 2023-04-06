@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_LOCAL_CLIENT, INIT_CHAIN_LOAD } from '../state';
 import {
   W3A_TYPE,
@@ -151,7 +152,6 @@ export const useW3A = () => {
   ]);
 
   const handleConnectInitial = useCallback(() => {
-    console.log('try connect');
     setTryConnect(true);
   }, []);
 

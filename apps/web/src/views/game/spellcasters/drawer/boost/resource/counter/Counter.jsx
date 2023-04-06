@@ -10,6 +10,7 @@ import {
 import { useActions } from '../../../../../../../../actions';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconMinus } from 'design/icons/minus.icon';
 import { IconPlus } from 'design/icons/plus.icon';
 import IconResource from '../../../../../../../shared/types/icons/IconResource';

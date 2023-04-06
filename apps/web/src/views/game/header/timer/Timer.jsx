@@ -24,6 +24,7 @@ import { IconSkip } from 'design/icons/skip.icon';
 import { AnimateCrank } from '../animations/AnimateCrank';
 import { useActions } from '../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import usePrevious from 'core/hooks/usePrevious';
 
 let a = 180;

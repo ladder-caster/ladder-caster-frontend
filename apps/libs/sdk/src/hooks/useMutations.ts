@@ -1,4 +1,5 @@
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CREATE_MUTATION } from 'core/remix/state';
 import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
@@ -85,7 +86,6 @@ export const useMutation = () => {
         } = (await client.connection.getLatestBlockhash()) as BlockhashWithExpiryBlockHeight;
 
         // Sign Transaction
-        console.log('signing...');
         let signedTxs: Transaction[];
         if (Array.isArray(builder)) {
           signedTxs = await signAllTransaction(
@@ -98,7 +98,6 @@ export const useMutation = () => {
             await signTransaction(builder, blockhash, client.wallet),
           ];
         }
-        console.log('builders', builder);
 
         setMutation({
           ...mutation,
@@ -106,7 +105,6 @@ export const useMutation = () => {
         });
 
         // Execute Transaction
-        console.log('executing...', signedTxs, atomicTransactions);
         const validatorSignatures = await executeTransaction(
           client.connection,
           signedTxs,
@@ -117,7 +115,6 @@ export const useMutation = () => {
         setMutation({ ...mutation, state: TxStates.CONFIRMING });
 
         // Confirming TX
-        console.log('confirming...', validatorSignatures);
         const confirmationPromise = [];
         for (const signature of validatorSignatures) {
           confirmationPromise.push(
@@ -138,10 +135,8 @@ export const useMutation = () => {
         if (onConfirmation) onConfirmation();
         setMutation({ ...mutation, state: TxStates.SUCCESS });
 
-        console.log('confirmed!!!!');
         return confirmationResult;
       } catch (e) {
-        console.log('mutation failed', e);
         if (onError) return await onError();
 
         //TODO: review error handling

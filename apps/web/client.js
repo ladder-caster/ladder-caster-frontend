@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import 'core/language/i18n';
 import { createBrowserHistory } from 'history';
+import { createRoot } from 'react-dom/client';
 
 const history = createBrowserHistory();
 
@@ -16,4 +16,7 @@ const app = (
   </Router>
 );
 
-ReactDOM.render(app, document.getElementById('app'));
+const domNode = document.getElementById('app');
+const root = createRoot(domNode);
+
+root.render(app);

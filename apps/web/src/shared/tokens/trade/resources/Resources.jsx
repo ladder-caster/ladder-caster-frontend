@@ -4,6 +4,7 @@ import IconResource from '../../../types/icons/IconResource';
 import { IconArrow } from 'design/icons/arrow.icon';
 import { TOKENS_ACTIVE } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../../actions';
 
 const Resources = ({ pair }) => {

@@ -14,6 +14,7 @@ import Dashboard from '../home/Dashboard';
 import { AnimatePresence, motion } from 'framer-motion';
 import { VIEW_NAVIGATION } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const variants = {
   initial: {
@@ -48,7 +49,7 @@ export const AnimatedViews = () => {
   };
   const Views = useMemo(
     () => () => (
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence>
         {!view || view === VIEW_HOME ? (
           <View key={'view-home'} $key={'view-home-motion'}>
             <Dashboard />

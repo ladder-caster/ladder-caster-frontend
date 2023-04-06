@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { _options } from './Options.styled';
 import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Option from './option/Option';
 import { forEach } from 'lodash';
 

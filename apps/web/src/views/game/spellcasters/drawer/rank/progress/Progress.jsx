@@ -10,7 +10,6 @@ const Progress = ({ caster }) => {
   useEffect(() => {
     if (caster?.xp || caster?.xp === 0) {
       const level = caster?.level;
-      console.log('level', level);
       const current_level = level;
       const next_level = level + 1;
       const from_xp = LEVEL_BOUNDS[level - 2] || 0;

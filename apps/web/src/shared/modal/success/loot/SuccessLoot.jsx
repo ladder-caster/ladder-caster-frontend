@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   ITEM_CHEST,
   MODAL_ACTIVE,

@@ -18,6 +18,7 @@ import {
 } from 'core/remix/state';
 import { _feed } from '../home/Dashboard.styled';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Heading from '../../../shared/heading/Heading';
 import { sortBy } from 'lodash';
 import { Onboarding } from '../home/onboarding/Onboarding';

@@ -19,6 +19,7 @@ import { nanoid } from 'nanoid';
 import { useActions } from '../../../actions';
 import usePrevious from 'core/hooks/usePrevious';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Drawer = ({ children, height }) => {
   const { closeDrawer } = useActions();

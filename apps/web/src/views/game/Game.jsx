@@ -19,6 +19,7 @@ import { AnimateMobile } from './animations/AnimateMobile';
 import { IconMore } from 'design/icons/more.icon';
 import Modal from '../../shared/modal/Modal';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { VIEW_NAVIGATION } from 'core/remix/state';
 import { AnimateDots } from './animations/AnimateSettings';
 import { useActions } from '../../../actions';

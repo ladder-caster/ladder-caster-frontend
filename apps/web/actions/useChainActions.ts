@@ -1,4 +1,5 @@
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
@@ -83,15 +84,15 @@ export const useChainActions = () => {
   const [confirm, setConfirm] = useRemix(GAME_CONFIRM);
   const [, setMutation] = useRemix(CREATE_MUTATION);
   const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
-  const [game, setGame] = useRemix(CHAIN_GAME);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
+  const [game, setGame] = useMesh(CHAIN_GAME);
   const [items, setItems] = useRemix(CHAIN_ITEMS);
   const [casters, setCasters] = useRemix(CHAIN_CASTERS);
   const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
   const [, setResources] = useRemix(GAME_RESOURCES);
   const [spellcasters] = useRemix(GAME_SPELLCASTERS);
   const [orderbook, setOrderbook] = useRemix(TRADE_ORDERBOOK);
-  const [board] = useRemix(GAME_MAP);
+  const [board] = useMesh(GAME_MAP);
   const { handleState } = useMutation();
 
   const fetchPlayer = async (

@@ -2,6 +2,7 @@ import React from 'react';
 import { _confirm, _display, _button } from './RedeemConfirm.styled';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import NFT from '../../../nft/NFT';
 import { useActions } from '../../../../../../actions';
 import { useTranslation } from 'react-i18next';

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
 import { GAME_OLD_SPELLCASTERS } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import { CHAIN_OLD_CASTERS } from 'chain/hooks/state';
 

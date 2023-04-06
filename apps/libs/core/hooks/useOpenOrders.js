@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DRAWER_CONTEXT } from '../remix/state';
 import { useRemix } from './remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { findMarket } from '../utils/markets';
 import { useActions } from 'web/actions';
 import usePrevious from './usePrevious';

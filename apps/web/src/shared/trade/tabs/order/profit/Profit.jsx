@@ -13,6 +13,7 @@ import { AnimateBar } from '../../../animations/AnimateBar';
 import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
 import { useActions } from '../../../../../../actions';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Profit = () => {
   const [context] = useRemix(DRAWER_CONTEXT);

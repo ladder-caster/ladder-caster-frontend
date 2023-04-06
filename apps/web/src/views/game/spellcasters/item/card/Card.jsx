@@ -2,6 +2,7 @@ import React from 'react';
 import { _card, _icon } from './Card.styled';
 import { IconHat } from 'design/icons/hat.icon';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { GAME_OLD_SPELLCASTERS, GAME_SPELLCASTERS } from 'core/remix/state';
 import { find } from 'lodash';
 import Spotlight from '../../../../../shared/spotlight/Spotlight';

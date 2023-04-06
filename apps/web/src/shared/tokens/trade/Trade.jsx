@@ -4,6 +4,7 @@ import Resources from './resources/Resources';
 import Counter from './counter/Counter';
 import { TOKENS_ACTIVE } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../actions';
 

@@ -6,6 +6,7 @@ import { map } from 'lodash';
 import { useKeys } from 'core/hooks/useKeys';
 import { DRAWER_CONTEXT } from 'core/remix/state';
 import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import RedeemConfirm from '../confirm/RedeemConfirm';
 import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,6 @@ const RedeemTab = () => {
       try {
         return await nftUtil.getNFTS();
       } catch (e) {
-        console.log('failed getting NFTs');
         // catch error
       }
     };
