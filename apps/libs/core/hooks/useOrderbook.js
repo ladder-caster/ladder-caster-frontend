@@ -18,7 +18,7 @@ export const useOrderbook = (base, quote) => {
   const market = `${pair?.base}/${pair?.quote}`;
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const handleBidsAsk = async () => {
     if (pair && client?.connection && pair !== prev_pair) {
       try {
         const next_orders = await getBidsAsks(pair);
@@ -29,6 +29,10 @@ export const useOrderbook = (base, quote) => {
       }
     } else {
     }
+  };
+
+  useEffect(() => {
+    handleBidsAsk();
   }, [pair, client]);
 
   return orders;

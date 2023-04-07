@@ -19,7 +19,7 @@ export const useFilledOrders = () => {
   const market = `${pair?.base}/${pair?.quote}`;
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const getFilled = async () => {
     if (pair !== prev_pair) {
       try {
         const next_orders = await getFilledOrders(pair);
@@ -28,6 +28,10 @@ export const useFilledOrders = () => {
         setOrders({});
       }
     }
+  };
+
+  useEffect(() => {
+    getFilled();
   }, [pair]);
 
   return orders;

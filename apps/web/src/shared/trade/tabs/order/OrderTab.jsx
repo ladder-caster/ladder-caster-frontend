@@ -27,10 +27,10 @@ const OrderTab = () => {
   const { t } = useTranslation();
   const { drawerTrade } = useActions();
 
-  useEffect(() => {
-    // Get Price on mount and on symbol change create usePrice hooks
-    drawerTrade();
-  }, []);
+  // useEffect(() => {
+  //   // Get Price on mount and on symbol change create usePrice hooks
+  //   drawerTrade();
+  // }, []);
 
   return (
     <_order>

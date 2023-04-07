@@ -13,7 +13,7 @@ const Settle = () => {
   const base = context?.base;
   const quote = context?.quote;
   const pair = findMarket(base, quote);
-  const { unsettledOrders, loading } = useOpenOrders(true);
+  const { unsettledOrders } = useOpenOrders(true);
   const { settleFunds } = useActions();
 
   if (!unsettledOrders?.length) return null;

@@ -31,9 +31,9 @@ const SwapTab = () => {
   const { t } = useTranslation();
   const { switchTradeSymbols, drawerTrade } = useActions();
 
-  useEffect(() => {
-    drawerTrade();
-  }, []);
+  // useEffect(() => {
+  //   drawerTrade();
+  // }, []);
 
   return (
     <_swap>

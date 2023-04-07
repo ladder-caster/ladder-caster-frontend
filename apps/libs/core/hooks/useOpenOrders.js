@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DRAWER_CONTEXT } from '../mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { findMarket } from '../utils/markets';
@@ -14,10 +14,12 @@ export const useOpenOrders = (isPersonal = false) => {
 
   const base = context?.base;
   const quote = context?.quote;
-  const pair = findMarket(base, quote);
+  const pair = useMemo(() => {
+    findMarket(base, quote);
+  }, [base, quote]);
   const prev_pair = usePrevious(pair);
 
-  useEffect(async () => {
+  const handleOpenOrders = useCallback(async () => {
     if (pair !== prev_pair) {
       let newOrders = [];
       try {
@@ -38,6 +40,10 @@ export const useOpenOrders = (isPersonal = false) => {
         console.log('orders error 2', e);
       }
     }
+  }, [pair]);
+
+  useEffect(() => {
+    handleOpenOrders();
   }, [pair]);
 
   return {
