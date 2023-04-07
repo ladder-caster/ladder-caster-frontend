@@ -3,7 +3,6 @@ import { _heading, _divider, _title, _container } from './Heading.styled';
 import Redeem from '../redeem/Redeem';
 import Phases from '../phases/Phases';
 import { CHAIN_CASTERS, CHAIN_GAME } from 'chain/hooks/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   GAME_INIT,
@@ -12,17 +11,17 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { map } from 'lodash';
 import Ticks from '../ticks/Ticks';
 import Trade from './trade/Trade';
 import ResourceTrade from '../resourceTrade/ResourceTrade';
 
 const Heading = ({ title, flat, marketplace }) => {
-  const [initialized] = useRemix(GAME_INIT);
+  const [initialized] = useMesh(GAME_INIT);
   const [game] = useMesh(CHAIN_GAME);
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const [board] = useMesh(GAME_MAP);
   const [lootAll, setLootAll] = useState(false);
   const currentTurn = game?.turnInfo?.turn;

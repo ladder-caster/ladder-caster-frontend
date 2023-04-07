@@ -13,8 +13,7 @@ import {
   TYPE_RES2,
   USER_PHASE,
   VIEW_NAVIGATION,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { nanoid } from 'nanoid';
 import usePrevious from 'core/hooks/usePrevious';
@@ -22,14 +21,14 @@ import { map } from 'lodash';
 import { CHAIN_GAME } from 'chain/hooks/state';
 
 const Ticks = () => {
-  const [phase] = useRemix(USER_PHASE);
+  const [phase] = useMesh(USER_PHASE);
   const [game] = useMesh(CHAIN_GAME);
-  const [options] = useRemix(GAME_OPTIONS);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [options] = useMesh(GAME_OPTIONS);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const [board] = useMesh(GAME_MAP);
   const [inc, setInc] = useState(0);
   const [lootAll, setLootAll] = useState(false);
-  const [view] = useRemix(VIEW_NAVIGATION);
+  const [view] = useMesh(VIEW_NAVIGATION);
   const loading_bars = options?.bars || 0;
 
   // TODO: figure out what variable is

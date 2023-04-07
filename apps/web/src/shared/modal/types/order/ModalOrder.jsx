@@ -14,13 +14,12 @@ import { useTranslation } from 'react-i18next';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
 import { AnimateButton } from '../../animations/AnimateButton';
-import { DRAWER_CONTEXT, SIDE_BUY } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT, SIDE_BUY } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 
 const ModalOrder = ({ options }) => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { closeModal, confirmOrder } = useActions();
   const board_ref = useRef();
   const button_ref = useRef();

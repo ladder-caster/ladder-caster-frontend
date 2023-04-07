@@ -8,7 +8,6 @@ import {
   _action,
   _button,
 } from './UnequipConfirm.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
@@ -16,14 +15,14 @@ import {
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { useActions } from '../../../../../actions';
 
 const UnequipConfirm = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { unequipItem } = useActions();
   const item = context?.item;
   const item_type = item?.type;

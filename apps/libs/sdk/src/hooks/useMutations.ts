@@ -1,6 +1,5 @@
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { CREATE_MUTATION } from 'core/remix/state';
+import { CREATE_MUTATION } from 'core/mesh/state';
 import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import {
@@ -55,8 +54,8 @@ type Handler = (
 
 export const useMutation = () => {
   const { t } = useTranslation();
-  const [, setMutation] = useRemix(CREATE_MUTATION);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
+  const [, setMutation] = useMesh(CREATE_MUTATION);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
 
   const handleState: Handler = useCallback(
     async (

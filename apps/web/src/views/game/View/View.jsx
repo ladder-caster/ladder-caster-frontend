@@ -1,4 +1,3 @@
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { useEventListener } from 'core/hooks/useEventListener';
 import { useSize } from 'core/hooks/useSize';
@@ -13,7 +12,7 @@ import {
   DRAWER_TRADE,
   DRAWER_WALLET,
   VIEW_SIZE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { domMax, LazyMotion } from 'framer-motion';
 import React, {
   useLayoutEffect,
@@ -38,8 +37,8 @@ export const View = () => {
   const view_ref = useRef();
   const view_size = useSize(view_ref);
   const [dh, setDrawerHeight] = useState();
-  const [, setViewHeight] = useRemix(VIEW_SIZE);
-  const [drawer] = useRemix(DRAWER_ACTIVE);
+  const [, setViewHeight] = useMesh(VIEW_SIZE);
+  const [drawer] = useMesh(DRAWER_ACTIVE);
 
   useEffect(() => {
     if (view_size?.height) setViewHeight(view_size?.height);

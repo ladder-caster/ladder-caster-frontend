@@ -15,15 +15,14 @@ import {
 } from '../../views/game/inventory/drawer/craft/character/Character.styled';
 import { AnimateButton } from '../button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { VIEW_SIZE } from 'core/remix/state';
+import { VIEW_SIZE } from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 
 const SettingsDrawer = () => {
   const { t } = useTranslation();
-  const [view_height] = useRemix(VIEW_SIZE);
+  const [view_height] = useMesh(VIEW_SIZE);
 
   const {
     closeDrawer,

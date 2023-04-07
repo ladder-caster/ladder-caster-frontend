@@ -3,7 +3,6 @@ import { useW3A } from './useW3A';
 import { useClient } from '../useClient';
 import { INIT_CHAIN_LOAD } from '../state';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
@@ -13,9 +12,7 @@ export const useConnectionClient = (client) => {
   const anchorWallet = useAnchorWallet();
   const [stopLoad, setStopLoad] = useState(false);
   const { connected, connecting, disconnecting } = useWallet();
-  const [initLoading, setInitLoading, isSetInitLoading] = useRemix(
-    INIT_CHAIN_LOAD,
-  );
+  const [initLoading, setInitLoading] = useMesh(INIT_CHAIN_LOAD);
 
   // Connection Handling
   useEffect(() => {
@@ -30,14 +27,6 @@ export const useConnectionClient = (client) => {
       createClient(anchorWallet as NodeWallet);
     }
   }, [connected, client]);
-
-  //TODO: Simplify logic.
-  useEffect(() => {
-    if (stopLoad && isSetInitLoading && initLoading) {
-      setInitLoading(false);
-      setStopLoad(false);
-    }
-  }, [isSetInitLoading]);
 
   useEffect(() => {
     if (disconnecting) {

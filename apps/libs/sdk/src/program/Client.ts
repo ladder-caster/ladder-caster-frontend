@@ -51,9 +51,9 @@ export class Client {
     return laddercasterIDL;
   }
 
-  async getSOLBalance() {
+  static async getSOLBalance(connection: Connection, wallet: NodeWallet) {
     try {
-      return await this.connection.getBalance(this.wallet.publicKey);
+      return await connection.getBalance(wallet.publicKey);
     } catch (e) {
       return 0;
     }

@@ -11,7 +11,6 @@ import {
   _tier,
   _attribute,
 } from './InventoryDrawer.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   CONFIRM_EQUIP,
@@ -21,7 +20,7 @@ import {
   ITEM_ROBE,
   ITEM_STAFF,
   VIEW_SIZE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { _close, _icon } from '../../spellcasters/drawer/rank/Rank.styled';
 import { IconClose } from 'design/icons/close.icon';
@@ -39,8 +38,8 @@ import Confirm from '../../../../shared/confirm/Confirm';
 const InventoryDrawer = () => {
   const { t } = useTranslation();
   const { closeDrawer } = useActions();
-  const [view_height] = useRemix(VIEW_SIZE);
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [view_height] = useMesh(VIEW_SIZE);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const item = context?.item;
   const type = item?.type;
   const rarity = item?.rarity;

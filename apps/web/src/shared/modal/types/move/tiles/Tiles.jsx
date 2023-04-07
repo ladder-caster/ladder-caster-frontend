@@ -6,8 +6,7 @@ import {
   TILE_CHIP,
   TILE_DISABLED,
   TILE_GLOWING,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 

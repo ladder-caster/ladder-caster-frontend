@@ -1,16 +1,15 @@
 import React from 'react';
 import { _percent } from './Percent.styled';
 import { AnimatePercent } from '../../../animations/AnimatePercent';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { DRAWER_CONTEXT, GAME_RESOURCES } from 'core/remix/state';
+import { DRAWER_CONTEXT, GAME_RESOURCES } from 'core/mesh/state';
 import { useActions } from '../../../../../../actions';
 import { useTranslation } from 'react-i18next';
 
 const Percent = ({ weight, isOrder }) => {
   const { t } = useTranslation();
-  const [resources] = useRemix(GAME_RESOURCES);
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [resources] = useMesh(GAME_RESOURCES);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { inputOrder } = useActions();
   const base =
     Math.floor(resources?.[context?.base?.toLowerCase()] * 1e2) / 1e2 || 0;

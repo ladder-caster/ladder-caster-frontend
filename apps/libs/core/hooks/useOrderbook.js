@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { DRAWER_CONTEXT, TRADE_ORDERBOOK } from '../remix/state';
-import { useRemix } from './remix/useRemix';
+import { DRAWER_CONTEXT, TRADE_ORDERBOOK } from '../mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { findMarket } from '../utils/markets';
 import { useActions } from 'web/actions';
@@ -8,9 +7,9 @@ import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import usePrevious from './usePrevious';
 
 export const useOrderbook = (base, quote) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [orders, setOrders] = useRemix(TRADE_ORDERBOOK);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [orders, setOrders] = useMesh(TRADE_ORDERBOOK);
   const { getBidsAsks } = useActions();
 
   const next_base = base ? base : context?.base;

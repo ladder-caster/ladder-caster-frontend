@@ -18,8 +18,7 @@ import {
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { filter, sortBy, reverse } from 'lodash';
@@ -31,8 +30,8 @@ import { IconChevronRight } from 'design/icons/chevron-right.icon';
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { drawerInventory } = useActions();
-  const [, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const [inventory] = useRemix(GAME_INVENTORY);
+  const [, setDrawer] = useMesh(DRAWER_ACTIVE);
+  const [inventory] = useMesh(GAME_INVENTORY);
   const items_ref = useRef();
   var scrollInterval = null;
   const title = {

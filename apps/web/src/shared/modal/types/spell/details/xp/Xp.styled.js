@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ATTRIBUTE_XP } from 'core/remix/state';
+import { ATTRIBUTE_XP } from 'core/mesh/state';
 
 export const _xp = styled.div`
   font-size: 16px;

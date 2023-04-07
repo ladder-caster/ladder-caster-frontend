@@ -1,4 +1,4 @@
-import { ITEM_BOOK, ITEM_HAT, ITEM_ROBE, ITEM_STAFF } from 'core/remix/state';
+import { ITEM_BOOK, ITEM_HAT, ITEM_ROBE, ITEM_STAFF } from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 
 const TitleItem = ({ type }) => {

@@ -18,9 +18,8 @@ import { AnimateBoard } from '../../animations/AnimateBoard';
 import Item from './item/Item';
 import Slide from '../../../slide/Slide';
 import Details from './details/Details';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { GAME_INVENTORY, GAME_SPELL, ITEM_BOOK } from 'core/remix/state';
+import { GAME_INVENTORY, GAME_SPELL, ITEM_BOOK } from 'core/mesh/state';
 import { filter, map } from 'lodash';
 import { AnimateLimit } from '../../animations/AnimateLimit';
 import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
@@ -28,9 +27,9 @@ import { EQUIP_MAP } from 'core/utils/switch';
 
 const ModalSpell = ({ height, options }) => {
   const { t } = useTranslation();
-  const [spell] = useRemix(GAME_SPELL);
+  const [spell] = useMesh(GAME_SPELL);
   const { closeModal, castSpell } = useActions();
-  const [inventory] = useRemix(GAME_INVENTORY);
+  const [inventory] = useMesh(GAME_INVENTORY);
   const board_ref = useRef();
   const button_ref = useRef();
   const caster = options?.caster;

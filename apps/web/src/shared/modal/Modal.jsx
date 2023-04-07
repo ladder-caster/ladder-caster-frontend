@@ -20,8 +20,7 @@ import {
   MODAL_BURN,
   MODAL_SWAP,
   MODAL_ORDER,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
@@ -41,8 +40,8 @@ import ModalOrder from './types/order/ModalOrder';
 const Modal = ({ screen_height }) => {
   const { t } = useTranslation();
   const { closeModal } = useActions();
-  const [modal] = useRemix(MODAL_ACTIVE);
-  const [, setSeen] = useRemix(SEEN_PHASE);
+  const [modal] = useMesh(MODAL_ACTIVE);
+  const [, setSeen] = useMesh(SEEN_PHASE);
   const modal_ref = useRef();
   const options = modal?.options;
   const isSuccess = modal?.success;

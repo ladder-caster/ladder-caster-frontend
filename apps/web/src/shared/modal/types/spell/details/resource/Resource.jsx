@@ -6,7 +6,7 @@ import {
   ATTRIBUTE_RES3,
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
 

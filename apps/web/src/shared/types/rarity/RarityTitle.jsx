@@ -3,7 +3,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 
 const RarityTitle = ({ rarity }) => {

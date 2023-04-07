@@ -8,22 +8,21 @@ import {
   CHAIN_PLAYER,
   INIT_CHAIN_LOAD,
 } from './state';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { Client } from '../../sdk/src/program/Client';
 import { GameContext } from '../../sdk/src/program/GameContext';
 import { PlayerContext } from '../../sdk/src/program';
-import { GAME_RESOURCES } from 'core/remix/state';
+import { GAME_RESOURCES } from 'core/mesh/state';
 
 export const useGame = () => {
   const [game, setGame] = useMesh(CHAIN_GAME);
   const [player, setPlayer] = useMesh(CHAIN_PLAYER);
-  const [, setNfts] = useRemix(CHAIN_NFTS);
-  const [, setItems] = useRemix(CHAIN_ITEMS);
-  const [, setCasters] = useRemix(CHAIN_CASTERS);
-  const [, setOldCasters] = useRemix(CHAIN_OLD_CASTERS);
-  const [, setResources] = useRemix(GAME_RESOURCES);
-  const [, setInitLoading] = useRemix(INIT_CHAIN_LOAD);
+  const [, setNfts] = useMesh(CHAIN_NFTS);
+  const [, setItems] = useMesh(CHAIN_ITEMS);
+  const [, setCasters] = useMesh(CHAIN_CASTERS);
+  const [, setOldCasters] = useMesh(CHAIN_OLD_CASTERS);
+  const [, setResources] = useMesh(GAME_RESOURCES);
+  const [, setInitLoading] = useMesh(INIT_CHAIN_LOAD);
   const [error, setError] = useState();
   const [waiting, setWaiting] = useState(false);
 

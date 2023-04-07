@@ -10,12 +10,11 @@ import {
   _link,
   _text,
 } from './WalletTab.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { useTranslation } from 'react-i18next';
-import { GAME_RESOURCES } from 'core/remix/state';
+import { GAME_RESOURCES } from 'core/mesh/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
@@ -27,8 +26,8 @@ const TRUNCATE_DECIMAL = 5;
 
 const WalletTab = () => {
   const { t } = useTranslation();
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [resources, setResources] = useRemix(GAME_RESOURCES);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [resources, setResources] = useMesh(GAME_RESOURCES);
 
   const publicKey = useMemo(() => {
     const key = client?.wallet?.payer?._keypair?.publicKey;

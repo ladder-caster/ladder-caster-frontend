@@ -12,9 +12,8 @@ import {
   _float,
   _spinner,
 } from './Mutations.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { CREATE_MUTATION, USER_OFFLINE } from 'core/remix/state';
+import { CREATE_MUTATION, USER_OFFLINE } from 'core/mesh/state';
 import { AnimatePresence } from 'framer-motion';
 import { AnimateMutations } from './animations/AnimateMutations';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +23,7 @@ import { cloneDeep, findIndex, isEqual } from 'lodash';
 import { IconLoading } from 'design/icons/loading.icon';
 import { IconLightning } from 'design/icons/lightning.icon';
 import { IconEye } from 'design/icons/eye.icon';
-import { fetching } from 'core/remix/fetching';
+import { fetching } from 'core/mesh/fetching';
 import { IconSpinner } from 'design/icons/spinner.icon';
 import { AnimateSpinner } from './animations/AnimateSpinner';
 import { IconBlind } from 'design/icons/blind.icon';
@@ -36,8 +35,8 @@ const Mutations = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const mutations_ref = useRef();
   const { width, height } = useSize(mutations_ref);
-  const [mutation, setMutation] = useRemix(CREATE_MUTATION);
-  const [offline] = useRemix(USER_OFFLINE);
+  const [mutation, setMutation] = useMesh(CREATE_MUTATION);
+  const [offline] = useMesh(USER_OFFLINE);
   const [queue, setQueue] = useState([]);
 
   // Handle Mutation

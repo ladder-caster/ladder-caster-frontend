@@ -12,9 +12,8 @@ import { AnimateButton } from '../../../button/animations/AnimateButton';
 import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { GAME_CONSTANTS, MODAL_ACTIVE, MINT_COST } from 'core/remix/state';
+import { GAME_CONSTANTS, MODAL_ACTIVE, MINT_COST } from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 import {
   _count,
@@ -25,7 +24,7 @@ import {
 const ModalMint = () => {
   const { t } = useTranslation();
   const { closeModal, buyCaster } = useActions();
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const [gameConstants] = useMesh(GAME_CONSTANTS);
   const button_ref = useRef();
   const [count, setCount] = useState(1);
   const [cost, name] = useMemo(() => {

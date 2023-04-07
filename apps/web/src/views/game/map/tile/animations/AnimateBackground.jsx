@@ -6,7 +6,7 @@ import {
   TILE_CHIP,
   TILE_DISABLED,
   TILE_GLOWING,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 
 export const AnimateBackground = withTheme(
   ({

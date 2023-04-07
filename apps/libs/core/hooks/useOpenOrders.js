@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { DRAWER_CONTEXT } from '../remix/state';
-import { useRemix } from './remix/useRemix';
+import { DRAWER_CONTEXT } from '../mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { findMarket } from '../utils/markets';
 import { useActions } from 'web/actions';
 import usePrevious from './usePrevious';
 
 export const useOpenOrders = (isPersonal = false) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const [openOrders, setOrders] = useState([]);
   const [unsettledOrders, setUnsettledOrders] = useState([]);
   const [loading, setLoading] = useState(false);

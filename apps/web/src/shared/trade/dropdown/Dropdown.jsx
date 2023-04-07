@@ -11,16 +11,15 @@ import {
   _label,
 } from './Dropdown.styled';
 import { IconChevronDown } from 'design/icons/chevron-down.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { DRAWER_CONTEXT, SIDE_BUY } from 'core/remix/state';
+import { DRAWER_CONTEXT, SIDE_BUY } from 'core/mesh/state';
 import LogoCoins from '../../types/icons/LogoCoins';
 import Options from './options/Options';
 import { useActions } from '../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 
 const Dropdown = ({ isSwap, isBase, isQuote, list, label }) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { tradeDropdownClick } = useActions();
   const [active, setActive] = useState(false);
   const base = context?.base;

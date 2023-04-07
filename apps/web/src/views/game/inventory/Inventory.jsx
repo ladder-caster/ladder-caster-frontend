@@ -29,11 +29,10 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { _controls, _speed } from '../header/Header.styled';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS, CHAIN_ITEMS } from 'chain/hooks/state';
 import {
@@ -46,11 +45,11 @@ import {
 
 const Inventory = () => {
   const { t } = useTranslation();
-  const [initialized] = useRemix(GAME_INIT);
-  const [casters] = useRemix(CHAIN_CASTERS);
+  const [initialized] = useMesh(GAME_INIT);
+  const [casters] = useMesh(CHAIN_CASTERS);
   const [inventoryPanel, setInventoryPanel] = useState(false);
-  const [items] = useRemix(CHAIN_ITEMS);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const [items] = useMesh(CHAIN_ITEMS);
+  const [gameConstants] = useMesh(GAME_CONSTANTS);
   const toggleInventoryPanel = () => {
     setInventoryPanel(!inventoryPanel);
   };

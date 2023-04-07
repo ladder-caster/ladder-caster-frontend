@@ -32,8 +32,7 @@ import {
   TYPE_RES1,
   TYPE_LEGENDARY,
   TYPE_RES2,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { IconBeaker } from 'design/icons/beaker.icon';
 import { withTheme } from 'styled-components';
@@ -51,8 +50,8 @@ const COST_MULTIPLIER = 10;
 
 const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   const { confirmMove, cancelMove } = useActions();
-  const [confirm] = useRemix(GAME_CONFIRM);
-  const [modal] = useRemix(MODAL_ACTIVE);
+  const [confirm] = useMesh(GAME_CONFIRM);
+  const [modal] = useMesh(MODAL_ACTIVE);
   const row = level - 1;
   const position = `${col}${level}`;
   const sumPosition = useCallback((spellcasters) => {
@@ -65,7 +64,7 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
     }
     return count;
   }, []);
-  const [casters] = useRemix(GAME_SPELLCASTERS, (spellcasters) =>
+  const [casters] = useMesh(GAME_SPELLCASTERS, (spellcasters) =>
     sumPosition(spellcasters),
   );
   const [land] = useMesh(GAME_MAP, (lands) => lands?.[row]?.[col]);

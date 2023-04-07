@@ -1,4 +1,4 @@
-import { ATTRIBUTE_RES1 } from 'core/remix/state';
+import { ATTRIBUTE_RES1 } from 'core/mesh/state';
 import styled from 'styled-components';
 
 export const _details = styled.div`

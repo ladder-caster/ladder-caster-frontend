@@ -14,8 +14,7 @@ import {
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +22,7 @@ import { useActions } from '../../../../../actions';
 
 const EquipConfirm = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { equipItem } = useActions();
   const item = context?.item;
   const item_type = item?.type;

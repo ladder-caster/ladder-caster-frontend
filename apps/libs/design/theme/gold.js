@@ -11,7 +11,7 @@ import {
   RARITY_LEGENDARY,
   RARITY_RARE,
   ATTRIBUTE_CRAFT,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 
 export const gold = {
   map: {

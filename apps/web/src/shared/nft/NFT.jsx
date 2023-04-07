@@ -10,7 +10,7 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 
 const NFT = ({ height, type, tier, zindex, all, small }) => {
   const src = {

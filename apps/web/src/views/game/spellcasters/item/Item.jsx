@@ -2,13 +2,12 @@ import React, { useMemo } from 'react';
 import { _item, _inventory, _queue, _buy } from './Item.styled';
 import Card from './card/Card';
 import Queue from './queue/Queue';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_ACTIVE,
   SPELLCASTER_BUY,
   TABS_CHARACTER_ACTIONS,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import Buy from './buy/Buy';
 import { useActions } from 'web/actions';
 import Prestige from './prestige/Prestige';

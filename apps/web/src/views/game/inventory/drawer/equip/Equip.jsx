@@ -20,7 +20,6 @@ import {
   _tile_text,
   _tile_icon,
 } from './Equip.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
@@ -37,7 +36,7 @@ import {
   TYPE_RES1,
   TYPE_RES2,
   TYPE_RES3,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { sortBy } from 'lodash';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { IconBook } from 'design/icons/book.icon';
@@ -59,8 +58,8 @@ import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 const Equip = () => {
   const { t } = useTranslation();
   const { equipItem } = useActions();
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const item = context?.item;
   const back = context?.back;
   const [lands] = useMesh(GAME_MAP);

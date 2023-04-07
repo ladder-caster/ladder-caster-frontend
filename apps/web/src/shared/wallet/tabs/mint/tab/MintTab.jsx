@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
 import { _grid, _row, _tab, _empty } from './MintTab.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   GAME_INVENTORY,
   GAME_SPELLCASTERS,
   VIEW_SIZE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { gridList } from 'core/utils/lists';
 import { map } from 'lodash';
 import Item from '../../../../../shared/item/Item';
@@ -18,11 +17,11 @@ import { useActions } from '../../../../../../actions';
 
 const MintTab = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [inventory] = useRemix(GAME_INVENTORY);
-  const [view_height] = useRemix(VIEW_SIZE);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [inventory] = useMesh(GAME_INVENTORY);
+  const [view_height] = useMesh(VIEW_SIZE);
   const items = inventory?.items.concat(inventory?.chests);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const { chooseMintItem, chooseMintCaster } = useActions();
 
   const list_items = useMemo(() => {

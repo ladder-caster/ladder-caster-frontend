@@ -8,15 +8,14 @@ import {
   _big,
 } from './Counter.styled';
 import { useActions } from '../../../../../../../../actions';
-import { DRAWER_CONTEXT } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { IconMinus } from 'design/icons/minus.icon';
 import { IconPlus } from 'design/icons/plus.icon';
 import IconResource from '../../../../../../../shared/types/icons/IconResource';
 
 const Counter = ({ element }) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { decrementXP, incrementXP } = useActions();
 
   const amount = context?.[element];

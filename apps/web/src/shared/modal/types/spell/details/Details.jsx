@@ -16,7 +16,7 @@ import {
   RARITY_LEGENDARY,
   RARITY_RARE,
   ATTRIBUTE_CRAFT,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import Craft from './craft/Craft';
 import Item from './item/Item';
 import Resource from './resource/Resource';

@@ -15,9 +15,8 @@ import {
   _remaining,
 } from './Rank.styled';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
-import { DRAWER_ACTIVE } from 'core/remix/state';
+import { DRAWER_ACTIVE } from 'core/mesh/state';
 import Progress from './progress/Progress';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
 import { IconClose } from 'design/icons/close.icon';
@@ -26,7 +25,7 @@ import { LEVEL_BOUNDS } from 'core/utils/numbers';
 
 const Rank = ({ caster }) => {
   const { t } = useTranslation();
-  const [, setDrawer] = useRemix(DRAWER_ACTIVE);
+  const [, setDrawer] = useMesh(DRAWER_ACTIVE);
   const { boostXP } = useActions();
   const [rank, setRank] = useState();
 

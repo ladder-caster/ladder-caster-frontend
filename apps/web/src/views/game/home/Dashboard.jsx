@@ -17,8 +17,7 @@ import {
   _link,
 } from './Dashboard.styled';
 import { useTranslation } from 'react-i18next';
-import { GAME_MAP, TIER_I } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { GAME_MAP, TIER_I } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { map as _map } from 'lodash';
 import { nanoid } from 'nanoid';

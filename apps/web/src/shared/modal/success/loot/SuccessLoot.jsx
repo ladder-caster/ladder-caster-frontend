@@ -10,7 +10,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../actions';
 import { useClickOutside } from 'core/hooks/useClickOutside';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 import {
   ITEM_CHEST,
@@ -18,7 +17,7 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import NFT from '../../../nft/NFT';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { IconResource2 } from 'design/icons/resource2.icon';
@@ -29,7 +28,7 @@ import { css } from 'styled-components';
 const SuccessLoot = ({ height }) => {
   const { t } = useTranslation();
   const { closeModal } = useActions();
-  const [rewards] = useRemix(MODAL_ACTIVE, (modal) => modal?.rewards);
+  const [rewards] = useMesh(MODAL_ACTIVE, (modal) => modal?.rewards);
   const success_ref = useRef();
 
   const type = rewards?.type;

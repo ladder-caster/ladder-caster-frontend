@@ -9,8 +9,7 @@ import {
 } from './Prestige.styled';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
-import { GAME_OLD_SPELLCASTERS } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { GAME_OLD_SPELLCASTERS } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import { CHAIN_OLD_CASTERS } from 'chain/hooks/state';
@@ -19,11 +18,11 @@ const Prestige = ({ spell_id }) => {
   const { t } = useTranslation();
   const { prestigeCaster } = useActions();
   const [confirm, setConfirm] = useState(false);
-  const [caster] = useRemix(GAME_OLD_SPELLCASTERS, (spellcasters) =>
+  const [caster] = useMesh(GAME_OLD_SPELLCASTERS, (spellcasters) =>
     find(spellcasters, (caster) => caster.id === spell_id),
   );
 
-  const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
+  const [oldCasters] = useMesh(CHAIN_OLD_CASTERS);
   return (
     <_prestige>
       <_title>{t('prestige.caster')}</_title>

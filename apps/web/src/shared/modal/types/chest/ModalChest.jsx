@@ -21,8 +21,7 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { filter, clamp } from 'lodash';
 import NFT from '../../../nft/NFT';
@@ -30,9 +29,9 @@ import { _level, _overlay } from '../../../item/Item.styled';
 const ModalChest = () => {
   const { t } = useTranslation();
   const { closeModal, openChest } = useActions();
-  const [modal] = useRemix(MODAL_ACTIVE);
+  const [modal] = useMesh(MODAL_ACTIVE);
   const grid_ref = useRef();
-  const [inventory] = useRemix(GAME_INVENTORY);
+  const [inventory] = useMesh(GAME_INVENTORY);
   const chests = useMemo(() => {
     if (!inventory?.chests) return [];
     return filter(
@@ -40,7 +39,7 @@ const ModalChest = () => {
       (chest) => chest.tier === modal?.tier,
     ).sort((a, b) => b?.level - a?.level);
   }, [inventory]);
-  //const [confirm] = useRemix(GAME_CONFIRM);
+  //const [confirm] = useMesh(GAME_CONFIRM);
 
   const tierMap = {
     [TIER_I]: 1,

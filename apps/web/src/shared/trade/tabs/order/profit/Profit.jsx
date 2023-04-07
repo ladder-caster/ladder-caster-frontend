@@ -10,13 +10,12 @@ import {
   _indicator,
 } from './Profit.styled';
 import { AnimateBar } from '../../../animations/AnimateBar';
-import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
+import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/mesh/state';
 import { useActions } from '../../../../../../actions';
-import { useRemix } from 'core/hooks/remix/useRemix';
 import { useMesh } from 'core/state/mesh/useMesh';
 
 const Profit = () => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { chooseOrderSide } = useActions();
   const buy = context?.side === SIDE_BUY;
 

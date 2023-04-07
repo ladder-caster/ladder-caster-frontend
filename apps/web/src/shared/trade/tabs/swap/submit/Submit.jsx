@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { _submit } from './Submit.styled';
 import { findMarket } from 'core/utils/markets';
-import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../../../../actions';
 
 const Submit = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { swapOrder } = useActions();
   const base = context?.base;
   const quote = context?.quote;

@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, _app, _view } from 'design/styles/global';
 import { styles, theme, zindex } from 'design';
 import { Route, Switch } from 'react-router-dom';
-import { VIEW_SIZE, USER_LANGUAGE, USER_THEME } from 'core/remix/state';
+import { USER_THEME } from 'core/mesh/state';
 import { PUBLIC_GAME } from 'core/routes/routes';
 import Game from './src/views/game/Game';
 import { useMobileHeight } from 'core/hooks/useMobileHeight';

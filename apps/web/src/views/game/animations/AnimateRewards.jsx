@@ -1,7 +1,7 @@
 import React from 'react';
 import { LazyAnimations } from 'design/animations';
 import { withTheme } from 'styled-components';
-import { TYPE_LEGENDARY } from 'core/remix/state';
+import { TYPE_LEGENDARY } from 'core/mesh/state';
 
 export const AnimateRewards = withTheme(({ theme, children, ...props }) => {
   const variants = {

@@ -1,12 +1,11 @@
 import React from 'react';
 import { _input } from './Input.styled';
-import { DRAWER_CONTEXT } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT } from 'core/mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../actions';
 
 const Input = ({ isBase }) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { inputSwap } = useActions();
 
   const input = context?.input;
