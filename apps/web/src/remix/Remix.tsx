@@ -45,10 +45,10 @@ const Remix = () => {
   const [, setOldSpellcasters] = useMesh(GAME_OLD_SPELLCASTERS);
   const [client] = useMesh(CHAIN_LOCAL_CLIENT);
   const [inventory, setInventory] = useMesh(GAME_INVENTORY);
-  const { getGame } = useGame();
-  useConnectionClient(client);
   const [gameConstants] = useMesh(GAME_CONSTANTS);
   const [arweave] = useMesh(ARWEAVE_UTILS);
+  const { getGame } = useGame();
+  useConnectionClient(client);
 
   // useMeshOrigin(
   //   PRESTIGE_TOGGLE,
@@ -244,7 +244,7 @@ const Remix = () => {
   const initClient = useCallback(async () => {
     await gameConstants.initClient(client);
     await getGame(client);
-  }, [client]);
+  }, [getGame, client]);
 
   useEffect(() => {
     if (game) {
@@ -282,6 +282,7 @@ const Remix = () => {
     };
 
     if (game) {
+      console.log('game', game);
       const timeTwentyMinute = game.turnInfo.turnDelay * 1000; // 20 minute in milliseconds 1200000
       const timeDiff =
         new Date().getTime() -
@@ -303,21 +304,30 @@ const Remix = () => {
 
   useEffect(() => {
     if (casters) {
+      console.log('casters', casters);
       setSpellcasters(generateSpellCaster(casters));
     }
   }, [casters]);
 
   useEffect(() => {
     if (oldCasters) {
+      console.log('old casters', oldCasters);
       setOldSpellcasters(generateSpellCaster(oldCasters));
     }
   }, [oldCasters]);
 
   useEffect(() => {
     if (items) {
+      console.log('inventory', inventory);
       setInventory(generateInventory(items));
     }
   }, [items]);
+
+  useEffect(() => {
+    if (player) {
+      console.log('player', player);
+    }
+  }, [player]);
 
   return null;
 };

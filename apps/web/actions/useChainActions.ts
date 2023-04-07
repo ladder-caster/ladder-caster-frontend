@@ -66,8 +66,7 @@ import {
   INST_CLAIM_ALL,
 } from 'core/mesh/rpc';
 import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/mesh/init';
-import { map, find, filter } from 'lodash';
-import remix from 'core/mesh';
+import { find, filter } from 'lodash';
 import { PublicKey } from '@solana/web3.js';
 import { findMarket } from 'core/utils/markets';
 import { TxStates, useMutation } from 'sdk/src/hooks/useMutations';
@@ -110,7 +109,7 @@ export const useChainActions = () => {
         } else {
           const nextCaster = await casterInstance.refreshCaster();
           if (nextCaster) nextCaster.publicKey = publicKey;
-          const nextCasters = remix?.getValue(CHAIN_CASTERS);
+          const nextCasters = [...casters];
 
           if (nextCaster && publicKey) {
             // Replace
@@ -604,27 +603,6 @@ export const useChainActions = () => {
           await new CasterContext().casterRedeemAllActions(redeemableCasters),
           INST_CLAIM_ALL,
         );
-      });
-    },
-    async lootAllResources() {
-      map(spellcasters, (caster) => {
-        const col = caster?.position?.[0];
-        const level = +caster?.position?.slice(1);
-        let count = 0;
-        map(board, async (row) => {
-          if (row?.level === level) {
-            const tile = row?.[col];
-            if (
-              caster?.last_loot < game?.turnInfo?.turn &&
-              (tile?.type === TYPE_RES2 ||
-                tile?.type === TYPE_RES3 ||
-                tile?.type === TYPE_RES1)
-            ) {
-              setTimeout(async () => await lootResources(caster), 1000 * count);
-              count++;
-            }
-          }
-        });
       });
     },
     async prestigeCaster(casterPK) {

@@ -62,7 +62,15 @@ export const useGame = () => {
         setInitLoading(false);
       }
     },
-    [setPlayer, setResources, setItems, setCasters, setNfts, setGame],
+    [
+      setPlayer,
+      setResources,
+      setItems,
+      setCasters,
+      setNfts,
+      setGame,
+      setInitLoading,
+    ],
   );
 
   return {

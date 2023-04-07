@@ -14,25 +14,7 @@ export const useMesh = (key, selector) => {
   const observer = {
     id: unique_id,
     next(next_value) {
-      if (String(next_value !== value)) {
-        let newInstance;
-        if (typeof next_value === 'string') {
-          newInstance = String(next_value);
-        } else if (Array.isArray(next_value)) {
-          newInstance = [...next_value];
-        } else if (typeof next_value === 'object' && next_value !== null) {
-          if (next_value instanceof Map) {
-            newInstance = new Map(next_value);
-          } else {
-            newInstance = { ...next_value };
-          }
-        } else {
-          // Handle other types or return the original value if not supported
-          newInstance = value;
-        }
-
-        setValue(newInstance);
-      }
+      setValue(next_value);
     },
     complete() {
       setValue(undefined);
