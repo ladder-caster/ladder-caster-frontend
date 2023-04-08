@@ -17,6 +17,7 @@ export const AnimateEnchant = withTheme(
     move_to,
     $casters,
     width,
+    animate_key,
     $vh,
     ...props
   }) => {
@@ -50,12 +51,15 @@ export const AnimateEnchant = withTheme(
       }[status];
 
       if (glowing && !move_to) return glowing;
-      else return undefined;
+      else
+        return {
+          duration: 0,
+        };
     }, [status, move_to]);
 
     const variants = {
       initial: {
-        opacity: 0.25,
+        opacity: status === TILE_GLOWING ? 0.25 : opacity,
       },
       animate: {
         opacity,
@@ -67,8 +71,11 @@ export const AnimateEnchant = withTheme(
 
     return (
       <LazyAnimations
+        key={`lazy-enchant-${animate_key}`}
+        animate_key={animate_key}
         initial={'initial'}
         animate={'animate'}
+        g
         whileHover={'hover'}
         whileTap={'tap'}
         listen_key={move_to}

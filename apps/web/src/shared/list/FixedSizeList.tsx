@@ -1,6 +1,8 @@
 // @ts-ignore
 import React from 'react';
 import { useState, useEffect, useRef, useMemo, FC, cloneElement, ReactElement } from 'react';
+// @ts-ignore
+import { useKeys } from 'core/hooks/useKeys';
 
 interface FixedSizeListProps {
   children: ReactElement;
@@ -8,22 +10,25 @@ interface FixedSizeListProps {
   itemSize: number;
   height: number;
   width: number;
+  padding: number;
   itemData: any[];
   orientation?: 'vertical' | 'horizontal';
 }
 
 const FixedSizeList: FC<FixedSizeListProps> = ({
-                                                       children,
-                                                       itemCount,
-                                                       itemSize,
-                                                       height,
-                                                       width,
-                                                       itemData,
-                                                       orientation = 'vertical',
-                                                     }) => {
+                                                 children,
+                                                 itemCount,
+                                                 itemSize,
+                                                 height,
+                                                 width,
+                                                 itemData,
+                                                 padding,
+                                                 orientation = 'vertical'
+                                               }) => {
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const outerRef = useRef<HTMLDivElement>(null);
   const isHorizontal = orientation === 'horizontal';
+  const key = useKeys(itemCount);
 
   const handleScroll = (event: Event) => {
     const target = event.target as HTMLElement;
@@ -41,59 +46,90 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
       };
     };
 
-    return debounce(handleScroll, 1);
+    return debounce(handleScroll, 2);
   }, [handleScroll]);
 
-  const attachScrollListener = () => {
+  useEffect(() => {
     if (outerRef.current) {
       outerRef.current.addEventListener('scroll', debouncedHandleScroll);
+
       return () => outerRef.current?.removeEventListener('scroll', debouncedHandleScroll);
     }
-  };
+  }, [debouncedHandleScroll, outerRef]);
 
-  useEffect(attachScrollListener, [debouncedHandleScroll]);
 
-  const calculateVisibleItemCount = () => useMemo(() => {
-    return Math.ceil((isHorizontal ? width : height) / itemSize) + 1;
+  const calculateVisibleItemCount = useMemo(() => {
+    const visible = Math.ceil((isHorizontal ? width : height) / itemSize) + 3;
+    return itemCount <= visible ? itemCount : visible;
   }, [isHorizontal, width, height, itemSize]);
 
   const visibleItems = useMemo(() => {
-    const visibleItemCount = calculateVisibleItemCount();
+    const visibleItemCount = calculateVisibleItemCount;
     const items = [];
+    let key_count = 0;
+
+    const cloneChildFixedKey = (element, i) => {
+      const next_key = `fixed-${key[i]?.key}-${key_count}`;
+      if (typeof element !== 'object' || element === null) {
+        return element;
+      }
+
+      if (Array.isArray(element)) {
+        return element.map(cloneChildFixedKey);
+      }
+
+      if (React.isValidElement(element) && element?.props?.key !== next_key) {
+        key_count++;
+        const clonedElement = cloneElement(element, {
+          key: next_key,
+          child_key: `child-${next_key}`
+        });
+
+        if (element.props.children) {
+          const clonedChildren = cloneChildFixedKey(element.props.children,i);
+          return cloneElement(clonedElement, {}, clonedChildren);
+        }
+
+        return clonedElement;
+      }
+
+      return element;
+    };
 
     for (let i = 0; i < visibleItemCount; i++) {
       const index = visibleStartIndex + i;
       if (index < itemCount) {
         const style = isHorizontal
-          ? { position: 'absolute', left: index * itemSize, width: itemSize, height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }
-          : { position: 'absolute', top: index * itemSize, width: '100%', height: itemSize, display: 'flex', flexDirection: 'column', alignItems: 'center' };
+          ? { position: 'absolute', left: index * itemSize + (padding / 2), width: itemSize, height: `${height - padding}px`, display: 'flex', flexDirection: 'row', alignItems: 'center' }
+          : { position: 'absolute', top: index * itemSize + (padding / 2), width: `${width - padding}px`, height: itemSize, display: 'flex', flexDirection: 'column', alignItems: 'center' };
 
-        items.push(
-          React.cloneElement(children, {
-            index,
-            data: itemData,
-            style,
-            key: `${children?.key}`,
-          }),
-        );
+        const RowCopy = React.cloneElement(children, {
+          index,
+          data: itemData,
+          style
+        });
+
+        if (children) {
+          items.push(cloneChildFixedKey(RowCopy, i));
+        }
       }
     }
 
     return items;
-  }, [visibleStartIndex, itemCount, children, itemData, isHorizontal, itemSize, calculateVisibleItemCount]);
+  }, [visibleStartIndex, itemCount, children, itemData, isHorizontal, itemSize, calculateVisibleItemCount, key]);
 
-
-  const totalSize = useMemo(() => itemCount * itemSize, [itemCount, itemSize]);
+  const totalSize = useMemo(() => itemCount * itemSize + padding * 2, [itemCount, itemSize]);
 
   const innerStyle = useMemo(() => {
     return isHorizontal
-      ? { width: `${totalSize}px`, height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center'  }
-      : { height: `${totalSize}px`, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' };
+      ? { width: `${totalSize}px`, height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }
+      : { height: `${totalSize}px`, width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' };
   }, [isHorizontal, totalSize]);
 
   return (
-    <div key={`asdadsaassadas`} ref={outerRef} style={{ overflow: isHorizontal ? 'auto' : 'auto', height, width }}>
-      <div key='dsfdsfsdfsd' style={innerStyle}>{visibleItems}</div>
+    <div {...key[0]} ref={outerRef} style={{ position: 'relative', overflow: 'scroll', height, width }}>
+      {/* @ts-ignore */}
+      <div {...key[1]} style={innerStyle}>{visibleItems}</div>
     </div>
   );
 };

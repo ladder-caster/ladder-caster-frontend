@@ -4,6 +4,7 @@ import {
   _list,
   _button,
   _claim_all,
+  _purchase,
 } from './Spellcasters.styled';
 import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +26,7 @@ import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { useActions } from '../../../../actions';
 import RecycledList from '../../../shared/list/RecycledList';
 import { useSize } from 'core/hooks/useSize';
+import Buy from './buy/Buy';
 
 const Spellcasters = () => {
   const { t } = useTranslation();
@@ -71,12 +73,11 @@ const Spellcasters = () => {
               itemSize={134}
             />
           </_list>
-          {/*<_purchase>*/}
-
-          {/*</_purchase>*/}
-          <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
-          <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
-          {!hidePrestige && render_old_spellcasters}
+          <_purchase>
+            <Buy />
+          </_purchase>
+          {/*<Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />*/}
+          {/*<Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />*/}
         </>
       );
     }

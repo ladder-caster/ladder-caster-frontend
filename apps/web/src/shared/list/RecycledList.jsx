@@ -1,28 +1,37 @@
 import React from 'react';
 import FixedSizeList from './FixedSizeList';
+import { useKeys } from 'core/hooks/useKeys';
 
-const Row = ({ index, style, data }) => {
+const Row = ({ index, style, data, child_key }) => {
   return (
-    <div key={`uwertwteer${index}`} style={style}>
+    <div key={`row-item-${child_key}`} style={style}>
       {data[index]}
     </div>
   );
 };
 
-const RecycledList = ({ items, height, width, itemSize, orientation }) => {
-  console.log('RECYCLED PROPS', items, height, width, itemSize);
+const RecycledList = ({
+  items,
+  height,
+  width,
+  padding,
+  itemSize,
+  orientation,
+}) => {
+  const key = useKeys(3);
 
   return (
     <FixedSizeList
-      key={'asdasdsadasds'}
+      {...key[0]}
       height={height}
       width={width}
+      padding={padding || 0}
       itemCount={items.length}
       itemSize={itemSize}
       itemData={items}
       orientation={orientation}
     >
-      <Row key={'ewrewryrerf'} />
+      <Row {...key[1]} />
     </FixedSizeList>
   );
 };

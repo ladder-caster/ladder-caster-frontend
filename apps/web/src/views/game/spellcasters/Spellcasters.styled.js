@@ -92,6 +92,19 @@ export const _buy = styled(Link)`
 
 export const _actions = styled.div``;
 
+export const _purchase = styled.div`
+  width: 100%;
+  min-height: 60px;
+  height: 60px;
+  background-color: ${({ theme }) => theme.background['lowest']};
+  box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 4px 8px 4px;
+`;
+
 export const _claim_all = styled(__button)`
   width: 128px;
   align-items: center;
