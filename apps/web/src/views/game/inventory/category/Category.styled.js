@@ -27,6 +27,8 @@ export const _title = styled.div`
 
 export const _items = styled.div`
   width: 100%;
+  min-height: 80px;
+  height: 80px;
   display: flex;
   flex-direction: row;
   align-items: center;

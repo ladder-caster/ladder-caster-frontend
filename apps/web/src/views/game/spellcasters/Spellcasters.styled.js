@@ -45,7 +45,6 @@ export const _fill = styled.div`
 export const _list = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 16px;
   overflow: scroll;
   display: flex;
   flex-direction: column;

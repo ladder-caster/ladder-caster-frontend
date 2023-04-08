@@ -24,13 +24,15 @@ import Tile from './tile/Tile';
 import Heading from '../../../shared/heading/Heading';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
+import TestRecycledList from '../../../shared/list/TestRecycledList';
+import RecycledList from '../../../shared/list/RecycledList';
 
 const Map = () => {
   const { t } = useTranslation();
   const [map] = useMesh(GAME_MAP);
   const map_ref = useRef();
   const list_ref = useRef();
-  const { height } = useSize(list_ref);
+  const { height, width } = useSize(list_ref);
   const [initialized] = useMesh(GAME_INIT);
   const [casters] = useMesh(CHAIN_CASTERS);
 
@@ -70,6 +72,8 @@ const Map = () => {
       );
   }, [map?.length]);
 
+  console.log('render_map', render_map);
+
   return (
     <_ladder>
       <Heading flat title={t('title.map')} />
@@ -85,7 +89,14 @@ const Map = () => {
             <_shadow>
               <_gradient $height={height} />
             </_shadow>
-            <_list ref={list_ref}>{render_map}</_list>
+            <_list ref={list_ref}>
+              <RecycledList
+                items={render_map}
+                itemSize={88}
+                height={height}
+                width={width}
+              />
+            </_list>
           </_map>
         </>
       ) : null}
