@@ -17,6 +17,7 @@ export const AnimateBackground = withTheme(
     move_to,
     status,
     width,
+    animate_key,
     $vh,
     ...props
   }) => {
@@ -24,6 +25,13 @@ export const AnimateBackground = withTheme(
     const faded = 0.45;
     const chip = 0.65;
     const active = 1;
+
+    const controlled = {
+      [TILE_DISABLED]: disabled,
+      [TILE_ACTIVE]: active,
+      [TILE_GLOWING]: active,
+      [TILE_CHIP]: chip,
+    }[status];
 
     const opacity = useMemo(() => {
       const controlled = {
@@ -50,12 +58,15 @@ export const AnimateBackground = withTheme(
       }[status];
 
       if (glowing && !move_to) return glowing;
-      else return undefined;
+      else
+        return {
+          duration: 0,
+        };
     }, [status, move_to]);
 
     const variants = {
       initial: {
-        opacity: 0.25,
+        opacity: status === TILE_GLOWING ? 0.25 : opacity,
       },
       animate: {
         opacity,
@@ -67,6 +78,8 @@ export const AnimateBackground = withTheme(
 
     return (
       <LazyAnimations
+        key={`lazy-bg-${animate_key}`}
+        animate_key={animate_key}
         initial={'initial'}
         animate={'animate'}
         whileHover={'hover'}

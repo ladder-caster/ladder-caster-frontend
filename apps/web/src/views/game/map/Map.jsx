@@ -46,30 +46,31 @@ const Map = () => {
   }, [list_ref?.current, initialized]);
 
   const render_map = useMemo(() => {
-    if (map)
-      return reverse(
-        map?.map((data) => {
-          const level = data.level + 1;
+    if (map) console.log('map2', map);
 
-          return (
-            <_row key={data.id}>
-              <_level>
-                <_indent />
-                <span>{level}</span>
-              </_level>
-              <_portals>
-                <Tile level={level} col={'a'} />
-                <Tile level={level} col={'b'} />
-                <Tile level={level} col={'c'} />
-              </_portals>
-              <_pace>
-                <span>{level}</span>
-                <_indent $disabled $right />
-              </_pace>
-            </_row>
-          );
-        }),
-      );
+    return reverse(
+      map?.map((data) => {
+        const level = data.level + 1;
+
+        return (
+          <_row key={data.id}>
+            <_level key={`level-${data.id}`}>
+              <_indent key={`indent-${data.id}`} />
+              <span key={`level-span-${data.id}`}>{level}</span>
+            </_level>
+            <_portals key={`portals-${data.id}`}>
+              <Tile key={`tile-a-${data.id}`} level={level} col={'a'} />
+              <Tile key={`tile-b-${data.id}`} level={level} col={'b'} />
+              <Tile key={`tile-c-${data.id}`} level={level} col={'c'} />
+            </_portals>
+            <_pace key={`pace-${data.id}`}>
+              <span key={`pace-span-${data.id}`}>{level}</span>
+              <_indent key={`indent-${data.id}`} $disabled $right />
+            </_pace>
+          </_row>
+        );
+      }),
+    );
   }, [map?.length]);
 
   console.log('render_map', render_map);

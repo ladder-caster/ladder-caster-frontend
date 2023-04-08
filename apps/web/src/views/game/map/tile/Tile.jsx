@@ -40,7 +40,7 @@ import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';
 import { AnimateBackground } from './animations/AnimateBackground';
-import { AnimateEnchant } from './animations/AniamteEnchant';
+import { AnimateEnchant } from './animations/AnimateEnchant';
 import { IconAnvil } from 'design/icons/anvil.icon';
 import { IconMap } from 'design/icons/map.icon';
 import { IconWizard } from 'design/icons/wizard.icon';
@@ -130,22 +130,30 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
   }[land?.tier];
 
   return (
-    <_tile>
-      <_cutout>
+    <_tile key={`tile-${land?.id}`}>
+      <_cutout key={`cutout-${land?.id}`}>
         {isActive && (
           <>
-            <_float>
-              <_float>
-                <_backdrop />
+            <_float key={`float-${land?.id}`}>
+              <_float key={`float-2-${land?.id}`}>
+                <_backdrop key={`backdrop-${land?.id}`} />
               </_float>
               <_float>
                 <AnimateEnchant
+                  key={`animate-enchant-${land?.id}`}
+                  animate_key={`animate-enchant-key-${land?.id}`}
                   move_to={move_to}
                   status={status}
                   $casters={casters}
                 >
-                  <_enchant $color={color} $element={type}>
-                    {remaining && <span>{remaining}</span>}
+                  <_enchant
+                    key={`enchant-${land?.id}`}
+                    $color={color}
+                    $element={type}
+                  >
+                    {remaining && (
+                      <span key={`remaining-${land?.id}`}>{remaining}</span>
+                    )}
                   </_enchant>
                 </AnimateEnchant>
               </_float>
@@ -153,39 +161,53 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
             {(status === TILE_CHIP ||
               (status === TILE_GLOWING && move_to) ||
               move_from) && (
-              <_float>
+              <_float key={`float-3-${land?.id}`}>
                 {move_from ? (
-                  <_outline />
+                  <_outline key={`outline-${land?.id}`} />
                 ) : (
-                  <_chip>
-                    <IconWizard />
+                  <_chip key={`chip-${land?.id}`}>
+                    <IconWizard key={`icon-wizard-${land?.id}`} />
                   </_chip>
                 )}
               </_float>
             )}
             <AnimateBackground
+              key={`animate-bg-${land?.id}`}
+              animate_key={`animate-bg-key-${land?.id}`}
               move_to={move_to}
               status={status}
               $casters={casters}
             >
               <_background
+                key={`background-${land?.id}`}
                 onClick={() => clickTile()}
                 $color={color}
                 $element={type}
                 $tier={tier_multiply}
               >
-                <_floaticon $element={type}>
-                  <Icon />
+                <_floaticon key={`float-icon-${land?.id}`} $element={type}>
+                  <Icon key={`float-icon-icon-${land?.id}`} />
                 </_floaticon>
-                <_tier $element={type}>
-                  <span>{show_tier}</span>
+                <_tier key={`tier-${land?.id}`} $element={type}>
+                  <span key={`tier-span-${land?.id}`}>{show_tier}</span>
                 </_tier>
-                <_element $element={type} $width={90}>
-                  <_icon $offset={0} $element={type} $casters={casters}>
-                    <Icon />
+                <_element
+                  key={`element-${land?.id}`}
+                  $element={type}
+                  $width={90}
+                >
+                  <_icon
+                    key={`icon-${land?.id}`}
+                    $offset={0}
+                    $element={type}
+                    $casters={casters}
+                  >
+                    <Icon key={`icon-icon-${land?.id}`} />
                   </_icon>
                   {+casters > 0 && (
-                    <_casters $element={type}>{casters}</_casters>
+                    <_casters key={`casters-${land?.id}`} $element={type}>
+                      {casters}
+                    </_casters>
                   )}
                 </_element>
               </_background>

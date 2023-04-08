@@ -5,6 +5,7 @@ import { useKeys } from 'core/hooks/useKeys';
 export const LazyAnimations = ({
   children,
   listen_key,
+  animate_key,
   watch = [],
   ...props
 }) => {
@@ -25,7 +26,10 @@ export const LazyAnimations = ({
 
   return useMemo(
     () => (
-      <LazyMotion {...key[1]} features={domMax}>
+      <LazyMotion
+        key={`lazy-motion-${animate_key || key[1]?.key}`}
+        features={domMax}
+      >
         {childrenWithProps}
       </LazyMotion>
     ),
