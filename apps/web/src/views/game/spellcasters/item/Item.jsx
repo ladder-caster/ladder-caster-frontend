@@ -43,7 +43,7 @@ const Item = ({ spell_id, isOld, isPrestigeHide }) => {
       );
     }
   }, [isBuy, isOld, isPrestigeHide, spell_id]);
-  // prevents rerenders - anon funcs rerender :/
+
   const onClick = () => {
     drawerCaster(spell_id);
   };
