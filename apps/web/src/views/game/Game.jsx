@@ -35,15 +35,9 @@ const Game = () => {
   const screen_ref = useRef();
   const { height } = useSize(screen_ref);
   const { vh } = useMobileHeight();
-  const [view, setView] = useMesh(VIEW_NAVIGATION);
+  const [, setView] = useMesh(VIEW_NAVIGATION);
   const { drawerSettings } = useActions();
   const [k0, k1, k2] = useKeys(5);
-
-  useEffect(() => {
-    if (view) {
-      localStorage.setItem('lc-tab', view);
-    }
-  }, [view]);
 
   useEffect(() => {
     const cachedTab = localStorage.getItem('lc-tab');

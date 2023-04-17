@@ -19,8 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 const Nav = () => {
   const { t } = useTranslation();
-  const [drawer, setDrawer] = useMesh(DRAWER_ACTIVE);
-  const { pathname } = useLocation();
+  const [, setDrawer] = useMesh(DRAWER_ACTIVE);
   const [view, setView] = useMesh(VIEW_NAVIGATION);
 
   return (
@@ -29,6 +28,7 @@ const Nav = () => {
         onClick={() => {
           setView(VIEW_MARKET);
           setDrawer('');
+          localStorage.setItem('lc-tab', VIEW_MARKET);
         }}
       >
         <_button $first $active={view === VIEW_MARKET}>
@@ -40,6 +40,7 @@ const Nav = () => {
         onClick={() => {
           setView(VIEW_INVENTORY);
           setDrawer('');
+          localStorage.setItem('lc-tab', VIEW_INVENTORY);
         }}
       >
         <_button $active={view === VIEW_INVENTORY}>
@@ -51,6 +52,7 @@ const Nav = () => {
         onClick={() => {
           setView(VIEW_HOME);
           setDrawer('');
+          localStorage.setItem('lc-tab', VIEW_HOME);
         }}
       >
         <_button $active={!view || view === VIEW_HOME}>
@@ -62,6 +64,7 @@ const Nav = () => {
         onClick={() => {
           setView(VIEW_SPELLCASTERS);
           setDrawer('');
+          localStorage.setItem('lc-tab', VIEW_SPELLCASTERS);
         }}
       >
         <_button $active={view === VIEW_SPELLCASTERS}>
@@ -73,6 +76,7 @@ const Nav = () => {
         onClick={() => {
           setView(VIEW_MAP);
           setDrawer('');
+          localStorage.setItem('lc-tab', VIEW_MAP);
         }}
       >
         <_button $last $active={view === VIEW_MAP}>
