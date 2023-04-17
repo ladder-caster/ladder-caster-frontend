@@ -17,8 +17,8 @@ import {
   _link,
 } from './Dashboard.styled';
 import { useTranslation } from 'react-i18next';
-import { GAME_MAP, TIER_I } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { GAME_MAP, TIER_I } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { map as _map } from 'lodash';
 import { nanoid } from 'nanoid';
 import { _controls, _speed } from '../header/Header.styled';
@@ -28,7 +28,7 @@ import { Onboarding } from './onboarding/Onboarding';
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const [map, setMap] = useRemix(GAME_MAP);
+  const [map, setMap] = useMesh(GAME_MAP);
   const [next_map] = useState();
 
   let new_map = map ? [...map] : [];

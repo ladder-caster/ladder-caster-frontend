@@ -9,7 +9,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { randomIntBetween } from 'core';
 import { IconStaff } from 'design/icons/staff.icon';
 import { nanoid } from 'nanoid';

@@ -1,5 +1,5 @@
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { CREATE_MUTATION } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { CREATE_MUTATION } from 'core/mesh/state';
 import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import {
@@ -54,13 +54,11 @@ type Handler = (
 
 export const useMutation = () => {
   const { t } = useTranslation();
-  const [, setMutation] = useRemix(CREATE_MUTATION);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
+  const [, setMutation] = useMesh(CREATE_MUTATION);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
 
   const handleState: Handler = useCallback(
     async (
-      // rpcCallback,
-      // transaction: Transaction | Transaction[],
       builder: TransactionBuilder | TransactionBuilder[],
       type: string,
       retryId: string = '',
@@ -137,7 +135,6 @@ export const useMutation = () => {
 
         if (onConfirmation) onConfirmation();
         setMutation({ ...mutation, state: TxStates.SUCCESS });
-
         console.log('confirmed!!!!');
         return confirmationResult;
       } catch (e) {

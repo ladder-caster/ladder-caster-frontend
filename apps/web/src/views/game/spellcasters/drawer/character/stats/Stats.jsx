@@ -6,7 +6,7 @@ import {
   ATTRIBUTE_RES1,
   ATTRIBUTE_MAGIC,
   ATTRIBUTE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import IconAttribute from '../../../../../../shared/types/icons/IconAttribute';
 
 const Stats = ({ caster }) => {

@@ -29,7 +29,7 @@ import { AnimateBoard } from '../../animations/AnimateBoard';
 import { AnimateLimit } from '../../animations/AnimateLimit';
 import { _button } from '../loot/ModalLoot.styled';
 import { AnimateButton } from '../../../../views/game/nav/animations/AnimateButton';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   CONFIRM_MOVE,
   GAME_CONFIRM,
@@ -38,7 +38,7 @@ import {
   TYPE_RES1,
   TYPE_LEGENDARY,
   TYPE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
@@ -57,8 +57,8 @@ const ModalMove = ({ height, options }) => {
   const confirm_ref = useRef();
   const { t } = useTranslation();
   const { closeModal, moveToTile } = useActions();
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [confirm] = useRemix(GAME_CONFIRM);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [confirm] = useMesh(GAME_CONFIRM);
   const isConfirm = confirm && confirm?.type === CONFIRM_MOVE;
   useClickOutside([confirm_ref, button_ref], () => closeModal());
 

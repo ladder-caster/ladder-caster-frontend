@@ -11,7 +11,7 @@ import {
 } from './Caster.styled';
 import { useSize } from 'core/hooks/useSize';
 import { useActions } from '../../../actions';
-import { EDITION_LIMITED } from 'core/remix/state';
+import { EDITION_LIMITED } from 'core/mesh/state';
 
 const Caster = ({ caster, grid, small, callback, isOld }) => {
   const caster_ref = useRef();

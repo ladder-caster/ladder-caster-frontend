@@ -13,19 +13,18 @@ import {
   EQUIP_ITEM,
   MODAL_ACTIVE,
   UNEQUIP_ITEM,
-} from 'core/remix/state';
-import { useRemixOrigin } from 'core/hooks/remix/useRemixOrigin';
+} from 'core/mesh/state';
 import { nanoid } from 'nanoid';
 import { useActions } from '../../../actions';
 import usePrevious from 'core/hooks/usePrevious';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Drawer = ({ children, height }) => {
   const { closeDrawer } = useActions();
-  const [drawer] = useRemixOrigin(DRAWER_ACTIVE, '');
-  const [modal] = useRemix(MODAL_ACTIVE);
-  const [, setEquip] = useRemix(EQUIP_ITEM);
-  const [, setUnequip] = useRemix(UNEQUIP_ITEM);
+  const [drawer] = useMesh(DRAWER_ACTIVE);
+  const [modal] = useMesh(MODAL_ACTIVE);
+  const [, setEquip] = useMesh(EQUIP_ITEM);
+  const [, setUnequip] = useMesh(UNEQUIP_ITEM);
   const prevDrawer = usePrevious(drawer);
   const container_ref = useRef();
   const key = useMemo(() => nanoid(), [drawer]);

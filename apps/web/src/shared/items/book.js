@@ -11,7 +11,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { randomIntBetween } from 'core';
 import { IconHat } from 'design/icons/hat.icon';
 import { nanoid } from 'nanoid';

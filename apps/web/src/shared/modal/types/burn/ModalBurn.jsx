@@ -26,8 +26,8 @@ import {
   RARITY_RARE,
   RARITY_EPIC,
   RARITY_LEGENDARY,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Item from '../../../item/Item';
 import { useSize } from 'core/hooks/useSize';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
@@ -36,7 +36,7 @@ import { IconResource3 } from 'design/icons/resource3.icon';
 const ModalBurn = () => {
   const { t } = useTranslation();
   const { closeModal, confirmBurn } = useActions();
-  const [modal] = useRemix(MODAL_ACTIVE);
+  const [modal] = useMesh(MODAL_ACTIVE);
   const image_ref = useRef();
   const { width } = useSize(image_ref);
   const item = modal?.item;

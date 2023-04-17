@@ -20,8 +20,8 @@ import {
   TYPE_RES1,
   TYPE_RES2,
   GAME_INVENTORY,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import { AnimateButton } from '../../../../../shared/button/animations/AnimateButton';
 import { IconBook } from 'design/icons/book.icon';
@@ -47,9 +47,9 @@ const Queue = ({ spell_id }) => {
     drawerCraft,
     redeemReward,
   } = useActions();
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [game] = useRemix(CHAIN_GAME);
-  const [inventory] = useRemix(GAME_INVENTORY);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [game] = useMesh(CHAIN_GAME);
+  const [inventory] = useMesh(GAME_INVENTORY);
   const { t } = useTranslation();
   const caster = useMemo(
     () => find(spellcasters, (caster) => caster?.id === spell_id && caster),
@@ -61,7 +61,7 @@ const Queue = ({ spell_id }) => {
     caster?.casterActionPosition && !caster?.isLootActionBefore
       ? caster?.casterActionPosition
       : position;
-  const [tile] = useRemix(
+  const [tile] = useMesh(
     GAME_MAP,
     (rows) =>
       find(rows, (row) => row?.level + 1 === +searchPosition?.slice(1))?.[

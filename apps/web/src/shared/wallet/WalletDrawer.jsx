@@ -9,8 +9,8 @@ import {
   _title,
 } from './WalletDrawer.styled';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { DRAWER_ACTIVE, VIEW_SIZE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { DRAWER_ACTIVE, VIEW_SIZE } from 'core/mesh/state';
 import { useActions } from '../../../actions';
 import {
   TAB_MINT,
@@ -18,7 +18,7 @@ import {
   TAB_WALLET,
   TABS_MINT_REDEEM,
   TAB_KEYS,
-} from 'core/remix/tabs';
+} from 'core/mesh/tabs';
 import RedeemTab from './tabs/redeem/tab/RedeemTab';
 import { IconClose } from 'design/icons/close.icon';
 import { _breakpoint } from '../../views/game/spellcasters/drawer/Player.styled';
@@ -30,11 +30,11 @@ import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 
 const WalletDrawer = () => {
   const { t } = useTranslation();
-  const [view_height] = useRemix(VIEW_SIZE);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
+  const [view_height] = useMesh(VIEW_SIZE);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
   const { closeDrawer, refreshResources } = useActions();
-  
-  const [nfts, setNfts] = useRemix(CHAIN_NFTS);
+
+  const [nfts, setNfts] = useMesh(CHAIN_NFTS);
 
   const tabs_mint_redeem = {
     [TAB_WALLET]: {
@@ -54,7 +54,7 @@ const WalletDrawer = () => {
       View: MintTab,
     },
   };
-  
+
   useEffect(() => {
     if (refreshResources && client) refreshResources();
   }, [client]);

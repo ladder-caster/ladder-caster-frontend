@@ -21,8 +21,8 @@ import {
   W3A_TYPE,
   WALLET_TYPE,
   WEB3AUTH_PLUGIN_STORE,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { magicEdenLogo } from 'design/icons/magic.eden.icon';
@@ -30,10 +30,10 @@ import { IconOpensea, IconOpenseaLogo } from 'design/icons/opensea.icon';
 
 const Market = () => {
   const { t } = useTranslation();
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [initialized] = useRemix(GAME_INIT);
-  const [walletType] = useRemix(WALLET_TYPE);
-  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [initialized] = useMesh(GAME_INIT);
+  const [walletType] = useMesh(WALLET_TYPE);
+  const [pluginStore] = useMesh(WEB3AUTH_PLUGIN_STORE);
 
   return (
     <_market $init={initialized && casters?.length !== 0}>

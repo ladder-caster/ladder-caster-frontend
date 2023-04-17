@@ -20,7 +20,7 @@ import {
   _tile_text,
   _tile_icon,
 } from './Equip.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   EQUIP_ITEM,
@@ -36,7 +36,7 @@ import {
   TYPE_RES1,
   TYPE_RES2,
   TYPE_RES3,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { sortBy } from 'lodash';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { IconBook } from 'design/icons/book.icon';
@@ -58,11 +58,11 @@ import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 const Equip = () => {
   const { t } = useTranslation();
   const { equipItem } = useActions();
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const item = context?.item;
   const back = context?.back;
-  const [lands] = useRemix(GAME_MAP);
+  const [lands] = useMesh(GAME_MAP);
   const sort_casters = useMemo(() => {
     return sortBy(spellcasters, (sort) => sort?.hue);
   }, [spellcasters]);
@@ -138,10 +138,10 @@ const Equip = () => {
 
         const col = caster?.position?.substring(0, 1);
         const row = caster?.position?.substring(1);
-        const intRow = row? parseInt(row) - 1:0
+        const intRow = row ? parseInt(row) - 1 : 0;
         const element = lands?.[intRow]?.[col]?.type;
         const Icon = TileIcons[element];
-        
+
         return (
           <_caster onClick={() => equipItem(item, caster)}>
             <_item>

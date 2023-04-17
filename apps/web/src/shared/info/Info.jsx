@@ -16,7 +16,7 @@ import { AnimateButton } from '../button/animations/AnimateButton';
 import Attributes from '../../views/game/inventory/drawer/attributes/Attributes';
 import { useTranslation } from 'react-i18next';
 import { useSize } from 'core/hooks/useSize';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_CONTEXT,
   ITEM_BOOK,
@@ -24,7 +24,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { useActions } from '../../../actions';
 import Power from '../power/Power';
 import { IconDice } from 'design/icons/dice.icon';
@@ -39,7 +39,7 @@ const Info = ({ item, caster }) => {
     modalBurn,
     closeDrawer,
   } = useActions();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const image_ref = useRef();
   const { width } = useSize(image_ref);
   const equip = context?.equip;

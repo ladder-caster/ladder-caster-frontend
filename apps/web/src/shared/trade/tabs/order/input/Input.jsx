@@ -5,16 +5,16 @@ import {
   DRAWER_CONTEXT,
   GAME_RESOURCES,
   TRADE_ORDERBOOK,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../../../actions';
 import usePrevious from 'core/hooks/usePrevious';
 import { findMarket } from 'core/utils/markets';
 
 const Input = ({ isBase }) => {
-  const [resources] = useRemix(GAME_RESOURCES);
-  const [orderbook] = useRemix(TRADE_ORDERBOOK);
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [resources] = useMesh(GAME_RESOURCES);
+  const [orderbook] = useMesh(TRADE_ORDERBOOK);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { inputOrder } = useActions();
 
   const input = context?.input;

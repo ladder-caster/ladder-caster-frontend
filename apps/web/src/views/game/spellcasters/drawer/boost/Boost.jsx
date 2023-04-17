@@ -6,15 +6,15 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { _burn, _float } from '../Player.styled';
 import { useActions } from '../../../../../../actions';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const Boost = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { burnResourcesForXP } = useActions();
   const total_amount =
     context?.[TYPE_RES1] + context?.[TYPE_RES2] + context?.[TYPE_RES3] || 0;

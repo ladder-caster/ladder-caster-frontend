@@ -15,7 +15,7 @@ import {
   RARITY_LEGENDARY,
   RARITY_RARE,
   ATTRIBUTE_CRAFT,
-} from '../remix/state';
+} from '../mesh/state';
 
 export const randomIntBetween = (start, end) => {
   return Math.floor(Math.random() * (end - start + 0.99) + start);

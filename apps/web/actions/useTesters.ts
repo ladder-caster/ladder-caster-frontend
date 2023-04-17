@@ -4,21 +4,21 @@ import {
   GIVE_LADA,
   GIVE_RESOURCES,
   INST_INIT_CASTER,
-} from 'core/remix/rpc';
+} from 'core/mesh/rpc';
 import {
   ATTRIBUTE_RES1,
   ATTRIBUTE_RES2,
   GAME_RESOURCES,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { CHAIN_ITEMS, CHAIN_PLAYER } from 'chain/hooks/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useMutation } from 'sdk/src/hooks/useMutations';
 
 export const useTesters = () => {
   const { handleState } = useMutation();
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
-  const [, setItems] = useRemix(CHAIN_ITEMS);
-  const [, setResources] = useRemix(GAME_RESOURCES);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
+  const [, setItems] = useMesh(CHAIN_ITEMS);
+  const [, setResources] = useMesh(GAME_RESOURCES);
 
   const createCasterContext = () => {
     return new CasterContext();

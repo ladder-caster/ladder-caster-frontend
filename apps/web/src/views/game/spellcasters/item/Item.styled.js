@@ -6,7 +6,7 @@ export const _item = styled.div`
   flex-direction: row;
   /* align-items: center; */
   justify-content: flex-start;
-  padding: 18px 0;
+  padding: 16px;
   border-bottom: 2px solid ${({ theme }) => theme.border['base']};
 `;
 

@@ -11,18 +11,18 @@ import {
 import { IconClose } from 'design/icons/close.icon';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
-import { TAB_PLACE_ORDER, TAB_SWAP, TABS_SWAP_ORDER } from 'core/remix/tabs';
+import { TAB_PLACE_ORDER, TAB_SWAP, TABS_SWAP_ORDER } from 'core/mesh/tabs';
 import Tabs from '../tabs/Tabs';
 import SwapTab from './tabs/swap/SwapTab';
 import OrderTab from './tabs/order/OrderTab';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { VIEW_SIZE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { VIEW_SIZE } from 'core/mesh/state';
 import Breakpoint from '../breakpoint/Breakpoint';
 
 const TradeDrawer = () => {
   const { t } = useTranslation();
   const { closeDrawer } = useActions();
-  const [view_height] = useRemix(VIEW_SIZE);
+  const [view_height] = useMesh(VIEW_SIZE);
 
   const tabs_swap_order = {
     [TAB_SWAP]: {

@@ -21,7 +21,7 @@ import { IconResource2IMG } from 'design/icons/resource2.icon';
 import { IconResource3IMG } from 'design/icons/resource3.icon';
 import { IconResourcee1IMG } from 'design/icons/resourcee1.icon';
 import { IconMoneyIMG } from 'design/icons/money.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   GAME_INIT,
   GAME_RESOURCES,
@@ -29,7 +29,7 @@ import {
   TYPE_RES1,
   TYPE_RES2,
   GAME_CONSTANTS,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { useActions } from 'web/actions';
 import Counter from '../../../shared/counter/Counter';
 import usePrevious from 'core/hooks/usePrevious';
@@ -40,10 +40,10 @@ import Timer from './timer/Timer';
 const Header = withTheme(({ theme }) => {
   const { t } = useTranslation();
   const { drawerTokens } = useActions();
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [resources] = useRemix(GAME_RESOURCES);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
-  const [initialized] = useRemix(GAME_INIT);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [resources] = useMesh(GAME_RESOURCES);
+  const [gameConstants] = useMesh(GAME_CONSTANTS);
+  const [initialized] = useMesh(GAME_INIT);
 
   const prevGold = usePrevious(+resources?.lada || 0);
   const prevFire = usePrevious(+resources?.[TYPE_RES1] || 0);

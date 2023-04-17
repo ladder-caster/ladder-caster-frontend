@@ -2,14 +2,14 @@ import React from 'react';
 import { _percent } from './Percent.styled';
 import { AnimatePercent } from '../../../animations/AnimatePercent';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { DRAWER_CONTEXT, GAME_RESOURCES, SIDE_BUY } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { DRAWER_CONTEXT, GAME_RESOURCES, SIDE_BUY } from 'core/mesh/state';
 import { useActions } from '../../../../../../actions';
 
 const Percent = ({ weight }) => {
   const { t } = useTranslation();
-  const [resources] = useRemix(GAME_RESOURCES);
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [resources] = useMesh(GAME_RESOURCES);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { inputSwap } = useActions();
   const base = context?.base;
   const quote = context?.quote;

@@ -1,10 +1,10 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { _tab, _button, _disconnect, _link } from './KeysTab.styles';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_LOCAL_CLIENT } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
 import ManageKey from '../ManageKey';
-import { WALLET_TYPE, WEB3AUTH_PLUGIN_STORE } from 'core/remix/state';
+import { WALLET_TYPE, WEB3AUTH_PLUGIN_STORE } from 'core/mesh/state';
 import { useActions } from '../../../../../../actions';
 import { AnimateDots } from '../../../../../views/game/animations/AnimateSettings';
 import { IconHyperlink } from 'design/icons/hyperlink.icon';
@@ -15,10 +15,10 @@ const network = config.environment === 'devnet' ? '?cluster=devnet' : '';
 
 const KeysTab = () => {
   const { t } = useTranslation();
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
   const [activeMenu, setActiveMenu] = useState(null);
-  const [, setWalletType] = useRemix(WALLET_TYPE);
-  const [pluginStore] = useRemix(WEB3AUTH_PLUGIN_STORE);
+  const [, setWalletType] = useMesh(WALLET_TYPE);
+  const [pluginStore] = useMesh(WEB3AUTH_PLUGIN_STORE);
   const { closeDrawer, clearStates, disconnect, fixAccount } = useActions();
 
   const handleLogout = useCallback(async () => {

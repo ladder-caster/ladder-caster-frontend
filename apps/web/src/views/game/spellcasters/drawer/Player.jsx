@@ -22,8 +22,8 @@ import {
   PLAYER_LEADERBOARD,
   SPELLCASTER_BUY,
   TABS_CHARACTER_ACTIONS,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { find } from 'lodash';
 import Rank from './rank/Rank';
 import Boost from './boost/Boost';
@@ -33,9 +33,9 @@ import TabAction from '../../../../shared/tabs/TabActions/TabActions';
 
 const Player = () => {
   const { t } = useTranslation();
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [drawer] = useRemix(DRAWER_ACTIVE);
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [drawer] = useMesh(DRAWER_ACTIVE);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const isBoost = drawer?.boost;
   const confirm = context?.confirm && context?.unequip;
   const id = drawer?.id;

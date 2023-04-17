@@ -16,7 +16,7 @@ import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useTranslation } from 'react-i18next';
 import { AnimateButton } from '../../../button/animations/AnimateButton';
 import { IconArrow } from 'design/icons/arrow.icon';
-import { SEEN_PHASE } from 'core/remix/state';
+import { SEEN_PHASE } from 'core/mesh/state';
 
 const ModalPhase = ({ height, options }) => {
   const { t } = useTranslation();

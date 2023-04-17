@@ -12,7 +12,7 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-} from '../remix/state';
+} from '../mesh/state';
 
 export const COLUMNS_ALPHA = ['a', 'b', 'c'];
 

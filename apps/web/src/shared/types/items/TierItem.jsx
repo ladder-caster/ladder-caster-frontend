@@ -1,5 +1,5 @@
 import React from 'react';
-import { TIER_I, TIER_II, TIER_III, TIER_IV } from 'core/remix/state';
+import { TIER_I, TIER_II, TIER_III, TIER_IV } from 'core/mesh/state';
 
 const TierItem = ({ tier }) => {
   return (

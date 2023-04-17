@@ -5,7 +5,7 @@ import {
   ATTRIBUTE_RES2,
   RARITY_COMMON,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 export const _upgrade = styled(m.div).attrs(({ theme, $hue }) => {
   return {
     initial: {

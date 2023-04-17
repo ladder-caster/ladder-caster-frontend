@@ -8,7 +8,7 @@ import {
   ATTRIBUTE_MAGIC,
   ATTRIBUTE_RES2,
   ATTRIBUTE_XP,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { IconResourcee1 } from 'design/icons/resourcee1.icon';
 import { IconResource2 } from 'design/icons/resource2.icon';
 import { IconResource3 } from 'design/icons/resource3.icon';

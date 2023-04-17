@@ -18,8 +18,8 @@ import {
   ITEM_HAT,
   ITEM_ROBE,
   ITEM_STAFF,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useTranslation } from 'react-i18next';
 import { filter, sortBy, reverse } from 'lodash';
 import { EQUIP_MAP, ICON_EQUIP_MAP } from 'core/utils/switch';
@@ -27,12 +27,15 @@ import Item from '../../../../shared/item/Item';
 import { useActions } from '../../../../../actions';
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
+import RecycledList from '../../../../shared/list/RecycledList';
+import { useSize } from 'core/hooks/useSize';
 const Category = ({ type }) => {
   const { t } = useTranslation();
   const { drawerInventory } = useActions();
-  const [, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const [inventory] = useRemix(GAME_INVENTORY);
+  const [, setDrawer] = useMesh(DRAWER_ACTIVE);
+  const [inventory] = useMesh(GAME_INVENTORY);
   const items_ref = useRef();
+  const { height, width } = useSize(items_ref);
   var scrollInterval = null;
   const title = {
     [ITEM_HAT]: t('inventory.title.hat'),
@@ -95,7 +98,8 @@ const Category = ({ type }) => {
       );
     }
     return list;
-  }, [min_items, inventory]);
+  }, [min_items, inventory, height, width]);
+
   const chevronScroll = (left) => {
     if (!items_ref || !items_ref.current) {
       if (scrollInterval) {
@@ -127,7 +131,15 @@ const Category = ({ type }) => {
         <_icon onMouseDown={scrollLeft} onMouseUp={stopScroll}>
           <IconChevronLeft />
         </_icon>
-        <_items ref={items_ref}>{items}</_items>
+        <_items ref={items_ref}>
+          <RecycledList
+            items={items}
+            orientation={'horizontal'}
+            height={height}
+            width={width}
+            itemSize={72}
+          />
+        </_items>
         <_icon onMouseDown={scrollRight} onMouseUp={stopScroll}>
           <IconChevronRight />
         </_icon>

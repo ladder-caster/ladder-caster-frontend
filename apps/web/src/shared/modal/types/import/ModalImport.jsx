@@ -5,15 +5,15 @@ import { AnimateButton } from '../../../button/animations/AnimateButton';
 import { AnimateModal } from '../../animations/AnimateModal';
 import { useClickOutside } from 'core/hooks/useClickOutside';
 import { useActions } from '../../../../../actions';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { MODAL_ACTIVE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { MODAL_ACTIVE } from 'core/mesh/state';
 import { useTranslation } from 'react-i18next';
 import { IconWallet } from 'design/icons/wallet.icon';
 
 const ModalImport = () => {
   const { t } = useTranslation();
   const { closeModal } = useActions();
-  const [modal] = useRemix(MODAL_ACTIVE);
+  const [modal] = useMesh(MODAL_ACTIVE);
   const button_ref = useRef();
   const [inputValue, setInputValue] = useState('');
 

@@ -12,8 +12,8 @@ import Market from '../market/Market';
 import Inventory from '../inventory/Inventory';
 import Dashboard from '../home/Dashboard';
 import { AnimatePresence, motion } from 'framer-motion';
-import { VIEW_NAVIGATION } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { VIEW_NAVIGATION } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 const variants = {
   initial: {
@@ -34,7 +34,7 @@ const variants = {
 };
 
 export const AnimatedViews = () => {
-  const [view] = useRemix(VIEW_NAVIGATION);
+  const [view] = useMesh(VIEW_NAVIGATION);
 
   const View = ({ children, $key }) => {
     return useMemo(
@@ -48,7 +48,7 @@ export const AnimatedViews = () => {
   };
   const Views = useMemo(
     () => () => (
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence>
         {!view || view === VIEW_HOME ? (
           <View key={'view-home'} $key={'view-home-motion'}>
             <Dashboard />

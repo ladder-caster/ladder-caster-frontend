@@ -12,15 +12,15 @@ import { IconClose } from 'design/icons/close.icon';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../../../actions';
 import Pairs from './pairs/Pairs';
-import { TOKENS_ACTIVE } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { TOKENS_ACTIVE } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Trade from './trade/Trade';
 import { _breakpoint } from '../../views/game/spellcasters/drawer/Player.styled';
 
 const TokensDrawer = () => {
   const { t } = useTranslation();
   const { closeDrawer } = useActions();
-  const [tokens] = useRemix(TOKENS_ACTIVE);
+  const [tokens] = useMesh(TOKENS_ACTIVE);
 
   return (
     <_tokens>

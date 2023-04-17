@@ -13,26 +13,22 @@ import {
 import { IconChevronLeft } from 'design/icons/chevron-left.icon';
 import { IconChevronRight } from 'design/icons/chevron-right.icon';
 import { map, sortBy } from 'lodash';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_SPELL } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { GAME_SPELL } from 'core/mesh/state';
 import usePrevious from 'core/hooks/usePrevious';
 
 const Slide = ({ list, items }) => {
   const [index, setIndex] = useState(0);
   const prev_index = usePrevious(index);
-  const [, setSpell, isSetSpellReady] = useRemix(GAME_SPELL);
+  const [, setSpell] = useMesh(GAME_SPELL);
   const carousel_ref = useRef();
   const height = 100;
 
   useEffect(() => {
-    if (
-      list?.length > 0 &&
-      (prev_index !== index || index === 0) &&
-      isSetSpellReady
-    ) {
+    if (list?.length > 0 && (prev_index !== index || index === 0)) {
       setSpell(list?.[index]);
     }
-  }, [index, list?.length, isSetSpellReady]);
+  }, [index, list?.length]);
 
   const list_items = useMemo(() => {
     let count = 0;

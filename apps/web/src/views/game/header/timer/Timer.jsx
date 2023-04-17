@@ -18,12 +18,12 @@ import {
 } from '../Header.styled';
 import { AnimateButton } from '../../../../shared/button/animations/AnimateButton';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
-import { GAME_CONSTANTS } from 'core/remix/state';
+import { GAME_CONSTANTS } from 'core/mesh/state';
 import dayjs from 'dayjs';
 import { IconSkip } from 'design/icons/skip.icon';
 import { AnimateCrank } from '../animations/AnimateCrank';
 import { useActions } from '../../../../../actions';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import usePrevious from 'core/hooks/usePrevious';
 
 let a = 180;
@@ -37,8 +37,8 @@ let position = 0;
 let interval;
 const Timer = () => {
   const { drawerCrank } = useActions();
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [gameConstants] = useMesh(GAME_CONSTANTS);
   const prev_game = usePrevious(gameConstants?.gameState);
   const [time, setTime] = useState();
   const game = gameConstants?.gameState;

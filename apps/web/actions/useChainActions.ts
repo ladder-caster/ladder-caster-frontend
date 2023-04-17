@@ -1,4 +1,4 @@
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
@@ -23,7 +23,7 @@ import {
   SIDE_BUY,
   TRADE_ORDERBOOK,
   SIDE_SELL,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import {
   CHAIN_CASTERS,
   CHAIN_GAME,
@@ -64,34 +64,33 @@ import {
   INST_CANCEL_ORDER,
   INST_INIT_CASTER,
   INST_CLAIM_ALL,
-} from 'core/remix/rpc';
-import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/remix/init';
-import { map, find, filter } from 'lodash';
-import remix from 'core/remix';
+} from 'core/mesh/rpc';
+import { INIT_STATE_BOOST, INIT_STATE_REDEEM } from 'core/mesh/init';
+import { find, filter } from 'lodash';
 import { PublicKey } from '@solana/web3.js';
 import { findMarket } from 'core/utils/markets';
 import { TxStates, useMutation } from 'sdk/src/hooks/useMutations';
 
 export const useChainActions = () => {
   const { t } = useTranslation();
-  const [, setModal] = useRemix(MODAL_ACTIVE);
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const [context, setContext] = useRemix(DRAWER_CONTEXT);
-  const [, setPhase] = useRemix(USER_PHASE);
-  const [, setEquip] = useRemix(EQUIP_ITEM);
-  const [, setUnequip] = useRemix(UNEQUIP_ITEM);
-  const [confirm, setConfirm] = useRemix(GAME_CONFIRM);
-  const [, setMutation] = useRemix(CREATE_MUTATION);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
-  const [game, setGame] = useRemix(CHAIN_GAME);
-  const [items, setItems] = useRemix(CHAIN_ITEMS);
-  const [casters, setCasters] = useRemix(CHAIN_CASTERS);
-  const [oldCasters] = useRemix(CHAIN_OLD_CASTERS);
-  const [, setResources] = useRemix(GAME_RESOURCES);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [orderbook, setOrderbook] = useRemix(TRADE_ORDERBOOK);
-  const [board] = useRemix(GAME_MAP);
+  const [, setModal] = useMesh(MODAL_ACTIVE);
+  const [drawer, setDrawer] = useMesh(DRAWER_ACTIVE);
+  const [context, setContext] = useMesh(DRAWER_CONTEXT);
+  const [, setPhase] = useMesh(USER_PHASE);
+  const [, setEquip] = useMesh(EQUIP_ITEM);
+  const [, setUnequip] = useMesh(UNEQUIP_ITEM);
+  const [confirm, setConfirm] = useMesh(GAME_CONFIRM);
+  const [, setMutation] = useMesh(CREATE_MUTATION);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
+  const [game, setGame] = useMesh(CHAIN_GAME);
+  const [items, setItems] = useMesh(CHAIN_ITEMS);
+  const [casters, setCasters] = useMesh(CHAIN_CASTERS);
+  const [oldCasters] = useMesh(CHAIN_OLD_CASTERS);
+  const [, setResources] = useMesh(GAME_RESOURCES);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [orderbook, setOrderbook] = useMesh(TRADE_ORDERBOOK);
+  const [board] = useMesh(GAME_MAP);
   const { handleState } = useMutation();
 
   const fetchPlayer = async (
@@ -110,7 +109,7 @@ export const useChainActions = () => {
         } else {
           const nextCaster = await casterInstance.refreshCaster();
           if (nextCaster) nextCaster.publicKey = publicKey;
-          const nextCasters = remix?.getValue(CHAIN_CASTERS);
+          const nextCasters = [...casters];
 
           if (nextCaster && publicKey) {
             // Replace
@@ -606,27 +605,6 @@ export const useChainActions = () => {
           INST_CLAIM_ALL,
         );
       }, casterInstance);
-    },
-    async lootAllResources() {
-      map(spellcasters, (caster) => {
-        const col = caster?.position?.[0];
-        const level = +caster?.position?.slice(1);
-        let count = 0;
-        map(board, async (row) => {
-          if (row?.level === level) {
-            const tile = row?.[col];
-            if (
-              caster?.last_loot < game?.turnInfo?.turn &&
-              (tile?.type === TYPE_RES2 ||
-                tile?.type === TYPE_RES3 ||
-                tile?.type === TYPE_RES1)
-            ) {
-              setTimeout(async () => await lootResources(caster), 1000 * count);
-              count++;
-            }
-          }
-        });
-      });
     },
     async prestigeCaster(casterPK) {
       const casterContext = new CasterContext(

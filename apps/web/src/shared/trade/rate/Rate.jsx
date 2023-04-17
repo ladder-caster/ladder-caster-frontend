@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import { _rate, _base, _equals, _quote, _empty } from './Rate.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/mesh/state';
 import { useOrderbook } from 'core/hooks/useOrderbook';
 import { findMarket } from 'core/utils/markets';
 import { useTranslation } from 'react-i18next';
 
 const Rate = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const orderbook = useOrderbook();
   const base = context?.base;
   const quote = context?.quote;

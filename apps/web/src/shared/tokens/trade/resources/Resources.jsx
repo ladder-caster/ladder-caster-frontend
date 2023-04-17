@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { _resources, _element } from './Resources.styled';
 import IconResource from '../../../types/icons/IconResource';
 import { IconArrow } from 'design/icons/arrow.icon';
-import { TOKENS_ACTIVE } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { TOKENS_ACTIVE } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../../actions';
 
 const Resources = ({ pair }) => {
-  const [tokens] = useRemix(TOKENS_ACTIVE);
+  const [tokens] = useMesh(TOKENS_ACTIVE);
   const { flipSide } = useActions();
   const flip = tokens?.flip;
   const input = pair?.split('/')?.[!flip ? 0 : 1];

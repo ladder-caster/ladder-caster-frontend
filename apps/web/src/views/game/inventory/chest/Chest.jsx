@@ -17,14 +17,14 @@ import {
   TIER_II,
   TIER_III,
   TIER_IV,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconTreasure } from 'design/icons/treasure.icon';
 import { useActions } from '../../../../../actions';
 
 const Chest = ({ tier }) => {
   const { modalChest, openChest } = useActions();
-  const [chests] = useRemix(
+  const [chests] = useMesh(
     GAME_INVENTORY,
     (inventory) =>
       inventory?.chests?.filter((chest) => chest.tier === tier) || [],

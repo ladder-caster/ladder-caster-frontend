@@ -8,11 +8,11 @@ import {
   _back,
   _tab_span,
 } from './Tabs.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { IconChevronLeft } from '../../../../libs/design/icons/chevron-left.icon';
 
 const Tabs = ({ padding, back, views, tab_id, ...props }) => {
-  const [tab, setTab] = useRemix(tab_id);
+  const [tab, setTab] = useMesh(tab_id);
 
   const titles = Object.entries(views)?.map(([key, value]) => {
     const pulse = views?.[key]?.data?.pulse ?? false;

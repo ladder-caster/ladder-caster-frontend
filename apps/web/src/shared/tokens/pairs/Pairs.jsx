@@ -1,6 +1,6 @@
 import React from 'react';
 import { _pairs, _row } from './Pairs.styled';
-import { TYPE_RES3, TYPE_RES1, TYPE_GOLD, TYPE_RES2 } from 'core/remix/state';
+import { TYPE_RES3, TYPE_RES1, TYPE_GOLD, TYPE_RES2 } from 'core/mesh/state';
 import Button from './button/Button';
 
 const Pairs = () => {

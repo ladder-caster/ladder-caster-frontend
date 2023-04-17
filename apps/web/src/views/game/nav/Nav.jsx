@@ -7,8 +7,8 @@ import {
   VIEW_INVENTORY,
   VIEW_MARKET,
 } from 'core/routes/routes';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/mesh/state';
 import { IconMarketplace } from 'design/icons/marketplace.icon';
 import { useLocation } from 'react-router-dom';
 import { IconBag } from 'design/icons/bag.icon';
@@ -19,9 +19,9 @@ import { useTranslation } from 'react-i18next';
 
 const Nav = () => {
   const { t } = useTranslation();
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
+  const [drawer, setDrawer] = useMesh(DRAWER_ACTIVE);
   const { pathname } = useLocation();
-  const [view, setView] = useRemix(VIEW_NAVIGATION);
+  const [view, setView] = useMesh(VIEW_NAVIGATION);
 
   return (
     <_nav>

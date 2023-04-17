@@ -1,18 +1,18 @@
 import React from 'react';
 import { _card, _icon } from './Card.styled';
 import { IconHat } from 'design/icons/hat.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_OLD_SPELLCASTERS, GAME_SPELLCASTERS } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { GAME_OLD_SPELLCASTERS, GAME_SPELLCASTERS } from 'core/mesh/state';
 import { find } from 'lodash';
 import Spotlight from '../../../../../shared/spotlight/Spotlight';
 import Caster from '../../../../../shared/caster/Caster';
 
 const Card = ({ spell_id }) => {
   const [old_caster] =
-    useRemix(GAME_OLD_SPELLCASTERS, (oldCasters) =>
+    useMesh(GAME_OLD_SPELLCASTERS, (oldCasters) =>
       find(oldCasters, (caster) => caster?.id === spell_id),
     ) || null;
-  const [caster] = useRemix(GAME_SPELLCASTERS, (spellcasters) =>
+  const [caster] = useMesh(GAME_SPELLCASTERS, (spellcasters) =>
     find(spellcasters, (caster) => caster.id === spell_id),
   );
 

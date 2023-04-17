@@ -3,17 +3,17 @@ import { _settle, _button } from './Settle.styled';
 import { useTranslation } from 'react-i18next';
 import { useOpenOrders } from 'core/hooks/useOpenOrders';
 import { useActions } from '../../../../../../actions';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { DRAWER_CONTEXT } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { DRAWER_CONTEXT } from 'core/mesh/state';
 import { findMarket } from 'core/utils/markets';
 
 const Settle = () => {
   const { t } = useTranslation();
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const base = context?.base;
   const quote = context?.quote;
   const pair = findMarket(base, quote);
-  const { unsettledOrders, loading } = useOpenOrders(true);
+  const { unsettledOrders } = useOpenOrders(true);
   const { settleFunds } = useActions();
 
   if (!unsettledOrders?.length) return null;

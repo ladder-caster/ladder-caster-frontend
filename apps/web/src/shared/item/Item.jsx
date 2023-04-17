@@ -23,7 +23,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import IconAttribute from '../types/icons/IconAttribute';
 import { IconAnvil } from '../../../../libs/design/icons/anvil.icon';
 

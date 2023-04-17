@@ -1,13 +1,13 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { CREATE_MUTATION, WALLET_DISCONNECT } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { CREATE_MUTATION, WALLET_DISCONNECT } from 'core/mesh/state';
 import { useEffect, useMemo } from 'react';
 import { nanoid } from 'nanoid';
 import { TxStates } from 'sdk/src/hooks/useMutations';
 
 export const useWalletAdapter = () => {
   const { connected, disconnect, disconnecting } = useWallet();
-  const [, setMutation] = useRemix(CREATE_MUTATION);
+  const [, setMutation] = useMesh(CREATE_MUTATION);
   const id = useMemo(() => nanoid(), []);
 
   const handleDisconnect = async () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ITEM_BOOK, ITEM_HAT, ITEM_ROBE, ITEM_STAFF } from 'core/remix/state';
+import { ITEM_BOOK, ITEM_HAT, ITEM_ROBE, ITEM_STAFF } from 'core/mesh/state';
 import { IconHat } from 'design/icons/hat.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { IconStaff } from 'design/icons/staff.icon';

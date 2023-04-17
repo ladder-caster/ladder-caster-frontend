@@ -18,14 +18,14 @@ import { IconStaff } from 'design/icons/staff.icon';
 import { IconCloak } from 'design/icons/cloak.icon';
 import { useActions } from '../../../../../../../actions';
 import Item from '../../../../../../shared/item/Item';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 
 const Equipment = ({ caster }) => {
   const equip_ref = useRef();
   const { chooseUnequip } = useActions();
   const { width } = useSize(equip_ref);
-  const [casters] = useRemix(CHAIN_CASTERS);
+  const [casters] = useMesh(CHAIN_CASTERS);
   const hat = caster?.hat;
   const robe = caster?.robe;
   const staff = caster?.staff;

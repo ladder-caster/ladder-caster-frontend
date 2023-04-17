@@ -9,7 +9,7 @@ import {
   OLD_SEASON,
   CURRENT_SEASON,
   ROUND_TIMELIMIT,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import config from 'web/src/utils/config';
 import PDA from './fetchers/PDA';
 

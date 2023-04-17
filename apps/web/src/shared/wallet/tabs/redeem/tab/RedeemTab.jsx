@@ -4,8 +4,8 @@ import { gridList } from 'core/utils/lists';
 import NFT from '../../../nft/NFT';
 import { map } from 'lodash';
 import { useKeys } from 'core/hooks/useKeys';
-import { DRAWER_CONTEXT } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import RedeemConfirm from '../confirm/RedeemConfirm';
 import { CHAIN_LOCAL_CLIENT, CHAIN_NFTS } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
@@ -14,16 +14,15 @@ import nftUtil from 'sdk/src/utils/NFTUtil';
 const RedeemTab = () => {
   const { t } = useTranslation();
   const [k0, k1, k2, k3] = useKeys(4);
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [nfts, setNfts] = useRemix(CHAIN_NFTS);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [nfts, setNfts] = useMesh(CHAIN_NFTS);
 
   useEffect(() => {
     const getAllNFTs = async () => {
       try {
         return await nftUtil.getNFTS();
       } catch (e) {
-        console.log('failed getting NFTs');
         // catch error
       }
     };

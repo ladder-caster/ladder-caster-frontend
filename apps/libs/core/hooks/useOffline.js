@@ -1,10 +1,10 @@
 import { useLayoutEffect } from 'react';
 import { useEventListener } from './useEventListener';
-import { USER_OFFLINE } from '../remix/state';
-import { useRemix } from './remix/useRemix';
+import { USER_OFFLINE } from '../mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 
 export const useOffline = () => {
-  const [offline, setOffline] = useRemix(USER_OFFLINE);
+  const [offline, setOffline] = useMesh(USER_OFFLINE);
 
   useEventListener('offline', () => {
     if (!offline) setOffline(true);

@@ -14,7 +14,7 @@ import {
   _inner,
 } from './Item.styled';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
@@ -23,7 +23,7 @@ import {
   ITEM_ROBE,
   ITEM_STAFF,
   VIEW_SIZE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import Rank from '../../../../spellcasters/drawer/rank/Rank';
 import { useSize } from 'core/hooks/useSize';
 import { IconHat } from 'design/icons/hat.icon';
@@ -36,10 +36,10 @@ import { filter } from 'lodash';
 const Item = () => {
   const { t } = useTranslation();
   const { craftChooseItem } = useActions();
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const [context, setContext] = useRemix(DRAWER_CONTEXT);
-  const [inventory] = useRemix(GAME_INVENTORY);
-  const [view_height] = useRemix(VIEW_SIZE);
+  const [drawer, setDrawer] = useMesh(DRAWER_ACTIVE);
+  const [context, setContext] = useMesh(DRAWER_CONTEXT);
+  const [inventory] = useMesh(GAME_INVENTORY);
+  const [view_height] = useMesh(VIEW_SIZE);
   const isBoost = drawer?.boost;
   const caster = context?.caster;
   const choose_ref = useRef();

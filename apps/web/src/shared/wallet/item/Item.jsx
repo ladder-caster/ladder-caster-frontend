@@ -11,7 +11,7 @@ import {
   RARITY_EPIC,
   RARITY_LEGENDARY,
   RARITY_RARE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 
 const commonImg = require('../../../../../libs/design/assets/common.png');
 const rareImg = require('../../../../../libs/design/assets/rare.png');

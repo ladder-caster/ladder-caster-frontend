@@ -1,12 +1,12 @@
 import React from 'react';
 import { LazyAnimations } from 'design/animations';
 import { withTheme } from 'styled-components';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_OPTIONS } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { GAME_OPTIONS } from 'core/mesh/state';
 
 export const AnimateLoading = withTheme(
   ({ theme, children, position, ...props }) => {
-    const [options] = useRemix(GAME_OPTIONS);
+    const [options] = useMesh(GAME_OPTIONS);
 
     const variants = {
       initial: {

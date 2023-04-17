@@ -8,7 +8,7 @@ import {
   COIN_ROOT,
   COIN_TORM,
   COIN_USDC,
-} from 'core/remix/coins';
+} from 'core/mesh/coins';
 import { IconMoneyIMG } from 'design/icons/money.icon';
 import { IconEmberIMG } from 'design/icons/ember.icon';
 import { IconFrostIMG } from 'design/icons/frost.icon';

@@ -22,12 +22,12 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePulse } from '../animations/AnimatePulse';
 import { useOrderbook } from 'core/hooks/useOrderbook';
 import { findMarket } from 'core/utils/markets';
-import { DRAWER_CONTEXT } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import { useActions } from '../../../../actions';
 
 const Orderbook = () => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const { inputOrder } = useActions();
   const orderbook = useOrderbook();
   const { t } = useTranslation();

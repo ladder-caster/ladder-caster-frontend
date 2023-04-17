@@ -6,8 +6,8 @@ import {
   CHAIN_PLAYER,
 } from 'chain/hooks/state';
 import { useTranslation } from 'react-i18next';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/remix/init';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { INIT_STATE_REDEEM, INIT_STATE_TRADE } from 'core/mesh/init';
 import {
   CRAFT_CHARACTER,
   CRAFT_MATERIALS,
@@ -46,13 +46,13 @@ import {
   UNEQUIP_ITEM,
   USER_PHASE,
   VIEW_NAVIGATION,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import {
   TABS_MINT_REDEEM,
   TAB_MINT,
   TAB_REDEEM,
   TAB_WALLET,
-} from 'core/remix/tabs';
+} from 'core/mesh/tabs';
 import {
   VIEW_INVENTORY,
   VIEW_MAP,
@@ -61,26 +61,26 @@ import {
 
 export const useStateActions = () => {
   const { t } = useTranslation();
-  const [orderbook] = useRemix(TRADE_ORDERBOOK);
-  const [drawer, setDrawer] = useRemix(DRAWER_ACTIVE);
-  const [context, setContext] = useRemix(DRAWER_CONTEXT);
-  const [resources, setResources] = useRemix(GAME_RESOURCES);
-  const [inventory, setInventory] = useRemix(GAME_INVENTORY);
-  const [tokens, setTokens] = useRemix(TOKENS_ACTIVE);
-  const [, setCasterTab] = useRemix(TABS_CHARACTER_ACTIONS);
-  const [, setWalletTab] = useRemix(TABS_MINT_REDEEM);
-  const [, setModal] = useRemix(MODAL_ACTIVE);
-  const [, setEquip] = useRemix(EQUIP_ITEM);
-  const [, setUnequip] = useRemix(UNEQUIP_ITEM);
-  const [, setConfirm] = useRemix(GAME_CONFIRM);
-  const [, setPhase] = useRemix(USER_PHASE);
-  const [, setClient] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [, setPlayer] = useRemix(CHAIN_PLAYER);
-  const [, setItems] = useRemix(CHAIN_ITEMS);
-  const [, setCasters] = useRemix(CHAIN_CASTERS);
-  const [, setSpellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [, setGame] = useRemix(CHAIN_GAME);
-  const [, setView] = useRemix(VIEW_NAVIGATION);
+  const [orderbook] = useMesh(TRADE_ORDERBOOK);
+  const [drawer, setDrawer] = useMesh(DRAWER_ACTIVE);
+  const [context, setContext] = useMesh(DRAWER_CONTEXT);
+  const [resources, setResources] = useMesh(GAME_RESOURCES);
+  const [inventory, setInventory] = useMesh(GAME_INVENTORY);
+  const [tokens, setTokens] = useMesh(TOKENS_ACTIVE);
+  const [, setCasterTab] = useMesh(TABS_CHARACTER_ACTIONS);
+  const [, setWalletTab] = useMesh(TABS_MINT_REDEEM);
+  const [, setModal] = useMesh(MODAL_ACTIVE);
+  const [, setEquip] = useMesh(EQUIP_ITEM);
+  const [, setUnequip] = useMesh(UNEQUIP_ITEM);
+  const [, setConfirm] = useMesh(GAME_CONFIRM);
+  const [, setPhase] = useMesh(USER_PHASE);
+  const [, setClient] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [, setPlayer] = useMesh(CHAIN_PLAYER);
+  const [, setItems] = useMesh(CHAIN_ITEMS);
+  const [, setCasters] = useMesh(CHAIN_CASTERS);
+  const [, setSpellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [, setGame] = useMesh(CHAIN_GAME);
+  const [, setView] = useMesh(VIEW_NAVIGATION);
 
   return {
     closeDrawer() {

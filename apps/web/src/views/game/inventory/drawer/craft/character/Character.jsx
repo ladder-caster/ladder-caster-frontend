@@ -13,8 +13,8 @@ import {
 } from './Character.styled';
 import { useTranslation } from 'react-i18next';
 import { IconClose } from 'design/icons/close.icon';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_MAP, GAME_SPELLCASTERS, VIEW_SIZE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { GAME_MAP, GAME_SPELLCASTERS, VIEW_SIZE } from 'core/mesh/state';
 import { map, sortBy } from 'lodash';
 import Caster from '../../../../../../shared/caster/Caster';
 import { AnimateButton } from '../../../../../../shared/button/animations/AnimateButton';
@@ -23,9 +23,9 @@ import { useActions } from '../../../../../../../actions';
 
 const Character = () => {
   const { t } = useTranslation();
-  const [view_height] = useRemix(VIEW_SIZE);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [board] = useRemix(GAME_MAP);
+  const [view_height] = useMesh(VIEW_SIZE);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [board] = useMesh(GAME_MAP);
   const { closeDrawer } = useActions();
 
   const list_spellcasters = useMemo(() => {

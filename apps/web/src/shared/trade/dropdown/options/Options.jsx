@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { _options } from './Options.styled';
-import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { DRAWER_CONTEXT, SIDE_BUY, SIDE_SELL } from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Option from './option/Option';
 import { forEach } from 'lodash';
 
 const Options = ({ isSwap, isBase, selected, other, click }) => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
   const fiat = context?.fiat;
   const coins = context?.coins;
   const side = context?.side;

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import {
   _spellcasters,
   _list,
@@ -15,24 +15,28 @@ import {
   PRESTIGE_HIDE,
   GAME_CONSTANTS,
   PRESTIGE_TOGGLE,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { _feed } from '../home/Dashboard.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Heading from '../../../shared/heading/Heading';
 import { sortBy } from 'lodash';
 import { Onboarding } from '../home/onboarding/Onboarding';
 import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { useActions } from '../../../../actions';
+import RecycledList from '../../../shared/list/RecycledList';
+import { useSize } from 'core/hooks/useSize';
 
 const Spellcasters = () => {
   const { t } = useTranslation();
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
-  const [oldSpellcasters] = useRemix(GAME_OLD_SPELLCASTERS);
-  const [gameConstants] = useRemix(GAME_CONSTANTS);
-  const [phase] = useRemix(USER_PHASE);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [oldSpellcasters] = useMesh(GAME_OLD_SPELLCASTERS);
+  const list_ref = useRef();
+  const { height, width } = useSize(list_ref);
+  const [gameConstants] = useMesh(GAME_CONSTANTS);
+  const [phase] = useMesh(USER_PHASE);
   const { claimAllRewards } = useActions();
-  const [hidePrestige] = useRemix(PRESTIGE_TOGGLE);
+  const [hidePrestige] = useMesh(PRESTIGE_TOGGLE);
 
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
@@ -59,12 +63,20 @@ const Spellcasters = () => {
           <_claim_all onClick={() => claimAllRewards()}>
             {t('spellcasters.claim.all')}
           </_claim_all>
-          <_list>
-            {render_spellcasters}
-            <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
-            <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
-            {!hidePrestige && render_old_spellcasters}
+          <_list ref={list_ref}>
+            <RecycledList
+              items={render_spellcasters}
+              height={height}
+              width={width}
+              itemSize={134}
+            />
           </_list>
+          {/*<_purchase>*/}
+
+          {/*</_purchase>*/}
+          <Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />
+          <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />
+          {!hidePrestige && render_old_spellcasters}
         </>
       );
     }
@@ -73,7 +85,14 @@ const Spellcasters = () => {
         <Onboarding />
       </_feed>
     );
-  }, [gameConstants?.gameState, spellcasters, oldSpellcasters, hidePrestige]);
+  }, [
+    gameConstants?.gameState,
+    height,
+    width,
+    spellcasters,
+    oldSpellcasters,
+    hidePrestige,
+  ]);
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />

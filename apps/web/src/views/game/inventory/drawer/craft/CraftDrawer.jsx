@@ -4,14 +4,14 @@ import {
   CRAFT_ITEM,
   CRAFT_MATERIALS,
   DRAWER_CONTEXT,
-} from 'core/remix/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+} from 'core/mesh/state';
+import { useMesh } from 'core/state/mesh/useMesh';
 import Materials from './materials/Materials';
 import Item from './item/Item';
 import Character from './character/Character';
 
 const CraftDrawer = () => {
-  const [context] = useRemix(DRAWER_CONTEXT);
+  const [context] = useMesh(DRAWER_CONTEXT);
 
   const craft_types = {
     [CRAFT_MATERIALS]: <Materials />,

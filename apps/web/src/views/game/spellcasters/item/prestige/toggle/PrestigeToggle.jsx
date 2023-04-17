@@ -10,12 +10,12 @@ import {
 } from './PrestigeToggle.styled';
 import { useTranslation } from 'react-i18next';
 import Toggle from '../../../../../../shared/button/toggle/Toggle';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { PRESTIGE_TOGGLE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { PRESTIGE_TOGGLE } from 'core/mesh/state';
 
 const PrestigeToggle = () => {
   const { t } = useTranslation();
-  const [toggle, setToggle] = useRemix(PRESTIGE_TOGGLE);
+  const [toggle, setToggle] = useMesh(PRESTIGE_TOGGLE);
   const handleToggle = () => {
     setToggle(!toggle);
     localStorage.setItem('hide_prestige', !toggle);

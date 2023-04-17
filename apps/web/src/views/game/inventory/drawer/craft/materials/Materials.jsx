@@ -23,7 +23,7 @@ import {
   _grid_item,
 } from './Materials.styled';
 import Rank from '../../../../spellcasters/drawer/rank/Rank';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import {
   DRAWER_ACTIVE,
   DRAWER_CONTEXT,
@@ -42,7 +42,7 @@ import {
   USER_PHASE,
   PHASE_REWARDS,
   PHASE_EQUIP,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { _row } from '../character/Character.styled';
 import { filter } from 'lodash';
 import Item from '../../../../../../shared/item/Item';
@@ -55,12 +55,12 @@ import { IconMoneyIMG } from 'design/icons/money.icon';
 
 const Materials = () => {
   const { t } = useTranslation();
-  const [drawer] = useRemix(DRAWER_ACTIVE);
-  const [context] = useRemix(DRAWER_CONTEXT);
-  const [board] = useRemix(GAME_MAP);
-  const [inventory] = useRemix(GAME_INVENTORY);
-  const [view_height] = useRemix(VIEW_SIZE);
-  const [phase] = useRemix(USER_PHASE);
+  const [drawer] = useMesh(DRAWER_ACTIVE);
+  const [context] = useMesh(DRAWER_CONTEXT);
+  const [board] = useMesh(GAME_MAP);
+  const [inventory] = useMesh(GAME_INVENTORY);
+  const [view_height] = useMesh(VIEW_SIZE);
+  const [phase] = useMesh(USER_PHASE);
   const material_ref = useRef();
   const material_size = useSize(material_ref);
   const caster = context?.caster;
@@ -176,7 +176,6 @@ const Materials = () => {
     rarity: craft_item?.max_rarity,
     tier: craft_item?.max_tier,
   };
-  console.log(item_type, context);
   const confirm = materials?.[0] && materials?.[1] && materials?.[2];
 
   const filter_items = filter(

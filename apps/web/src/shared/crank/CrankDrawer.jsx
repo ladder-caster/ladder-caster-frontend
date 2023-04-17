@@ -19,7 +19,7 @@ import { IconClose } from 'design/icons/close.icon';
 import { useActions } from '../../../actions';
 import { useTranslation } from 'react-i18next';
 import { CHAIN_GAME } from 'chain/hooks/state';
-import { useRemix } from 'core/hooks/remix/useRemix';
+import { useMesh } from 'core/state/mesh/useMesh';
 import dayjs from 'dayjs';
 import { AnimateFill } from './animations/AnimateFill';
 import { AnimateBar } from './animations/AnimateBar';
@@ -29,7 +29,7 @@ import {
   TYPE_RES3,
   TYPE_RES1,
   TYPE_RES2,
-} from 'core/remix/state';
+} from 'core/mesh/state';
 import { map } from 'lodash';
 
 let start = Math.floor(+dayjs() / 1000);
@@ -45,12 +45,12 @@ let end = '';
 const CrankDrawer = () => {
   const { t } = useTranslation();
   const { closeDrawer, nextTurn } = useActions();
-  const [game] = useRemix(CHAIN_GAME);
+  const [game] = useMesh(CHAIN_GAME);
   const [time, setTime] = useState({});
-  const [spellcasters] = useRemix(GAME_SPELLCASTERS);
+  const [spellcasters] = useMesh(GAME_SPELLCASTERS);
   const [claim, setClaim] = useState(false);
   const [loot, setLoot] = useState(false);
-  const [board] = useRemix(GAME_MAP);
+  const [board] = useMesh(GAME_MAP);
 
   useEffect(() => {
     if (spellcasters) {

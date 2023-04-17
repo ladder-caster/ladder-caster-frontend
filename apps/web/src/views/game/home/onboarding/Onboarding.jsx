@@ -24,8 +24,8 @@ import {
   _text,
   _warning,
 } from '../Dashboard.styled';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { GAME_INIT, GAME_RESOURCES, USER_PHASE } from 'core/mesh/state';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useActions } from '../../../../../actions';
 import { useTranslation } from 'react-i18next';
@@ -36,17 +36,17 @@ import { IconMoney } from 'design/icons/money.icon';
 import { IconLightning } from 'design/icons/lightning.icon';
 import Skeleton from './skeleton/Skeleton';
 import { IconGoogle } from '../../../../../../libs/design/icons/google.icon';
+import { Client } from 'sdk/src/program';
 
 export const Onboarding = ({ home }) => {
   const { t } = useTranslation();
   const [noFunds, setNoFunds] = useState(false);
-  const [player] = useRemix(CHAIN_PLAYER);
-  const [casters] = useRemix(CHAIN_CASTERS);
-  const [resources] = useRemix(GAME_RESOURCES);
-  const [, setInitalized, isSetInitReady] = useRemix(GAME_INIT);
-  const [client] = useRemix(CHAIN_LOCAL_CLIENT);
-  const [initLoading] = useRemix(INIT_CHAIN_LOAD);
-  const [phase] = useRemix(USER_PHASE);
+  const [player] = useMesh(CHAIN_PLAYER);
+  const [casters] = useMesh(CHAIN_CASTERS);
+  const [resources] = useMesh(GAME_RESOURCES);
+  const [, setInitalized] = useMesh(GAME_INIT);
+  const [client] = useMesh(CHAIN_LOCAL_CLIENT);
+  const [initLoading] = useMesh(INIT_CHAIN_LOAD);
   const { drawerRedeem } = useActions();
   const { setVisible } = useWalletModal();
   const {
@@ -56,7 +56,9 @@ export const Onboarding = ({ home }) => {
     drawerTrade,
   } = useActions();
   const getFunds = async () => {
-    setNoFunds((await client.getSOLBalance()) === 0);
+    setNoFunds(
+      (await Client.getSOLBalance(client.connection, client.wallet)) === 0,
+    );
   };
 
   const connectWallet = () => {
@@ -89,8 +91,8 @@ export const Onboarding = ({ home }) => {
   }, [client, player]);
 
   useEffect(() => {
-    if (isSetInitReady) setInitalized(initialized);
-  }, [initialized, isSetInitReady]);
+    setInitalized(initialized);
+  }, [initialized]);
 
   if (initLoading) return <Skeleton />;
 

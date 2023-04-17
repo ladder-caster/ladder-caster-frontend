@@ -19,7 +19,7 @@ import {
   MetadataProgram,
 } from '@metaplex-foundation/mpl-token-metadata';
 const { SystemProgram } = anchor.web3;
-import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/remix/state';
+import { TYPE_RES1, TYPE_RES2, TYPE_RES3 } from 'core/mesh/state';
 import gameConstantsContext from './GameConstantsContext';
 import arweaveUtil from '../utils/ArweaveUtil';
 import { TransactionBuilder } from '../hooks/useMutations';

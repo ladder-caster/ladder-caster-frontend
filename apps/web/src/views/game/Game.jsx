@@ -18,8 +18,8 @@ import { useMobileHeight } from 'core/hooks/useMobileHeight';
 import { AnimateMobile } from './animations/AnimateMobile';
 import { IconMore } from 'design/icons/more.icon';
 import Modal from '../../shared/modal/Modal';
-import { useRemix } from 'core/hooks/remix/useRemix';
-import { VIEW_NAVIGATION } from 'core/remix/state';
+import { useMesh } from 'core/state/mesh/useMesh';
+import { VIEW_NAVIGATION } from 'core/mesh/state';
 import { AnimateDots } from './animations/AnimateSettings';
 import { useActions } from '../../../actions';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ const Game = () => {
   const screen_ref = useRef();
   const { height } = useSize(screen_ref);
   const { vh } = useMobileHeight();
-  const [view, setView, isSetViewReady] = useRemix(VIEW_NAVIGATION);
+  const [view, setView, isSetViewReady] = useMesh(VIEW_NAVIGATION);
   const { drawerSettings } = useActions();
   const [k0, k1, k2] = useKeys(5);
 
