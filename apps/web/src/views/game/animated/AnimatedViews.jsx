@@ -36,16 +36,6 @@ const variants = {
 export const AnimatedViews = () => {
   const [view] = useMesh(VIEW_NAVIGATION);
 
-  const View = ({ children, $key }) => {
-    return useMemo(
-      () => (
-        <motion.div {...variants} key={$key}>
-          {children}
-        </motion.div>
-      ),
-      [children],
-    );
-  };
   const Views = useMemo(
     () => () => (
       <AnimatePresence>
@@ -80,4 +70,15 @@ export const AnimatedViews = () => {
   );
 
   return <Views />;
+};
+
+const View = ({ children, $key }) => {
+  return useMemo(
+    () => (
+      <motion.div {...variants} key={$key}>
+        {children}
+      </motion.div>
+    ),
+    [children, $key],
+  );
 };

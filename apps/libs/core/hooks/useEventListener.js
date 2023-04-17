@@ -1,13 +1,13 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useEventListener = (eventName, handler, element = window) => {
   const savedHandler = useRef();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     savedHandler.current = handler;
   }, [handler]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const isSupported = element && element.addEventListener;
     if (!isSupported) return;
 

@@ -28,13 +28,14 @@ import Connect from '../../shared/connect/Connect';
 import { useKeys } from 'core/hooks/useKeys';
 import { View } from './View/View';
 import config from '../../../src/utils/config';
+import { VIEW_HOME } from 'core/routes/routes';
 
 const Game = () => {
   const { t } = useTranslation();
   const screen_ref = useRef();
   const { height } = useSize(screen_ref);
   const { vh } = useMobileHeight();
-  const [view, setView, isSetViewReady] = useMesh(VIEW_NAVIGATION);
+  const [view, setView] = useMesh(VIEW_NAVIGATION);
   const { drawerSettings } = useActions();
   const [k0, k1, k2] = useKeys(5);
 
@@ -47,10 +48,12 @@ const Game = () => {
   useEffect(() => {
     const cachedTab = localStorage.getItem('lc-tab');
 
-    if (cachedTab && isSetViewReady) {
+    if (cachedTab) {
       setView(cachedTab);
+    } else {
+      setView(VIEW_HOME);
     }
-  }, [isSetViewReady]);
+  }, []);
 
   return (
     <_game $vh={vh} {...k0}>

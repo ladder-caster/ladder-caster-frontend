@@ -1,8 +1,8 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { animate } from 'framer-motion';
 
 export const useAnimatedNumber = (ref, from, to) => {
-  useLayoutEffect(() => {
+  useEffect(() => {
     const number = ref?.current;
 
     const controls = animate(from, to, {

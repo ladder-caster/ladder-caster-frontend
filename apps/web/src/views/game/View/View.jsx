@@ -14,13 +14,7 @@ import {
   VIEW_SIZE,
 } from 'core/mesh/state';
 import { domMax, LazyMotion } from 'framer-motion';
-import React, {
-  useLayoutEffect,
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import CrankDrawer from '../../../shared/crank/CrankDrawer';
 import Drawer from '../../../shared/drawer/Drawer';
 import SettingsDrawer from '../../../shared/settings/SettingsDrawer';
@@ -50,7 +44,7 @@ export const View = () => {
     if (next_height && next_height !== dh) setDrawerHeight(next_height);
   };
 
-  useLayoutEffect(() => refreshHeight(), []);
+  useEffect(() => refreshHeight(), []);
   useEventListener('resize', () => refreshHeight());
   useEventListener('scroll', () => refreshHeight());
 

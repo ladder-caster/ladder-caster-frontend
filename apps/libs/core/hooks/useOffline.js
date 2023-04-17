@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useEventListener } from './useEventListener';
 import { USER_OFFLINE } from '../mesh/state';
 import { useMesh } from 'core/state/mesh/useMesh';
@@ -14,7 +14,7 @@ export const useOffline = () => {
     if (offline) setOffline(false);
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.onoffline = () => {
       if (!offline) setOffline(true);
     };

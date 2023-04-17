@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   _spellcasters,
   _list,
@@ -32,13 +32,10 @@ const Spellcasters = () => {
   const { t } = useTranslation();
   const [casters] = useMesh(CHAIN_CASTERS);
   const [spellcasters] = useMesh(GAME_SPELLCASTERS);
-  const [oldSpellcasters] = useMesh(GAME_OLD_SPELLCASTERS);
-  const list_ref = useRef();
-  const { height, width } = useSize(list_ref);
   const [gameConstants] = useMesh(GAME_CONSTANTS);
-  const [phase] = useMesh(USER_PHASE);
+  const list_ref = useRef();
+  const { height, width } = useSize(list_ref, 'spellcaster');
   const { claimAllRewards } = useActions();
-  const [hidePrestige] = useMesh(PRESTIGE_TOGGLE);
 
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
@@ -48,18 +45,8 @@ const Spellcasters = () => {
     }
   }, [spellcasters]);
 
-  const render_old_spellcasters = useMemo(() => {
-    if (oldSpellcasters && oldSpellcasters.length >= 1) {
-      return sortBy(oldSpellcasters, (sort) => sort?.hue).map((caster) => (
-        <Item key={caster?.publicKey} spell_id={caster.id} isOld />
-      ));
-    }
-  }, [oldSpellcasters]);
   const render = useMemo(() => {
-    if (
-      gameConstants?.gameState &&
-      (phase || casters?.length > 0 || oldSpellcasters?.length > 0)
-    ) {
+    if (gameConstants?.gameState && casters?.length > 0) {
       return (
         <>
           <_claim_all onClick={() => claimAllRewards()}>
@@ -86,14 +73,8 @@ const Spellcasters = () => {
         <Onboarding />
       </_feed>
     );
-  }, [
-    gameConstants?.gameState,
-    height,
-    width,
-    spellcasters,
-    oldSpellcasters,
-    hidePrestige,
-  ]);
+  }, [gameConstants?.gameState, height, width, spellcasters, list_ref.current]);
+
   return (
     <_spellcasters>
       <Heading title={t('title.casters')} />

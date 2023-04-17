@@ -1,4 +1,3 @@
-import { Observable } from './observable';
 import state from '../../state';
 
 // List of all observable states
@@ -17,4 +16,4 @@ const mesh = () => {
   };
 };
 
-export default mesh();
+export default mesh;
