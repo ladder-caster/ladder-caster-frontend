@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   _home,
   _header,
@@ -17,10 +17,7 @@ import {
   _link,
 } from './Dashboard.styled';
 import { useTranslation } from 'react-i18next';
-import { GAME_MAP, TIER_I } from 'core/mesh/state';
-import { useMesh } from 'core/state/mesh/useMesh';
 import { map as _map } from 'lodash';
-import { nanoid } from 'nanoid';
 import { _controls, _speed } from '../header/Header.styled';
 import { _wallet } from '../inventory/Inventory.styled';
 import Heading from '../../../shared/heading/Heading';
@@ -28,41 +25,6 @@ import { Onboarding } from './onboarding/Onboarding';
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const [map, setMap] = useMesh(GAME_MAP);
-  const [next_map] = useState();
-
-  let new_map = map ? [...map] : [];
-
-  //TODO: why here?
-  useEffect(() => {
-    if (next_map) {
-      const show_map = _map(next_map?.map, (tile) => {
-        const col = {
-          ['1']: 'a',
-          ['2']: 'b',
-          ['3']: 'c',
-        }[`${tile.column}`];
-
-        return {
-          level: tile.level,
-          remaining: tile.life,
-          tier: TIER_I,
-          type: Object.keys(tile.feature)[0],
-          id: nanoid(),
-          col,
-        };
-      });
-
-      new_map[0] = {
-        a: show_map[0],
-        b: show_map[1],
-        c: show_map[2],
-        level: show_map[0].level,
-      };
-
-      setMap(new_map);
-    }
-  }, [next_map]);
 
   return (
     <_home>

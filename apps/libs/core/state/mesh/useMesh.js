@@ -23,6 +23,7 @@ export const useMesh = (key, selector) => {
 
   // Subscribe to the current state
   useEffect(() => {
+    setValue(source?.getValue());
     source?.subscribe(observer);
     return () => {
       source?.unsubscribe(observer);
