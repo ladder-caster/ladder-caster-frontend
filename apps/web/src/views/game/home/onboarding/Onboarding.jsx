@@ -55,6 +55,7 @@ export const Onboarding = ({ home }) => {
     web3AuthConnect,
     drawerTrade,
   } = useActions();
+
   const getFunds = async () => {
     setNoFunds(
       (await Client.getSOLBalance(client.connection, client.wallet)) === 0,

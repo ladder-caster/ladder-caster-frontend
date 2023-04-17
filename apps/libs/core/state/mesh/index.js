@@ -1,4 +1,6 @@
+import singleton from './mesh';
+
 // Initialize mesh singleton
-const mesh = mesh();
+const mesh = singleton();
 
 export default mesh;

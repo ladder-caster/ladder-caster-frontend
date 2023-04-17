@@ -46,8 +46,6 @@ const Map = () => {
   }, [list_ref?.current, initialized]);
 
   const render_map = useMemo(() => {
-    if (map) console.log('map2', map);
-
     return reverse(
       map?.map((data) => {
         const level = data.level + 1;
@@ -72,8 +70,6 @@ const Map = () => {
       }),
     );
   }, [map?.length]);
-
-  console.log('render_map', render_map);
 
   return (
     <_ladder>

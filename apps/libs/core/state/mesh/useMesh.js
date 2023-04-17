@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import mesh from './mesh';
+import mesh from './index';
 import { nanoid } from 'nanoid';
 
 export const useMesh = (key, selector) => {

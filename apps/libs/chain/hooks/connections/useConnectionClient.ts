@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useW3A } from './useW3A';
 import { useClient } from '../useClient';
 import { INIT_CHAIN_LOAD } from '../state';
@@ -10,7 +10,6 @@ export const useConnectionClient = (client) => {
   const { handleConnectInitial: handleConnectInitialW3A } = useW3A();
   const { createClient } = useClient();
   const anchorWallet = useAnchorWallet();
-  const [stopLoad, setStopLoad] = useState(false);
   const { connected, connecting, disconnecting } = useWallet();
   const [initLoading, setInitLoading] = useMesh(INIT_CHAIN_LOAD);
 
@@ -40,7 +39,7 @@ export const useConnectionClient = (client) => {
       !localStorage.getItem('adapter-connected') &&
       !localStorage.getItem('w3a-connected')
     ) {
-      setStopLoad(true);
+      setInitLoading(false);
     }
   }, []);
 };

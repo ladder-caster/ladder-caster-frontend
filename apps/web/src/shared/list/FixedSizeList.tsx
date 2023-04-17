@@ -1,6 +1,14 @@
 // @ts-ignore
 import React from 'react';
-import { useState, useEffect, useRef, useMemo, FC, cloneElement, ReactElement } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  FC,
+  cloneElement,
+  ReactElement,
+} from 'react';
 // @ts-ignore
 import { useKeys } from 'core/hooks/useKeys';
 
@@ -16,15 +24,15 @@ interface FixedSizeListProps {
 }
 
 const FixedSizeList: FC<FixedSizeListProps> = ({
-                                                 children,
-                                                 itemCount,
-                                                 itemSize,
-                                                 height,
-                                                 width,
-                                                 itemData,
-                                                 padding,
-                                                 orientation = 'vertical'
-                                               }) => {
+  children,
+  itemCount,
+  itemSize,
+  height,
+  width,
+  itemData,
+  padding,
+  orientation = 'vertical',
+}) => {
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const outerRef = useRef<HTMLDivElement>(null);
   const isHorizontal = orientation === 'horizontal';
@@ -53,15 +61,16 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
     if (outerRef.current) {
       outerRef.current.addEventListener('scroll', debouncedHandleScroll);
 
-      return () => outerRef.current?.removeEventListener('scroll', debouncedHandleScroll);
+      return () =>
+        outerRef.current?.removeEventListener('scroll', debouncedHandleScroll);
     }
   }, [debouncedHandleScroll, outerRef]);
 
-
   const calculateVisibleItemCount = useMemo(() => {
-    const visible = Math.ceil((isHorizontal ? width : height) / itemSize) + 3;
+    const visible =
+      Math.ceil((isHorizontal ? width || 0 : height || 0) / itemSize) + 3;
     return itemCount <= visible ? itemCount : visible;
-  }, [isHorizontal, width, height, itemSize]);
+  }, [isHorizontal, width, height, itemSize, itemCount]);
 
   const visibleItems = useMemo(() => {
     const visibleItemCount = calculateVisibleItemCount;
@@ -82,11 +91,11 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
         key_count++;
         const clonedElement = cloneElement(element, {
           key: next_key,
-          child_key: `child-${next_key}`
+          child_key: `child-${next_key}`,
         });
 
         if (element.props.children) {
-          const clonedChildren = cloneChildFixedKey(element.props.children,i);
+          const clonedChildren = cloneChildFixedKey(element.props.children, i);
           return cloneElement(clonedElement, {}, clonedChildren);
         }
 
@@ -100,13 +109,29 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
       const index = visibleStartIndex + i;
       if (index < itemCount) {
         const style = isHorizontal
-          ? { position: 'absolute', left: index * itemSize + (padding / 2), width: itemSize, height: `${height - padding}px`, display: 'flex', flexDirection: 'row', alignItems: 'center' }
-          : { position: 'absolute', top: index * itemSize + (padding / 2), width: `${width - padding}px`, height: itemSize, display: 'flex', flexDirection: 'column', alignItems: 'center' };
+          ? {
+              position: 'absolute',
+              left: index * itemSize + padding / 2,
+              width: itemSize,
+              height: `${height - padding}px`,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }
+          : {
+              position: 'absolute',
+              top: index * itemSize + padding / 2,
+              width: `${width - padding}px`,
+              height: itemSize,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            };
 
         const RowCopy = React.cloneElement(children, {
           index,
           data: itemData,
-          style
+          style,
         });
 
         if (children) {
@@ -116,20 +141,51 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
     }
 
     return items;
-  }, [visibleStartIndex, itemCount, children, itemData, isHorizontal, itemSize, calculateVisibleItemCount, key]);
+  }, [
+    visibleStartIndex,
+    itemCount,
+    children,
+    itemData,
+    isHorizontal,
+    itemSize,
+    calculateVisibleItemCount,
+    key,
+  ]);
 
-  const totalSize = useMemo(() => itemCount * itemSize + padding * 2, [itemCount, itemSize]);
+  const totalSize = useMemo(() => itemCount * itemSize + padding * 2, [
+    itemCount,
+    itemSize,
+  ]);
 
   const innerStyle = useMemo(() => {
     return isHorizontal
-      ? { width: `${totalSize}px`, height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }
-      : { height: `${totalSize}px`, width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' };
+      ? {
+          width: `${totalSize}px`,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }
+      : {
+          height: `${totalSize}px`,
+          width: '100%',
+          maxWidth: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        };
   }, [isHorizontal, totalSize]);
 
   return (
-    <div {...key[0]} ref={outerRef} style={{ position: 'relative', overflow: 'scroll', height, width }}>
+    <div
+      {...key[0]}
+      ref={outerRef}
+      style={{ position: 'relative', overflow: 'scroll', height, width }}
+    >
       {/* @ts-ignore */}
-      <div {...key[1]} style={innerStyle}>{visibleItems}</div>
+      <div {...key[1]} style={innerStyle}>
+        {visibleItems}
+      </div>
     </div>
   );
 };
