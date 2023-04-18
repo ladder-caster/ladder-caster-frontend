@@ -513,8 +513,30 @@ export class CasterContext {
     const gameTurnData = await this.getGameTurnData(caster?.turnCommit?.turn);
 
     console.log('looting caster turn commit', caster.turnCommit);
-    console.log('game data turn ', gameConstantsContext.gameState.turnInfo);
+
+    console.log('caster', caster);
+    console.log(
+      'caster  312',
+      await gameConstantsContext.Client.program.account.caster.fetch(
+        caster.publicKey,
+      ),
+    );
+
+    console.log('game data turn ', gameConstantsContext.gameState);
+    console.log(
+      'gameConstantsContext.gameAccount',
+      await gameConstantsContext.Client.program.account.game.fetch(
+        gameConstantsContext.gameAccount,
+      ),
+    );
+
     console.log('game turn data', gameTurnData.toString());
+    console.log(
+      'game turn data object',
+      await gameConstantsContext.Client.program.account.turnData.fetch(
+        gameTurnData,
+      ),
+    );
 
     return await gameConstantsContext.Client.program.methods
       .casterRedeemLoot()
@@ -801,6 +823,16 @@ export class CasterContext {
           }
         : {};
 
+    // console.log('------------------------------- reward actions');
+    // console.log('looting caster turn commit', caster.turnCommit);
+    // console.log('game data turn ', gameConstantsContext.gameState.turnInfo);
+    // console.log('game turn data', gameTurnData.toString());
+    // console.log(
+    //   'game turn data object',
+    //   await gameConstantsContext.Client.program.account.turnData.fetch(
+    //     gameTurnData,
+    //   ),
+    // );
     return await gameConstantsContext.Client.program.methods
       .casterRedeemReward()
       .accounts({

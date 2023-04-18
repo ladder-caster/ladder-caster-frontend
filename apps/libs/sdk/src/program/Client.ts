@@ -60,7 +60,9 @@ export class Client {
   }
 
   private static getProgram(conn: anchor.web3.Connection, wallet: NodeWallet) {
-    const _provider = new anchor.AnchorProvider(conn, wallet, {});
+    const _provider = new anchor.AnchorProvider(conn, wallet, {
+      skipPreflight: false,
+    });
     const idl = Client.getIDL();
     return new anchor.Program(idl as anchor.Idl, config.programId, _provider);
   }

@@ -5,6 +5,7 @@ import { INIT_CHAIN_LOAD } from '../state';
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { useMesh } from 'core/state/mesh/useMesh';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
+import * as anchor from '@project-serum/anchor';
 
 export const useConnectionClient = (client) => {
   const { handleConnectInitial: handleConnectInitialW3A } = useW3A();
