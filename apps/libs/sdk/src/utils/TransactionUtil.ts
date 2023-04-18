@@ -17,6 +17,8 @@ export const signTransaction = async (
     builder.transaction.partialSign(sign);
   }
 
+  console.log('signTransaction', wallet.signTransaction);
+
   return await wallet.signTransaction(builder.transaction);
 };
 
@@ -74,6 +76,9 @@ export const executeTransaction = async (
     });
 
     console.log('rejected', rejected);
+    if (rejected.length === signedTxs.length) {
+      throw rejected[0];
+    }
   }
 
   return validatorSignatures;
