@@ -12,7 +12,7 @@
     "web": "parcel serve public/index.html",
     "build": "rimraf build && parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url .",
     "deploy-prod": "build-prod && vc --cwd build && vercel deploy --prebuilt",
-    "vercel-build": "rimraf build && parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url ."
+    "vercel-build": "rimraf build && parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url . && npm list"
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "0.9.22",
