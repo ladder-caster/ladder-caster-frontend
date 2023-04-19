@@ -76,14 +76,14 @@ export const useMutation = () => {
       } as Mutation;
 
       try {
-        setMutation({ ...mutation });
+        setMutation({ mutation });
         const {
           blockhash,
           lastValidBlockHeight,
         } = (await client.connection.getLatestBlockhash()) as BlockhashWithExpiryBlockHeight;
 
         // Sign Transaction
-        console.log('signing...', builder);
+        console.log('signing...');
         let signedTxs: Transaction[];
         if (Array.isArray(builder)) {
           signedTxs = await signAllTransaction(
@@ -139,14 +139,6 @@ export const useMutation = () => {
         return confirmationResult;
       } catch (e) {
         console.log('mutation failed', e);
-        if (e.message.includes('rejected')) {
-          setMutation({
-            ...mutation,
-            state: TxStates.ERROR,
-          });
-
-          return;
-        }
         if (onError) return await onError();
 
         //TODO: review error handling

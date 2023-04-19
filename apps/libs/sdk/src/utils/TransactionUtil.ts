@@ -64,16 +64,11 @@ export const executeTransaction = async (
 
     const results = await Promise.allSettled(executionPromise);
 
-    const rejected = [];
     results.forEach((result) => {
       if (result.status === 'fulfilled') {
         validatorSignatures.push(result.value);
-      } else {
-        rejected.push(result.reason);
       }
     });
-
-    console.log('rejected', rejected);
   }
 
   return validatorSignatures;

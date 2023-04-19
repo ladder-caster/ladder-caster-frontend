@@ -10,6 +10,7 @@ import {
 import { useMesh } from 'core/state/mesh/useMesh';
 import { DRAWER_ACTIVE, VIEW_NAVIGATION } from 'core/mesh/state';
 import { IconMarketplace } from 'design/icons/marketplace.icon';
+import { useLocation } from 'react-router-dom';
 import { IconBag } from 'design/icons/bag.icon';
 import { IconHat } from 'design/icons/hat.icon';
 import { IconMap } from 'design/icons/map.icon';

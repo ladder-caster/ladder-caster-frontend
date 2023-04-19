@@ -512,10 +512,6 @@ export class CasterContext {
     const mintAccounts = await this.getMintAccounts();
     const gameTurnData = await this.getGameTurnData(caster?.turnCommit?.turn);
 
-    console.log('looting caster turn commit', caster.turnCommit);
-    console.log('game data turn ', gameConstantsContext.gameState.turnInfo);
-    console.log('game turn data', gameTurnData.toString());
-
     return await gameConstantsContext.Client.program.methods
       .casterRedeemLoot()
       .accounts({
