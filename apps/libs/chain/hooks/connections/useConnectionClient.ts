@@ -33,11 +33,9 @@ export const useConnectionClient = (client) => {
     }
   }, [disconnecting]);
 
-  // useEffect(() => {
-  //   if (!connected && !connecting) {
-  //     setInitLoading(false);
-  //   }
-  // }, [connected, connecting]);
+  const removeLoad = useCallback(() => {
+    if (!connecting && !connected) setInitLoading(false);
+  }, [connecting, connected]);
 
   useEffect(() => {
     if (localStorage.getItem('w3a-connected')) handleConnectInitialW3A();
@@ -51,5 +49,9 @@ export const useConnectionClient = (client) => {
       localStorage.removeItem('w3a-connected');
       localStorage.removeItem('adapter-connected');
     }
+
+    setTimeout(() => {
+      removeLoad();
+    }, 1000);
   }, []);
 };

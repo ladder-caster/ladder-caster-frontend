@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, _app, _view } from 'design/styles/global';
 import { styles, theme, zindex } from 'design';
@@ -62,13 +62,7 @@ const App = () => {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider
-        wallets={wallets}
-        autoConnect={true}
-        onError={(e) => {
-          console.log('erreur', e);
-        }}
-      >
+      <WalletProvider wallets={wallets} autoConnect={true}>
         <WalletModalProvider>
           <ThemeProvider theme={withThemes({ palette: theme })}>
             <Helmet>
