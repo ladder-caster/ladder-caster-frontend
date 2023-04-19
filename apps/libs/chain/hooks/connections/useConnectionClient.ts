@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useW3A } from './useW3A';
 import { useClient } from '../useClient';
 import { INIT_CHAIN_LOAD } from '../state';
@@ -33,13 +33,23 @@ export const useConnectionClient = (client) => {
     }
   }, [disconnecting]);
 
+  // useEffect(() => {
+  //   if (!connected && !connecting) {
+  //     setInitLoading(false);
+  //   }
+  // }, [connected, connecting]);
+
   useEffect(() => {
     if (localStorage.getItem('w3a-connected')) handleConnectInitialW3A();
     if (
-      !localStorage.getItem('adapter-connected') &&
-      !localStorage.getItem('w3a-connected')
+      (!localStorage.getItem('adapter-connected') &&
+        !localStorage.getItem('w3a-connected')) ||
+      !localStorage.getItem('walletName')
     ) {
       setInitLoading(false);
+
+      localStorage.removeItem('w3a-connected');
+      localStorage.removeItem('adapter-connected');
     }
   }, []);
 };
