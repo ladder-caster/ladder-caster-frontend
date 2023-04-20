@@ -75,7 +75,6 @@ export const AnimateEnchant = withTheme(
         animate_key={animate_key}
         initial={'initial'}
         animate={'animate'}
-        g
         whileHover={'hover'}
         whileTap={'tap'}
         listen_key={move_to}

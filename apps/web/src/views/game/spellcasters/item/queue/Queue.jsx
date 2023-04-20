@@ -147,61 +147,41 @@ const Queue = ({ spell_id }) => {
   const render = useMemo(() => {
     if (needsToRedeem) {
       return (
-        <AnimateRewards element={TYPE_LEGENDARY}>
-          <_claim onClick={redeem}>{t('spellcasters.claim')}</_claim>
-        </AnimateRewards>
+        <_claim $element={TYPE_LEGENDARY} onClick={redeem}>
+          {t('spellcasters.claim')}
+        </_claim>
       );
     } else if (element === TYPE_CRAFT || element === TYPE_LEGENDARY) {
       return (
-        <AnimateButton
-          low
-          shake={clicked === 'craft' && !unlocked_craft}
-          element={element}
-        >
-          <_action onClick={craft}>
-            <_icon $element={element}>
-              {!!IconElement ? <IconElement /> : undefined}
-              <span>{t('spellcaster.action.craft')}</span>
-            </_icon>
-            <_float>
-              <AnimatePresence>
-                {!unlocked_craft && (
-                  <AnimateLock key={'animate-lock-craft'}>
-                    <_lock $element={element}>
-                      <IconLock />
-                    </_lock>
-                  </AnimateLock>
-                )}
-              </AnimatePresence>
-            </_float>
-          </_action>
-        </AnimateButton>
+        <_action onClick={craft} $element={element} $low>
+          <_icon $element={element}>
+            {!!IconElement ? <IconElement /> : undefined}
+            <span>{t('spellcaster.action.craft')}</span>
+          </_icon>
+          <_float>
+            {!unlocked_craft && (
+              <_lock $element={element}>
+                <IconLock />
+              </_lock>
+            )}
+          </_float>
+        </_action>
       );
     } else {
       return (
-        <AnimateButton
-          low
-          shake={clicked === 'loot' && !unlocked_loot}
-          element={element}
-        >
-          <_action onClick={loot}>
-            <_icon $element={element}>
-              {!!IconElement ? <IconElement /> : undefined}
-              <span>{t('spellcaster.action.loot')}</span>
-            </_icon>
-            <_float>
-              <AnimatePresence>
-                {!unlocked_loot && (
-                  <AnimateLock key={'animate-lock-loot'}>
-                    <_lock $element={element}>
-                      <IconLock />
-                    </_lock>
-                  </AnimateLock>
-                )}
-              </AnimatePresence>
-            </_float>
-          </_action>
-        </AnimateButton>
+        <_action onClick={loot} $element={element} $low>
+          <_icon $element={element}>
+            {!!IconElement ? <IconElement /> : undefined}
+            <span>{t('spellcaster.action.loot')}</span>
+          </_icon>
+          <_float>
+            {!unlocked_loot && (
+              <_lock $element={element}>
+                <IconLock />
+              </_lock>
+            )}
+          </_float>
+        </_action>
       );
     }
   }, [
@@ -217,44 +197,32 @@ const Queue = ({ spell_id }) => {
       return (
         <>
           {' '}
-          <AnimateButton shake={clicked === 'move' && !unlocked_move}>
-            <_action onClick={move}>
-              <_icon $basic>
-                <IconMove />
-                <span>{t('spellcaster.action.move')}</span>
-              </_icon>
-              <_float>
-                <AnimatePresence>
-                  {!unlocked_move && (
-                    <AnimateLock key={'animate-lock-move'}>
-                      <_lock $basic>
-                        <IconLock />
-                      </_lock>
-                    </AnimateLock>
-                  )}
-                </AnimatePresence>
-              </_float>
-            </_action>
-          </AnimateButton>
-          <AnimateButton shake={clicked === 'spell' && !unlocked_spell}>
-            <_action onClick={spell}>
-              <_icon $basic>
-                <IconBook />
-                <span>{t('spellcaster.action.spell')}</span>
-              </_icon>
-              <_float>
-                <AnimatePresence>
-                  {!unlocked_spell && (
-                    <AnimateLock key={'animate-lock-spell'}>
-                      <_lock $basic>
-                        <IconLock />
-                      </_lock>
-                    </AnimateLock>
-                  )}
-                </AnimatePresence>
-              </_float>
-            </_action>
-          </AnimateButton>
+          <_action onClick={move}>
+            <_icon $basic>
+              <IconMove />
+              <span>{t('spellcaster.action.move')}</span>
+            </_icon>
+            <_float>
+              {!unlocked_move && (
+                <_lock $basic>
+                  <IconLock />
+                </_lock>
+              )}
+            </_float>
+          </_action>
+          <_action onClick={spell}>
+            <_icon $basic>
+              <IconBook />
+              <span>{t('spellcaster.action.spell')}</span>
+            </_icon>
+            <_float>
+              {!unlocked_spell && (
+                <_lock $basic>
+                  <IconLock />
+                </_lock>
+              )}
+            </_float>
+          </_action>
         </>
       );
     }

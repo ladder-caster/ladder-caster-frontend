@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { m } from 'framer-motion';
 import { TextureFur } from 'design/textures/fur.texture';
 import { bgTexture } from 'design/textures';
 
@@ -13,13 +12,27 @@ export const _queue = styled.div`
   padding: 0 16px 0 12px;
 `;
 
-export const _action = styled(m.div)`
+export const _action = styled.div`
   min-width: 52px;
   width: 52px;
   min-height: 52px;
   height: 52px;
   border-radius: 12px;
   box-shadow: ${({ theme }) => theme.shadow['frost']};
+  background: ${({ theme, $element, $active, $high, $low, $disabled }) =>
+    $element
+      ? theme[$element]['button']
+      : theme.background[
+          $active
+            ? 'button_active'
+            : $high
+            ? 'button_high'
+            : $low
+            ? 'button_low'
+            : $disabled
+            ? 'button_disabled'
+            : 'button'
+        ]};
   cursor: pointer;
   margin-right: 16px;
   display: flex;
@@ -31,7 +44,7 @@ export const _action = styled(m.div)`
   }
 `;
 
-export const _button = styled(m.div)`
+export const _button = styled.div`
   min-width: 52px;
   width: 52px;
   min-height: 52px;
@@ -101,7 +114,7 @@ export const _float = styled.div`
   align-items: center;
 `;
 
-export const _lock = styled(m.div)`
+export const _lock = styled.div`
   min-width: 28px;
   width: 28px;
   min-height: 28px;
@@ -183,7 +196,7 @@ export const _title = styled.div`
   }
 `;
 
-export const _claim = styled(m.div)`
+export const _claim = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

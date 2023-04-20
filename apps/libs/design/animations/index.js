@@ -17,8 +17,8 @@ export const LazyAnimations = ({
       () =>
         React.Children.map(children, (child) =>
           React.cloneElement(child, {
-            ...key[0],
             ...props,
+            key: `lazy-key-${animate_key || key[0]?.key}`,
           }),
         ),
       [watch, children],

@@ -17,12 +17,14 @@ const RecycledList = ({
   padding,
   itemSize,
   orientation,
+  header,
 }) => {
   const key = useKeys(3);
 
   return (
     <FixedSizeList
       {...key[0]}
+      header={header}
       height={height}
       width={width}
       padding={padding || 0}

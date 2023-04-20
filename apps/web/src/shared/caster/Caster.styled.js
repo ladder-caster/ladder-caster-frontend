@@ -1,45 +1,11 @@
 import styled from 'styled-components';
-import { m } from 'framer-motion';
-import {
-  ATTRIBUTE_RES3,
-  ATTRIBUTE_RES2,
-  RARITY_COMMON,
-  RARITY_RARE,
-} from 'core/mesh/state';
-export const _upgrade = styled(m.div).attrs(({ theme, $hue }) => {
-  return {
-    initial: {
-      backgroundColor:
-        $hue !== undefined
-          ? `hsla(${$hue},60%,34%,100%)`
-          : `hsla(360,60%,100%,100%)`,
-      scale: 0.75,
-    },
-    animate: {
-      backgroundColor:
-        $hue !== undefined
-          ? `hsla(${Math.min(Math.max($hue + 10, 0), 360)},30%,60%,100%)`
-          : `hsla(360,60%,100%,100%)`,
-      scale: 1,
-    },
-    transition: {
-      ease: [0.56, -0.28, 0, 1.53],
-      duration: 2.2,
-      repeat: Infinity,
-      repeatType: 'mirror',
-      repeatDelay: 0.1,
-    },
-  };
-})`
+export const _upgrade = styled.div`
   position: absolute;
   width: 16px;
   height: 16px;
   top: 8px;
   right: 56px;
-  background-color: ${({ theme, $hue }) =>
-    $hue !== undefined
-      ? `hsla(${$hue},60%,34%,100%)`
-      : `hsla(360,60%,100%,100%)`};
+  background-color: ${({ theme, $hue }) => `hsla(${$hue},60%,34%,100%)`};
   border-radius: 50%;
   border: 2px solid
     ${({ theme, $hue }) =>
@@ -50,10 +16,10 @@ export const _upgrade = styled(m.div).attrs(({ theme, $hue }) => {
   z-index: 183;
 `;
 export const _caster = styled.div`
-  min-width: ${({ $grid }) => ($grid ? `calc(50% - 8px)` : '100%')};
-  width: ${({ $grid }) => ($grid ? `calc(50% - 8px)` : '100%')};
-  min-height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
-  height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
+  min-width: 88px;
+  width: 88px;
+  min-height: 88px;
+  height: 88px;
   border-radius: 16px;
   margin: 0 8px;
   display: inline-flex;
@@ -108,8 +74,8 @@ export const _overview = styled.div`
 export const _img = styled.img`
   position: relative;
   z-index: ${({ theme }) => theme.zindex['drawer_base']};
-  min-height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
-  height: ${({ $height }) => ($height ? `${$height}px` : '100px')};
+  min-height: 88px;
+  height: 88px;
   border-radius: 8px;
   transform: translateY(${({ $isOld }) => ($isOld ? '-20px' : '0px')})
     scale(${({ $isOld }) => ($isOld ? 1 : 1.5)});

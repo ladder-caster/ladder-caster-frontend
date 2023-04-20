@@ -54,10 +54,12 @@ import {
   RPC_ERROR,
   CHAIN_NEXT_TURN,
   CHAIN_NFTS,
+  EVENT_ANALYTICS,
 } from 'chain/hooks/state';
 import arweaveUtil from 'sdk/src/utils/ArweaveUtil';
 
 export const initialState = {
+  [EVENT_ANALYTICS]: {},
   [VIEW_SIZE]: {},
   [USER_LANGUAGE]: 'en',
   [USER_THEME]: 'gold',
