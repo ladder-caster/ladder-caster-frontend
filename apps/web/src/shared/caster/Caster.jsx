@@ -27,6 +27,11 @@ const Caster = ({ caster, grid, small, callback, isOld }) => {
     if (!isOld && callback) callback();
     else if (!isOld) craftChooseCharacter(caster);
   };
+  const caster_hue =
+    caster?.hue !== undefined
+      ? `hsla(${caster?.hue},60%,34%,100%)`
+      : `hsla(360,60%,100%,100%)`;
+
   return (
     <_caster
       $hue={caster?.hue}

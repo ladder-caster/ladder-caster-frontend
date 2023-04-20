@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { bgTexture } from 'design/textures';
 import { TextureFur } from 'design/textures/fur.texture';
-import { m } from 'framer-motion';
+import { TILE_DISABLED } from 'core/mesh/state';
 
 export const _tile = styled.div`
   min-width: 60px;
@@ -41,7 +41,7 @@ export const _float = styled.div`
   pointer-events: none;
 `;
 
-export const _enchant = styled(m.div)`
+export const _enchant = styled.div`
   min-width: 32px;
   width: 32px;
   min-height: 24px;
@@ -53,6 +53,8 @@ export const _enchant = styled(m.div)`
   padding-right: 2px;
   pointer-events: none;
   box-shadow: ${({ theme }) => theme.shadow['glass']};
+  opacity: ${({ $move_to, $casters, $status }) =>
+    $status === TILE_DISABLED ? 0.45 : $casters ? 1 : 0.45};
   background: ${({ $color, theme }) =>
     $color ||
     `radial-gradient(circle,
@@ -74,7 +76,7 @@ export const _enchant = styled(m.div)`
   }
 `;
 
-export const _backdrop = styled(m.div)`
+export const _backdrop = styled.div`
   min-width: 28px;
   width: 28px;
   min-height: 20px;
@@ -84,7 +86,7 @@ export const _backdrop = styled(m.div)`
   background: ${({ theme }) => theme.background['lowest']};
 `;
 
-export const _background = styled(m.div)`
+export const _background = styled.div`
   position: relative;
   z-index: ${({ theme }) => theme.zindex['map_tile_background']};
   width: 100%;
@@ -97,6 +99,8 @@ export const _background = styled(m.div)`
   background-size: ${({ $tier }) => ($tier ? $tier * 8 : 8)}px;
   background-repeat: repeat;
   box-shadow: ${({ theme }) => theme.shadow['glass']};
+  opacity: ${({ $casters, $status }) =>
+    $status === TILE_DISABLED ? 0.45 : $casters ? 1 : 0.45};
   display: flex;
   flex-direction: column;
   align-items: center;

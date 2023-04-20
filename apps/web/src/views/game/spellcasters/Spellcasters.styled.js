@@ -10,10 +10,6 @@ export const _spellcasters = styled(m.div)`
   flex-direction: column;
 `;
 
-export const _header = styled.div`
-  ${({ theme }) => theme.styles?.view?.['_header']};
-`;
-
 export const _location = styled.h3`
   width: 100%;
   display: flex;
@@ -66,56 +62,105 @@ export const _button = styled.div`
   }
 `;
 
-export const _buy = styled(Link)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 6px 12px;
-  border: 2px solid ${({ theme }) => theme.border['highest']};
-  border-radius: 8px;
-  cursor: pointer;
-  > span {
-    font-size: 14px;
-    font-weight: 700;
-    color: ${({ theme }) => theme.text['base']};
-    padding-left: 4px;
-    letter-spacing: 0.5px;
-  }
-  > svg {
-    min-width: 14px;
-    width: 14px;
-    min-height: 14px;
-    height: 14px;
-    color: ${({ theme }) => theme.text['base']};
-  }
-`;
-
 export const _actions = styled.div``;
 
 export const _purchase = styled.div`
-  width: 100%;
+  width: 50%;
+  min-width: 50%;
+  max-width: 50%;
   min-height: 60px;
   height: 60px;
   background-color: ${({ theme }) => theme.background['lowest']};
   box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 6px 4px 8px 4px;
 `;
 
-export const _claim_all = styled(__button)`
-  width: 128px;
+export const _claim_all = styled.div`
+  width: 100%;
+  height: 100%;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  border: none;
+  box-shadow: ${({ theme }) => theme.shadow['glass']};
+  background: ${({ theme }) => theme.background['button_high']};
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  left: 128px;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    background-color: ${({ theme }) => theme.background['highest']};
-    transform: scale(1.02);
-    color: ${({ theme }) => theme.text['active']};
+  border-radius: 8px;
+  margin-left: 4px;
+  > span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    height: 100%;
   }
-  bottom: 0;
+`;
+
+export const _header = styled.div`
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const _container = styled.div`
+  width: 100%;
+  min-height: 48px;
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px 0 8px;
+`;
+
+export const _buy = styled.div`
+  width: 100%;
+  height: 100%;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  border: none;
+  box-shadow: ${({ theme }) => theme.shadow['glass']};
+  background: ${({ theme }) => theme.background['button_high']};
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin-right: 4px;
+  > span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: ${({ theme, $disabled }) =>
+      theme.text[$disabled ? 'faded' : 'base']};
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    height: 100%;
+  }
+`;
+
+export const _divider = styled.div`
+  width: 100%;
+  min-height: 2px;
+  height: 2px;
+  background: ${({ theme }) => theme.border['base']};
+  margin-top: 8px;
+  margin-bottom: 4px;
 `;

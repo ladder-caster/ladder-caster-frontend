@@ -20,6 +20,7 @@ interface FixedSizeListProps {
   width: number;
   padding: number;
   itemData: any[];
+  header: any[];
   orientation?: 'vertical' | 'horizontal';
 }
 
@@ -31,18 +32,84 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
   width,
   itemData,
   padding,
+  header,
   orientation = 'vertical',
 }) => {
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
+  const [nonPositionStylesCache, setNonPositionStylesCache] = useState({});
+  const [stylesCache, setStylesCache] = useState({});
+
   const outerRef = useRef<HTMLDivElement>(null);
   const isHorizontal = orientation === 'horizontal';
   const key = useKeys(itemCount);
+
+  const calculateNonPositionStyles = () => {
+    const cacheKey = isHorizontal ? 'horizontal' : 'vertical';
+    if (nonPositionStylesCache[cacheKey]) {
+      return nonPositionStylesCache[cacheKey];
+    }
+
+    const styles = isHorizontal
+      ? {
+        width: itemSize,
+        height: `${height - padding}px`,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }
+      : {
+        height: itemSize,
+        width: `${width - padding}px`,
+        maxWidth: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      };
+
+    setNonPositionStylesCache((prevCache) => ({
+      ...prevCache,
+      [cacheKey]: styles,
+    }));
+    return styles;
+  };
+
+  const calculateItemStyle = (index: number) => {
+    const nonPositionStyles = calculateNonPositionStyles();
+    if (stylesCache[index]) {
+      return { ...nonPositionStyles, ...stylesCache[index] };
+    }
+
+    const style = {
+      position: 'absolute',
+      [isHorizontal ? 'left' : 'top']: index * itemSize + padding / 2,
+      ...nonPositionStyles,
+    };
+
+    setStylesCache((prevCache) => ({ ...prevCache, [index]: style }));
+    return style;
+  };
+
+
+  const bufferSize = 6;
+
+  const calculateVisibleItemCount = useMemo(() => {
+    const visible = Math.ceil(
+      (isHorizontal ? width || 0 : height || 0) / itemSize
+    );
+    return Math.min(itemCount, visible + 2 * bufferSize);
+  }, [isHorizontal, width, height, itemSize, itemCount, bufferSize]);
+
+  const [visibleRange, setVisibleRange] = useState({
+    start: 0,
+    end: calculateVisibleItemCount + bufferSize,
+  });
 
   const handleScroll = (event: Event) => {
     const target = event.target as HTMLElement;
     const scrollValue = isHorizontal ? target.scrollLeft : target.scrollTop;
     const startIndex = Math.floor(scrollValue / itemSize);
-    setVisibleStartIndex(startIndex);
+    const endIndex = Math.min(startIndex + calculateVisibleItemCount + bufferSize, itemCount);
+    setVisibleRange({ start: startIndex - bufferSize, end: endIndex });
   };
 
   const debouncedHandleScroll = useMemo(() => {
@@ -65,12 +132,6 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
         outerRef.current?.removeEventListener('scroll', debouncedHandleScroll);
     }
   }, [debouncedHandleScroll, outerRef]);
-
-  const calculateVisibleItemCount = useMemo(() => {
-    const visible =
-      Math.ceil((isHorizontal ? width || 0 : height || 0) / itemSize) + 3;
-    return itemCount <= visible ? itemCount : visible;
-  }, [isHorizontal, width, height, itemSize, itemCount]);
 
   const visibleItems = useMemo(() => {
     const visibleItemCount = calculateVisibleItemCount;
@@ -105,8 +166,12 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
       return element;
     };
 
-    for (let i = 0; i < visibleItemCount; i++) {
-      const index = visibleStartIndex + i;
+    for (let i = visibleRange.start; i < visibleRange.end; i++) {
+      const index = i;
+      const style = {
+        ...calculateNonPositionStyles(),
+        [isHorizontal ? 'left' : 'top']: index * itemSize + padding / 2,
+      };
       if (index < itemCount) {
         const style = isHorizontal
           ? {
@@ -120,7 +185,7 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
             }
           : {
               position: 'absolute',
-              top: index * itemSize + padding / 2,
+              top: index * itemSize + (padding / 2),
               width: `${width - padding}px`,
               height: itemSize,
               display: 'flex',
@@ -142,37 +207,34 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
 
     return items;
   }, [
-    visibleStartIndex,
-    itemCount,
+    visibleRange,
     children,
     itemData,
     isHorizontal,
     itemSize,
-    calculateVisibleItemCount,
     key,
   ]);
 
-  const totalSize = useMemo(() => itemCount * itemSize + padding * 2, [
-    itemCount,
-    itemSize,
-  ]);
+  const totalSize = useMemo(() => visibleRange.end * itemSize + padding * 2, [  visibleRange,  itemSize,]);
 
   const innerStyle = useMemo(() => {
     return isHorizontal
       ? {
+          position: 'absolute',
           width: `${totalSize}px`,
           height: '100%',
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'center'
         }
       : {
+          position: 'absolute',
           height: `${totalSize}px`,
           width: '100%',
           maxWidth: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'center'
         };
   }, [isHorizontal, totalSize]);
 
@@ -180,8 +242,9 @@ const FixedSizeList: FC<FixedSizeListProps> = ({
     <div
       {...key[0]}
       ref={outerRef}
-      style={{ position: 'relative', overflow: 'scroll', height, width }}
+      style={{ position: 'relative', overflowX: isHorizontal ? 'scroll' : 'visible', overflowY: isHorizontal ? 'visible' : 'scroll',height, width }}
     >
+      {header || null}
       {/* @ts-ignore */}
       <div {...key[1]} style={innerStyle}>
         {visibleItems}

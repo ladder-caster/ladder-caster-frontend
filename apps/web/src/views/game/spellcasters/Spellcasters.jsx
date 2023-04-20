@@ -2,9 +2,13 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import {
   _spellcasters,
   _list,
+  _container,
   _button,
   _claim_all,
   _purchase,
+  _header,
+  _buy,
+  _divider,
 } from './Spellcasters.styled';
 import Item from './item/Item';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +30,6 @@ import { CHAIN_CASTERS } from 'chain/hooks/state';
 import { useActions } from '../../../../actions';
 import RecycledList from '../../../shared/list/RecycledList';
 import { useSize } from 'core/hooks/useSize';
-import Buy from './buy/Buy';
 
 const Spellcasters = () => {
   const { t } = useTranslation();
@@ -35,7 +38,7 @@ const Spellcasters = () => {
   const [gameConstants] = useMesh(GAME_CONSTANTS);
   const list_ref = useRef();
   const { height, width } = useSize(list_ref, 'spellcaster');
-  const { claimAllRewards } = useActions();
+  const { claimAllRewards, modalBuyLADA } = useActions();
 
   const render_spellcasters = useMemo(() => {
     if (spellcasters && spellcasters.length >= 1) {
@@ -45,24 +48,34 @@ const Spellcasters = () => {
     }
   }, [spellcasters]);
 
+  const render_header = useMemo(() => {
+    return (
+      <_header>
+        <_container>
+          <_claim_all onClick={() => claimAllRewards()}>
+            <span>{t('spellcasters.claim.all')}</span>
+          </_claim_all>
+        </_container>
+        <_divider />
+      </_header>
+    );
+  }, [claimAllRewards]);
+
   const render = useMemo(() => {
     if (gameConstants?.gameState && casters?.length > 0) {
       return (
         <>
-          <_claim_all onClick={() => claimAllRewards()}>
-            {t('spellcasters.claim.all')}
-          </_claim_all>
           <_list ref={list_ref}>
             <RecycledList
               items={render_spellcasters}
               height={height}
               width={width}
-              itemSize={134}
+              itemSize={129.08}
+              header={render_header}
+              headerHeight={60}
             />
           </_list>
-          <_purchase>
-            <Buy />
-          </_purchase>
+
           {/*<Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />*/}
           {/*<Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />*/}
         </>

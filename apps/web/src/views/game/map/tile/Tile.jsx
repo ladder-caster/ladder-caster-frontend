@@ -139,23 +139,18 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
                 <_backdrop key={`backdrop-${land?.id}`} />
               </_float>
               <_float>
-                <AnimateEnchant
-                  key={`animate-enchant-${land?.id}`}
-                  animate_key={`animate-enchant-key-${land?.id}`}
-                  move_to={move_to}
-                  status={status}
-                  $casters={casters}
+                <_enchant
+                  key={`enchant-${land?.id}`}
+                  $color={color}
+                  $element={type}
+                  $move_to={move_to}
+                  $casters={casters > 0}
+                  $status={status}
                 >
-                  <_enchant
-                    key={`enchant-${land?.id}`}
-                    $color={color}
-                    $element={type}
-                  >
-                    {remaining && (
-                      <span key={`remaining-${land?.id}`}>{remaining}</span>
-                    )}
-                  </_enchant>
-                </AnimateEnchant>
+                  {remaining && (
+                    <span key={`remaining-${land?.id}`}>{remaining}</span>
+                  )}
+                </_enchant>
               </_float>
             </_float>
             {(status === TILE_CHIP ||
@@ -171,47 +166,38 @@ const Tile = withTheme(({ theme, level, col, isModal, status }) => {
                 )}
               </_float>
             )}
-            <AnimateBackground
-              key={`animate-bg-${land?.id}`}
-              animate_key={`animate-bg-key-${land?.id}`}
-              move_to={move_to}
-              status={status}
-              $casters={casters}
+            <_background
+              key={`background-${land?.id}`}
+              onClick={() => clickTile()}
+              $color={color}
+              $element={type}
+              $tier={tier_multiply}
+              $move_to={move_to}
+              $casters={casters > 0}
+              $status={status}
             >
-              <_background
-                key={`background-${land?.id}`}
-                onClick={() => clickTile()}
-                $color={color}
-                $element={type}
-                $tier={tier_multiply}
-              >
-                <_floaticon key={`float-icon-${land?.id}`} $element={type}>
-                  <Icon key={`float-icon-icon-${land?.id}`} />
-                </_floaticon>
-                <_tier key={`tier-${land?.id}`} $element={type}>
-                  <span key={`tier-span-${land?.id}`}>{show_tier}</span>
-                </_tier>
-                <_element
-                  key={`element-${land?.id}`}
+              <_floaticon key={`float-icon-${land?.id}`} $element={type}>
+                <Icon key={`float-icon-icon-${land?.id}`} />
+              </_floaticon>
+              <_tier key={`tier-${land?.id}`} $element={type}>
+                <span key={`tier-span-${land?.id}`}>{show_tier}</span>
+              </_tier>
+              <_element key={`element-${land?.id}`} $element={type} $width={90}>
+                <_icon
+                  key={`icon-${land?.id}`}
+                  $offset={0}
                   $element={type}
-                  $width={90}
+                  $casters={casters}
                 >
-                  <_icon
-                    key={`icon-${land?.id}`}
-                    $offset={0}
-                    $element={type}
-                    $casters={casters}
-                  >
-                    <Icon key={`icon-icon-${land?.id}`} />
-                  </_icon>
-                  {+casters > 0 && (
-                    <_casters key={`casters-${land?.id}`} $element={type}>
-                      {casters}
-                    </_casters>
-                  )}
-                </_element>
-              </_background>
-            </AnimateBackground>
+                  <Icon key={`icon-icon-${land?.id}`} />
+                </_icon>
+                {+casters > 0 && (
+                  <_casters key={`casters-${land?.id}`} $element={type}>
+                    {casters}
+                  </_casters>
+                )}
+              </_element>
+            </_background>
           </>
         )}
       </_cutout>
