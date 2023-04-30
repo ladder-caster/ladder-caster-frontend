@@ -75,15 +75,15 @@ export const useMutation = () => {
         state: TxStates.SIGNING,
       } as Mutation;
 
+      console.log('signing...', builder);
       try {
-        setMutation({ mutation });
+        setMutation({ ...mutation });
         const {
           blockhash,
           lastValidBlockHeight,
         } = (await client.connection.getLatestBlockhash()) as BlockhashWithExpiryBlockHeight;
 
         // Sign Transaction
-        console.log('signing...');
         let signedTxs: Transaction[];
         if (Array.isArray(builder)) {
           signedTxs = await signAllTransaction(
@@ -96,7 +96,6 @@ export const useMutation = () => {
             await signTransaction(builder, blockhash, client.wallet),
           ];
         }
-        console.log('builders', builder);
 
         setMutation({
           ...mutation,

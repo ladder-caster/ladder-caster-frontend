@@ -5,12 +5,20 @@ import { INIT_CHAIN_LOAD } from '../state';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useMesh } from 'core/state/mesh/useMesh';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
+import * as anchor from '@project-serum/anchor';
 
 export const useConnectionClient = (client) => {
   const { handleConnectInitial: handleConnectInitialW3A } = useW3A();
   const { createClient } = useClient();
   const anchorWallet = useAnchorWallet();
-  const { connected, connecting, disconnecting } = useWallet();
+  const {
+    connected,
+    connecting,
+    disconnecting,
+    publicKey,
+    signAllTransactions,
+    signTransaction,
+  } = useWallet();
   const [initLoading, setInitLoading] = useMesh(INIT_CHAIN_LOAD);
 
   // Connection Handling
@@ -23,7 +31,11 @@ export const useConnectionClient = (client) => {
   useEffect(() => {
     if (connected && !client) {
       localStorage.setItem('adapter-connected', 'true');
-      createClient(anchorWallet as NodeWallet);
+      createClient({
+        publicKey,
+        signAllTransactions,
+        signTransaction,
+      } as NodeWallet);
     }
   }, [connected, client]);
 
