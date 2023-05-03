@@ -42,14 +42,18 @@ export interface TransactionBuilder {
   meta?: string;
 }
 
+export interface Options {
+  retryId?: string;
+  onExecution?: () => Promise<void>;
+  onConfirmation?: () => Promise<void>;
+  onError?: () => Promise<any>;
+  atomicTransactions?: boolean;
+}
+
 type Handler = (
   builder: TransactionBuilder | TransactionBuilder[],
   type: string,
-  retryId?: string,
-  onExecution?: () => Promise<void>,
-  onConfirmation?: () => Promise<void>,
-  onError?: () => Promise<any>,
-  atomicTransactions?: boolean,
+  options?: Options,
 ) => Promise<void>;
 
 export const useMutation = () => {
@@ -61,11 +65,13 @@ export const useMutation = () => {
     async (
       builder: TransactionBuilder | TransactionBuilder[],
       type: string,
-      retryId: string = '',
-      onExecution?: () => Promise<void>,
-      onConfirmation?: () => Promise<void>,
-      onError?: () => Promise<any>,
-      atomicTransactions: boolean = false,
+      {
+        retryId = '',
+        onExecution,
+        onConfirmation,
+        onError,
+        atomicTransactions = false,
+      }: Options,
     ) => {
       const id = retryId || nanoid();
 
