@@ -68,7 +68,7 @@ const Spellcasters = () => {
       ];
     }
     return list;
-  }, [spellcasters, showPrestige]);
+  }, [spellcasters, oldSpecasters, showPrestige]);
 
   const render_header = useMemo(() => {
     return (
@@ -110,6 +110,7 @@ const Spellcasters = () => {
     height,
     width,
     spellcasters,
+    oldSpecasters,
     showPrestige,
     list_ref.current,
   ]);
