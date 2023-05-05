@@ -35,18 +35,40 @@ const Spellcasters = () => {
   const { t } = useTranslation();
   const [casters] = useMesh(CHAIN_CASTERS);
   const [spellcasters] = useMesh(GAME_SPELLCASTERS);
+  const [oldSpecasters] = useMesh(GAME_OLD_SPELLCASTERS);
+  const [showPrestige] = useMesh(PRESTIGE_TOGGLE);
   const [gameConstants] = useMesh(GAME_CONSTANTS);
   const list_ref = useRef();
   const { height, width } = useSize(list_ref, 'spellcaster');
   const { claimAllRewards, modalBuyLADA } = useActions();
 
   const render_spellcasters = useMemo(() => {
+    let list = [];
     if (spellcasters && spellcasters.length >= 1) {
-      return sortBy(spellcasters, (sort) => sort?.hue).map((caster) => (
-        <Item key={caster?.publicKey} spell_id={caster.id} />
-      ));
+      list = [
+        ...sortBy(spellcasters, (sort) => sort?.hue).map((caster) => (
+          <Item key={caster?.publicKey} spell_id={caster.id} />
+        )),
+      ];
     }
-  }, [spellcasters]);
+
+    if (oldSpecasters.length) {
+      list = [
+        ...list,
+        <Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />,
+      ];
+    }
+
+    if (oldSpecasters.length && showPrestige) {
+      list = [
+        ...list,
+        ...sortBy(oldSpecasters, (sort) => sort?.hue).map((caster) => (
+          <Item key={caster?.publicKey} spell_id={caster.id} isOld={true} />
+        )),
+      ];
+    }
+    return list;
+  }, [spellcasters, showPrestige]);
 
   const render_header = useMemo(() => {
     return (
@@ -75,9 +97,6 @@ const Spellcasters = () => {
               headerHeight={60}
             />
           </_list>
-
-          {/*<Item key={SPELLCASTER_BUY} spell_id={SPELLCASTER_BUY} />*/}
-          {/*<Item key={PRESTIGE_HIDE} spell_id={PRESTIGE_HIDE} isPrestigeHide />*/}
         </>
       );
     }
@@ -86,7 +105,14 @@ const Spellcasters = () => {
         <Onboarding />
       </_feed>
     );
-  }, [gameConstants?.gameState, height, width, spellcasters, list_ref.current]);
+  }, [
+    gameConstants?.gameState,
+    height,
+    width,
+    spellcasters,
+    showPrestige,
+    list_ref.current,
+  ]);
 
   return (
     <_spellcasters>

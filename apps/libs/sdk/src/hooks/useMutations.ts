@@ -144,7 +144,16 @@ export const useMutation = () => {
         return confirmationResult;
       } catch (e) {
         console.log('mutation failed', e);
-        if (onError) return await onError();
+        if (onError) {
+          setMutation({
+            ...mutation,
+            state: TxStates.ERROR,
+            text: {
+              error: e,
+            },
+          });
+          return await onError();
+        }
 
         //TODO: review error handling
         //TODO: change retry logic to connection
