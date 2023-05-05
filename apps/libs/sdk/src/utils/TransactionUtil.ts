@@ -73,6 +73,8 @@ export const executeTransaction = async (
       }
     });
     console.log('rejected', rejected);
+
+    if (rejected.length === signedTxs.length) throw rejected[0];
   }
 
   return validatorSignatures;
