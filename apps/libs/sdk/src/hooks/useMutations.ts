@@ -152,6 +152,8 @@ export const useMutation = () => {
               error: e,
             },
           });
+          await sleep(500);
+
           return await onError();
         }
 
@@ -170,7 +172,11 @@ export const useMutation = () => {
         });
       }
     },
-    [client, t],
+    [client, t, setMutation],
   );
   return { handleState };
 };
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

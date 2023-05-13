@@ -79,7 +79,7 @@ const Mutations = withTheme(({ theme }) => {
   // Remove Queue
   const removeFromQueue = (item) => {
     //filters out items of same type in queue
-    let next_queue = cloneDeep(queue).filter(
+    let next_queue = [...queue].filter(
       (queueItem) => !isEqual(queueItem.type, item.type),
     );
     setQueue(next_queue);
