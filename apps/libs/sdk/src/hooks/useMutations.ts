@@ -143,25 +143,25 @@ export const useMutation = () => {
         console.log('confirmed!!!!');
         return confirmationResult;
       } catch (e) {
-        console.log('mutation failed', e);
-        if (onError) {
-          setMutation({
-            ...mutation,
-            state: TxStates.ERROR,
-            text: {
-              error: e,
-            },
-          });
-          await sleep(500);
-
-          return await onError();
-        }
-
         //TODO: review error handling
         //TODO: change retry logic to connection
         let parsedMessage = handleCustomErrors(e.message);
         if (e.message?.includes('Solana'))
           parsedMessage = t('mutations.timeout');
+        console.log('mutation failed', parsedMessage);
+
+        if (onError) {
+          setMutation({
+            ...mutation,
+            state: TxStates.ERROR,
+            text: {
+              error: e.message,
+            },
+          });
+          await sleep(500);
+
+          return await onError(); //TODO: pass error message to avoid unneccessary retries
+        }
 
         setMutation({
           ...mutation,
