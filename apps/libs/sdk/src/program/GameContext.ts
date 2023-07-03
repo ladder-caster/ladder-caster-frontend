@@ -17,7 +17,6 @@ export class GameContext {
     return gameConstantsContext.gameState;
   }
 
-  //TODO: to test
   async crank(): Promise<TransactionBuilder> {
     await gameConstantsContext.hydrateGame();
 

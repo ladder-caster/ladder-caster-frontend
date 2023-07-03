@@ -138,15 +138,16 @@ export const useChainActions = () => {
       INST_REDEEM_ACTION,
       {
         onConfirmation,
-        onError: async () => {
-          return await handleState(
-            await casterContext.fallbackRedeem(),
-            INST_REDEEM_ACTION,
-            {
-              onConfirmation,
-              atomicTransactions: true,
-            },
-          );
+        onError: async (error: string) => {
+          if (error.includes('Transaction too large'))
+            return await handleState(
+              await casterContext.fallbackRedeem(),
+              INST_REDEEM_ACTION,
+              {
+                onConfirmation,
+                atomicTransactions: true,
+              },
+            );
         },
       },
     );
@@ -920,6 +921,21 @@ export const useChainActions = () => {
           },
         },
       );
+    },
+    async redeemCasterWhitelist(caster: Caster) {
+      if (!caster) return;
+
+      const casterObject = find(
+        casters,
+        (match) => match?.publicKey?.toString() === caster?.publicKey,
+      );
+      const casterContext = new CasterContext(casterObject);
+
+      await handleState(await casterContext.redeemWhitelist(), INST_BURN_NFT, {
+        onConfirmation: async () => {
+          fetchCaster();
+        },
+      });
     },
     emptyInputs() {
       setContext({

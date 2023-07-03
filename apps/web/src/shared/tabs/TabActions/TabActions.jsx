@@ -6,10 +6,14 @@ import { useActions } from '../../../../actions';
 
 const TabAction = ({ caster }) => {
   const { t } = useTranslation();
-  const { unequipAllItems } = useActions();
+  const { unequipAllItems, redeemCasterWhitelist } = useActions();
   const equipBlocked = !!caster?.turnCommit ?? false;
   const unequip = () => {
     unequipAllItems(caster);
+  };
+
+  const handleRedeemCasterWhitelist = () => {
+    redeemCasterWhitelist(caster);
   };
 
   return (
@@ -24,6 +28,11 @@ const TabAction = ({ caster }) => {
               disabled={equipBlocked}
               onClick={unequip}
               text={t('player.actions.main.unequip_all')}
+            />
+            <Pill
+              disabled={equipBlocked}
+              onClick={handleRedeemCasterWhitelist}
+              text={t('player.actions.main.redeem')}
             />
           </_row>
         </_player_actions>

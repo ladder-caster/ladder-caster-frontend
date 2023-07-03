@@ -46,7 +46,7 @@ export interface Options {
   retryId?: string;
   onExecution?: () => Promise<void>;
   onConfirmation?: () => Promise<void>;
-  onError?: () => Promise<any>;
+  onError?: (error: string) => Promise<any>;
   atomicTransactions?: boolean;
 }
 
@@ -155,12 +155,12 @@ export const useMutation = () => {
             ...mutation,
             state: TxStates.ERROR,
             text: {
-              error: e.message,
+              error: parsedMessage,
             },
           });
           await sleep(500);
 
-          return await onError(); //TODO: pass error message to avoid unneccessary retries
+          return await onError(e.message); //TODO: pass error message to avoid unneccessary retries
         }
 
         setMutation({

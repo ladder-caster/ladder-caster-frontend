@@ -36,6 +36,7 @@ export const INST_MINT_NFT = 'INST_MINT_NFT';
 export const INST_PRESTIGE_CASTER = 'INST_PRESTIGE_CASTER';
 export const INST_CLAIM_ALL = 'INST_CLAIM_ALL';
 export const INST_BURN_NFT = 'INST_BURN_NFT';
+
 // RPC Connections
 export const CONNECT_RPC = 'CONNECT_RPC';
 
