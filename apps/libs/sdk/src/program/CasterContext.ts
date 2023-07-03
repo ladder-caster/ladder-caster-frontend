@@ -18,12 +18,17 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
+  Token,
 } from '@solana/spl-token';
 import { TransactionBuilder } from '../hooks/useMutations';
 
 //constants of cached data used throughout the app
 const gameConstantsContext: GameConstantsContextInterface = require('../program/GameConstantsContext')
   .default;
+
+const WHITELIST_MINT = new PublicKey(
+  '28Hobn5UWoUgZ4HhiQrhz3jkMuTCFPNTWKDJxJQWakoZ',
+);
 export class CasterContext {
   constructor(private caster?: Caster) {}
 
@@ -64,27 +69,40 @@ export class CasterContext {
       );
 
       return { transaction, signers: [casterKP] };
-      // return await gameConstantsContext.Client.program.rpc.initCaster({
-      //   accounts: {
-      //     systemProgram: anchor.web3.SystemProgram.programId,
-      //     tokenProgram: TOKEN_PROGRAM_ID,
-      //     rent: SYSVAR_RENT_PUBKEY,
-      //     authority: gameConstantsContext.Client.wallet.publicKey,
-      //     season: gameConstantsContext.season,
-      //     game: gameConstantsContext.gameAccount,
-      //     player: gameConstantsContext.playerAccount,
-      //     slots: SYSVAR_SLOT_HASHES_PUBKEY,
-      //     instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
-      //     ladaMint: gameConstantsContext.gameState.ladaMintAccount,
-      //     caster: casterKP.publicKey,
-      //     gameLadaTokenAccount: gameConstantsContext.gameState.ladaTokenAccount,
-      //     ladaTokenAccount: gameConstantsContext.ladaTokenAccount,
-      //   },
-      //   signers: [gameConstantsContext.Client.wallet.payer, casterKP],
-      // });
     } else {
       //TODO: implement multi-caster purchase
     }
+  }
+
+  async redeemWhitelist() {
+    const whitelistATA = await Token.getAssociatedTokenAddress(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      WHITELIST_MINT,
+      gameConstantsContext.Client.wallet.publicKey,
+    );
+
+    const transaction = new Transaction().add(
+      await gameConstantsContext.Client.program.methods
+        .burnCaster()
+        .accounts({
+          systemProgram: anchor.web3.SystemProgram.programId,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+          authority: gameConstantsContext.Client.wallet.publicKey,
+          game: gameConstantsContext.gameAccount,
+          gameSigner: gameConstantsContext.gameSigner,
+          player: gameConstantsContext.playerAccount,
+          caster: this.caster?.publicKey,
+          season: gameConstantsContext.season,
+          whiteListMint: WHITELIST_MINT,
+          whiteListTokenAccount: whitelistATA,
+        })
+        .instruction(),
+    );
+
+    return { transaction };
   }
 
   //TODO: to test
