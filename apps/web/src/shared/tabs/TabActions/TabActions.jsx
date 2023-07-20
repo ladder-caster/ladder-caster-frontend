@@ -30,7 +30,7 @@ const TabAction = ({ caster }) => {
               text={t('player.actions.main.unequip_all')}
             />
             <Pill
-              disabled={equipBlocked}
+              // disabled={equipBlocked}
               onClick={handleRedeemCasterWhitelist}
               text={t('player.actions.main.redeem')}
             />
