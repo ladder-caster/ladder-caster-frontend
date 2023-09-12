@@ -15,10 +15,10 @@
     "vercel-build": "rimraf build && parcel build public/index.html --dist-dir build/ --no-source-maps --no-scope-hoist --no-cache --public-url ."
   },
   "dependencies": {
-    "@solana/wallet-adapter-base": "0.9.22",
-    "@solana/wallet-adapter-react": "0.15.32",
-    "@solana/wallet-adapter-react-ui": "0.9.31",
-    "@solana/wallet-adapter-wallets": "0.19.15",
+    "@solana/wallet-adapter-base": "0.9.23",
+    "@solana/wallet-adapter-react": "0.15.35",
+    "@solana/wallet-adapter-react-ui": "0.9.34",
+    "@solana/wallet-adapter-wallets": "0.19.20",
     "@web3auth/base": "^1.1.1",
     "@web3auth/core": "^1.1.1",
     "@web3auth/solana-wallet-connector-plugin": "^1.1.1",
